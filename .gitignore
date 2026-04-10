@@ -1,2 +1,100 @@
-.venv
-.vscode
+# =============================================================================
+# .gitignore — TRAJCENTER
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# Fichiers de trajectoires
+# Les fichiers de trajectoires peuvent être volumineux ou contenir des données
+# propriétaires liées aux pièces usinées. Ils ne doivent pas être versionnés.
+# -----------------------------------------------------------------------------
+trajectory_files/
+
+
+# -----------------------------------------------------------------------------
+# Python — Bytecode et cache
+# Générés automatiquement par l'interpréteur Python, inutiles dans le dépôt.
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+
+# -----------------------------------------------------------------------------
+# Python — Environnements virtuels
+# Ne pas versionner les environnements locaux.
+# -----------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+
+# -----------------------------------------------------------------------------
+# Python — Distribution et packaging
+# -----------------------------------------------------------------------------
+dist/
+build/
+*.egg-info/
+
+
+# -----------------------------------------------------------------------------
+# Jupyter Notebook
+# Les checkpoints sont des fichiers temporaires générés automatiquement.
+# -----------------------------------------------------------------------------
+.ipynb_checkpoints/
+*.ipynb
+
+
+# -----------------------------------------------------------------------------
+# IDEs et éditeurs
+# -----------------------------------------------------------------------------
+
+# PyCharm / IntelliJ
+.idea/
+
+# VS Code
+.vscode/
+
+# Spyder
+.spyderproject.cfg
+.spyproject/
+
+# Eclipse
+.project
+.pydevproject
+
+
+# -----------------------------------------------------------------------------
+# Système d'exploitation
+# -----------------------------------------------------------------------------
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# macOS
+.DS_Store
+._*
+
+# Linux
+*~
+
+
+# -----------------------------------------------------------------------------
+# Logs et fichiers temporaires
+# -----------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+
+
+# -----------------------------------------------------------------------------
+# Fichiers de configuration locaux
+# Si des fichiers de config contiennent des IPs, ports ou credentials locaux,
+# ils ne doivent pas être partagés.
+# -----------------------------------------------------------------------------
+config_local.*
+*.env
