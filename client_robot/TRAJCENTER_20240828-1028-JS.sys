@@ -1,52 +1,52 @@
 MODULE TRAJCENTER(SYSMODULE)
 !DATE:          27/02/2024
 !AUTEUR:        SCHUMACKER.J
-!DESCRIPTION:   Ce module sert � communiquer en TCP/IP avec un serveur pour les trajectoires �tr�s grand nombre de points.
-!               Les points sont mis en m�moire dans un tableau de robtargets "RobtTRAJCENTER"
-!               Le serveur est le programme python TRAJCENTER de Cl�ment RACINET
+!DESCRIPTION:   Ce module sert à  communiquer en TCP/IP avec un serveur pour les trajectoires à très grand nombre de points.
+!               Les points sont mis en mémoire dans un tableau de robtargets "RobtTRAJCENTER"
+!               Le serveur est le programme python TRAJCENTER de Clément RACINET
 !---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-!UTILISATION:   Commencer par appeler la proc�dure "TRAJCENTER_GetValues" pour s�lectionner et charger la traj via un menu sur le Flexpendant
+!UTILISATION:   Commencer par appeler la procédure "TRAJCENTER_GetValues" pour sélectionner et charger la traj via un menu sur le Flexpendant
 !               puis lancer la traj avec "TRAJCENTER_Move" avec les arguments adhoc
-!               IMPORTANT: Pr�voir un point d'approche aux confDatas ma�tris�s avant l'ex�cution de "TRAJCENTER_Move" car cette proc�dure d�sactive les confDatas
+!               IMPORTANT: Prévoir un point d'approche aux confDatas maîtrisés avant l'exécution de "TRAJCENTER_Move" car cette procédure désactive les confDatas
 !---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-!COMM SERVEUR:  Les donn�es re�ues sont interpr�t�es en ordre "little endian"
+!COMM SERVEUR:  Les données reçues sont interprétées en ordre "little endian"
 !               REQUETE (STRING)	REPONSE	                                                                                                    TYPE DE DONNEES
 !               nbtraj              renvoie le nombre de trajectoires disponibles sur le serveur	                                            INT32
 !               nomtraj[i]	        renvoie le nom de la trajectoire i	                                                                        STRING
-!               loadtraj[i]         charge la traj i en m�moire du serveur et r�pond "loaded" quand c'est fait ("error" si �a merde)            STRING 
-!               dimtraj 	        renvoie le nombre de robtargets de la trajectoire charg�e en m�moire                                        INT32
-!               robt[j;k]	        renvoie en s�rie de INT32 les données de k robtargets de la trajectoire charg�e, �partir du robtarget n�j	INT32 (s�rie)
+!               loadtraj[i]         charge la traj i en mémoire du serveur et répond "loaded" quand c'est fait ("error" si ça merde)            STRING 
+!               dimtraj 	        renvoie le nombre de robtargets de la trajectoire chargée en mémoire                                        INT32
+!               robt[j;k]	        renvoie en série de INT32 les données de k robtargets de la trajectoire chargée, à partir du robtarget n°j	INT32 (série)
 !               stop	            fin de la communication, renvoie "stop"	                                                                    STRING
 !---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-!CORRECTIFS:    20240228-1603-JS    Transformation en module syst�me
-!                                   Suppression du chronom�tre
+!CORRECTIFS:    20240228-1603-JS    Transformation en module système
+!                                   Suppression du chronomètre
 !                                   Correction des commentaires
 !                                   Ajout d'infos utilisateur concernant le chargement des points
-!               20240828-1028-JS    Suppression de la requ�te "stop" qui coupait le serveur. On ferme juste le socket pour laisser le serveur tourner
+!               20240828-1028-JS    Suppression de la requête "stop" qui coupait le serveur. On ferme juste le socket pour laisser le serveur tourner
 !---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     VAR robtarget RobtTRAJCENTER{100000};           !Stockage des valeurs en Robtarget
-    VAR num NbRobtargetsTraj:=0;                    !Nombre de robtargets dans la traj s�lectionn�e
+    VAR num NbRobtargetsTraj:=0;                    !Nombre de robtargets dans la traj sélectionnée
     
     !====================================================================================================================================
     PROC TRAJCENTER_GetValues()
-    !DESCRIPTION:   affiche un menu utilisateur de s�lection de traj puis remplit la m�moire des points de la traj envoy�s par le serveur
+    !DESCRIPTION:   affiche un menu utilisateur de sélection de traj puis remplit la mémoire des points de la traj envoyés par le serveur
     !------------------------------------------------------------------------------------------------------------------------------------
         VAR string state:="init";                       !Etat du programme
-        VAR num selectionMenu:=0;                       !N� d'entr�e s�lectionn�e dans le menu
-        VAR btnres button_answer;                       !Stocke la r�ponse des UI
-        VAR num nbPtsDemandes:=0;                       !Nombre de points demand�s dans la requ�te au serveur
+        VAR num selectionMenu:=0;                       !N° d'entrée sélectionnée dans le menu
+        VAR btnres button_answer;                       !Stocke la réponse des UI
+        VAR num nbPtsDemandes:=0;                       !Nombre de points demandés dans la requête au serveur
         VAR string AdresseIpServeur:="10.118.155.5";    !Adresse IP du serveur
-        VAR num portServeur:=50000;                     !Port utilis� par le serveur
-        VAR socketdev socketTrajcenter;                 !D�claration du socket
-        VAR string received_string:="";                 !Chaine de caract�res re�ue du serveur
+        VAR num portServeur:=50000;                     !Port utilisé par le serveur
+        VAR socketdev socketTrajcenter;                 !Déclaration du socket
+        VAR string received_string:="";                 !Chaine de caractères reçue du serveur
         VAR num nbTraj:=0;                              !Nombre de trajs dispos sur le serveur
-        VAR num selectedTraj:=0;                        !Num�ro de trajectoire s�lectionn�es par l'utilisateur
-        VAR listitem menuListeTrajs{256};               !Liste de trajs � afficher sur la page de menu
-        VAR num NbPaquetsValeurs:=0;                    !Nombre de Paquets n�cessaires au stockage de la traj dans le tableau de rawbytes "ValeursTRAJCENTER"
-        VAR num indexEcritureTraj:=0;                   !Nombre de points de la traj �crits dans la m�moire
-        VAR rawbytes recievedRawBytes;                  !Donn�es brutes re�ues du serveur
-        VAR num ConvertedData{15,17};                   !Donn�es converties de 15 robtargets de 17 valeurs
+        VAR num selectedTraj:=0;                        !Numéro de trajectoire sélectionnées par l'utilisateur
+        VAR listitem menuListeTrajs{256};               !Liste de trajs à  afficher sur la page de menu
+        VAR num NbPaquetsValeurs:=0;                    !Nombre de Paquets nécessaires au stockage de la traj dans le tableau de rawbytes "ValeursTRAJCENTER"
+        VAR num indexEcritureTraj:=0;                   !Nombre de points de la traj écrits dans la mémoire
+        VAR rawbytes recievedRawBytes;                  !Données brutes reçues du serveur
+        VAR num ConvertedData{15,17};                   !Données converties de 15 robtargets de 17 valeurs
         !--------------
         WHILE state<>"quit" DO
             TEST state
@@ -65,7 +65,7 @@ MODULE TRAJCENTER(SYSMODULE)
                     FOR i FROM 1 TO 256 DO
                         menuListeTrajs{i}:=[stEmpty,stEmpty];
                     ENDFOR
-                    !--------------R�cup�ration du nombre de trajs dispos sur le serveur
+                    !--------------Récupération du nombre de trajs dispos sur le serveur
                     SocketSend socketTrajcenter\Str:="nbtraj";
                     SocketReceive socketTrajcenter \RawData:=recievedRawBytes;
                     UnpackRawBytes recievedRawBytes,1,nbTraj\IntX:=DINT;
@@ -87,14 +87,14 @@ MODULE TRAJCENTER(SYSMODULE)
                 CASE "validationTraj":
                     UIMsgBox
                         \Header:="CONFIRMATION",
-                        "Trajectoire s�lectionn�e:"
+                        "Trajectoire sélectionnée:"
                         \MsgLine2:=menuListeTrajs{selectedTraj}.text
                         \Buttons:=btnOKCancel
                         \Icon:=iconWarning
                         \Result:=button_answer;
                     TEST button_answer
                         CASE resOK:
-                            !--------------Demande de chargement de la traj en m�moire du serveur pour envoi
+                            !--------------Demande de chargement de la traj en mémoire du serveur pour envoi
                             SocketSend socketTrajcenter\Str:="loadtraj["+ValToStr(selectedTraj)+"]";
                             SocketReceive socketTrajcenter\Str:=received_string;
                             IF received_string="loaded" THEN
@@ -117,40 +117,40 @@ MODULE TRAJCENTER(SYSMODULE)
                     ENDTEST
                 !_____________________________
                 CASE "demandePoints":
-                    !-------------Verif du nombre de Paquets n�cessaires
+                    !-------------Verif du nombre de Paquets nécessaires
                     IF NbRobtargetsTraj MOD 15 = 0
                         THEN NbPaquetsValeurs := NbRobtargetsTraj DIV 15;
                         ELSE NbPaquetsValeurs := (NbRobtargetsTraj DIV 15)+1;
                     ENDIF
                     !-------------Ecriture des valeurs dans les Paquets
                     FOR i FROM 1 TO NbPaquetsValeurs DO
-                        !--------------Verif du nombre de points � demander dans le paquet
+                        !--------------Verif du nombre de points à demander dans le paquet
                         IF NbRobtargetsTraj-indexEcritureTraj < 15
                             THEN nbPtsDemandes:=NbRobtargetsTraj-indexEcritureTraj;
                             ELSE nbPtsDemandes:=15;
                         ENDIF
-                        !--------------R�cup�ration du paquet
+                        !--------------Récupération du paquet
                         ClearRawBytes recievedRawBytes;
                         SocketSend socketTrajcenter\Str:="robt["+ValToStr(indexEcritureTraj+1)+";"+ValToStr(nbPtsDemandes)+"]";
                         SocketReceive socketTrajcenter \RawData:=recievedRawBytes;
-                        !--------------Conversion des INT32 re�us
+                        !--------------Conversion des INT32 reçus
                         FOR j FROM 1 TO nbPtsDemandes DO
                             FOR k FROM 1 TO 17 DO
                                 UnpackRawBytes recievedRawBytes,1+(j-1)*17*4+(k-1)*4,ConvertedData{j,k}\IntX:=DINT;
                                 !--------------Conversion des entiers:
                                 TEST k
                                     CASE 1,2,3:
-                                        ConvertedData{j,k}:=ConvertedData{j,k}/1000;!Conversion des coordonn�es
+                                        ConvertedData{j,k}:=ConvertedData{j,k}/1000;!Conversion des coordonnées
                                     CASE 4,5,6,7:
                                         ConvertedData{j,k}:=ConvertedData{j,k}/1000000;!Conversion du quaternion
                                     CASE 12,13,14,15,16,17:
                                         IF ConvertedData{j,k}=2147483647
-                                            THEN ConvertedData{j,k}:=9E9; !Si la valeur est �gale au max d'un INT32, remplacer par 9E9 (=axe pas utilis�)
+                                            THEN ConvertedData{j,k}:=9E9; !Si la valeur est égale au max d'un INT32, remplacer par 9E9 (=axe pas utilisé)
                                             ELSE ConvertedData{j,k}:=ConvertedData{j,k}/1000;!Conversion des axes externes
                                         ENDIF
                                 ENDTEST
                             ENDFOR
-                            !--------------Incr�mentation de l'index d'�criture
+                            !--------------Incrémentation de l'index d'écriture
                             incr indexEcritureTraj;
                             !--------------Conversion des valeurs en RobTargets
                             RobtTRAJCENTER{indexEcritureTraj}:=[[convertedData{j,1},convertedData{j,2},convertedData{j,3}],
@@ -158,12 +158,12 @@ MODULE TRAJCENTER(SYSMODULE)
                                                                 [convertedData{j,8},convertedData{j,9},convertedData{j,10},convertedData{j,11}],
                                                                 [convertedData{j,12},convertedData{j,13},convertedData{j,14},convertedData{j,15},convertedData{j,16},convertedData{j,17}]];
                         ENDFOR
-                        TPWrite "Points charg�s: "+ValToStr(indexEcritureTraj)+"/"+ValToStr(NbRobtargetsTraj);
+                        TPWrite "Points chargés: "+ValToStr(indexEcritureTraj)+"/"+ValToStr(NbRobtargetsTraj);
                     ENDFOR
-                    !--------------R�capitulatif du transfert
+                    !--------------Récapitulatif du transfert
                     UIMsgBox
                         \Header:="RECAPITULATIF",
-                        "Trajectoire s�lectionn�e: "+Valtostr(menuListeTrajs{selectedTraj}.text)
+                        "Trajectoire sélectionnée: "+Valtostr(menuListeTrajs{selectedTraj}.text)
                         \MsgLine2:= "Nombre de points: "+ValToStr(indexEcritureTraj)+"/"+ValToStr(NbRobtargetsTraj)
                         \MsgLine3:= ""
                         \MsgLine4:= ""
@@ -178,7 +178,7 @@ MODULE TRAJCENTER(SYSMODULE)
                     state:="quit";
                 !_____________________________
                 DEFAULT:
-                    TPWrite "Erreur de consigne d'�tat, v�rifier le code";
+                    TPWrite "Erreur de consigne d'état, vérifier le code";
                     TPWrite "Etat invalide: " + state;
                     stop;
             ENDTEST
@@ -187,13 +187,13 @@ MODULE TRAJCENTER(SYSMODULE)
     
     !=====================================================================================================
     PROC TRAJCENTER_Move(speeddata vitesse, PERS tooldata outil, PERS wobjdata repereObjet)
-    !DESCRIPTION:   Execute les mouvemements de la traj charg�e dans RobtTRAJCENTER en mouvement lin�aires
+    !DESCRIPTION:   Execute les mouvemements de la traj chargée dans RobtTRAJCENTER en mouvement linéaires
     !-----------------------------------------------------------------------------------------------------
-        ConfL\Off;!D�sactivation de la lecture des confdatas, attention � commencer par un point d'approche de configuration ma�tris�e
+        ConfL\Off;!Désactivation de la lecture des confdatas, attention à commencer par un point d'approche de configuration maîtrisée
         FOR i FROM 1 TO NbRobtargetsTraj DO
             TPWrite valtostr(i)+"/"+ValToStr(NbRobtargetsTraj)+": "\Pos:=RobtTRAJCENTER{i}.trans; !Affichage d'infos de suivi
             MoveL RobtTRAJCENTER{i},vitesse,z0,outil\WObj:=repereObjet; !Execution du mouvement
         ENDFOR
-        ConfL\On; !R�activation de la lecture des confdatas 
+        ConfL\On; !Réactivation de la lecture des confdatas 
     ENDPROC
 ENDMODULE
