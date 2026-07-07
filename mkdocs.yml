@@ -1,0 +1,25 @@
+site_name: TrajCenter
+theme:
+  name: material
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+
+markdown_extensions:
+  - pymdownx.snippets:
+      base_path: ["."]
+
+nav:
+  - Accueil: index.md
+  - Référence API:
+    # --- AUTOGEN_API_START ---
+    - Trajcenter:
+      - Core:
+        - Trajectory: api/trajcenter/core/trajectory.md
+# --- AUTOGEN_API_END ---
+

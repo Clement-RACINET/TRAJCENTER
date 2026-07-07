@@ -1,0 +1,56 @@
+[project]
+name = "trajcenter"
+requires-python = ">= 3.11"
+version = "2.1.0"
+dependencies = ["httpx>=0.28.1,<0.29", "pandas>=3.0.3,<4", "numpy>=2.5.1,<3", "pydantic>=2", "openpyxl>=3.1.5,<4", "rich>=15.0.0,<16", "typer>=0.26.8,<0.27", "textual>=8.2.8,<9"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[tool.pixi.pypi-dependencies]
+trajcenter = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { features = [], solve-group = "default" }
+dev     = { features = ["dev"], solve-group = "default" }
+
+[tool.pixi.tasks]
+server    = "python -m trajcenter.server.app"
+convert   = "python -m trajcenter.converter"
+test      = "pytest tests/ --cov=trajcenter --cov-report=term-missing"
+lint      = "ruff check trajcenter/"
+fmt       = "ruff format trajcenter/"
+typecheck = "mypy trajcenter/"
+docs = "python scripts/doc/run_docs.py"
+
+
+[tool.pixi.dependencies]
+python = ">=3.14.6,<3.15"
+pyarrow = ">=24.0.0,<25"
+pandas-stubs = ">=3.0.3.260530,<4"
+typing_extensions = ">=4.16.0,<5"
+
+[dependency-groups]
+dev = ["pytest", "pytest-asyncio", "pytest-cov", "respx", "ruff", "mypy", "pre-commit", "mkdocs>=1.6.1,<2", "mkdocs-material>=9.7.6,<10", "mkdocstrings[python]>=1.0.4,<2"]
+
+[tool.basedpyright]
+pythonVersion = "3.11"
+pythonPlatform = "Windows"
+venvPath = ".pixi/envs"
+venv = "dev"
+typeCheckingMode = "basic"
+include = ["trajcenter"]
+exclude = ["test.py", "tests/"]
+useLibraryCodeForTypes = true 
+
+reportUnknownMemberType   = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"
+reportMissingTypeStubs    = "warning"
+reportAny                 = "none"
+reportCallIssue           = "none"   # ← ajoute cette ligne
