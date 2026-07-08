@@ -8,9 +8,9 @@
 # Les fichiers de trajectoires peuvent être volumineux ou contenir des données
 # propriétaires liées aux pièces usinées. Ils ne doivent pas être versionnés.
 # -----------------------------------------------------------------------------
-trajectory_files/
-trajectory_store/
-trajectory_exports/
+# trajectory_files/
+# trajectory_store/
+# trajectory_exports/
 
 
 # -----------------------------------------------------------------------------

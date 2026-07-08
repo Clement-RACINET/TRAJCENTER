@@ -1,0 +1,31 @@
+MODULE TRAJCENTER (SYSMODULE)
+
+  ! ── Métadonnées trajectoires ──────────────────────────
+  PERS num NbTrajDispo := 0;
+  PERS string NomsTraj{50} := ["","","","","","","","","","",
+                                "","","","","","","","","","",
+                                "","","","","","","","","","",
+                                "","","","","","","","","","",
+                                "","","","","","","","","",""];
+  PERS num NbPointsTraj{50} := [0,0,0,0,0,0,0,0,0,0,
+                                 0,0,0,0,0,0,0,0,0,0,
+                                 0,0,0,0,0,0,0,0,0,0,
+                                 0,0,0,0,0,0,0,0,0,0,
+                                 0,0,0,0,0,0,0,0,0,0];
+
+  ! ── Trajectoire chargée ───────────────────────────────
+  PERS num NbRobtargetsTraj := 0;
+  PERS robtarget RobtTRAJCENTER{100000};
+
+  ! ── Tools & Wobjs de la traj courante ─────────────────
+  PERS num NbTool := 0;
+  PERS string ToolNames{10} := ["","","","","","","","","",""];
+  PERS num NbWobj := 0;
+  PERS string WobjNames{10} := ["","","","","","","","","",""];
+
+  ! ── Signaux de synchronisation ────────────────────────
+  PERS bool TrajReady := FALSE;
+  PERS num SelectedTrajIndex := 0;
+  PERS bool RefreshFlag := FALSE;
+
+ENDMODULE
