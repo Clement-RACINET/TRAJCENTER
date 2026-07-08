@@ -5,7 +5,7 @@ Fixtures partagées entre tous les modules de tests TrajCenter.
 
 Contient les fixtures de bas niveau (DataFrames, métadonnées)
 réutilisables par test_trajectory.py, test_mod_converter.py,
-test_excel_converter.py, etc.
+test_excel_converter.py, test_csv_converter.py, etc.
 """
 
 from __future__ import annotations
@@ -360,3 +360,116 @@ def xlsx_empty_rows(tmp_path: Path) -> Path:
     ws.append([4.0, 5.0, 6.0])
     wb.save(tmp_path / "empty_rows.xlsx")
     return tmp_path / "empty_rows.xlsx"
+
+
+# ---------------------------------------------------------------------------
+# Helpers — fichiers CSV synthétiques
+# ---------------------------------------------------------------------------
+
+
+def _write_csv(path: Path, content: str, encoding: str = "utf-8") -> Path:
+    """Écrit un fichier CSV synthétique et retourne son chemin."""
+    path.write_text(content, encoding=encoding)
+    return path
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — fichiers CSV synthétiques
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def csv_simple(tmp_path: Path) -> Path:
+    """CSV minimal : XYZ + quaternions, séparateur virgule."""
+    return _write_csv(
+        tmp_path / "simple.csv",
+        "x,y,z,q1,q2,q3,q4\n"
+        "100.0,200.0,300.0,1.0,0.0,0.0,0.0\n"
+        "150.0,250.0,350.0,1.0,0.0,0.0,0.0\n",
+    )
+
+
+@pytest.fixture
+def csv_semicolon(tmp_path: Path) -> Path:
+    """CSV avec séparateur point-virgule (export Excel français)."""
+    return _write_csv(
+        tmp_path / "semicolon.csv",
+        "x;y;z;q1;q2;q3;q4\n"
+        "10.0;20.0;30.0;1.0;0.0;0.0;0.0\n"
+        "40.0;50.0;60.0;1.0;0.0;0.0;0.0\n",
+    )
+
+
+@pytest.fixture
+def csv_xyz_only(tmp_path: Path) -> Path:
+    """CSV XYZ sans quaternions → orientation identité par défaut."""
+    return _write_csv(
+        tmp_path / "xyz_only.csv",
+        "x,y,z\n"
+        "10.0,20.0,30.0\n"
+        "40.0,50.0,60.0\n",
+    )
+
+
+@pytest.fixture
+def csv_aliases(tmp_path: Path) -> Path:
+    """CSV avec noms de colonnes non canoniques (alias + casse)."""
+    return _write_csv(
+        tmp_path / "aliases.csv",
+        "PosX,PosY,PosZ,VITESSE\n"
+        "1.0,2.0,3.0,v500\n",
+    )
+
+
+@pytest.fixture
+def csv_with_tools(tmp_path: Path) -> Path:
+    """CSV avec colonnes tool et wobj."""
+    return _write_csv(
+        tmp_path / "with_tools.csv",
+        "x,y,z,tool,wobj\n"
+        "1.0,2.0,3.0,Tool_A,Wobj_A\n"
+        "4.0,5.0,6.0,Tool_B,Wobj_A\n",
+    )
+
+
+@pytest.fixture
+def csv_missing_xyz(tmp_path: Path) -> Path:
+    """CSV sans colonnes XYZ → doit lever ValueError."""
+    return _write_csv(
+        tmp_path / "missing_xyz.csv",
+        "speed,zone\n"
+        "v500,z0\n",
+    )
+
+
+@pytest.fixture
+def csv_empty_rows(tmp_path: Path) -> Path:
+    """CSV avec des lignes entièrement vides intercalées."""
+    return _write_csv(
+        tmp_path / "empty_rows.csv",
+        "x,y,z\n"
+        "1.0,2.0,3.0\n"
+        ",,\n"
+        "4.0,5.0,6.0\n",
+    )
+
+
+@pytest.fixture
+def csv_with_bom(tmp_path: Path) -> Path:
+    """CSV encodé UTF-8 avec BOM (export Excel Windows)."""
+    return _write_csv(
+        tmp_path / "bom.csv",
+        "x,y,z\n1.0,2.0,3.0\n",
+        encoding="utf-8-sig",
+    )
+
+
+@pytest.fixture
+def csv_full(tmp_path: Path) -> Path:
+    """CSV complet avec toutes les colonnes canoniques."""
+    return _write_csv(
+        tmp_path / "full.csv",
+        "x,y,z,q1,q2,q3,q4,move_type,speed,zone,tool,wobj\n"
+        "100.0,200.0,300.0,1.0,0.0,0.0,0.0,MoveL,v500,z10,Tool_formage,Wobj_SerreFlan\n"
+        "150.0,250.0,350.0,1.0,0.0,0.0,0.0,MoveJ,v1000,fine,Tool_formage,Wobj_SerreFlan\n",
+    )
