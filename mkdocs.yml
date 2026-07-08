@@ -1,6 +1,8 @@
 site_name: TrajCenter
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/favicon.png
 
 plugins:
   - search
@@ -9,6 +11,10 @@ plugins:
         python:
           options:
             docstring_style: google
+            show_source: true
+  - coverage:
+      page_name: coverage        #URL : /coverage/
+      html_report_dir: docs/coverage  # le rapport HTML
 
 markdown_extensions:
   - pymdownx.snippets:
@@ -19,7 +25,14 @@ nav:
   - Référence API:
     # --- AUTOGEN_API_START ---
     - Trajcenter:
+      - Converter:
+        - Base: api/trajcenter/converter/base.md
+        - Column Mapper: api/trajcenter/converter/column_mapper.md
+        - Defaults: api/trajcenter/converter/defaults.md
+        - Excel Converter: api/trajcenter/converter/excel_converter.md
+        - Mod Converter: api/trajcenter/converter/mod_converter.md
       - Core:
         - Trajectory: api/trajcenter/core/trajectory.md
 # --- AUTOGEN_API_END ---
+  - Coverage: coverage.md 
 

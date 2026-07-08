@@ -2,7 +2,7 @@
 name = "trajcenter"
 requires-python = ">= 3.11"
 version = "2.1.0"
-dependencies = ["httpx>=0.28.1,<0.29", "pandas>=3.0.3,<4", "numpy>=2.5.1,<3", "pydantic>=2", "openpyxl>=3.1.5,<4", "rich>=15.0.0,<16", "typer>=0.26.8,<0.27", "textual>=8.2.8,<9"]
+dependencies = ["httpx>=0.28.1,<0.29", "pandas>=3.0.3,<4", "numpy>=2.5.1,<3", "pydantic>=2", "openpyxl>=3.1.5,<4", "rich>=15.0.0,<16", "typer>=0.26.8,<0.27", "textual>=8.2.8,<9", "mkdocs-coverage>=2.0.0,<3"]
 
 [build-system]
 build-backend = "hatchling.build"
@@ -54,3 +54,36 @@ reportUnknownVariableType = "none"
 reportMissingTypeStubs    = "warning"
 reportAny                 = "none"
 reportCallIssue           = "none"   # ← ajoute cette ligne
+
+[tool.pytest.ini_options]
+addopts = [
+    "--cov=trajcenter",
+    "--cov-branch",
+    "--cov-report=term-missing",   # terminal avec lignes manquantes
+    "--cov-report=html:docs/coverage",  # rapport HTML navigable dans la documentation
+    "--cov-report=xml:coverage.xml", # pour GitLab CI
+]
+
+[tool.coverage.run]
+source = ["trajcenter", "tests"]   # ← analyse uniquement ces deux packages
+branch = true
+omit = [
+    ".pixi/*",
+    "*/site-packages/*",
+    "examples/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+
+[tool.coverage.html]
+directory = "docs/coverage"   # dans l'arbre docs/
+title = "TrajCenter — Coverage Report"
+
+[tool.coverage.xml]
+output = "coverage.xml"

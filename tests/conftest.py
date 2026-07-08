@@ -1,0 +1,362 @@
+# tests/conftest.py
+
+"""
+Fixtures partagées entre tous les modules de tests TrajCenter.
+
+Contient les fixtures de bas niveau (DataFrames, métadonnées)
+réutilisables par test_trajectory.py, test_mod_converter.py,
+test_excel_converter.py, etc.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+from textwrap import dedent
+
+import pandas as pd
+import pytest
+from openpyxl import Workbook
+
+from trajcenter.core.trajectory import (
+    ExternalAxisConfig,
+    SourceFormat,
+    Trajectory,
+    TrajectoryMeta,
+)
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — DataFrames
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def minimal_df() -> pd.DataFrame:
+    """DataFrame minimal avec uniquement les colonnes obligatoires."""
+    return pd.DataFrame({
+        "x":  [100.0, 200.0],
+        "y":  [150.0, 250.0],
+        "z":  [50.0,  60.0],
+        "q1": [1.0,   1.0],
+        "q2": [0.0,   0.0],
+        "q3": [0.0,   0.0],
+        "q4": [0.0,   0.0],
+    })
+
+
+@pytest.fixture
+def complete_df() -> pd.DataFrame:
+    """DataFrame complet avec toutes les colonnes CONVERTER_COLUMNS."""
+    return pd.DataFrame({
+        "x":  [100.0, 200.0],
+        "y":  [150.0, 250.0],
+        "z":  [50.0,  60.0],
+        "q1": [1.0,   1.0],
+        "q2": [0.0,   0.0],
+        "q3": [0.0,   0.0],
+        "q4": [0.0,   0.0],
+        "cf1": [0, 0],
+        "cf4": [0, 0],
+        "cf6": [0, 0],
+        "cfx": [0, 0],
+        "move_type":  ["MoveL", "MoveL"],
+        "speed":      ["v500",  "v500"],
+        "zone":       ["z10",   "z10"],
+        "tool_index": [0, 0],
+        "wobj_index": [0, 0],
+    })
+
+
+@pytest.fixture
+def complete_df_with_eax() -> pd.DataFrame:
+    """DataFrame complet avec un axe externe actif (eax_a)."""
+    return pd.DataFrame({
+        "x":  [100.0], "y": [150.0], "z": [50.0],
+        "q1": [1.0],   "q2": [0.0],  "q3": [0.0], "q4": [0.0],
+        "cf1": [0], "cf4": [0], "cf6": [0], "cfx": [0],
+        "move_type":  ["MoveL"],
+        "speed":      ["v500"],
+        "zone":       ["z10"],
+        "tool_index": [0],
+        "wobj_index": [0],
+        "eax_a":      [45.0],
+    })
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — métadonnées
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def minimal_meta() -> TrajectoryMeta:
+    """Métadonnées minimales valides."""
+    return TrajectoryMeta(name="test_traj")
+
+
+@pytest.fixture
+def complete_meta() -> TrajectoryMeta:
+    """Métadonnées complètes avec axes externes et autocomplétion."""
+    return TrajectoryMeta(
+        name="test_complet",
+        source_format=SourceFormat.RAPID,
+        source_file="sphere05mm.mod",
+        robot_model="IRB6700-205/2.80",
+        autocompleted=["speed"],
+        external_axes={
+            "eax_a": ExternalAxisConfig(
+                axis_type="rotational", unit="deg", label="Positionneur A"
+            )
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — trajectoires
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def simple_trajectory(minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame) -> Trajectory:
+    """Trajectoire simple sans axes externes."""
+    return Trajectory(
+        meta=minimal_meta,
+        points=complete_df,
+        tools=["Tool_formage"],
+        wobjs=["Wobj_SerreFlan"],
+    )
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — fichiers .mod synthétiques
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def mod_simple(tmp_path: Path) -> Path:
+    """Fichier .mod minimal avec deux MoveL et une vitesse variable."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                MoveL [[100.0,200.0,300.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+                MoveL [[150.0,250.0,350.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "simple.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_with_literal_speed(tmp_path: Path) -> Path:
+    """Fichier .mod avec vitesse littérale RAPID (v500)."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                MoveL [[10.0,20.0,30.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],v500,z10,Tool_formage\\wobj:=Wobj_SerreFlan;
+                MoveJ [[40.0,50.0,60.0],[1.0,0.0,0.0,0.0],[-1,0,1,0],[9E9,9E9,9E9,9E9,9E9,9E9]],v1000,fine,Tool_formage\\wobj:=Wobj_SerreFlan;
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "literal_speed.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_with_eax(tmp_path: Path) -> Path:
+    """Fichier .mod avec un axe externe actif (eax_a = 45.0)."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                MoveL [[100.0,200.0,300.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[45.0,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "eax.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_multiline(tmp_path: Path) -> Path:
+    """Fichier .mod avec un robtarget formaté sur plusieurs lignes."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                MoveL [[100.0,200.0,300.0],
+                       [1.0,0.0,0.0,0.0],
+                       [0,0,0,0],
+                       [9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "multiline.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_multiple_tools(tmp_path: Path) -> Path:
+    """Fichier .mod avec deux tools et deux wobjs différents."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                MoveL [[1.0,2.0,3.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_A\\wobj:=Wobj_A;
+                MoveL [[4.0,5.0,6.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_B\\wobj:=Wobj_B;
+                MoveL [[7.0,8.0,9.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_A\\wobj:=Wobj_A;
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "multi_tools.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_empty(tmp_path: Path) -> Path:
+    """Fichier .mod sans aucune instruction Move."""
+    content = dedent("""\
+        MODULE TestModule
+            PROC TestProc()
+                ! Aucune instruction Move ici
+            ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "empty.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+# ---------------------------------------------------------------------------
+# Fixtures — classeurs Excel synthétiques
+# ---------------------------------------------------------------------------
+
+
+def _make_xlsx(path: Path, sheets: dict[str, list[dict]]) -> Path:
+    """Crée un fichier .xlsx à partir d'un dict {nom_feuille: [lignes]}.
+
+    La première ligne de chaque feuille est utilisée comme en-tête
+    (clés du premier dict de la liste).
+    """
+    wb = Workbook()
+    first = True
+    for sheet_name, rows in sheets.items():
+        ws = wb.active if first else wb.create_sheet()
+        assert ws is not None
+        ws.title = sheet_name
+        first = False
+        if not rows:
+            continue
+        headers = list(rows[0].keys())
+        ws.append(headers)
+        for row in rows:
+            ws.append([row.get(h) for h in headers])
+    wb.save(path)
+    return path
+
+
+@pytest.fixture
+def xlsx_simple(tmp_path: Path) -> Path:
+    """Classeur minimal : une feuille XYZ + quaternions."""
+    return _make_xlsx(tmp_path / "simple.xlsx", {
+        "traj": [
+            {"x": 100.0, "y": 200.0, "z": 300.0,
+             "q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0},
+            {"x": 150.0, "y": 250.0, "z": 350.0,
+             "q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_xyz_only(tmp_path: Path) -> Path:
+    """Classeur XYZ sans quaternions → orientation identité par défaut."""
+    return _make_xlsx(tmp_path / "xyz_only.xlsx", {
+        "traj": [
+            {"x": 10.0, "y": 20.0, "z": 30.0},
+            {"x": 40.0, "y": 50.0, "z": 60.0},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_aliases(tmp_path: Path) -> Path:
+    """Classeur avec noms de colonnes non canoniques (alias + accents + casse)."""
+    return _make_xlsx(tmp_path / "aliases.xlsx", {
+        "traj": [
+            {"PosX": 1.0, "PosY": 2.0, "PosZ": 3.0,
+             "Vitesse": "v500", "Répère": "Wobj_A", "Outil": "Tool_A"},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_multi_traj(tmp_path: Path) -> Path:
+    """Classeur avec deux feuilles trajectoire."""
+    return _make_xlsx(tmp_path / "multi_traj.xlsx", {
+        "traj_A": [
+            {"x": 1.0, "y": 2.0, "z": 3.0},
+        ],
+        "traj_B": [
+            {"x": 4.0, "y": 5.0, "z": 6.0},
+            {"x": 7.0, "y": 8.0, "z": 9.0},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_with_tools_sheet(tmp_path: Path) -> Path:
+    """Classeur avec feuille trajectoire + feuille tools + feuille wobjs."""
+    return _make_xlsx(tmp_path / "with_refs.xlsx", {
+        "traj": [
+            {"x": 1.0, "y": 2.0, "z": 3.0, "tool": "Tool_A", "wobj": "Wobj_A"},
+            {"x": 4.0, "y": 5.0, "z": 6.0, "tool": "Tool_B", "wobj": "Wobj_A"},
+        ],
+        "tools": [
+            {"name": "Tool_A"},
+            {"name": "Tool_B"},
+        ],
+        "wobjs": [
+            {"name": "Wobj_A"},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_missing_xyz(tmp_path: Path) -> Path:
+    """Classeur sans colonnes XYZ → doit lever ValueError."""
+    return _make_xlsx(tmp_path / "missing_xyz.xlsx", {
+        "traj": [
+            {"speed": "v500", "zone": "z0"},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_with_meta_sheet(tmp_path: Path) -> Path:
+    """Classeur avec une feuille meta (doit être ignorée silencieusement)."""
+    return _make_xlsx(tmp_path / "with_meta.xlsx", {
+        "traj": [
+            {"x": 1.0, "y": 2.0, "z": 3.0},
+        ],
+        "meta": [
+            {"key": "author", "value": "test"},
+        ],
+    })
+
+
+@pytest.fixture
+def xlsx_empty_rows(tmp_path: Path) -> Path:
+    """Classeur avec des lignes entièrement vides intercalées."""
+    wb = Workbook()
+    ws = wb.active
+    assert ws is not None
+    ws.title = "traj"
+    ws.append(["x", "y", "z"])
+    ws.append([1.0, 2.0, 3.0])
+    ws.append([None, None, None])  # ligne vide
+    ws.append([4.0, 5.0, 6.0])
+    wb.save(tmp_path / "empty_rows.xlsx")
+    return tmp_path / "empty_rows.xlsx"

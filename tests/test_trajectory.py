@@ -14,115 +14,23 @@ Couvre :
 
 from __future__ import annotations
 
+import io
 import json
 import zipfile
 from pathlib import Path
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 import pytest
 
 from trajcenter.core.trajectory import (
     CONVERTER_COLUMNS,
-    EXTERNAL_AXIS_COLUMNS,
-    REQUIRED_COLUMNS,
     ExternalAxisConfig,
-    MoveType,
     SourceFormat,
     Trajectory,
     TrajectoryMeta,
 )
-
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-
-@pytest.fixture
-def minimal_df() -> pd.DataFrame:
-    """DataFrame minimal avec uniquement les colonnes obligatoires."""
-    return pd.DataFrame({
-        "x": [100.0, 200.0],
-        "y": [150.0, 250.0],
-        "z": [50.0,  60.0],
-        "q1": [1.0, 1.0],
-        "q2": [0.0, 0.0],
-        "q3": [0.0, 0.0],
-        "q4": [0.0, 0.0],
-    })
-
-
-@pytest.fixture
-def complete_df() -> pd.DataFrame:
-    """DataFrame complet avec toutes les colonnes CONVERTER_COLUMNS."""
-    return pd.DataFrame({
-        "x": [100.0, 200.0],
-        "y": [150.0, 250.0],
-        "z": [50.0,  60.0],
-        "q1": [1.0, 1.0],
-        "q2": [0.0, 0.0],
-        "q3": [0.0, 0.0],
-        "q4": [0.0, 0.0],
-        "cf1": [0, 0],
-        "cf4": [0, 0],
-        "cf6": [0, 0],
-        "cfx": [0, 0],
-        "move_type":  ["MoveL", "MoveL"],
-        "speed":      ["v500", "v500"],
-        "zone":       ["z10",  "z10"],
-        "tool_index": [0, 0],
-        "wobj_index": [0, 0],
-    })
-
-
-@pytest.fixture
-def complete_df_with_eax() -> pd.DataFrame:
-    """DataFrame complet avec un axe externe actif (eax_a)."""
-    return pd.DataFrame({
-        "x": [100.0], "y": [150.0], "z": [50.0],
-        "q1": [1.0], "q2": [0.0], "q3": [0.0], "q4": [0.0],
-        "cf1": [0], "cf4": [0], "cf6": [0], "cfx": [0],
-        "move_type":  ["MoveL"],
-        "speed":      ["v500"],
-        "zone":       ["z10"],
-        "tool_index": [0],
-        "wobj_index": [0],
-        "eax_a":      [45.0],
-    })
-
-
-@pytest.fixture
-def minimal_meta() -> TrajectoryMeta:
-    """Métadonnées minimales valides."""
-    return TrajectoryMeta(name="test_traj")
-
-
-@pytest.fixture
-def complete_meta() -> TrajectoryMeta:
-    """Métadonnées complètes avec axes externes et autocomplétion."""
-    return TrajectoryMeta(
-        name="test_complet",
-        source_format=SourceFormat.RAPID,
-        source_file="sphere05mm.mod",
-        robot_model="IRB6700-205/2.80",
-        autocompleted=["speed"],
-        external_axes={
-            "eax_a": ExternalAxisConfig(
-                axis_type="rotational", unit="deg", label="Positionneur A"
-            )
-        },
-    )
-
-
-@pytest.fixture
-def simple_trajectory(minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame) -> Trajectory:
-    """Trajectoire simple sans axes externes."""
-    return Trajectory(
-        meta=minimal_meta,
-        points=complete_df,
-        tools=["Tool_formage"],
-        wobjs=["Wobj_SerreFlan"],
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -229,7 +137,7 @@ class TestTrajectoryValidation:
     ) -> None:
         """Un tool_index hors bornes lève ValueError."""
         df = complete_df.copy()
-        df["tool_index"] = 5  # tools ne contiendra qu'un seul élément
+        df["tool_index"] = 5
         with pytest.raises(ValueError, match="tool_index max"):
             Trajectory(meta=minimal_meta, points=df, tools=["Tool_formage"])
 
@@ -432,7 +340,6 @@ class TestTrajectorySaveLoad:
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         loaded = Trajectory.load(dest)
-
         pd.testing.assert_series_equal(
             loaded.points["x"].reset_index(drop=True),
             simple_trajectory.points["x"].reset_index(drop=True),
@@ -440,7 +347,7 @@ class TestTrajectorySaveLoad:
         )
 
     def test_load_autocompleted_preserved(
-        self, tmp_path: Path, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
+        self, tmp_path: Path, complete_df: pd.DataFrame
     ) -> None:
         """Le champ autocompleted est préservé après save/load."""
         meta = TrajectoryMeta(
@@ -468,7 +375,6 @@ class TestTrajectorySaveLoad:
         dest = tmp_path / "bad.trajcenter"
         with zipfile.ZipFile(dest, "w") as zf:
             zf.writestr("meta.json", "{}")
-            # points.parquet absent intentionnellement
         with pytest.raises(ValueError, match="entrées manquantes"):
             Trajectory.load(dest)
 
@@ -479,21 +385,14 @@ class TestTrajectorySaveLoad:
         complete_df: pd.DataFrame,
     ) -> None:
         """load() tolère l'absence de tools.json et wobjs.json (anciens fichiers)."""
-        import io
-        import pyarrow as pa
-        import pyarrow.parquet as pq
-
         dest = tmp_path / "old.trajcenter"
         traj = Trajectory(meta=minimal_meta, points=complete_df)
-
-        # Écriture manuelle sans tools.json / wobjs.json
         with zipfile.ZipFile(dest, "w") as zf:
             zf.writestr("meta.json", traj.meta.model_dump_json())
             buf = io.BytesIO()
             table = pa.Table.from_pandas(traj.points, preserve_index=False)
             pq.write_table(table, buf, compression="zstd")
             zf.writestr("points.parquet", buf.getvalue())
-
         loaded = Trajectory.load(dest)
         assert loaded.tools == []
         assert loaded.wobjs == []

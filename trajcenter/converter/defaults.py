@@ -76,11 +76,11 @@ class ConversionDefaults(BaseModel):
     """
 
     move_type: str = Field(
-        "MoveL",
+        "MoveJ",
         description="Type de mouvement RAPID par défaut : 'MoveL', 'MoveJ' ou 'MoveC'.",
     )
     speed: str = Field(
-        "v500",
+        "v10",
         description="Vitesse RAPID par défaut (speeddata). Ex. : 'v500', 'v1000'.",
     )
     zone: str = Field(
