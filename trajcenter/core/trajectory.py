@@ -106,6 +106,7 @@ class SourceFormat(StrEnum):
     CSV    = "csv"
     RAPID  = "rapid"
     MANUAL = "manual"
+    TRAJCENTER = "trajcenter"
 
 
 class MoveType(StrEnum):

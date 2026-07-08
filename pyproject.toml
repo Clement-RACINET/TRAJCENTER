@@ -63,6 +63,8 @@ addopts = [
     "--cov-report=html:docs/coverage",  # rapport HTML navigable dans la documentation
     "--cov-report=xml:coverage.xml", # pour GitLab CI
 ]
+testpaths = ["tests"]
+
 
 [tool.coverage.run]
 source = ["trajcenter", "tests"]   # ← analyse uniquement ces deux packages

@@ -9,6 +9,7 @@
 # propriétaires liées aux pièces usinées. Ils ne doivent pas être versionnés.
 # -----------------------------------------------------------------------------
 trajectory_files/
+trajectory_store/
 
 
 # -----------------------------------------------------------------------------
