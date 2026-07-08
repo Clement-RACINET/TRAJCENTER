@@ -135,10 +135,27 @@ class TestExcelConverter:
         for _, row in traj.points.iterrows():
             assert traj.tools[int(row["tool_index"])] in ("Tool_A", "Tool_B")
 
-    # --- Feuille meta ignorée ---
+    # --- Feuille meta ---
 
-    def test_meta_sheet_ignored(self, xlsx_with_meta_sheet: Path) -> None:
+    def test_meta_sheet_not_a_traj_sheet(self, xlsx_with_meta_sheet: Path) -> None:
+        """La feuille meta n'est pas traitée comme une feuille trajectoire."""
         assert ExcelConverter().convert(xlsx_with_meta_sheet).point_count == 1
+
+    def test_meta_sheet_name_override(self, xlsx_with_full_meta: Path) -> None:
+        """La feuille meta surcharge le nom de la trajectoire."""
+        traj = ExcelConverter().convert(xlsx_with_full_meta)
+        assert traj.meta.name == "Trajectoire_Soudure"
+
+    def test_meta_sheet_robot_model(self, xlsx_with_full_meta: Path) -> None:
+        """La feuille meta alimente robot_model."""
+        traj = ExcelConverter().convert(xlsx_with_full_meta)
+        assert traj.meta.robot_model == "IRB6700-205/2.80"
+
+    def test_meta_sheet_extra_fields(self, xlsx_with_full_meta: Path) -> None:
+        """Les champs inconnus de la feuille meta vont dans extra{}."""
+        traj = ExcelConverter().convert(xlsx_with_full_meta)
+        assert traj.meta.extra.get("author") == "Jean Dupont"
+
 
     # --- Lignes vides ---
 

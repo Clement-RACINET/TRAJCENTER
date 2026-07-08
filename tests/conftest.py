@@ -473,3 +473,15 @@ def csv_full(tmp_path: Path) -> Path:
         "100.0,200.0,300.0,1.0,0.0,0.0,0.0,MoveL,v500,z10,Tool_formage,Wobj_SerreFlan\n"
         "150.0,250.0,350.0,1.0,0.0,0.0,0.0,MoveJ,v1000,fine,Tool_formage,Wobj_SerreFlan\n",
     )
+
+@pytest.fixture
+def xlsx_with_full_meta(tmp_path: Path) -> Path:
+    """Classeur avec feuille meta complète (name, robot_model, champ custom)."""
+    return _make_xlsx(tmp_path / "full_meta.xlsx", {
+        "traj": [{"x": 1.0, "y": 2.0, "z": 3.0}],
+        "meta": [
+            {"key": "name",        "value": "Trajectoire_Soudure"},
+            {"key": "robot_model", "value": "IRB6700-205/2.80"},
+            {"key": "author",      "value": "Jean Dupont"},
+        ],
+    })

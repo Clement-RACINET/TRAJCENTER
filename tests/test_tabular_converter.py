@@ -234,6 +234,24 @@ class TestTabularConverterLogic:
         traj = CsvConverter().convert(csv)
         assert "Wobj_A" in traj.wobjs
 
+    # --- Feuilles de meta ---
+
+    def test_no_meta_overrides_name_is_stem(self, tmp_path: Path) -> None:
+        """Sans feuille meta, le nom est le stem du fichier source."""
+        csv = _write_csv(tmp_path, "ma_traj.csv", "x,y,z\n1.0,2.0,3.0\n")
+        traj = CsvConverter().convert(csv)
+        assert traj.meta.name == "ma_traj"
+
+    def test_no_meta_overrides_robot_model_is_none(self, tmp_path: Path) -> None:
+        """Sans feuille meta, robot_model est None."""
+        csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
+        assert CsvConverter().convert(csv).meta.robot_model is None
+
+    def test_no_meta_overrides_extra_is_empty(self, tmp_path: Path) -> None:
+        """Sans feuille meta, extra{} est vide."""
+        csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
+        assert CsvConverter().convert(csv).meta.extra == {}
+
     # --- Lignes vides ---
 
     def test_empty_rows_dropped(self, tmp_path: Path) -> None:

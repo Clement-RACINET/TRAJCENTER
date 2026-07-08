@@ -22,11 +22,19 @@ Architecture
 
 Feuilles réservées
 -------------------
-- ``tools`` / ``tool``       : table des noms de tools (colonne ``name``)
-- ``wobjs`` / ``wobj``       : table des noms de wobjs (colonne ``name``)
-- ``meta`` / ``metadata``    : ignorée silencieusement
+- ``tools`` / ``tool``    : table des noms de tools (colonne ``name``)
+- ``wobjs`` / ``wobj``    : table des noms de wobjs (colonne ``name``)
+- ``meta`` / ``metadata`` : métadonnées clé/valeur (lues, pas une trajectoire)
 
 Toute autre feuille est traitée comme une feuille trajectoire.
+
+Feuille meta
+-------------
+La feuille ``meta`` est attendue avec deux colonnes ``key`` et ``value``.
+Les champs reconnus (``name``, ``robot_model``) alimentent :class:`TrajectoryMeta`.
+Les champs inconnus sont stockés dans :attr:`TrajectoryMeta.extra`.
+Les champs recalculés à l'import (``source_format``, ``autocompleted``,
+``created_at``, ``version``, ``point_count``) sont ignorés silencieusement.
 
 Colonnes obligatoires
 ----------------------
@@ -70,6 +78,19 @@ _IDENTITY_QUATERNION: dict[str, float] = {
 #: Noms de feuilles "par défaut" — le nom de feuille ne sera pas suffixé au stem.
 _SHEET_DEFAULT_NAMES: frozenset[str] = frozenset({
     "feuil1", "sheet1", "traj", "trajectoire", "sheet",
+})
+
+#: Champs de TrajectoryMeta directement applicables depuis la feuille meta.
+#: Tout champ inconnu va dans extra{}.
+_META_APPLICABLE_FIELDS: frozenset[str] = frozenset({
+    "name", "robot_model",
+})
+
+#: Champs de TrajectoryMeta à ignorer explicitement à la relecture
+#: (recalculés à l'import ou non pertinents).
+_META_IGNORED_FIELDS: frozenset[str] = frozenset({
+    "source_format", "autocompleted", "created_at", "version",
+    "point_count", "external_axes", "source_file",
 })
 
 
@@ -164,8 +185,9 @@ class _TabularConverter(BaseConverter):
         all_sheets = self._read_sheets(source)
         sheet_names = list(all_sheets.keys())
 
-        shared_tools = self._extract_ref_table(all_sheets, _SHEET_TOOLS, "name")
-        shared_wobjs = self._extract_ref_table(all_sheets, _SHEET_WOBJS, "name")
+        shared_tools    = self._extract_ref_table(all_sheets, _SHEET_TOOLS, "name")
+        shared_wobjs    = self._extract_ref_table(all_sheets, _SHEET_WOBJS, "name")
+        meta_overrides  = self._extract_meta_overrides(all_sheets)
 
         traj_sheets = [
             s for s in sheet_names
@@ -187,6 +209,7 @@ class _TabularConverter(BaseConverter):
                     source=source,
                     shared_tools=shared_tools,
                     shared_wobjs=shared_wobjs,
+                    meta_overrides=meta_overrides,
                 )
                 trajectories.append(traj)
             except ValueError as exc:
@@ -222,15 +245,17 @@ class _TabularConverter(BaseConverter):
         source: Path,
         shared_tools: list[str],
         shared_wobjs: list[str],
+        meta_overrides: dict[str, str],
     ) -> Trajectory:
         """Convertit un DataFrame brut en :class:`~trajcenter.core.trajectory.Trajectory`.
 
         Args:
-            raw_df:        DataFrame brut issu de la lecture du fichier.
-            sheet_name:    Nom de la feuille (pour les messages d'erreur et le nommage).
-            source:        Chemin du fichier source (pour les métadonnées).
-            shared_tools:  Table tools partagée (feuille dédiée), peut être vide.
-            shared_wobjs:  Table wobjs partagée (feuille dédiée), peut être vide.
+            raw_df:         DataFrame brut issu de la lecture du fichier.
+            sheet_name:     Nom de la feuille (pour les messages d'erreur et le nommage).
+            source:         Chemin du fichier source (pour les métadonnées).
+            shared_tools:   Table tools partagée (feuille dédiée), peut être vide.
+            shared_wobjs:   Table wobjs partagée (feuille dédiée), peut être vide.
+            meta_overrides: Dict clé/valeur issu de la feuille meta, peut être vide.
 
         Returns:
             Objet :class:`~trajcenter.core.trajectory.Trajectory` valide et complet.
@@ -271,20 +296,71 @@ class _TabularConverter(BaseConverter):
             c for c in autocompleted if c not in autocompleted_quat
         ]
 
-        traj_name = (
+        # Nom : meta_overrides["name"] > nom calculé depuis stem + sheet
+        traj_name: str = meta_overrides.get("name") or (
             source.stem
             if sheet_name.casefold() in _SHEET_DEFAULT_NAMES
             else f"{source.stem}_{sheet_name}"
         )
+
+        # Champs directs applicables depuis meta
+        robot_model: str | None = meta_overrides.get("robot_model") or None
+
+        # Champs inconnus → extra{} (ni applicables, ni ignorés explicitement)
+        extra: dict[str, str | int | float | bool | None] = {
+            k: v for k, v in meta_overrides.items()
+            if k not in _META_APPLICABLE_FIELDS
+            and k not in _META_IGNORED_FIELDS
+        }
 
         meta = TrajectoryMeta(
             name=traj_name,
             source_file=source.name,
             source_format=self._source_format,
             autocompleted=all_autocompleted,
+            robot_model=robot_model,
+            extra=extra,
         )
 
         return Trajectory(meta=meta, points=df, tools=tools, wobjs=wobjs)
+
+    @staticmethod
+    def _extract_meta_overrides(
+        all_sheets: dict[str, pd.DataFrame],
+    ) -> dict[str, str]:
+        """Lit la feuille meta (format clé/valeur) et retourne un dict ``{key: value}``.
+
+        La feuille est attendue avec deux colonnes ``key`` et ``value``
+        (insensible à la casse). Les lignes avec clé ou valeur vide sont ignorées.
+        Si la feuille est absente ou mal formée, retourne un dict vide
+        silencieusement.
+
+        Args:
+            all_sheets: Toutes les feuilles du fichier source.
+
+        Returns:
+            Dict ``{clé_normalisée: valeur_str}``, jamais ``None``.
+        """
+        for sheet_name, df in all_sheets.items():
+            if sheet_name.casefold() not in _SHEET_META:
+                continue
+
+            df_meta = df.copy()
+            df_meta.columns = pd.Index([str(c).casefold() for c in df_meta.columns])
+
+            if "key" not in df_meta.columns or "value" not in df_meta.columns:
+                return {}
+
+            result: dict[str, str] = {}
+            for _, row in df_meta.iterrows():
+                k = str(row["key"]).strip().casefold() if pd.notna(row["key"]) else ""
+                v = str(row["value"]).strip() if pd.notna(row["value"]) else ""
+                if k and v:
+                    result[k] = v
+
+            return result
+
+        return {}
 
     @staticmethod
     def _extract_ref_table(
