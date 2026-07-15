@@ -1,28 +1,44 @@
 #!/usr/bin/env python3
-# contrib/fix_init.py
-"""Audit and auto-fix all __init__.py files in abb_rws_client/ and tests/.
+# utils/fix_init.py
+"""Audit and auto-fix all ``__init__.py`` files in a Python project.
 
-For each Python package directory (containing .py files or sub-packages):
-  - Creates __init__.py if missing.
-  - Rewrites abb_rws_client/rws/*/__init__.py with correct imports + __all__.
-  - Rewrites abb_rws_client/rws/__init__.py with explicit sub-package re-exports.
-  - Rewrites abb_rws_client/highlevel/__init__.py with public API exports.
-  - Rewrites abb_rws_client/__init__.py with public API exports.
-  - Rewrites abb_rws_client/_core/__init__.py with core exports.
-  - Creates minimal __init__.py in tests/ sub-directories (no imports).
+Author: Clement RACINET
 
-Discovery strategy:
-  All public names are discovered automatically via AST scanning — no
-  manual declaration required. The only exception is _CORE_PUBLIC_EXPORTS,
-  which filters the _core/ API surface to avoid exposing private helpers.
+For each Python package directory (containing ``.py`` files or
+sub-packages):
+
+- Creates ``__init__.py`` if missing.
+- Rewrites each sub-package ``__init__.py`` with correct imports and
+  ``__all__``, discovered automatically via AST scanning.
+- Creates minimal ``__init__.py`` markers in ``tests/`` sub-directories
+  (no imports).
+
+Design goals
+------------
+- **Zero hard-coded dictionaries** — all public names are discovered
+  automatically via AST.  The only manual knob is an optional
+  per-directory *private name blocklist* (``PRIVATE_NAMES_BY_DIR``)
+  used to prevent internal helpers from leaking into the public API.
+- **Fully generic** — point ``PKG_ROOT`` and ``TESTS_ROOT`` at any
+  project and the script works without further edits.
+- **Idempotent** — running twice produces no changes.
+- **ruff-clean output** — import blocks are sorted (isort / ruff I001),
+  line length ≤ 88 chars, no F811 redefinition.
+
+Configuration
+-------------
+Edit the ``# --- PROJECT CONFIGURATION ---`` section below to adapt
+the script to a different project.  No other section needs to change.
 
 Usage:
-    pixi run python contrib/fix_init.py
-    pixi run python contrib/fix_init.py --dry-run
+    python utils/fix_init.py
+    python utils/fix_init.py --dry-run
+    python utils/fix_init.py --skip-tests
 
 Args:
-    --dry-run: Print what would be written without touching the filesystem.
-    --skip-tests: Skip processing of tests/ sub-directories.
+    --dry-run:     Print what would be written without touching the
+                   filesystem.
+    --skip-tests:  Skip processing of ``tests/`` sub-directories.
 """
 
 from __future__ import annotations
@@ -30,62 +46,75 @@ from __future__ import annotations
 import argparse
 import ast
 import io
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Configuration
+# --- PROJECT CONFIGURATION --------------------------------------------------
 # ---------------------------------------------------------------------------
+# These are the only values that need to change when adapting this script
+# to a different project.
 
-REPO_ROOT = Path(__file__).parent.parent
-PKG_ROOT = REPO_ROOT / "abb_rws_client"
-TESTS_ROOT = REPO_ROOT / "tests"
+#: Absolute path to the repository root.
+REPO_ROOT: Path = Path(__file__).parent.parent
 
-# Only _core/ requires an explicit allowlist because its files contain
-# private helpers (_build_auth, _raise_for_status, …) that must NOT be
-# re-exported. Every other sub-package uses full AST auto-discovery.
-_CORE_PUBLIC_EXPORTS: dict[str, list[str]] = {
-    "client": ["RWSClient", "RWSClientSync"],
-    "env": ["load_env"],
-    "exceptions": [
-        "CTRL_CODES",
-        "MastershipDenied",
-        "MastershipError",
-        "MastershipNotHeld",
-        "RWSAuthenticationError",
-        "RWSConnectionError",
-        "RWSError",
-        "RWSHTTPError",
-        "RWSNotFoundError",
-        "RWSTimeoutError",
-        "RWSValueError",
-    ],
-    "logging": ["configure_logging", "get_logger"],
-    "serializers": [
-        "RapidValue",
-        "RobTarget",
-        "robtarget_to_rws",
-        "rws_to_robtarget",
-    ],
+#: Root package directory (the one that contains ``__init__.py``).
+PKG_ROOT: Path = REPO_ROOT / "trajcenter"
+
+#: Root of the test suite.
+TESTS_ROOT: Path = REPO_ROOT / "tests"
+
+#: Package version string injected into the top-level ``__init__.py``.
+PKG_VERSION: str = "2.0.0"
+
+#: One-line description injected into the top-level ``__init__.py``.
+PKG_DESCRIPTION: str = (
+    "TrajCenter v2 — trajectory management and RWS transfer for ABB robots."
+)
+
+#: Per-directory blocklist of names that must NOT be re-exported even
+#: though they are technically public (no leading underscore).
+#:
+#: Keys are paths **relative to PKG_ROOT** (e.g. ``"_core"``).
+#: Values are sets of names to suppress.
+#:
+#: Leave empty (``{}``) for full auto-discovery with no filtering.
+PRIVATE_NAMES_BY_DIR: dict[str, set[str]] = {
+    # Example — uncomment and adapt if needed:
+    # "_core": {"build_auth", "raise_for_status"},
 }
 
+#: Directories inside PKG_ROOT that should be treated as **leaf**
+#: packages (no recursive sub-package discovery).  The default covers
+#: the common case where every first-level sub-package is flat.
+#: Add nested paths (e.g. ``"rws/rapid"``) to handle deeper trees.
+FLAT_SUBDIRS: set[str] = set()
+
 # ---------------------------------------------------------------------------
-# Helpers
+# --- END OF CONFIGURATION ---------------------------------------------------
 # ---------------------------------------------------------------------------
 
 
-def _collect_public_names(py_file: Path) -> list[str]:
-    """Parse a .py file with AST and return top-level public names only.
+# ---------------------------------------------------------------------------
+# AST helpers
+# ---------------------------------------------------------------------------
 
-    Only inspects the module's top-level body (no recursion).
-    Excludes imports — only collects definitions (functions, classes,
-    assignments) that are genuinely defined in this module.
+
+def _collect_public_names(py_file: Path, blocklist: set[str]) -> list[str]:
+    """Parse *py_file* with AST and return top-level public names.
+
+    Only top-level definitions are inspected (functions, classes,
+    annotated assignments, plain assignments).  Import statements are
+    intentionally ignored so that re-exported names from dependencies
+    do not pollute ``__all__``.
 
     Args:
         py_file: Path to the Python source file.
+        blocklist: Set of names to suppress even if they are public.
 
     Returns:
-        Deduplicated, sorted list of public names (no leading underscore).
+        Deduplicated, sorted list of public names (no leading
+        underscore, not in *blocklist*).
     """
     try:
         tree = ast.parse(py_file.read_text(encoding="utf-8"))
@@ -110,29 +139,68 @@ def _collect_public_names(py_file: Path) -> list[str]:
             case ast.AnnAssign(target=ast.Name(id=n)):
                 if not n.startswith("_"):
                     names.append(n)
-            # ast.ImportFrom and ast.Import → intentionally ignored
+            # ast.ImportFrom / ast.Import → intentionally ignored
 
     seen: set[str] = set()
     result: list[str] = []
     for n in names:
+        if n not in seen and n not in blocklist:
+            seen.add(n)
+            result.append(n)
+    return sorted(result)
+
+
+def _collect_dir_public_names(pkg_dir: Path) -> list[str]:
+    """Collect all public names from every ``.py`` file in *pkg_dir*.
+
+    Applies the blocklist declared in :data:`PRIVATE_NAMES_BY_DIR` for
+    this directory.
+
+    Args:
+        pkg_dir: Package directory to scan (non-recursive).
+
+    Returns:
+        Deduplicated, sorted list of public names.
+    """
+    rel_key = pkg_dir.relative_to(PKG_ROOT).as_posix()
+    blocklist = PRIVATE_NAMES_BY_DIR.get(rel_key, set())
+
+    all_names: list[str] = []
+    for py_file in sorted(pkg_dir.iterdir()):
+        if (
+            py_file.is_file()
+            and py_file.suffix == ".py"
+            and py_file.name != "__init__.py"
+        ):
+            all_names.extend(_collect_public_names(py_file, blocklist))
+
+    # Deduplicate preserving first-occurrence order, then sort
+    seen: set[str] = set()
+    result: list[str] = []
+    for n in all_names:
         if n not in seen:
             seen.add(n)
             result.append(n)
     return sorted(result)
 
 
-def _format_import(module: str, names: list[str]) -> str:
-    """Format a single from-import statement, wrapping beyond 88 chars.
+# ---------------------------------------------------------------------------
+# Formatting helpers
+# ---------------------------------------------------------------------------
 
-    Names are sorted alphabetically to satisfy isort (ruff I001).
+
+def _format_import(module: str, names: list[str]) -> str:
+    """Format a single ``from … import …`` statement.
+
+    Names are sorted alphabetically (isort / ruff I001 compliant).
+    Lines longer than 88 characters are wrapped with parentheses.
 
     Args:
-        module: The module to import from (e.g. '.backup').
-        names: List of names to import (order does not matter).
+        module: The module to import from (e.g. ``".converter"``).
+        names: List of names to import.
 
     Returns:
-        A formatted import string, single-line or parenthesised multi-line.
-        Empty string if names is empty.
+        Formatted import string, or empty string when *names* is empty.
     """
     if not names:
         return ""
@@ -150,15 +218,15 @@ def _format_import(module: str, names: list[str]) -> str:
 
 
 def _format_all(names: list[str]) -> str:
-    """Format a deduplicated, sorted list of names for __all__.
+    """Format a sorted, deduplicated list of names for ``__all__``.
 
     Args:
         names: Raw list of names (may contain duplicates).
 
     Returns:
-        Indented string of quoted names with trailing commas,
-        ready to be embedded inside ``__all__ = [\\n    ...\\n]``.
-        Empty string if names is empty.
+        Indented string of quoted names with trailing commas, ready
+        to be embedded inside ``__all__ = [\\n    ...\\n]``.
+        Empty string when *names* is empty.
     """
     unique = sorted(set(names))
     if not unique:
@@ -166,18 +234,24 @@ def _format_all(names: list[str]) -> str:
     return "\n    ".join(f'"{n}",' for n in unique)
 
 
-def _write(path: Path, content: str, dry_run: bool) -> None:
-    """Write content to path, or print it in dry-run mode.
+# ---------------------------------------------------------------------------
+# Filesystem helpers
+# ---------------------------------------------------------------------------
 
-    Compares existing content before writing to report the actual status:
-    - [NEW]       file did not exist
-    - [UNCHANGED] content is identical, no write performed
-    - [UPDATED]   content changed, file rewritten
+
+def _write(path: Path, content: str, dry_run: bool) -> None:
+    """Write *content* to *path*, or print it in dry-run mode.
+
+    Reports one of three statuses:
+
+    - ``[NEW]``       — file did not exist.
+    - ``[UNCHANGED]`` — content is identical, no write performed.
+    - ``[UPDATED]``   — content changed, file rewritten.
 
     Args:
         path: Destination file path.
         content: File content to write.
-        dry_run: If True, only print; do not write.
+        dry_run: When ``True``, only print; do not write.
     """
     rel = path.relative_to(REPO_ROOT)
 
@@ -204,13 +278,16 @@ def _write(path: Path, content: str, dry_run: bool) -> None:
 
 
 def _is_package_dir(directory: Path) -> bool:
-    """Return True if directory contains .py files or sub-packages.
+    """Return ``True`` if *directory* qualifies as a Python package.
+
+    A directory qualifies when it contains at least one ``.py`` file
+    (excluding ``__init__.py``) or at least one sub-package.
 
     Args:
         directory: Directory to inspect.
 
     Returns:
-        True if the directory qualifies as a Python package.
+        ``True`` if the directory qualifies as a Python package.
     """
     if not directory.is_dir():
         return False
@@ -228,15 +305,16 @@ def _is_package_dir(directory: Path) -> bool:
 
 
 def _collect_test_dirs(root: Path) -> list[Path]:
-    """Recursively collect all sub-directories of tests/ containing .py files.
+    """Recursively collect all ``tests/`` sub-directories with ``.py`` files.
 
-    Ignores hidden directories and __pycache__.
+    Ignores hidden directories and ``__pycache__``.
 
     Args:
-        root: Root of the tests/ directory.
+        root: Root of the ``tests/`` directory.
 
     Returns:
-        Sorted list of directories that contain at least one .py file.
+        Sorted list of directories containing at least one ``.py``
+        file.
     """
     result: list[Path] = []
     for d in sorted(root.rglob("*")):
@@ -250,23 +328,27 @@ def _collect_test_dirs(root: Path) -> list[Path]:
 
 
 # ---------------------------------------------------------------------------
-# Generators
+# __init__.py generators
 # ---------------------------------------------------------------------------
 
 
-def _gen_rws_submodule_init(pkg_dir: Path) -> str:
-    """Generate __init__.py for any flat sub-package via AST auto-discovery.
+def _gen_subpkg_init(pkg_dir: Path) -> str:
+    """Generate ``__init__.py`` for a flat sub-package via AST auto-discovery.
 
-    Scans all .py files (excluding __init__.py) in the directory,
-    extracts public names via AST, and generates imports + __all__.
-    No manual declaration required.
+    Scans all ``.py`` files (excluding ``__init__.py``) in *pkg_dir*,
+    extracts public names via AST, and generates imports + ``__all__``.
+    Applies :data:`PRIVATE_NAMES_BY_DIR` blocklist for this directory.
 
     Args:
         pkg_dir: Path to the sub-package directory.
 
     Returns:
-        Complete __init__.py content as a string.
+        Complete ``__init__.py`` content as a string.
     """
+    rel = pkg_dir.relative_to(PKG_ROOT).as_posix()
+    rel_key = rel
+    blocklist = PRIVATE_NAMES_BY_DIR.get(rel_key, set())
+
     py_files = sorted(
         f
         for f in pkg_dir.iterdir()
@@ -277,7 +359,7 @@ def _gen_rws_submodule_init(pkg_dir: Path) -> str:
     all_names: list[str] = []
 
     for py_file in py_files:
-        names = _collect_public_names(py_file)
+        names = _collect_public_names(py_file, blocklist)
         if names:
             block = _format_import(f".{py_file.stem}", names)
             if block:
@@ -287,13 +369,13 @@ def _gen_rws_submodule_init(pkg_dir: Path) -> str:
     imports_block = (
         "\n".join(import_blocks) if import_blocks else "# No public symbols"
     )
-    rel = pkg_dir.relative_to(PKG_ROOT).as_posix()
+    pkg_name = PKG_ROOT.name
 
     return f"""\
-# abb_rws_client/{rel}/__init__.py
+# {pkg_name}/{rel}/__init__.py
 \"\"\"Public re-exports for the {rel} sub-package.
 
-Auto-generated by contrib/fix_init.py — do not edit manually.
+Auto-generated by utils/fix_init.py — do not edit manually.
 \"\"\"
 
 from __future__ import annotations
@@ -306,31 +388,35 @@ __all__ = [
 """
 
 
-def _gen_rws_init(rws_dir: Path) -> str:
-    """Generate __init__.py for abb_rws_client/rws/ via AST auto-discovery.
+def _gen_nested_subpkg_init(pkg_dir: Path) -> str:
+    """Generate ``__init__.py`` for a nested sub-package (sub-packages + files).
 
-    Collects all public names from every sub-package AND flat .py files
-    in rws/, merges them into a single sorted import block, and deduplicates
-    names that appear in multiple modules (keeping the first occurrence by
-    alphabetical module order to avoid F811 redefinition errors).
+    Collects public names from:
+
+    1. All ``.py`` files directly in *pkg_dir* (excluding
+       ``__init__.py``).
+    2. All immediate sub-packages (one level deep).
+
+    Names are deduplicated: when the same name appears in multiple
+    modules, the first occurrence in alphabetical module order wins
+    (avoids ruff F811 redefinition errors).
 
     Args:
-        rws_dir: Path to abb_rws_client/rws/.
+        pkg_dir: Path to the nested sub-package directory.
 
     Returns:
-        Complete __init__.py content as a string.
+        Complete ``__init__.py`` content as a string.
     """
-    # ── Step 1: collect all (module_stem, [names]) pairs, sorted alpha ────
-    # Mix sub-packages and flat .py files in a single sorted pass so that
-    # the import order is strictly alphabetical → satisfies ruff I001.
+    rel = pkg_dir.relative_to(PKG_ROOT).as_posix()
+    rel_key = rel
+    blocklist = PRIVATE_NAMES_BY_DIR.get(rel_key, set())
+    pkg_name = PKG_ROOT.name
 
     entries: list[tuple[str, list[str]]] = []
 
     # Sub-packages (directories)
-    for sub in sorted(rws_dir.iterdir()):
-        if not sub.is_dir():
-            continue
-        if sub.name.startswith("_") or sub.name.startswith("."):
+    for sub in sorted(pkg_dir.iterdir()):
+        if not sub.is_dir() or sub.name.startswith(("_", ".")):
             continue
         sub_names: list[str] = []
         for py_file in sorted(sub.iterdir()):
@@ -339,97 +425,50 @@ def _gen_rws_init(rws_dir: Path) -> str:
                 and py_file.suffix == ".py"
                 and py_file.name != "__init__.py"
             ):
-                sub_names.extend(_collect_public_names(py_file))
+                sub_names.extend(_collect_public_names(py_file, blocklist))
         if sub_names:
             entries.append((sub.name, sorted(set(sub_names))))
 
-    # Flat .py files directly in rws/
-    for py_file in sorted(rws_dir.iterdir()):
+    # Flat .py files directly in pkg_dir
+    for py_file in sorted(pkg_dir.iterdir()):
         if (
             py_file.is_file()
             and py_file.suffix == ".py"
             and py_file.name != "__init__.py"
         ):
-            names = _collect_public_names(py_file)
+            names = _collect_public_names(py_file, blocklist)
             if names:
                 entries.append((py_file.stem, names))
 
-    # Sort all entries alphabetically by module stem → ruff I001 compliant
+    # Sort alphabetically → ruff I001 compliant
     entries.sort(key=lambda x: x[0])
 
-    # ── Step 2: deduplicate — first module (alpha order) wins ─────────────
-    # When the same function name exists in two modules (e.g. get_robtarget
-    # in both rapid/tasks.py and motionsystem.py), only the first occurrence
-    # (alphabetically) is kept to avoid F811 redefinition errors.
+    # Deduplicate — first module (alpha order) wins
     seen_names: set[str] = set()
-    deduped_entries: list[tuple[str, list[str]]] = []
-
+    deduped: list[tuple[str, list[str]]] = []
     for stem, names in entries:
-        unique_names = [n for n in names if n not in seen_names]
-        seen_names.update(unique_names)
-        if unique_names:
-            deduped_entries.append((stem, unique_names))
+        unique = [n for n in names if n not in seen_names]
+        seen_names.update(unique)
+        if unique:
+            deduped.append((stem, unique))
 
-    # ── Step 3: render ────────────────────────────────────────────────────
     import_blocks: list[str] = []
     all_names: list[str] = []
-
-    for stem, names in deduped_entries:
+    for stem, names in deduped:
         block = _format_import(f".{stem}", names)
         if block:
             import_blocks.append(block)
         all_names.extend(names)
 
     imports_block = (
-        "\n".join(import_blocks) if import_blocks else "# No sub-packages"
+        "\n".join(import_blocks) if import_blocks else "# No public symbols"
     )
 
     return f"""\
-# abb_rws_client/rws/__init__.py
-\"\"\"RWS API mirror — atomic HTTP functions (1 function = 1 endpoint).
+# {pkg_name}/{rel}/__init__.py
+\"\"\"Public re-exports for the {rel} sub-package.
 
-Auto-generated by contrib/fix_init.py — do not edit manually.
-\"\"\"
-
-from __future__ import annotations
-
-{imports_block}
-
-__all__ = [
-    {_format_all(all_names)}
-]
-"""
-
-
-def _gen_core_init() -> str:
-    """Generate __init__.py for abb_rws_client/_core/.
-
-    Uses the explicit allowlist ``_CORE_PUBLIC_EXPORTS`` (not AST
-    auto-discovery) because _core/ contains private helpers that must
-    not be re-exported. The allowlist is sorted per-module and globally
-    to satisfy ruff I001.
-
-    Returns:
-        Complete __init__.py content as a string.
-    """
-    import_blocks: list[str] = []
-    all_names: list[str] = []
-
-    # Iterate in sorted module order so ruff I001 is satisfied
-    for module in sorted(_CORE_PUBLIC_EXPORTS):
-        names = _CORE_PUBLIC_EXPORTS[module]
-        block = _format_import(f".{module}", names)
-        if block:
-            import_blocks.append(block)
-        all_names.extend(names)
-
-    imports_block = "\n".join(import_blocks)
-
-    return f"""\
-# abb_rws_client/_core/__init__.py
-\"\"\"Internal core — session, exceptions, serializers.
-
-Not part of the public API. Import from ``abb_rws_client`` directly.
+Auto-generated by utils/fix_init.py — do not edit manually.
 \"\"\"
 
 from __future__ import annotations
@@ -443,44 +482,57 @@ __all__ = [
 
 
 def _gen_package_init() -> str:
-    """Generate abb_rws_client/__init__.py with the public API surface.
+    """Generate the top-level ``{PKG_ROOT.name}/__init__.py``.
 
-    Imports are generated in sorted module order (isort-compatible) so
-    that ``ruff check`` passes without requiring a subsequent ``--fix``.
+    Aggregates all public names from every immediate sub-package via
+    AST auto-discovery.  Import blocks are sorted alphabetically
+    (isort / ruff I001 compliant).  Applies
+    :data:`PRIVATE_NAMES_BY_DIR` blocklist per sub-package.
 
     Returns:
-        Complete __init__.py content as a string.
+        Complete top-level ``__init__.py`` content as a string.
     """
+    pkg_name = PKG_ROOT.name
     import_blocks: list[str] = []
     all_names: list[str] = []
 
-    # Sorted module order → satisfies ruff I001 out of the box
-    for module in sorted(_CORE_PUBLIC_EXPORTS):
-        names = _CORE_PUBLIC_EXPORTS[module]
-        block = _format_import(f"abb_rws_client._core.{module}", names)
-        if block:
-            import_blocks.append(block)
-        all_names.extend(names)
+    # Collect from immediate sub-packages, sorted alphabetically
+    for sub in sorted(PKG_ROOT.iterdir()):
+        if not sub.is_dir() or sub.name.startswith("."):
+            continue
+        if not _is_package_dir(sub):
+            continue
+        names = _collect_dir_public_names(sub)
+        if names:
+            block = _format_import(f".{sub.name}", names)
+            if block:
+                import_blocks.append(block)
+            all_names.extend(names)
 
-    imports_block = "\n".join(import_blocks)
+    # Also collect from flat .py files directly in PKG_ROOT
+    blocklist_root = PRIVATE_NAMES_BY_DIR.get(".", set())
+    for py_file in sorted(PKG_ROOT.iterdir()):
+        if (
+            py_file.is_file()
+            and py_file.suffix == ".py"
+            and py_file.name != "__init__.py"
+        ):
+            names = _collect_public_names(py_file, blocklist_root)
+            if names:
+                block = _format_import(f".{py_file.stem}", names)
+                if block:
+                    import_blocks.append(block)
+                all_names.extend(names)
+
+    imports_block = (
+        "\n".join(import_blocks) if import_blocks else "# No public symbols"
+    )
 
     return f"""\
-# abb_rws_client/__init__.py
-\"\"\"abb-rws6-python-client — Async Python client for ABB RWS (RobotWare 6).
+# {pkg_name}/__init__.py
+\"\"\"{PKG_DESCRIPTION}
 
-Public API surface:
-    - RWSClient / RWSClientSync  : HTTP session management
-    - RWSError hierarchy         : typed exceptions
-    - RobTarget / RapidValue     : RAPID type helpers
-    - robtarget_to_rws / rws_to_robtarget : serializers
-    - load_env                   : .env file loader
-    - configure_logging          : library log level
-    - get_logger                 : namespaced child logger
-
-Example:
-    >>> from abb_rws_client import RWSClient
-    >>> async with RWSClient(host="192.168.125.1") as client:
-    ...     resp = await client.get("/rw/rapid/execution")
+Auto-generated by utils/fix_init.py — do not edit manually.
 \"\"\"
 
 from __future__ import annotations
@@ -491,28 +543,28 @@ __all__ = [
     {_format_all(all_names)}
 ]
 
-__version__ = "0.8.0"
+__version__ = "{PKG_VERSION}"
 """
 
 
 def _gen_test_init(directory: Path) -> str:
-    """Generate a minimal __init__.py for a tests/ sub-directory.
+    """Generate a minimal ``__init__.py`` for a ``tests/`` sub-directory.
 
-    Tests __init__.py files must stay empty of imports to avoid
-    circular dependencies and pytest collection conflicts.
-    They only serve as package markers for relative imports in conftest.
+    Test ``__init__.py`` files must remain free of imports to avoid
+    circular dependencies and pytest collection conflicts.  They only
+    serve as package markers for relative imports in ``conftest.py``.
 
     Args:
         directory: The test sub-directory.
 
     Returns:
-        Minimal __init__.py content as a string.
+        Minimal ``__init__.py`` content as a string.
     """
     rel = directory.relative_to(REPO_ROOT).as_posix()
     return f"""\
 # {rel}/__init__.py
 # Package marker — do not add imports here.
-# Auto-generated by contrib/fix_init.py — do not edit manually.
+# Auto-generated by utils/fix_init.py — do not edit manually.
 """
 
 
@@ -521,70 +573,66 @@ def _gen_test_init(directory: Path) -> str:
 # ---------------------------------------------------------------------------
 
 
-def fix_package(dry_run: bool) -> None:
-    """Rewrite abb_rws_client/__init__.py.
+def _fix_subpackage(sub: Path, dry_run: bool) -> None:
+    """Rewrite ``__init__.py`` for a single sub-package of PKG_ROOT.
+
+    Chooses between :func:`_gen_subpkg_init` (flat) and
+    :func:`_gen_nested_subpkg_init` (nested) based on whether the
+    directory contains sub-packages.
 
     Args:
-        dry_run: If True, only print without writing.
+        sub: Sub-package directory (direct child of PKG_ROOT).
+        dry_run: When ``True``, only print without writing.
     """
-    print("\n── abb_rws_client/__init__.py ──────────────────────────────")
+    rel_key = sub.relative_to(PKG_ROOT).as_posix()
+    has_subpkgs = any(
+        d.is_dir() and not d.name.startswith(("_", "."))
+        for d in sub.iterdir()
+        if d.is_dir()
+    )
+    is_forced_flat = rel_key in FLAT_SUBDIRS
+
+    if has_subpkgs and not is_forced_flat:
+        content = _gen_nested_subpkg_init(sub)
+    else:
+        content = _gen_subpkg_init(sub)
+
+    _write(sub / "__init__.py", content, dry_run)
+
+
+def fix_all_subpackages(dry_run: bool) -> None:
+    """Rewrite ``__init__.py`` for every sub-package of PKG_ROOT.
+
+    Iterates over all immediate sub-directories of PKG_ROOT that
+    qualify as Python packages and rewrites their ``__init__.py``.
+
+    Args:
+        dry_run: When ``True``, only print without writing.
+    """
+    print(f"\n── {PKG_ROOT.name}/ sub-packages ──────────────────────────────")
+    for sub in sorted(PKG_ROOT.iterdir()):
+        if not sub.is_dir() or sub.name.startswith("."):
+            continue
+        if not _is_package_dir(sub):
+            continue
+        _fix_subpackage(sub, dry_run)
+
+
+def fix_package_root(dry_run: bool) -> None:
+    """Rewrite the top-level ``{PKG_ROOT.name}/__init__.py``.
+
+    Args:
+        dry_run: When ``True``, only print without writing.
+    """
+    print(f"\n── {PKG_ROOT.name}/__init__.py ──────────────────────────────────")
     _write(PKG_ROOT / "__init__.py", _gen_package_init(), dry_run)
 
 
-def fix_core(dry_run: bool) -> None:
-    """Rewrite _core/__init__.py.
-
-    Args:
-        dry_run: If True, only print without writing.
-    """
-    print("\n── _core/__init__.py ───────────────────────────────────────")
-    _write(PKG_ROOT / "_core" / "__init__.py", _gen_core_init(), dry_run)
-
-
-def fix_rws(dry_run: bool) -> None:
-    """Process all rws/ sub-packages via AST auto-discovery, then rws/__init__.py.
-
-    Args:
-        dry_run: If True, only print without writing.
-    """
-    rws_dir = PKG_ROOT / "rws"
-    if not rws_dir.exists():
-        print("[SKIP] abb_rws_client/rws/ not found — skipping.")
-        return
-
-    print("\n── rws/ sub-packages ──────────────────────────────────────")
-    for sub in sorted(rws_dir.iterdir()):
-        if not sub.is_dir() or sub.name.startswith("_") or sub.name.startswith("."):
-            continue
-        _write(sub / "__init__.py", _gen_rws_submodule_init(sub), dry_run)
-
-    print("\n── rws/__init__.py ─────────────────────────────────────────")
-    _write(rws_dir / "__init__.py", _gen_rws_init(rws_dir), dry_run)
-
-
-def fix_highlevel(dry_run: bool) -> None:
-    """Rewrite highlevel/__init__.py via AST auto-discovery.
-
-    Automatically picks up any new module added to highlevel/ without
-    requiring manual edits to this script.
-
-    Args:
-        dry_run: If True, only print without writing.
-    """
-    hl_dir = PKG_ROOT / "highlevel"
-    if not hl_dir.exists():
-        print("\n[SKIP] highlevel/ does not exist yet — skipping.")
-        return
-
-    print("\n── highlevel/__init__.py ───────────────────────────────────")
-    _write(hl_dir / "__init__.py", _gen_rws_submodule_init(hl_dir), dry_run)
-
-
 def fix_tests(dry_run: bool) -> None:
-    """Create minimal __init__.py markers in all tests/ sub-directories.
+    """Create minimal ``__init__.py`` markers in all ``tests/`` sub-directories.
 
     Args:
-        dry_run: If True, only print without writing.
+        dry_run: When ``True``, only print without writing.
     """
     if not TESTS_ROOT.exists():
         print("\n[SKIP] tests/ not found — skipping.")
@@ -618,8 +666,8 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         description=(
-            "Audit and fix all __init__.py files in "
-            "abb_rws_client/ and tests/."
+            f"Audit and fix all __init__.py files in "
+            f"{PKG_ROOT.name}/ and tests/."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -642,10 +690,8 @@ def main() -> None:
         else "Fixing __init__.py files...\n"
     )
 
-    fix_package(dry)
-    fix_core(dry)
-    fix_rws(dry)
-    fix_highlevel(dry)
+    fix_all_subpackages(dry)
+    fix_package_root(dry)
 
     if not args.skip_tests:
         fix_tests(dry)
