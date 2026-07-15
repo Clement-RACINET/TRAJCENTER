@@ -111,3 +111,5 @@ config_local.*
 # Les fichiers de travail ou d'expérimentation
 # -----------------------------------------------------------------------------
 sandbox/
+utils/
+archives/
