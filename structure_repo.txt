@@ -1,20 +1,4 @@
 trajcenter
-├── archives
-│   ├── client_robot
-│   │   └── TRAJCENTER_20240828-1028-JS.sys
-│   ├── serveur
-│   │   ├── trajectory_files
-│   │   │   ├── 0.2.xlsx
-│   │   │   ├── 0.5.xlsx
-│   │   │   ├── 1.xlsx
-│   │   │   ├── mod_exemple.mod
-│   │   │   ├── Mod_Traj_sphere05mm.mod
-│   │   │   ├── Mod_Traj_sphere10x05mm.mod
-│   │   │   ├── PrepaFlans_Pointage.aptsource
-│   │   │   └── TrajGeo1Reel.txt
-│   │   └── TRAJCENTER.py
-│   ├── Tableau Récapitulatif de l'encodage.docx
-│   └── Tableau Récapitulatif de l'encodage.pdf
 ├── icons
 │   ├── Image0.png
 │   ├── Image1.png
@@ -103,10 +87,6 @@ trajcenter
 │   ├── trajectoires_mono.trajcenter
 │   ├── trajectoires_multi.trajcenter
 │   └── trajectoires_multi_Traj2.trajcenter
-├── utils
-│   ├── clean_cache.py
-│   ├── export_structure.py
-│   └── fix_init.py
 ├── __old_refacto.md
 ├── coverage.xml
 ├── mkdocs.yml
