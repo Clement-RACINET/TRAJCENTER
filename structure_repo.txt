@@ -1,0 +1,121 @@
+trajcenter
+├── archives
+│   ├── client_robot
+│   │   └── TRAJCENTER_20240828-1028-JS.sys
+│   ├── serveur
+│   │   ├── trajectory_files
+│   │   │   ├── 0.2.xlsx
+│   │   │   ├── 0.5.xlsx
+│   │   │   ├── 1.xlsx
+│   │   │   ├── mod_exemple.mod
+│   │   │   ├── Mod_Traj_sphere05mm.mod
+│   │   │   ├── Mod_Traj_sphere10x05mm.mod
+│   │   │   ├── PrepaFlans_Pointage.aptsource
+│   │   │   └── TrajGeo1Reel.txt
+│   │   └── TRAJCENTER.py
+│   ├── Tableau Récapitulatif de l'encodage.docx
+│   └── Tableau Récapitulatif de l'encodage.pdf
+├── icons
+│   ├── Image0.png
+│   ├── Image1.png
+│   ├── Image2.png
+│   └── Image3.png
+├── sandbox
+│   └── rapid
+│       ├── MainModule.mod
+│       └── module_sys.sys
+├── scripts
+│   ├── doc
+│   │   ├── config.py
+│   │   ├── generate_api.py
+│   │   └── run_docs.py
+│   └── exemples
+│       ├── basic_usage.py
+│       ├── convert_apt_example.py
+│       ├── convert_excel.py
+│       ├── convert_mod.py
+│       └── export_excel.py
+├── tests
+│   ├── converter
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   ├── test_apt_converter.py
+│   │   ├── test_base_converter.py
+│   │   ├── test_csv_converter.py
+│   │   ├── test_excel_converter.py
+│   │   ├── test_mod_converter.py
+│   │   └── test_tabular_converter.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   └── test_trajectory.py
+│   ├── exporter
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   ├── test_csv_exporter.py
+│   │   ├── test_excel_exporter.py
+│   │   └── test_tabular_exporter.py
+│   ├── __init__.py
+│   └── conftest.py
+├── trajcenter
+│   ├── converter
+│   │   ├── __init__.py
+│   │   ├── apt_converter.py
+│   │   ├── base.py
+│   │   ├── column_mapper.py
+│   │   ├── csv_converter.py
+│   │   ├── defaults.py
+│   │   ├── excel_converter.py
+│   │   ├── mod_converter.py
+│   │   └── tabular_converter.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   └── trajectory.py
+│   ├── exporter
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── csv_exporter.py
+│   │   ├── excel_exporter.py
+│   │   ├── options.py
+│   │   └── tabular_exporter.py
+│   ├── rws
+│   │   └── __init__.py
+│   ├── server
+│   │   └── __init__.py
+│   └── __init__.py
+├── trajectory_exports
+│   └── test_basic.xlsx
+├── trajectory_files
+│   ├── 0.2.xlsx
+│   ├── 0.5.xlsx
+│   ├── 1.xlsx
+│   ├── mod_exemple.mod
+│   ├── Mod_Traj_sphere05mm.mod
+│   ├── Mod_Traj_sphere10x05mm.mod
+│   ├── PrepaFlans_Pointage.aptsource
+│   ├── test_basic.xlsx
+│   ├── trajectoires_mono.xlsx
+│   ├── trajectoires_multi.xlsx
+│   └── TrajGeo1Reel.txt
+├── trajectory_store
+│   ├── 1.trajcenter
+│   ├── mod_exemple.trajcenter
+│   ├── pointage_check.trajcenter
+│   ├── PrepaFlans_Pointage.trajcenter
+│   ├── PrepaFlans_Pointage_transformed.trajcenter
+│   ├── test.trajcenter
+│   ├── test_basic.trajcenter
+│   ├── trajectoires_mono.trajcenter
+│   ├── trajectoires_multi.trajcenter
+│   └── trajectoires_multi_Traj2.trajcenter
+├── utils
+│   ├── clean_cache.py
+│   ├── export_structure.py
+│   └── fix_init.py
+├── __old_refacto.md
+├── coverage.xml
+├── mkdocs.yml
+├── pixi.lock
+├── pyproject.toml
+├── README.md
+├── ROUTES.md
+└── ROUTES.pdf

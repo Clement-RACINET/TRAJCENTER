@@ -26,13 +26,22 @@ nav:
     # --- AUTOGEN_API_START ---
     - Trajcenter:
       - Converter:
+        - Apt Converter: api/trajcenter/converter/apt_converter.md
         - Base: api/trajcenter/converter/base.md
         - Column Mapper: api/trajcenter/converter/column_mapper.md
+        - Csv Converter: api/trajcenter/converter/csv_converter.md
         - Defaults: api/trajcenter/converter/defaults.md
         - Excel Converter: api/trajcenter/converter/excel_converter.md
         - Mod Converter: api/trajcenter/converter/mod_converter.md
+        - Tabular Converter: api/trajcenter/converter/tabular_converter.md
       - Core:
         - Trajectory: api/trajcenter/core/trajectory.md
+      - Exporter:
+        - Base: api/trajcenter/exporter/base.md
+        - Csv Exporter: api/trajcenter/exporter/csv_exporter.md
+        - Excel Exporter: api/trajcenter/exporter/excel_exporter.md
+        - Options: api/trajcenter/exporter/options.md
+        - Tabular Exporter: api/trajcenter/exporter/tabular_exporter.md
 # --- AUTOGEN_API_END ---
   - Coverage: coverage.md 
 
