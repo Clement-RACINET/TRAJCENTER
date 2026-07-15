@@ -428,6 +428,7 @@ def xlsx_with_full_meta(tmp_path: Path) -> Path:
         },
     )
 
+
 @pytest.fixture
 def mod_bad_confdata(tmp_path: Path) -> Path:
     """A .mod file with malformed confdata (non-integer values)."""
@@ -471,3 +472,12 @@ def mod_no_robtarget(tmp_path: Path) -> Path:
     p = tmp_path / "no_robtarget.mod"
     p.write_text(content, encoding="utf-8")
     return p
+
+
+@pytest.fixture
+def csv_unknown_col(tmp_path: Path) -> Path:
+    """CSV with one unknown column alongside valid XYZ columns."""
+    return _write_csv(
+        tmp_path / "unknown_col.csv",
+        "x,y,z,custom_col\n1.0,2.0,3.0,99\n",
+    )
