@@ -1,23 +1,25 @@
+#!/usr/bin/env python3
 # trajcenter/converter/excel_converter.py
+"""Converter for Excel files (``.xlsx``, ``.xls``) to ``.trajcenter``.
 
-"""
-Convertisseur de fichiers Excel (``.xlsx``, ``.xls``) vers ``.trajcenter``.
+Author: Clement RACINET
 
-Délègue toute la logique de conversion à
+Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.
-Cette classe n'implémente que la lecture du fichier Excel via ``openpyxl``.
+This class only implements Excel file reading via ``openpyxl``.
 
-Structure attendue du classeur
---------------------------------
-- **Feuilles trajectoire** : toute feuille dont le nom n'est pas réservé.
-- **Feuille** ``tools``    : table des tools (colonne ``name``). Optionnelle.
-- **Feuille** ``wobjs``    : table des wobjs (colonne ``name``). Optionnelle.
-- **Feuille** ``meta``     : ignorée silencieusement.
+Expected workbook structure
+-----------------------------
+- **Trajectory sheets**: any sheet whose name is not reserved.
+- **Sheet** ``tools``: tool table (``name`` column). Optional.
+- **Sheet** ``wobjs``: wobj table (``name`` column). Optional.
+- **Sheet** ``meta``: silently ignored.
 
-Colonnes obligatoires : ``x``, ``y``, ``z``.
-Toutes les autres colonnes sont autocomplétées depuis
-:class:`~trajcenter.converter.defaults.ConversionDefaults` si absentes.
-Les quaternions absents sont remplacés par l'orientation identité ``[1,0,0,0]``.
+Mandatory columns: ``x``, ``y``, ``z``.
+All other columns are autocompleted from
+:class:`~trajcenter.converter.defaults.ConversionDefaults` when absent.
+Missing quaternions are replaced by the identity orientation
+``[1, 0, 0, 0]``.
 
 Example:
     ::
@@ -38,10 +40,11 @@ from trajcenter.core.trajectory import SourceFormat
 
 
 class ExcelConverter(_TabularConverter):
-    """Convertisseur de classeurs Excel vers :class:`~trajcenter.core.trajectory.Trajectory`.
+    """Converter for Excel workbooks to :class:`~trajcenter.core.trajectory.Trajectory`.
 
-    Hérite de :class:`~trajcenter.converter.tabular_converter._TabularConverter`
-    pour toute la logique métier. N'implémente que la lecture Excel.
+    Inherits from
+    :class:`~trajcenter.converter.tabular_converter._TabularConverter`
+    for all business logic. Only implements Excel reading.
 
     Example:
         ::
@@ -54,20 +57,33 @@ class ExcelConverter(_TabularConverter):
     """
 
     def __init__(self, defaults: ConversionDefaults | None = None) -> None:
+        """Initialise the Excel converter.
+
+        Args:
+            defaults: Default values for autocompletion.
+                When ``None``,
+                :class:`~trajcenter.converter.defaults.ConversionDefaults`
+                is instantiated with its own default values.
+        """
         super().__init__(defaults)
 
     @property
     def _source_format(self) -> SourceFormat:
+        """Source format identifier for this converter.
+
+        Returns:
+            :attr:`~trajcenter.core.trajectory.SourceFormat.EXCEL`.
+        """
         return SourceFormat.EXCEL
 
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
-        """Lit toutes les feuilles du classeur Excel.
+        """Read all sheets from the Excel workbook.
 
         Args:
-            source: Chemin vers le fichier ``.xlsx`` / ``.xls``.
+            source: Path to the ``.xlsx`` / ``.xls`` file.
 
         Returns:
-            Dictionnaire ordonné ``{nom_feuille: DataFrame brut}``.
+            Ordered dictionary ``{sheet_name: raw_DataFrame}``.
         """
         xl = pd.ExcelFile(source, engine="openpyxl")
         return {

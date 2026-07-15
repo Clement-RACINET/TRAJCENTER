@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
 # tests/rws/test_reader.py
-"""Tests for trajcenter.rws.reader.
+"""Tests for :mod:`trajcenter.rws.reader`.
+
+Author: Clement RACINET
 
 All RWS calls are mocked — no HTTP traffic.
 Mock target: ``trajcenter.rws.reader.get_variable``
@@ -24,7 +27,7 @@ _MODULE = "trajcenter.rws.reader"
 
 @pytest.fixture
 def client() -> MagicMock:
-    """Bare MagicMock acting as RWSClient."""
+    """Bare ``MagicMock`` acting as ``RWSClient``."""
     return MagicMock()
 
 
@@ -34,39 +37,39 @@ def client() -> MagicMock:
 
 
 class TestReadSelectedTrajIndex:
-    """Tests for read_selected_traj_index()."""
+    """Tests for :func:`~trajcenter.rws.reader.read_selected_traj_index`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
-        """Returns int from RAPID num string."""
+        """Returns an ``int`` parsed from a RAPID ``num`` string."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="3")):
             result = await read_selected_traj_index(client)
         assert result == 3
 
     @pytest.mark.asyncio
     async def test_zero(self, client: MagicMock) -> None:
-        """Returns 0 when no trajectory is selected."""
+        """Returns ``0`` when no trajectory is selected."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="0")):
             result = await read_selected_traj_index(client)
         assert result == 0
 
     @pytest.mark.asyncio
     async def test_float_string(self, client: MagicMock) -> None:
-        """RAPID num may be returned as '3.0' — must convert to int."""
+        """A RAPID ``num`` may be returned as ``'3.0'`` and must convert to ``int``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="3.0")):
             result = await read_selected_traj_index(client)
         assert result == 3
 
     @pytest.mark.asyncio
     async def test_invalid_value_raises(self, client: MagicMock) -> None:
-        """Non-numeric raw value raises ValueError."""
+        """A non-numeric raw value raises ``ValueError``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="abc")):
             with pytest.raises(ValueError, match="TrajSelectedIndex"):
                 await read_selected_traj_index(client)
 
     @pytest.mark.asyncio
     async def test_symbol_url_format(self, client: MagicMock) -> None:
-        """Symbol URL must follow RAPID/{task}/{module}/{var} format."""
+        """The symbol URL must follow the ``RAPID/{task}/{module}/{var}`` format."""
         mock_get = AsyncMock(return_value="1")
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_selected_traj_index(client, task="T_ROB1", module="TRAJCENTER")
@@ -80,36 +83,36 @@ class TestReadSelectedTrajIndex:
 
 
 class TestReadTrajReady:
-    """Tests for read_traj_ready()."""
+    """Tests for :func:`~trajcenter.rws.reader.read_traj_ready`."""
 
     @pytest.mark.asyncio
     async def test_true(self, client: MagicMock) -> None:
-        """'TRUE' → True."""
+        """``'TRUE'`` is parsed as ``True``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="TRUE")):
             assert await read_traj_ready(client) is True
 
     @pytest.mark.asyncio
     async def test_false(self, client: MagicMock) -> None:
-        """'FALSE' → False."""
+        """``'FALSE'`` is parsed as ``False``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="FALSE")):
             assert await read_traj_ready(client) is False
 
     @pytest.mark.asyncio
     async def test_case_insensitive(self, client: MagicMock) -> None:
-        """Parsing must be case-insensitive ('true' → True)."""
+        """Parsing must be case-insensitive (``'true'`` → ``True``)."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="true")):
             assert await read_traj_ready(client) is True
 
     @pytest.mark.asyncio
     async def test_invalid_raises(self, client: MagicMock) -> None:
-        """Any value other than TRUE/FALSE raises ValueError."""
+        """Any value other than ``TRUE``/``FALSE`` raises ``ValueError``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="MAYBE")):
             with pytest.raises(ValueError, match="TrajReady"):
                 await read_traj_ready(client)
 
     @pytest.mark.asyncio
     async def test_whitespace_stripped(self, client: MagicMock) -> None:
-        """Leading/trailing whitespace must be stripped before comparison."""
+        """Leading/trailing whitespace is stripped before comparison."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="  FALSE  ")):
             assert await read_traj_ready(client) is False
 
@@ -120,23 +123,23 @@ class TestReadTrajReady:
 
 
 class TestReadNbRobtargets:
-    """Tests for read_nb_robtargets()."""
+    """Tests for :func:`~trajcenter.rws.reader.read_nb_robtargets`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
-        """Returns int point count."""
+        """Returns the point count as an ``int``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="320")):
             assert await read_nb_robtargets(client) == 320
 
     @pytest.mark.asyncio
     async def test_float_string(self, client: MagicMock) -> None:
-        """'320.0' → 320."""
+        """``'320.0'`` is correctly converted to ``320``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="320.0")):
             assert await read_nb_robtargets(client) == 320
 
     @pytest.mark.asyncio
     async def test_invalid_raises(self, client: MagicMock) -> None:
-        """Non-numeric value raises ValueError."""
+        """A non-numeric value raises ``ValueError``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="???")):
             with pytest.raises(ValueError, match="NbRobtargetsTraj"):
                 await read_nb_robtargets(client)
@@ -148,17 +151,17 @@ class TestReadNbRobtargets:
 
 
 class TestReadNbTrajDispo:
-    """Tests for read_nb_traj_dispo()."""
+    """Tests for :func:`~trajcenter.rws.reader.read_nb_traj_dispo`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
-        """Returns int trajectory count."""
+        """Returns the trajectory count as an ``int``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="5")):
             assert await read_nb_traj_dispo(client) == 5
 
     @pytest.mark.asyncio
     async def test_zero(self, client: MagicMock) -> None:
-        """Empty store returns 0."""
+        """An empty store returns ``0``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="0")):
             assert await read_nb_traj_dispo(client) == 0
 
@@ -169,11 +172,11 @@ class TestReadNbTrajDispo:
 
 
 class TestReadTrajNames:
-    """Tests for read_traj_names()."""
+    """Tests for :func:`~trajcenter.rws.reader.read_traj_names`."""
 
     @pytest.mark.asyncio
     async def test_nominal_with_count(self, client: MagicMock) -> None:
-        """Returns stripped names when count is provided explicitly."""
+        """Returns stripped names when ``count`` is provided explicitly."""
         mock_get = AsyncMock(side_effect=['"Traj1"', '"Traj2"', '"Traj3"'])
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client, count=3)
@@ -181,7 +184,7 @@ class TestReadTrajNames:
 
     @pytest.mark.asyncio
     async def test_reads_nb_traj_dispo_when_count_none(self, client: MagicMock) -> None:
-        """When count=None, NbTrajDispo is read first then names are fetched."""
+        """When ``count=None``, ``NbTrajDispo`` is read first, then names are fetched."""
         # First call → NbTrajDispo = 2, then 2 name reads
         mock_get = AsyncMock(side_effect=["2", '"Alpha"', '"Beta"'])
         with patch(f"{_MODULE}.get_variable", mock_get):
@@ -191,7 +194,7 @@ class TestReadTrajNames:
 
     @pytest.mark.asyncio
     async def test_empty_store(self, client: MagicMock) -> None:
-        """count=0 returns empty list without any RWS call."""
+        """``count=0`` returns an empty list without any RWS call."""
         mock_get = AsyncMock()
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client, count=0)
@@ -200,7 +203,7 @@ class TestReadTrajNames:
 
     @pytest.mark.asyncio
     async def test_strips_rapid_quotes(self, client: MagicMock) -> None:
-        """RAPID string quotes and whitespace are stripped."""
+        """RAPID string quotes and outer whitespace are stripped; inner spaces preserved."""
         mock_get = AsyncMock(return_value='  "  Traj_A  "  ')
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client, count=1)
@@ -208,16 +211,15 @@ class TestReadTrajNames:
 
     @pytest.mark.asyncio
     async def test_count_exceeds_max_raises(self, client: MagicMock) -> None:
-        """count > MAX_TRAJ raises ValueError without any RWS call."""
+        """``count > MAX_TRAJ`` raises ``ValueError`` without any RWS call."""
         from trajcenter.rws.writer import MAX_TRAJ
 
-        # Pas de mock get_variable — le raise doit se produire avant
         with pytest.raises(ValueError, match="MAX_TRAJ"):
             await read_traj_names(client, count=MAX_TRAJ + 1)
 
     @pytest.mark.asyncio
     async def test_symbol_url_array_format(self, client: MagicMock) -> None:
-        """Array element URL must use RAPID/[i] notation."""
+        """Array element URL must use the ``RAPID/[i]`` notation."""
         mock_get = AsyncMock(return_value='"T1"')
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_traj_names(client, count=1, task="T_ROB1", module="TRAJCENTER")

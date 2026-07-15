@@ -1,33 +1,34 @@
+#!/usr/bin/env python3
 # trajcenter/converter/csv_converter.py
+"""Converter for CSV / delimited text files to ``.trajcenter``.
 
-"""
-Convertisseur de fichiers CSV / texte délimité vers ``.trajcenter``.
+Author: Clement RACINET
 
-Délègue toute la logique de conversion à
+Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.
-Cette classe n'implémente que la lecture du fichier CSV avec détection
-automatique du séparateur (virgule ``,`` ou point-virgule ``;``).
+This class only implements CSV file reading with automatic separator
+detection (comma ``,`` or semicolon ``;``).
 
-Séparateur
------------
-Le séparateur est détecté automatiquement via :func:`_detect_separator`
-en lisant les 4 premières lignes du fichier. Si la détection échoue,
-la virgule est utilisée par défaut.
+Separator
+----------
+The separator is detected automatically via :func:`_detect_separator`
+by reading the first 4 lines of the file. If detection fails, a comma
+is used as the default.
 
-Le séparateur peut également être forcé via le paramètre ``separator``
-du constructeur.
+The separator can also be forced via the ``separator`` constructor
+parameter.
 
-Encodage
+Encoding
 ---------
-L'encodage est détecté automatiquement (UTF-8 avec BOM, UTF-8, Latin-1).
-Il peut être forcé via le paramètre ``encoding``.
+The encoding is detected automatically (UTF-8 with BOM, UTF-8, Latin-1).
+It can be forced via the ``encoding`` parameter.
 
 Example:
     ::
 
         traj = CsvConverter().convert(Path("data/trajectoire.csv"))
 
-        # Forcer le séparateur et l'encodage
+        # Force separator and encoding
         traj = CsvConverter(separator=";", encoding="latin-1").convert(
             Path("data/export_excel.csv")
         )
@@ -46,7 +47,7 @@ from trajcenter.core.trajectory import SourceFormat
 
 
 # ---------------------------------------------------------------------------
-# Détection du séparateur
+# Separator detection
 # ---------------------------------------------------------------------------
 
 _CANDIDATE_SEPARATORS: list[str] = [",", ";", "\t", "|"]
@@ -54,20 +55,20 @@ _SNIFF_LINES: int = 4
 
 
 def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
-    """Détecte automatiquement le séparateur d'un fichier CSV.
+    """Automatically detect the separator of a CSV file.
 
-    Lit les :data:`_SNIFF_LINES` premières lignes non vides et utilise
-    :class:`csv.Sniffer` pour identifier le délimiteur. Si la détection
-    échoue ou retourne un séparateur non standard, la virgule est utilisée.
+    Reads the first :data:`_SNIFF_LINES` non-empty lines and uses
+    :class:`csv.Sniffer` to identify the delimiter. If detection fails
+    or returns a non-standard separator, a comma is used as the default.
 
     Args:
-        source:   Chemin vers le fichier CSV.
-        encoding: Encodage à utiliser pour la lecture. ``"utf-8-sig"``
-                  gère automatiquement le BOM UTF-8.
+        source: Path to the CSV file.
+        encoding: Encoding to use when reading. ``"utf-8-sig"``
+            handles the UTF-8 BOM automatically.
 
     Returns:
-        Séparateur détecté parmi ``","``, ``";"``, ``"\\t"``, ``"|"``,
-        ou ``","`` par défaut.
+        Detected separator among ``","``, ``";"``, ``"\\t"``, ``"|"``,
+        or ``","`` by default.
     """
     try:
         lines: list[str] = []
@@ -88,22 +89,23 @@ def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
 
 
 # ---------------------------------------------------------------------------
-# Convertisseur CSV
+# CSV converter
 # ---------------------------------------------------------------------------
 
 
 class CsvConverter(_TabularConverter):
-    """Convertisseur de fichiers CSV vers :class:`~trajcenter.core.trajectory.Trajectory`.
+    """Converter for CSV files to :class:`~trajcenter.core.trajectory.Trajectory`.
 
-    Hérite de :class:`~trajcenter.converter.tabular_converter._TabularConverter`
-    pour toute la logique métier. N'implémente que la lecture CSV avec
-    détection automatique du séparateur.
+    Inherits from
+    :class:`~trajcenter.converter.tabular_converter._TabularConverter`
+    for all business logic. Only implements CSV reading with automatic
+    separator detection.
 
     Attributes:
-        defaults:  Valeurs par défaut pour l'autocomplétion.
-        separator: Séparateur forcé. Si ``None``, détection automatique.
-        encoding:  Encodage du fichier. Par défaut ``"utf-8-sig"``
-                   (gère UTF-8 avec et sans BOM).
+        defaults: Default values for autocompletion.
+        separator: Forced separator. When ``None``, auto-detection is used.
+        encoding: File encoding. Defaults to ``"utf-8-sig"``
+            (handles UTF-8 with and without BOM).
 
     Example:
         ::
@@ -111,10 +113,10 @@ class CsvConverter(_TabularConverter):
             from pathlib import Path
             from trajcenter.converter.csv_converter import CsvConverter
 
-            # Détection automatique du séparateur
+            # Automatic separator detection
             traj = CsvConverter().convert(Path("trajectoire.csv"))
 
-            # Séparateur forcé (export Excel français)
+            # Forced separator (French Excel export)
             traj = CsvConverter(separator=";").convert(Path("export.csv"))
     """
 
@@ -124,14 +126,14 @@ class CsvConverter(_TabularConverter):
         separator: str | None = None,
         encoding: str = "utf-8-sig",
     ) -> None:
-        """Initialise le convertisseur CSV.
+        """Initialise the CSV converter.
 
         Args:
-            defaults:  Valeurs par défaut pour l'autocomplétion.
-            separator: Séparateur CSV forcé (``","`` ou ``";"`` etc.).
-                       Si ``None``, détection automatique.
-            encoding:  Encodage du fichier source. ``"utf-8-sig"`` par défaut
-                       (gère le BOM UTF-8 des exports Excel).
+            defaults: Default values for autocompletion.
+            separator: Forced CSV separator (``","`` or ``";"`` etc.).
+                When ``None``, auto-detection is used.
+            encoding: Source file encoding. Defaults to ``"utf-8-sig"``
+                (handles the UTF-8 BOM from Excel exports).
         """
         super().__init__(defaults)
         self.separator: str | None = separator
@@ -139,18 +141,23 @@ class CsvConverter(_TabularConverter):
 
     @property
     def _source_format(self) -> SourceFormat:
+        """Source format identifier for this converter.
+
+        Returns:
+            :attr:`~trajcenter.core.trajectory.SourceFormat.CSV`.
+        """
         return SourceFormat.CSV
 
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
-        """Lit le fichier CSV et retourne une feuille unique ``"sheet"``.
+        """Read the CSV file and return a single ``"sheet"`` entry.
 
-        Le séparateur est détecté automatiquement si non forcé.
+        The separator is detected automatically when not forced.
 
         Args:
-            source: Chemin vers le fichier CSV.
+            source: Path to the CSV file.
 
         Returns:
-            Dictionnaire ``{"sheet": DataFrame brut}``.
+            Dictionary ``{"sheet": raw_DataFrame}``.
         """
         sep = self.separator or _detect_separator(source, encoding=self.encoding)
         df = pd.read_csv(

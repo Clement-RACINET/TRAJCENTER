@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-# examples/export_excel.py
-"""
-Exemple d'import puis de réexport d'une trajectoire vers Excel (.xlsx).
+# scripts/examples/export_excel.py
+"""Trajectory import and re-export to Excel (``.xlsx``) example.
 
-Deux cas sont illustrés :
-  1. Import depuis un fichier .trajcenter  → export Excel
-  2. Import depuis un fichier .xlsx        → export Excel (re-export)
+Author: Clement RACINET
 
-Modifiez les variables de la section "Configuration" ci-dessous,
-puis lancez directement :
+Demonstrates two export scenarios:
 
-    python examples/export_excel_example.py
+1. **Import from ``.trajcenter``** → export to Excel.
+2. **Import from ``.xlsx``** → re-export to Excel.
+
+Edit the variables in the "Configuration" section below, then run
+directly::
+
+    python scripts/examples/export_excel_example.py
 """
 
 from __future__ import annotations
@@ -23,31 +25,31 @@ from trajcenter.exporter.excel_exporter import ExcelExporter
 from trajcenter.exporter.options import ExportOptions
 
 # ---------------------------------------------------------------------------
-# Configuration — à adapter selon votre contexte
+# Configuration — adjust to your context
 # ---------------------------------------------------------------------------
 
-# Cas 1 — source : fichier .trajcenter déjà converti
+# Case 1 — source: already converted .trajcenter file
 SOURCE_TRAJCENTER = Path("trajectory_store/test_basic.trajcenter")
 
-# Cas 2 — source : fichier Excel original (re-export direct)
+# Case 2 — source: original Excel file (direct re-export)
 SOURCE_XLSX = Path("trajectory_files/test_basic.xlsx")
 
 OUTPUT_DIR = Path("trajectory_exports")
 
-# Options d'export :
-#   float_precision : nombre de décimales pour XYZ et quaternions
-#   include_meta    : ajoute une feuille "meta" avec les métadonnées
+# Export options:
+#   float_precision : number of decimal places for XYZ and quaternions
+#   include_meta    : adds a "meta" sheet with trajectory metadata
 EXPORT_OPTIONS = ExportOptions(
-    float_precision = 6,
-    include_meta    = True,
+    float_precision=6,
+    include_meta=True,
 )
 
 # ---------------------------------------------------------------------------
-# Cas 1 — import .trajcenter → export .xlsx
+# Case 1 — import .trajcenter → export .xlsx
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Cas 1 — Import .trajcenter → Export Excel")
+print("Case 1 — Import .trajcenter → Export Excel")
 print("=" * 60)
 
 traj: Trajectory = Trajectory.load(SOURCE_TRAJCENTER)
@@ -61,15 +63,15 @@ print()
 print(traj.points.head())
 
 dest = ExcelExporter(options=EXPORT_OPTIONS).export(traj, OUTPUT_DIR)
-print(f"\nExporté → {dest}")
+print(f"\nExported → {dest}")
 
 # ---------------------------------------------------------------------------
-# Cas 2 — import .xlsx → export .xlsx (re-export)
+# Case 2 — import .xlsx → re-export .xlsx
 # ---------------------------------------------------------------------------
 
 print()
 print("=" * 60)
-print("Cas 2 — Import Excel → Re-export Excel")
+print("Case 2 — Import Excel → Re-export Excel")
 print("=" * 60)
 
 traj_from_xlsx: Trajectory = ExcelConverter().convert(SOURCE_XLSX)
@@ -83,4 +85,4 @@ print()
 print(traj_from_xlsx.points.head())
 
 dest = ExcelExporter(options=EXPORT_OPTIONS).export(traj_from_xlsx, OUTPUT_DIR)
-print(f"\nRe-exporté → {dest}")
+print(f"\nRe-exported → {dest}")

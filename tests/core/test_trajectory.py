@@ -1,15 +1,17 @@
-# tests/test_trajectory.py
+#!/usr/bin/env python3
+# tests/core/test_trajectory.py
+"""Unit tests for :mod:`trajcenter.core.trajectory`.
 
-"""
-Tests unitaires pour :mod:`trajcenter.core.trajectory`.
+Author: Clement RACINET
 
-Couvre :
-- La validation des colonnes obligatoires
-- Le cast des types pandas
-- La validation des bornes tool_index / wobj_index
-- La sérialisation / désérialisation ``.trajcenter``
-- Les propriétés utilitaires
-- La représentation ``__repr__``
+Covers:
+
+- Required column validation
+- Pandas type casting
+- ``tool_index`` / ``wobj_index`` bounds validation
+- ``.trajcenter`` serialisation / deserialisation
+- Utility properties
+- ``__repr__`` representation
 """
 
 from __future__ import annotations
@@ -25,7 +27,6 @@ import pyarrow.parquet as pq
 import pytest
 
 from trajcenter.core.trajectory import (
-    CONVERTER_COLUMNS,
     ExternalAxisConfig,
     SourceFormat,
     Trajectory,
@@ -39,10 +40,10 @@ from trajcenter.core.trajectory import (
 
 
 class TestTrajectoryMeta:
-    """Tests du modèle Pydantic TrajectoryMeta."""
+    """Tests for the ``TrajectoryMeta`` Pydantic model."""
 
     def test_defaults(self) -> None:
-        """Les valeurs par défaut sont correctement initialisées."""
+        """Default values are correctly initialised."""
         meta = TrajectoryMeta(name="traj")
         assert meta.version == "1.0"
         assert meta.source_format == SourceFormat.MANUAL
@@ -52,7 +53,7 @@ class TestTrajectoryMeta:
         assert meta.extra == {}
 
     def test_valid_eax_keys(self) -> None:
-        """Les clés eax_a…eax_f sont acceptées."""
+        """Keys ``eax_a`` through ``eax_f`` are accepted."""
         meta = TrajectoryMeta(
             name="traj",
             external_axes={
@@ -64,7 +65,7 @@ class TestTrajectoryMeta:
         assert "eax_f" in meta.external_axes
 
     def test_invalid_eax_key_raises(self) -> None:
-        """Une clé d'axe externe invalide lève ValueError."""
+        """An invalid external axis key raises ``ValueError``."""
         with pytest.raises(ValueError, match="Clé axe externe invalide"):
             TrajectoryMeta(
                 name="traj",
@@ -74,7 +75,7 @@ class TestTrajectoryMeta:
             )
 
     def test_autocompleted_stored(self) -> None:
-        """Le champ autocompleted est correctement stocké."""
+        """The ``autocompleted`` field is correctly stored."""
         meta = TrajectoryMeta(
             name="traj",
             autocompleted=["speed", "move_type", "cf1"],
@@ -84,7 +85,7 @@ class TestTrajectoryMeta:
         assert len(meta.autocompleted) == 3
 
     def test_serialization_roundtrip(self) -> None:
-        """Sérialisation JSON → désérialisation Pydantic est sans perte."""
+        """JSON serialisation → Pydantic deserialisation is lossless."""
         meta = TrajectoryMeta(
             name="traj",
             source_format=SourceFormat.RAPID,
@@ -103,22 +104,26 @@ class TestTrajectoryMeta:
 
 
 class TestTrajectoryValidation:
-    """Tests de validation à l'instanciation de Trajectory."""
+    """Tests for validation at ``Trajectory`` instantiation."""
 
     def test_missing_required_column_raises(self, minimal_meta: TrajectoryMeta) -> None:
-        """Une colonne obligatoire manquante lève ValueError."""
-        df = pd.DataFrame({"x": [1.0], "y": [2.0], "z": [3.0]})  # q1..q4 absents
+        """A missing required column raises ``ValueError``."""
+        df = pd.DataFrame({"x": [1.0], "y": [2.0], "z": [3.0]})  # q1..q4 missing
         with pytest.raises(ValueError, match="Colonnes obligatoires manquantes"):
             Trajectory(meta=minimal_meta, points=df)
 
-    def test_all_required_columns_missing_raises(self, minimal_meta: TrajectoryMeta) -> None:
-        """Un DataFrame vide de colonnes lève ValueError."""
+    def test_all_required_columns_missing_raises(
+        self, minimal_meta: TrajectoryMeta
+    ) -> None:
+        """A DataFrame with no recognised columns raises ``ValueError``."""
         df = pd.DataFrame({"foo": [1.0]})
         with pytest.raises(ValueError, match="Colonnes obligatoires manquantes"):
             Trajectory(meta=minimal_meta, points=df)
 
-    def test_float_cast(self, minimal_meta: TrajectoryMeta, minimal_df: pd.DataFrame) -> None:
-        """Les colonnes float64 sont correctement castées depuis int."""
+    def test_float_cast(
+        self, minimal_meta: TrajectoryMeta, minimal_df: pd.DataFrame
+    ) -> None:
+        """Float64 columns are correctly cast from integer input."""
         df = minimal_df.copy()
         df["x"] = df["x"].astype(int)
         traj = Trajectory(meta=minimal_meta, points=df)
@@ -127,7 +132,7 @@ class TestTrajectoryValidation:
     def test_confdata_cast_to_int8_nullable(
         self, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
     ) -> None:
-        """Les colonnes confdata sont castées en Int8 nullable."""
+        """Confdata columns are cast to nullable ``Int8``."""
         traj = Trajectory(meta=minimal_meta, points=complete_df)
         for col in ["cf1", "cf4", "cf6", "cfx"]:
             assert traj.points[col].dtype == pd.Int8Dtype()
@@ -135,7 +140,7 @@ class TestTrajectoryValidation:
     def test_tool_index_out_of_bounds_raises(
         self, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
     ) -> None:
-        """Un tool_index hors bornes lève ValueError."""
+        """A ``tool_index`` out of bounds raises ``ValueError``."""
         df = complete_df.copy()
         df["tool_index"] = 5
         with pytest.raises(ValueError, match="tool_index max"):
@@ -144,7 +149,7 @@ class TestTrajectoryValidation:
     def test_wobj_index_out_of_bounds_raises(
         self, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
     ) -> None:
-        """Un wobj_index hors bornes lève ValueError."""
+        """A ``wobj_index`` out of bounds raises ``ValueError``."""
         df = complete_df.copy()
         df["wobj_index"] = 3
         with pytest.raises(ValueError, match="wobj_index max"):
@@ -153,7 +158,7 @@ class TestTrajectoryValidation:
     def test_valid_index_bounds_pass(
         self, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
     ) -> None:
-        """Des index dans les bornes ne lèvent pas d'erreur."""
+        """Indices within bounds do not raise an error."""
         traj = Trajectory(
             meta=minimal_meta,
             points=complete_df,
@@ -166,32 +171,32 @@ class TestTrajectoryValidation:
     def test_empty_tools_wobjs_default(
         self, minimal_meta: TrajectoryMeta, minimal_df: pd.DataFrame
     ) -> None:
-        """tools et wobjs valent [] si non fournis."""
+        """``tools`` and ``wobjs`` default to ``[]`` when not provided."""
         traj = Trajectory(meta=minimal_meta, points=minimal_df)
         assert traj.tools == []
         assert traj.wobjs == []
 
 
 # ---------------------------------------------------------------------------
-# Tests — propriétés
+# Tests — properties
 # ---------------------------------------------------------------------------
 
 
 class TestTrajectoryProperties:
-    """Tests des propriétés utilitaires de Trajectory."""
+    """Tests for ``Trajectory`` utility properties."""
 
     def test_point_count(self, simple_trajectory: Trajectory) -> None:
-        """point_count retourne le nombre de lignes du DataFrame."""
+        """``point_count`` returns the number of DataFrame rows."""
         assert simple_trajectory.point_count == 2
 
     def test_active_external_axes_none(self, simple_trajectory: Trajectory) -> None:
-        """active_external_axes est vide si aucune colonne eax_* présente."""
+        """``active_external_axes`` is empty when no ``eax_*`` column is present."""
         assert simple_trajectory.active_external_axes == []
 
     def test_active_external_axes_with_eax(
         self, minimal_meta: TrajectoryMeta, complete_df_with_eax: pd.DataFrame
     ) -> None:
-        """active_external_axes retourne les colonnes eax_* présentes."""
+        """``active_external_axes`` returns the ``eax_*`` columns that are present."""
         traj = Trajectory(
             meta=minimal_meta,
             points=complete_df_with_eax,
@@ -201,48 +206,48 @@ class TestTrajectoryProperties:
         assert traj.active_external_axes == ["eax_a"]
 
     def test_has_confdata_true(self, simple_trajectory: Trajectory) -> None:
-        """has_confdata est True si cf1 est présente."""
+        """``has_confdata`` is ``True`` when ``cf1`` is present."""
         assert simple_trajectory.has_confdata is True
 
     def test_has_confdata_false(
         self, minimal_meta: TrajectoryMeta, minimal_df: pd.DataFrame
     ) -> None:
-        """has_confdata est False si cf1 est absente."""
+        """``has_confdata`` is ``False`` when ``cf1`` is absent."""
         traj = Trajectory(meta=minimal_meta, points=minimal_df)
         assert traj.has_confdata is False
 
     def test_has_move_type_true(self, simple_trajectory: Trajectory) -> None:
-        """has_move_type est True si move_type est présente."""
+        """``has_move_type`` is ``True`` when ``move_type`` is present."""
         assert simple_trajectory.has_move_type is True
 
     def test_has_tool_table_true(self, simple_trajectory: Trajectory) -> None:
-        """has_tool_table est True si tools non vide et tool_index présente."""
+        """``has_tool_table`` is ``True`` when ``tools`` is non-empty and ``tool_index`` is present."""
         assert simple_trajectory.has_tool_table is True
 
     def test_has_tool_table_false_no_tools(
         self, minimal_meta: TrajectoryMeta, complete_df: pd.DataFrame
     ) -> None:
-        """has_tool_table est False si tools est vide."""
+        """``has_tool_table`` is ``False`` when ``tools`` is empty."""
         traj = Trajectory(meta=minimal_meta, points=complete_df)
         assert traj.has_tool_table is False
 
     def test_has_wobj_table_true(self, simple_trajectory: Trajectory) -> None:
-        """has_wobj_table est True si wobjs non vide et wobj_index présente."""
+        """``has_wobj_table`` is ``True`` when ``wobjs`` is non-empty and ``wobj_index`` is present."""
         assert simple_trajectory.has_wobj_table is True
 
     def test_is_complete_true(self, simple_trajectory: Trajectory) -> None:
-        """is_complete est True si toutes les CONVERTER_COLUMNS sont présentes."""
+        """``is_complete`` is ``True`` when all ``CONVERTER_COLUMNS`` are present."""
         assert simple_trajectory.is_complete is True
 
     def test_is_complete_false(
         self, minimal_meta: TrajectoryMeta, minimal_df: pd.DataFrame
     ) -> None:
-        """is_complete est False si des CONVERTER_COLUMNS sont absentes."""
+        """``is_complete`` is ``False`` when some ``CONVERTER_COLUMNS`` are absent."""
         traj = Trajectory(meta=minimal_meta, points=minimal_df)
         assert traj.is_complete is False
 
     def test_repr(self, simple_trajectory: Trajectory) -> None:
-        """__repr__ contient les informations clés."""
+        """``__repr__`` contains the key trajectory information."""
         r = repr(simple_trajectory)
         assert "test_traj" in r
         assert "points=2" in r
@@ -257,12 +262,12 @@ class TestTrajectoryProperties:
 
 
 class TestTrajectorySaveLoad:
-    """Tests de sérialisation / désérialisation .trajcenter."""
+    """Tests for ``.trajcenter`` serialisation / deserialisation."""
 
     def test_save_creates_file(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """save() crée bien le fichier .trajcenter."""
+        """``save()`` creates the ``.trajcenter`` file."""
         dest = tmp_path / "test.trajcenter"
         result = simple_trajectory.save(dest)
         assert result.exists()
@@ -271,7 +276,7 @@ class TestTrajectorySaveLoad:
     def test_save_returns_absolute_path(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """save() retourne un chemin absolu."""
+        """``save()`` returns an absolute path."""
         dest = tmp_path / "test.trajcenter"
         result = simple_trajectory.save(dest)
         assert result.is_absolute()
@@ -279,7 +284,7 @@ class TestTrajectorySaveLoad:
     def test_save_creates_parent_dirs(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """save() crée les répertoires parents si nécessaire."""
+        """``save()`` creates parent directories when they do not exist."""
         dest = tmp_path / "subdir" / "nested" / "test.trajcenter"
         simple_trajectory.save(dest)
         assert dest.exists()
@@ -287,7 +292,7 @@ class TestTrajectorySaveLoad:
     def test_save_zip_contains_required_entries(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """L'archive ZIP contient les quatre entrées attendues."""
+        """The ZIP archive contains the four expected entries."""
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         with zipfile.ZipFile(dest, "r") as zf:
@@ -300,7 +305,7 @@ class TestTrajectorySaveLoad:
     def test_save_updates_point_count(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """save() met à jour meta.point_count avant l'écriture."""
+        """``save()`` updates ``meta.point_count`` before writing."""
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         with zipfile.ZipFile(dest, "r") as zf:
@@ -310,7 +315,7 @@ class TestTrajectorySaveLoad:
     def test_save_tools_wobjs_json(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """tools.json et wobjs.json contiennent les bonnes listes."""
+        """``tools.json`` and ``wobjs.json`` contain the correct lists."""
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         with zipfile.ZipFile(dest, "r") as zf:
@@ -322,7 +327,7 @@ class TestTrajectorySaveLoad:
     def test_load_roundtrip(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """save() + load() reconstituent une trajectoire identique."""
+        """``save()`` + ``load()`` reconstruct an identical trajectory."""
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         loaded = Trajectory.load(dest)
@@ -336,7 +341,7 @@ class TestTrajectorySaveLoad:
     def test_load_points_values(
         self, tmp_path: Path, simple_trajectory: Trajectory
     ) -> None:
-        """Les valeurs numériques sont préservées après save/load."""
+        """Numeric values are preserved after save/load."""
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         loaded = Trajectory.load(dest)
@@ -349,7 +354,7 @@ class TestTrajectorySaveLoad:
     def test_load_autocompleted_preserved(
         self, tmp_path: Path, complete_df: pd.DataFrame
     ) -> None:
-        """Le champ autocompleted est préservé après save/load."""
+        """The ``autocompleted`` field is preserved after save/load."""
         meta = TrajectoryMeta(
             name="traj",
             autocompleted=["speed", "move_type"],
@@ -366,12 +371,12 @@ class TestTrajectorySaveLoad:
         assert loaded.meta.autocompleted == ["speed", "move_type"]
 
     def test_load_file_not_found_raises(self, tmp_path: Path) -> None:
-        """load() lève FileNotFoundError si le fichier n'existe pas."""
+        """``load()`` raises ``FileNotFoundError`` when the file does not exist."""
         with pytest.raises(FileNotFoundError, match="Fichier introuvable"):
             Trajectory.load(tmp_path / "inexistant.trajcenter")
 
     def test_load_invalid_archive_raises(self, tmp_path: Path) -> None:
-        """load() lève ValueError si l'archive est incomplète."""
+        """``load()`` raises ``ValueError`` when the archive is incomplete."""
         dest = tmp_path / "bad.trajcenter"
         with zipfile.ZipFile(dest, "w") as zf:
             zf.writestr("meta.json", "{}")
@@ -384,7 +389,7 @@ class TestTrajectorySaveLoad:
         minimal_meta: TrajectoryMeta,
         complete_df: pd.DataFrame,
     ) -> None:
-        """load() tolère l'absence de tools.json et wobjs.json (anciens fichiers)."""
+        """``load()`` tolerates missing ``tools.json`` and ``wobjs.json`` (legacy files)."""
         dest = tmp_path / "old.trajcenter"
         traj = Trajectory(meta=minimal_meta, points=complete_df)
         with zipfile.ZipFile(dest, "w") as zf:
@@ -403,7 +408,7 @@ class TestTrajectorySaveLoad:
         minimal_meta: TrajectoryMeta,
         complete_df_with_eax: pd.DataFrame,
     ) -> None:
-        """Les colonnes eax_* sont préservées après save/load."""
+        """``eax_*`` columns are preserved after save/load."""
         traj = Trajectory(
             meta=minimal_meta,
             points=complete_df_with_eax,

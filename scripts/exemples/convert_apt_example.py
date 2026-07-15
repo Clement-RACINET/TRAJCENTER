@@ -1,18 +1,20 @@
-# examples/convert_apt_example.py
-
 #!/usr/bin/env python3
-"""
-Exemple de conversion d'un fichier APT source CATIA (.aptsource) vers .trajcenter.
+# scripts/examples/convert_apt_example.py
+"""APT source to ``.trajcenter`` conversion example.
 
-Trois cas sont illustrés :
-  1. Conversion standard           → coordonnées brutes APT
-  2. Avec transformation CATIA     → matrice de repère appliquée
-  3. Avec defaults personnalisés   → vitesse et zone de secours
+Author: Clement RACINET
 
-Modifiez les variables de la section "Configuration" ci-dessous,
-puis lancez directement :
+Demonstrates three conversion scenarios for a CATIA APT source file
+(``.aptsource``):
 
-    python examples/convert_apt_example.py
+1. **Standard conversion** — raw APT coordinates.
+2. **With CATIA transform** — frame matrix applied to all points.
+3. **With custom defaults** — override speed, zone, tool and wobj.
+
+Edit the variables in the "Configuration" section below, then run
+directly::
+
+    python scripts/examples/convert_apt_example.py
 """
 
 from __future__ import annotations
@@ -24,42 +26,46 @@ from trajcenter.converter.defaults import ConversionDefaults
 from trajcenter.core.trajectory import Trajectory
 
 # ---------------------------------------------------------------------------
-# Configuration — à adapter selon votre contexte
+# Configuration — adjust to your context
 # ---------------------------------------------------------------------------
 
 SOURCE = Path("trajectory_files/PrepaFlans_Pointage.aptsource")
 DEST_DIR = Path("trajectory_store")
 
 # ---------------------------------------------------------------------------
-# Cas 1 — Conversion standard (coordonnées brutes)
+# Case 1 — Standard conversion (raw coordinates)
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Cas 1 — Conversion standard")
+print("Case 1 — Standard conversion")
 print("=" * 60)
 
 traj = AptConverter().convert(SOURCE)
 
 print(traj)
-print(f"  Outil détecté   : {traj.tools[0]!r}")
-print(f"  Wobj par défaut : {traj.wobjs[0]!r}")
-print(f"  Autocomplété    : {traj.meta.autocompleted}")
+print(f"  Detected tool    : {traj.tools[0]!r}")
+print(f"  Default wobj     : {traj.wobjs[0]!r}")
+print(f"  Autocompleted    : {traj.meta.autocompleted}")
 print()
 
-# Aperçu des 3 premiers points
-print(traj.points[["x", "y", "z", "q1", "move_type", "speed"]].head(3).to_string(index=False))
+# Preview of the first 3 points
+print(
+    traj.points[["x", "y", "z", "q1", "move_type", "speed"]]
+    .head(3)
+    .to_string(index=False)
+)
 print()
 
 dest = AptConverter().convert_and_save(source=SOURCE, dest_dir=DEST_DIR)
-print(f"  Sauvegardé → {dest}")
+print(f"  Saved → {dest}")
 print()
 
 # ---------------------------------------------------------------------------
-# Cas 2 — Avec transformation CATIA
+# Case 2 — With CATIA transform
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Cas 2 — Avec transformation CATIA (apply_catia_transform=True)")
+print("Case 2 — With CATIA transform (apply_catia_transform=True)")
 print("=" * 60)
 
 traj_transformed = AptConverter(apply_catia_transform=True).convert(SOURCE)
@@ -67,13 +73,17 @@ traj_transformed = AptConverter(apply_catia_transform=True).convert(SOURCE)
 print(traj_transformed)
 print()
 
-# Comparaison premier point avant / après transformation
+# Compare first point before / after transform
 traj_raw = AptConverter().convert(SOURCE)
 pt_raw = traj_raw.points.iloc[0]
-pt_tr  = traj_transformed.points.iloc[0]
+pt_tr = traj_transformed.points.iloc[0]
 
-print(f"  Point 0 brut        : x={pt_raw['x']:.3f}  y={pt_raw['y']:.3f}  z={pt_raw['z']:.3f}")
-print(f"  Point 0 transformé  : x={pt_tr['x']:.3f}  y={pt_tr['y']:.3f}  z={pt_tr['z']:.3f}")
+print(
+    f"  Point 0 raw         : x={pt_raw['x']:.3f}  y={pt_raw['y']:.3f}  z={pt_raw['z']:.3f}"
+)
+print(
+    f"  Point 0 transformed : x={pt_tr['x']:.3f}  y={pt_tr['y']:.3f}  z={pt_tr['z']:.3f}"
+)
 print()
 
 dest_tr = AptConverter(apply_catia_transform=True).convert_and_save(
@@ -81,15 +91,15 @@ dest_tr = AptConverter(apply_catia_transform=True).convert_and_save(
     dest_dir=DEST_DIR,
     stem=SOURCE.stem + "_transformed",
 )
-print(f"  Sauvegardé → {dest_tr}")
+print(f"  Saved → {dest_tr}")
 print()
 
 # ---------------------------------------------------------------------------
-# Cas 3 — Defaults personnalisés
+# Case 3 — Custom defaults
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Cas 3 — Defaults personnalisés")
+print("Case 3 — Custom defaults")
 print("=" * 60)
 
 custom_defaults = ConversionDefaults(
@@ -102,18 +112,18 @@ custom_defaults = ConversionDefaults(
 traj_custom = AptConverter(defaults=custom_defaults).convert(SOURCE)
 
 print(traj_custom)
-print(f"  Outil              : {traj_custom.tools[0]!r}")
-print(f"  Wobj               : {traj_custom.wobjs[0]!r}")
-print(f"  Vitesse point 0    : {traj_custom.points['speed'].iloc[0]!r}")
-print(f"  Zone point 0       : {traj_custom.points['zone'].iloc[0]!r}")
+print(f"  Tool              : {traj_custom.tools[0]!r}")
+print(f"  Wobj              : {traj_custom.wobjs[0]!r}")
+print(f"  Speed at point 0  : {traj_custom.points['speed'].iloc[0]!r}")
+print(f"  Zone at point 0   : {traj_custom.points['zone'].iloc[0]!r}")
 print()
 
 # ---------------------------------------------------------------------------
-# Vérification roundtrip
+# Roundtrip verification
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Vérification roundtrip save → load")
+print("Roundtrip verification: save → load")
 print("=" * 60)
 
 saved = traj.save(DEST_DIR / "pointage_check.trajcenter")
@@ -123,6 +133,6 @@ assert loaded.point_count == traj.point_count
 assert loaded.tools == traj.tools
 assert loaded.is_complete
 
-print(f"  ✓ {loaded.point_count} points rechargés avec succès")
-print(f"  ✓ Complet : {loaded.is_complete}")
-print(f"  ✓ Outil   : {loaded.tools[0]!r}")
+print(f"  ✓ {loaded.point_count} points reloaded successfully")
+print(f"  ✓ Complete : {loaded.is_complete}")
+print(f"  ✓ Tool     : {loaded.tools[0]!r}")

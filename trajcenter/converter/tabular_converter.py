@@ -1,15 +1,16 @@
+#!/usr/bin/env python3
 # trajcenter/converter/tabular_converter.py
+"""Abstract tabular converter — shared logic for Excel and CSV.
 
-"""
-Convertisseur tabulaire abstrait — logique commune Excel et CSV.
+Author: Clement RACINET
 
-Ce module factorise toute la logique de conversion de données tabulaires
-(résolution des colonnes, gestion des feuilles, tables tools/wobjs,
-autocomplétion) dans une classe abstraite :class:`_TabularConverter`.
+This module factors out all tabular data conversion logic (column
+resolution, sheet handling, tools/wobjs tables, autocompletion) into
+an abstract class :class:`_TabularConverter`.
 
-Les sous-classes n'ont qu'une seule méthode à implémenter :
-:meth:`_read_sheets` qui retourne un ``dict[str, pd.DataFrame]``
-(nom de feuille → DataFrame brut).
+Subclasses only need to implement one method: :meth:`_read_sheets`,
+which returns a ``dict[str, pd.DataFrame]`` (sheet name → raw
+``DataFrame``).
 
 Architecture
 -------------
@@ -20,27 +21,28 @@ Architecture
                 ├── ExcelConverter   → _read_sheets() via pd.ExcelFile
                 └── CsvConverter     → _read_sheets() via pd.read_csv
 
-Feuilles réservées
--------------------
-- ``tools`` / ``tool``    : table des noms de tools (colonne ``name``)
-- ``wobjs`` / ``wobj``    : table des noms de wobjs (colonne ``name``)
-- ``meta`` / ``metadata`` : métadonnées clé/valeur (lues, pas une trajectoire)
+Reserved sheets
+----------------
+- ``tools`` / ``tool``    : tool name table (``name`` column)
+- ``wobjs`` / ``wobj``    : wobj name table (``name`` column)
+- ``meta`` / ``metadata`` : key/value metadata (read, not a trajectory)
 
-Toute autre feuille est traitée comme une feuille trajectoire.
+Every other sheet is treated as a trajectory sheet.
 
-Feuille meta
--------------
-La feuille ``meta`` est attendue avec deux colonnes ``key`` et ``value``.
-Les champs reconnus (``name``, ``robot_model``) alimentent :class:`TrajectoryMeta`.
-Les champs inconnus sont stockés dans :attr:`TrajectoryMeta.extra`.
-Les champs recalculés à l'import (``source_format``, ``autocompleted``,
-``created_at``, ``version``, ``point_count``) sont ignorés silencieusement.
+Meta sheet
+-----------
+The ``meta`` sheet is expected to have two columns ``key`` and ``value``.
+Recognised fields (``name``, ``robot_model``) populate
+:class:`TrajectoryMeta`. Unknown fields are stored in
+:attr:`TrajectoryMeta.extra`. Fields that are recalculated at import
+time (``source_format``, ``autocompleted``, ``created_at``,
+``version``, ``point_count``) are silently ignored.
 
-Colonnes obligatoires
-----------------------
-Seules ``x``, ``y``, ``z`` sont strictement obligatoires.
-Les quaternions absents sont remplacés par l'orientation identité ``[1,0,0,0]``.
-Toutes les autres colonnes sont autocomplétées depuis
+Mandatory columns
+------------------
+Only ``x``, ``y``, ``z`` are strictly mandatory.
+Missing quaternions are replaced by the identity orientation
+``[1, 0, 0, 0]``. All other columns are autocompleted from
 :class:`~trajcenter.converter.defaults.ConversionDefaults`.
 """
 
@@ -59,145 +61,170 @@ from trajcenter.core.trajectory import SourceFormat, Trajectory, TrajectoryMeta
 
 
 # ---------------------------------------------------------------------------
-# Constantes
+# Constants
 # ---------------------------------------------------------------------------
 
 _SHEET_TOOLS: frozenset[str] = frozenset({"tools", "tool"})
 _SHEET_WOBJS: frozenset[str] = frozenset({"wobjs", "wobj"})
-_SHEET_META:  frozenset[str] = frozenset({"meta", "metadata"})
+_SHEET_META: frozenset[str] = frozenset({"meta", "metadata"})
 _SHEET_RESERVED: frozenset[str] = _SHEET_TOOLS | _SHEET_WOBJS | _SHEET_META
 
-#: Seules x, y, z sont strictement obligatoires.
+#: Only x, y, z are strictly mandatory.
 _REQUIRED_COLS: frozenset[str] = frozenset({"x", "y", "z"})
 
-#: Quaternion identité (scalar-first : q1=qw=1, q2=qi=q3=qj=q4=qk=0).
+#: Identity quaternion (scalar-first: q1=qw=1, q2=qi=q3=qj=q4=qk=0).
 _IDENTITY_QUATERNION: dict[str, float] = {
-    "q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0,
+    "q1": 1.0,
+    "q2": 0.0,
+    "q3": 0.0,
+    "q4": 0.0,
 }
 
-#: Noms de feuilles "par défaut" — le nom de feuille ne sera pas suffixé au stem.
-_SHEET_DEFAULT_NAMES: frozenset[str] = frozenset({
-    "feuil1", "sheet1", "traj", "trajectoire", "sheet",
-})
+#: "Default" sheet names — the sheet name will not be suffixed to the stem.
+_SHEET_DEFAULT_NAMES: frozenset[str] = frozenset(
+    {
+        "feuil1",
+        "sheet1",
+        "traj",
+        "trajectoire",
+        "sheet",
+    }
+)
 
-#: Champs de TrajectoryMeta directement applicables depuis la feuille meta.
-#: Tout champ inconnu va dans extra{}.
-_META_APPLICABLE_FIELDS: frozenset[str] = frozenset({
-    "name", "robot_model",
-})
+#: TrajectoryMeta fields that can be applied directly from the meta sheet.
+#: Any unknown field goes into extra{}.
+_META_APPLICABLE_FIELDS: frozenset[str] = frozenset(
+    {
+        "name",
+        "robot_model",
+    }
+)
 
-#: Champs de TrajectoryMeta à ignorer explicitement à la relecture
-#: (recalculés à l'import ou non pertinents).
-_META_IGNORED_FIELDS: frozenset[str] = frozenset({
-    "source_format", "autocompleted", "created_at", "version",
-    "point_count", "external_axes", "source_file",
-})
+#: TrajectoryMeta fields to explicitly ignore when re-reading
+#: (recalculated at import time or not relevant).
+_META_IGNORED_FIELDS: frozenset[str] = frozenset(
+    {
+        "source_format",
+        "autocompleted",
+        "created_at",
+        "version",
+        "point_count",
+        "external_axes",
+        "source_file",
+    }
+)
 
 
 # ---------------------------------------------------------------------------
-# Convertisseur tabulaire abstrait
+# Abstract tabular converter
 # ---------------------------------------------------------------------------
 
 
 class _TabularConverter(BaseConverter):
-    """Convertisseur abstrait pour les formats tabulaires (Excel, CSV).
+    """Abstract converter for tabular formats (Excel, CSV).
 
-    Sous-classes concrètes : :class:`~trajcenter.converter.excel_converter.ExcelConverter`
-    et :class:`~trajcenter.converter.csv_converter.CsvConverter`.
+    Concrete subclasses:
+    :class:`~trajcenter.converter.excel_converter.ExcelConverter` and
+    :class:`~trajcenter.converter.csv_converter.CsvConverter`.
 
-    Les sous-classes doivent implémenter :meth:`_read_sheets` et
+    Subclasses must implement :meth:`_read_sheets` and
     :attr:`_source_format`.
 
     Attributes:
-        defaults: Valeurs par défaut pour l'autocomplétion.
+        defaults: Default values for autocompletion.
     """
 
     def __init__(self, defaults: ConversionDefaults | None = None) -> None:
+        """Initialise the tabular converter.
+
+        Args:
+            defaults: Default values for autocompletion.
+                When ``None``,
+                :class:`~trajcenter.converter.defaults.ConversionDefaults`
+                is instantiated with its own default values.
+        """
         super().__init__(defaults)
 
     # ------------------------------------------------------------------
-    # Interface à implémenter
+    # Interface to implement
     # ------------------------------------------------------------------
 
     @property
     @abstractmethod
     def _source_format(self) -> SourceFormat:
-        """Format source à inscrire dans :class:`~trajcenter.core.trajectory.TrajectoryMeta`."""
+        """Source format to record in :class:`~trajcenter.core.trajectory.TrajectoryMeta`."""
         ...
 
     @abstractmethod
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
-        """Lit le fichier source et retourne un dict ``{nom_feuille: DataFrame brut}``.
+        """Read the source file and return a dict ``{sheet_name: raw_DataFrame}``.
 
         Args:
-            source: Chemin vers le fichier source (déjà vérifié existant).
+            source: Path to the source file (already verified to exist).
 
         Returns:
-            Dictionnaire ordonné ``{nom_feuille: DataFrame}``.
-            Pour les formats mono-feuille (CSV), retourner ``{"sheet": df}``.
+            Ordered dictionary ``{sheet_name: DataFrame}``.
+            For single-sheet formats (CSV), return ``{"sheet": df}``.
         """
         ...
 
     # ------------------------------------------------------------------
-    # API publique
+    # Public API
     # ------------------------------------------------------------------
 
     def convert(self, source: Path) -> Trajectory:
-        """Convertit un fichier tabulaire à feuille unique en trajectoire.
+        """Convert a single-sheet tabular file to a trajectory.
 
         Args:
-            source: Chemin vers le fichier source.
+            source: Path to the source file.
 
         Returns:
-            Objet :class:`~trajcenter.core.trajectory.Trajectory` valide.
+            A valid :class:`~trajcenter.core.trajectory.Trajectory` object.
 
         Raises:
-            FileNotFoundError: Si le fichier n'existe pas.
-            ValueError: Si plusieurs feuilles trajectoire sont présentes
-                        (utiliser :meth:`convert_all`).
+            FileNotFoundError: If the file does not exist.
+            ValueError: If multiple trajectory sheets are present
+                (use :meth:`convert_all` instead).
         """
         trajs = self.convert_all(source)
         if len(trajs) > 1:
             names = [t.meta.name for t in trajs]
             raise ValueError(
-                f"Le fichier contient {len(trajs)} feuilles trajectoire : "
-                f"{names}. Utilisez convert_all() pour les traiter toutes."
+                f"The file contains {len(trajs)} trajectory sheets: "
+                f"{names}. Use convert_all() to process all of them."
             )
         return trajs[0]
 
     def convert_all(self, source: Path) -> list[Trajectory]:
-        """Convertit toutes les feuilles trajectoire d'un fichier tabulaire.
+        """Convert all trajectory sheets in a tabular file.
 
         Args:
-            source: Chemin vers le fichier source.
+            source: Path to the source file.
 
         Returns:
-            Liste de :class:`~trajcenter.core.trajectory.Trajectory`.
+            List of :class:`~trajcenter.core.trajectory.Trajectory` objects.
 
         Raises:
-            FileNotFoundError: Si le fichier n'existe pas.
-            ValueError: Si aucune feuille trajectoire valide n'est trouvée.
+            FileNotFoundError: If the file does not exist.
+            ValueError: If no valid trajectory sheet is found.
         """
         source = Path(source).resolve()
         if not source.exists():
-            raise FileNotFoundError(f"Fichier introuvable : {source}")
+            raise FileNotFoundError(f"File not found: {source}")
 
         all_sheets = self._read_sheets(source)
         sheet_names = list(all_sheets.keys())
 
-        shared_tools    = self._extract_ref_table(all_sheets, _SHEET_TOOLS, "name")
-        shared_wobjs    = self._extract_ref_table(all_sheets, _SHEET_WOBJS, "name")
-        meta_overrides  = self._extract_meta_overrides(all_sheets)
+        shared_tools = self._extract_ref_table(all_sheets, _SHEET_TOOLS, "name")
+        shared_wobjs = self._extract_ref_table(all_sheets, _SHEET_WOBJS, "name")
+        meta_overrides = self._extract_meta_overrides(all_sheets)
 
-        traj_sheets = [
-            s for s in sheet_names
-            if s.casefold() not in _SHEET_RESERVED
-        ]
+        traj_sheets = [s for s in sheet_names if s.casefold() not in _SHEET_RESERVED]
 
         if not traj_sheets:
             raise ValueError(
-                f"Aucune feuille trajectoire trouvée dans : {source.name}. "
-                f"Feuilles présentes : {sheet_names}"
+                f"No trajectory sheet found in: {source.name}. "
+                f"Sheets present: {sheet_names}"
             )
 
         trajectories: list[Trajectory] = []
@@ -213,29 +240,27 @@ class _TabularConverter(BaseConverter):
                 )
                 trajectories.append(traj)
             except ValueError as exc:
-                if "obligatoires manquantes" in str(exc):
+                if "mandatory columns missing" in str(exc):
                     raise
                 warnings.warn(
-                    f"Feuille '{sheet}' ignorée — erreur : {exc}",
+                    f"Sheet '{sheet}' skipped — error: {exc}",
                     UserWarning,
                     stacklevel=2,
                 )
             except Exception as exc:
                 warnings.warn(
-                    f"Feuille '{sheet}' ignorée — erreur : {exc}",
+                    f"Sheet '{sheet}' skipped — error: {exc}",
                     UserWarning,
                     stacklevel=2,
                 )
 
         if not trajectories:
-            raise ValueError(
-                f"Aucune trajectoire valide extraite de : {source.name}"
-            )
+            raise ValueError(f"No valid trajectory extracted from: {source.name}")
 
         return trajectories
 
     # ------------------------------------------------------------------
-    # Étapes internes
+    # Internal steps
     # ------------------------------------------------------------------
 
     def _convert_sheet(
@@ -247,29 +272,32 @@ class _TabularConverter(BaseConverter):
         shared_wobjs: list[str],
         meta_overrides: dict[str, str],
     ) -> Trajectory:
-        """Convertit un DataFrame brut en :class:`~trajcenter.core.trajectory.Trajectory`.
+        """Convert a raw ``DataFrame`` to a :class:`~trajcenter.core.trajectory.Trajectory`.
 
         Args:
-            raw_df:         DataFrame brut issu de la lecture du fichier.
-            sheet_name:     Nom de la feuille (pour les messages d'erreur et le nommage).
-            source:         Chemin du fichier source (pour les métadonnées).
-            shared_tools:   Table tools partagée (feuille dédiée), peut être vide.
-            shared_wobjs:   Table wobjs partagée (feuille dédiée), peut être vide.
-            meta_overrides: Dict clé/valeur issu de la feuille meta, peut être vide.
+            raw_df: Raw ``DataFrame`` from the file reader.
+            sheet_name: Sheet name (used in error messages and naming).
+            source: Path to the source file (used for metadata).
+            shared_tools: Shared tool table (from a dedicated sheet),
+                may be empty.
+            shared_wobjs: Shared wobj table (from a dedicated sheet),
+                may be empty.
+            meta_overrides: Key/value dict from the meta sheet,
+                may be empty.
 
         Returns:
-            Objet :class:`~trajcenter.core.trajectory.Trajectory` valide et complet.
+            A valid, complete
+            :class:`~trajcenter.core.trajectory.Trajectory` object.
 
         Raises:
-            ValueError: Si les colonnes obligatoires x, y, z sont absentes.
+            ValueError: If the mandatory columns x, y, z are absent.
         """
         df = raw_df.dropna(how="all").reset_index(drop=True)
         df, unresolved = resolve_columns(df)
 
         if unresolved:
             warnings.warn(
-                f"Feuille '{sheet_name}' — colonnes non reconnues "
-                f"(ignorées) : {unresolved}",
+                f"Sheet '{sheet_name}' — unrecognised columns (ignored): {unresolved}",
                 UserWarning,
                 stacklevel=4,
             )
@@ -277,11 +305,10 @@ class _TabularConverter(BaseConverter):
         missing = _REQUIRED_COLS - set(df.columns)
         if missing:
             raise ValueError(
-                f"Feuille '{sheet_name}' — colonnes obligatoires manquantes : "
-                f"{sorted(missing)}"
+                f"Sheet '{sheet_name}' — mandatory columns missing: {sorted(missing)}"
             )
 
-        # Quaternion identité si absent
+        # Identity quaternion when absent
         autocompleted_quat: list[str] = []
         for col, val in _IDENTITY_QUATERNION.items():
             if col not in df.columns:
@@ -296,21 +323,21 @@ class _TabularConverter(BaseConverter):
             c for c in autocompleted if c not in autocompleted_quat
         ]
 
-        # Nom : meta_overrides["name"] > nom calculé depuis stem + sheet
+        # Name: meta_overrides["name"] > name computed from stem + sheet
         traj_name: str = meta_overrides.get("name") or (
             source.stem
             if sheet_name.casefold() in _SHEET_DEFAULT_NAMES
             else f"{source.stem}_{sheet_name}"
         )
 
-        # Champs directs applicables depuis meta
+        # Direct applicable fields from meta
         robot_model: str | None = meta_overrides.get("robot_model") or None
 
-        # Champs inconnus → extra{} (ni applicables, ni ignorés explicitement)
+        # Unknown fields → extra{} (neither applicable nor explicitly ignored)
         extra: dict[str, str | int | float | bool | None] = {
-            k: v for k, v in meta_overrides.items()
-            if k not in _META_APPLICABLE_FIELDS
-            and k not in _META_IGNORED_FIELDS
+            k: v
+            for k, v in meta_overrides.items()
+            if k not in _META_APPLICABLE_FIELDS and k not in _META_IGNORED_FIELDS
         }
 
         meta = TrajectoryMeta(
@@ -328,18 +355,18 @@ class _TabularConverter(BaseConverter):
     def _extract_meta_overrides(
         all_sheets: dict[str, pd.DataFrame],
     ) -> dict[str, str]:
-        """Lit la feuille meta (format clé/valeur) et retourne un dict ``{key: value}``.
+        """Read the meta sheet (key/value format) and return a ``{key: value}`` dict.
 
-        La feuille est attendue avec deux colonnes ``key`` et ``value``
-        (insensible à la casse). Les lignes avec clé ou valeur vide sont ignorées.
-        Si la feuille est absente ou mal formée, retourne un dict vide
-        silencieusement.
+        The sheet is expected to have two columns ``key`` and ``value``
+        (case-insensitive). Rows with an empty key or value are ignored.
+        If the sheet is absent or malformed, an empty dict is returned
+        silently.
 
         Args:
-            all_sheets: Toutes les feuilles du fichier source.
+            all_sheets: All sheets from the source file.
 
         Returns:
-            Dict ``{clé_normalisée: valeur_str}``, jamais ``None``.
+            Dict ``{normalised_key: value_str}``, never ``None``.
         """
         for sheet_name, df in all_sheets.items():
             if sheet_name.casefold() not in _SHEET_META:
@@ -368,15 +395,18 @@ class _TabularConverter(BaseConverter):
         target_names: frozenset[str],
         name_col: str,
     ) -> list[str]:
-        """Extrait une table de référence (tools ou wobjs) depuis les feuilles chargées.
+        """Extract a reference table (tools or wobjs) from the loaded sheets.
 
         Args:
-            all_sheets:   Toutes les feuilles du fichier.
-            target_names: Noms de feuilles réservés à chercher (ex. ``_SHEET_TOOLS``).
-            name_col:     Nom de la colonne contenant les valeurs (``"name"``).
+            all_sheets: All sheets from the file.
+            target_names: Reserved sheet names to search for
+                (e.g. ``_SHEET_TOOLS``).
+            name_col: Name of the column containing the values
+                (``"name"``).
 
         Returns:
-            Liste des noms extraits, ou liste vide si la feuille est absente.
+            List of extracted names, or an empty list if the sheet is
+            absent.
         """
         for sheet_name, df in all_sheets.items():
             if sheet_name.casefold() in target_names:
@@ -392,18 +422,20 @@ class _TabularConverter(BaseConverter):
         shared_tools: list[str],
         shared_wobjs: list[str],
     ) -> tuple[list[str], list[str]]:
-        """Construit les tables tools/wobjs depuis le DataFrame ou les feuilles partagées.
+        """Build tools/wobjs tables from the ``DataFrame`` or shared sheets.
 
-        Priorité : feuille partagée > colonne ``tool``/``wobj`` dans le DataFrame.
+        Priority: shared sheet > ``tool``/``wobj`` column in the
+        ``DataFrame``.
 
         Args:
-            df:            DataFrame de la feuille trajectoire.
-            shared_tools:  Table tools issue d'une feuille dédiée.
-            shared_wobjs:  Table wobjs issue d'une feuille dédiée.
+            df: Trajectory sheet ``DataFrame``.
+            shared_tools: Tool table from a dedicated sheet.
+            shared_wobjs: Wobj table from a dedicated sheet.
 
         Returns:
             Tuple ``(tools, wobjs)``.
         """
+
         def _extract_unique(col: str) -> list[str]:
             if col in df.columns:
                 return list(dict.fromkeys(df[col].dropna().astype(str).tolist()))
@@ -419,15 +451,16 @@ class _TabularConverter(BaseConverter):
         tools: list[str],
         wobjs: list[str],
     ) -> pd.DataFrame:
-        """Remplace les colonnes ``tool``/``wobj`` (noms) par ``tool_index``/``wobj_index`` (int).
+        """Replace ``tool``/``wobj`` name columns with integer index columns.
 
         Args:
-            df:    DataFrame de la feuille trajectoire.
-            tools: Table des noms de tools.
-            wobjs: Table des noms de wobjs.
+            df: Trajectory sheet ``DataFrame``.
+            tools: Tool name table.
+            wobjs: Wobj name table.
 
         Returns:
-            DataFrame avec colonnes ``tool_index`` et ``wobj_index`` si applicable.
+            ``DataFrame`` with ``tool_index`` and ``wobj_index`` columns
+            where applicable, and the original name columns dropped.
         """
         df = df.copy()
         for col, table, idx_col in [
@@ -436,8 +469,6 @@ class _TabularConverter(BaseConverter):
         ]:
             if col in df.columns and table:
                 name_to_idx = {name: i for i, name in enumerate(table)}
-                df[idx_col] = (
-                    df[col].astype(str).map(name_to_idx).fillna(0).astype(int)
-                )
+                df[idx_col] = df[col].astype(str).map(name_to_idx).fillna(0).astype(int)
                 df = df.drop(columns=[col])
         return df

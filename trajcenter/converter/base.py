@@ -1,24 +1,26 @@
+#!/usr/bin/env python3
 # trajcenter/converter/base.py
+"""Abstract base class shared by all TrajCenter converters.
 
-"""
-Classe abstraite commune à tous les convertisseurs TrajCenter.
+Author: Clement RACINET
 
-Un convertisseur transforme un fichier source (RAPID ``.mod``, Excel, APT…)
-en objet :class:`~trajcenter.core.trajectory.Trajectory` **toujours complet**,
-prêt à être sauvegardé en ``.trajcenter``.
+A converter transforms a source file (RAPID ``.mod``, Excel, APT, …)
+into a :class:`~trajcenter.core.trajectory.Trajectory` object that is
+**always complete** and ready to be saved as ``.trajcenter``.
 
-Principe d'autocomplétion
---------------------------
-La méthode :meth:`BaseConverter._autocomplete` garantit que toutes les
-colonnes de :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` sont
-présentes dans le DataFrame avant la construction de la trajectoire.
-Les colonnes manquantes sont remplies avec les valeurs de
-:class:`~trajcenter.converter.defaults.ConversionDefaults` et leurs noms
-sont retournés pour être stockés dans
+Autocompletion principle
+-------------------------
+The :meth:`BaseConverter._autocomplete` method guarantees that all
+columns listed in
+:data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` are present in
+the ``DataFrame`` before the trajectory is constructed.
+Missing columns are filled with values from
+:class:`~trajcenter.converter.defaults.ConversionDefaults`, and their
+names are returned so they can be stored in
 :attr:`~trajcenter.core.trajectory.TrajectoryMeta.autocompleted`.
 
-Les colonnes ``eax_*`` ne sont **jamais** autocomplétées — leur absence
-signifie que l'axe n'existe pas sur ce robot.
+``eax_*`` columns are **never** autocompleted — their absence means
+the axis does not exist on that robot.
 
 Example:
     ::
@@ -31,7 +33,7 @@ Example:
         traj = converter.convert(Path("trajectory_files/soudure.mod"))
         traj.save("trajectory_store/soudure.trajcenter")
 
-        # Avec des defaults personnalisés
+        # With custom defaults
         converter_slow = ModConverter(
             defaults=ConversionDefaults(speed="v100", zone="fine")
         )
@@ -45,18 +47,18 @@ from pathlib import Path
 import pandas as pd
 
 from trajcenter.converter.defaults import ConversionDefaults
-from trajcenter.core.trajectory import CONVERTER_COLUMNS, CONFDATA_COLUMNS, Trajectory
+from trajcenter.core.trajectory import CONFDATA_COLUMNS, CONVERTER_COLUMNS, Trajectory
 
 
 class BaseConverter(ABC):
-    """Convertisseur de fichier source vers :class:`~trajcenter.core.trajectory.Trajectory`.
+    """Base converter from a source file to a :class:`~trajcenter.core.trajectory.Trajectory`.
 
-    Toutes les sous-classes doivent implémenter :meth:`convert`.
-    Les méthodes utilitaires :meth:`_autocomplete` et
-    :meth:`convert_and_save` sont fournies par cette classe de base.
+    All subclasses must implement :meth:`convert`.
+    The utility methods :meth:`_autocomplete` and
+    :meth:`convert_and_save` are provided by this base class.
 
     Attributes:
-        defaults: Valeurs par défaut utilisées pour l'autocomplétion.
+        defaults: Default values used for autocompletion.
 
     Example:
         ::
@@ -70,38 +72,39 @@ class BaseConverter(ABC):
     """
 
     def __init__(self, defaults: ConversionDefaults | None = None) -> None:
-        """Initialise le convertisseur avec des valeurs par défaut optionnelles.
+        """Initialise the converter with optional default values.
 
         Args:
-            defaults: Valeurs par défaut pour l'autocomplétion.
-                      Si ``None``, :class:`~trajcenter.converter.defaults.ConversionDefaults`
-                      est instancié avec ses propres valeurs par défaut.
+            defaults: Default values for autocompletion.
+                When ``None``,
+                :class:`~trajcenter.converter.defaults.ConversionDefaults`
+                is instantiated with its own default values.
         """
         self.defaults: ConversionDefaults = defaults or ConversionDefaults()
 
     @abstractmethod
     def convert(self, source: Path) -> Trajectory:
-        """Convertit un fichier source en objet :class:`~trajcenter.core.trajectory.Trajectory`.
+        """Convert a source file into a :class:`~trajcenter.core.trajectory.Trajectory`.
 
-        La trajectoire retournée doit être **complète** : toutes les colonnes
-        de :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` doivent
-        être présentes (garantie par l'appel à :meth:`_autocomplete`).
+        The returned trajectory must be **complete**: all columns listed
+        in :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` must be
+        present (guaranteed by calling :meth:`_autocomplete`).
 
         Args:
-            source: Chemin vers le fichier source à convertir.
+            source: Path to the source file to convert.
 
         Returns:
-            Objet :class:`~trajcenter.core.trajectory.Trajectory` valide
-            et complet, non sauvegardé.
+            A valid, complete, unsaved
+            :class:`~trajcenter.core.trajectory.Trajectory` object.
 
         Raises:
-            FileNotFoundError: Si le fichier source n'existe pas.
-            ValueError:        Si le fichier est invalide ou mal formé.
+            FileNotFoundError: If the source file does not exist.
+            ValueError: If the file is invalid or malformed.
         """
         ...
 
     # ------------------------------------------------------------------
-    # Autocomplétion
+    # Autocompletion
     # ------------------------------------------------------------------
 
     def _autocomplete(
@@ -110,46 +113,46 @@ class BaseConverter(ABC):
         tools: list[str],
         wobjs: list[str],
     ) -> tuple[pd.DataFrame, list[str]]:
-        """Complète les colonnes manquantes avec les valeurs de ``self.defaults``.
+        """Fill missing columns with values from ``self.defaults``.
 
-        Parcourt :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` et
-        ajoute chaque colonne absente avec la valeur correspondante dans
-        :attr:`defaults`. Les colonnes ``eax_*`` ne sont jamais touchées.
+        Iterates over :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS`
+        and adds each absent column using the corresponding value from
+        :attr:`defaults`. ``eax_*`` columns are never touched.
 
-        Si ``tools`` est vide, un tool par défaut (``defaults.tool``) est
-        ajouté à la liste et ``tool_index`` est autocomplété à ``0``.
-        Même logique pour ``wobjs`` / ``wobj_index``.
+        If ``tools`` is empty, a default tool (``defaults.tool``) is
+        appended to the list and ``tool_index`` is autocompleted to ``0``.
+        The same logic applies to ``wobjs`` / ``wobj_index``.
 
         Args:
-            df:    DataFrame partiellement rempli (après parsing de la source).
-            tools: Liste des noms de tools construite par le convertisseur.
-                   Modifiée **en place** si vide.
-            wobjs: Liste des noms de wobjs construite par le convertisseur.
-                   Modifiée **en place** si vide.
+            df: Partially filled ``DataFrame`` (after source parsing).
+            tools: List of tool names built by the converter.
+                Modified **in place** when empty.
+            wobjs: List of wobj names built by the converter.
+                Modified **in place** when empty.
 
         Returns:
-            Tuple ``(df_complet, autocompleted)`` où :
+            Tuple ``(df_complete, autocompleted)`` where:
 
-            - ``df_complet``    : DataFrame avec toutes les colonnes présentes.
-            - ``autocompleted`` : liste des noms de colonnes qui ont été
-                                  inférées (non présentes dans la source).
+            - ``df_complete``: ``DataFrame`` with all columns present.
+            - ``autocompleted``: list of column names that were inferred
+              (not present in the source).
         """
         df = df.copy()
         autocompleted: list[str] = []
         n = len(df)
 
-        # --- Tables tools / wobjs vides → default ---
+        # --- Empty tools / wobjs tables → default ---
         if not tools:
             tools.append(self.defaults.tool)
         if not wobjs:
             wobjs.append(self.defaults.wobj)
 
-        # --- Mapping colonne → valeur de remplissage (str uniquement) ---
-        # Les confdata sont gérés séparément (Int8 nullable)
+        # --- Column → fill value mapping (strings only) ---
+        # confdata columns are handled separately (nullable Int8)
         _fill_str: dict[str, str] = {
             "move_type": self.defaults.move_type,
-            "speed":     self.defaults.speed,
-            "zone":      self.defaults.zone,
+            "speed": self.defaults.speed,
+            "zone": self.defaults.zone,
         }
         _fill_int: dict[str, int] = {
             "tool_index": 0,
@@ -161,7 +164,7 @@ class BaseConverter(ABC):
                 continue
 
             if col in CONFDATA_COLUMNS:
-                # Int8 nullable — pd.Series est le seul chemin propre
+                # Nullable Int8 — pd.Series is the only clean path
                 df[col] = pd.Series(
                     [self.defaults.cf_value] * n,
                     dtype=pd.Int8Dtype(),
@@ -179,7 +182,7 @@ class BaseConverter(ABC):
         return df, autocompleted
 
     # ------------------------------------------------------------------
-    # Conversion + sauvegarde
+    # Convert and save
     # ------------------------------------------------------------------
 
     def convert_and_save(
@@ -188,16 +191,16 @@ class BaseConverter(ABC):
         dest_dir: Path,
         stem: str | None = None,
     ) -> Path:
-        """Convertit un fichier source et sauvegarde le résultat en ``.trajcenter``.
+        """Convert a source file and save the result as ``.trajcenter``.
 
         Args:
-            source:   Chemin du fichier source.
-            dest_dir: Dossier de destination (créé si absent).
-            stem:     Nom du fichier sans extension.
-                      Par défaut : même stem que le fichier source.
+            source: Path to the source file.
+            dest_dir: Destination directory (created if absent).
+            stem: Output filename without extension.
+                Defaults to the source file stem.
 
         Returns:
-            Chemin absolu du fichier ``.trajcenter`` créé.
+            Absolute path to the created ``.trajcenter`` file.
 
         Example:
             ::

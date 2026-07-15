@@ -1,16 +1,20 @@
+#!/usr/bin/env python3
 # tests/test_tabular_converter.py
+"""Unit tests for :mod:`trajcenter.converter.column_mapper` and the shared
+logic of :mod:`trajcenter.converter.tabular_converter`.
 
-"""
-Tests unitaires pour :mod:`trajcenter.converter.column_mapper`
-et la logique commune de :mod:`trajcenter.converter.tabular_converter`.
+Author: Clement RACINET
 
-Couvre :
+Covers:
+
 - :func:`~trajcenter.converter.column_mapper.canonical_name`
 - :func:`~trajcenter.converter.column_mapper.resolve_columns`
-- Logique partagée de :class:`~trajcenter.converter.tabular_converter._TabularConverter`
-  (résolution colonnes, tables tools/wobjs, quaternion identité, autocomplétion)
-  testée via :class:`~trajcenter.converter.csv_converter.CsvConverter`
-  comme proxy concret minimal.
+- Shared logic of
+  :class:`~trajcenter.converter.tabular_converter._TabularConverter`
+  (column resolution, tools/wobjs tables, identity quaternion,
+  autocompletion) tested via
+  :class:`~trajcenter.converter.csv_converter.CsvConverter`
+  as a minimal concrete proxy.
 """
 
 from __future__ import annotations
@@ -36,6 +40,17 @@ from trajcenter.converter.defaults import ConversionDefaults
 def _write_csv(
     tmp_path: Path, name: str, content: str, encoding: str = "utf-8"
 ) -> Path:
+    """Write a synthetic CSV file and return its path.
+
+    Args:
+        tmp_path: Temporary directory provided by pytest.
+        name: File name (including extension).
+        content: Raw CSV content to write.
+        encoding: File encoding (default: ``"utf-8"``).
+
+    Returns:
+        Path to the written CSV file.
+    """
     p = tmp_path / name
     p.write_text(content, encoding=encoding)
     return p
@@ -47,37 +62,37 @@ def _write_csv(
 
 
 class TestCanonicalName:
-    """Tests de la fonction canonical_name."""
+    """Tests for the ``canonical_name`` function."""
 
     def test_exact_lowercase(self) -> None:
-        """Un alias exact minuscule est reconnu."""
+        """An exact lowercase alias is recognised."""
         assert canonical_name("x") == "x"
         assert canonical_name("vitesse") == "speed"
         assert canonical_name("repere") == "wobj"
 
     def test_uppercase(self) -> None:
-        """Les majuscules sont ignorées."""
+        """Uppercase letters are ignored."""
         assert canonical_name("X") == "x"
         assert canonical_name("VITESSE") == "speed"
         assert canonical_name("PosX") == "x"
 
     def test_accents(self) -> None:
-        """Les accents sont supprimés avant comparaison."""
+        """Diacritics are stripped before comparison."""
         assert canonical_name("Répère") == "wobj"
         assert canonical_name("REPÈRE") == "wobj"
 
     def test_unknown_returns_none(self) -> None:
-        """Un nom inconnu retourne None."""
+        """An unknown name returns ``None``."""
         assert canonical_name("foobar") is None
         assert canonical_name("colonne_inconnue") is None
 
     def test_all_canonical_names_resolve_to_themselves(self) -> None:
-        """Chaque nom canonique se résout vers lui-même."""
+        """Every canonical name resolves to itself."""
         for canon in COLUMN_ALIASES:
             assert canonical_name(canon) == canon
 
     def test_quaternion_aliases(self) -> None:
-        """Les alias de quaternions sont correctement résolus."""
+        """Quaternion aliases are correctly resolved."""
         assert canonical_name("qw") == "q1"
         assert canonical_name("qi") == "q2"
         assert canonical_name("qj") == "q3"
@@ -90,17 +105,17 @@ class TestCanonicalName:
 
 
 class TestResolveColumns:
-    """Tests de la fonction resolve_columns."""
+    """Tests for the ``resolve_columns`` function."""
 
     def test_canonical_columns_unchanged(self) -> None:
-        """Des colonnes déjà canoniques ne sont pas modifiées."""
+        """Already-canonical columns are not modified."""
         df = pd.DataFrame(columns=["x", "y", "z"])
         df_out, unknown = resolve_columns(df)
         assert list(df_out.columns) == ["x", "y", "z"]
         assert unknown == []
 
     def test_alias_resolved(self) -> None:
-        """Les alias sont correctement renommés."""
+        """Aliases are correctly renamed to their canonical form."""
         df = pd.DataFrame(columns=["PosX", "PosY", "PosZ"])
         df_out, unknown = resolve_columns(df)
         assert "x" in df_out.columns
@@ -108,21 +123,21 @@ class TestResolveColumns:
         assert "z" in df_out.columns
 
     def test_unknown_columns_returned(self) -> None:
-        """Les colonnes inconnues sont retournées dans la liste et laissées intactes."""
+        """Unknown columns are returned in the list and left intact."""
         df = pd.DataFrame(columns=["x", "y", "z", "custom_col"])
         df_out, unknown = resolve_columns(df)
         assert "custom_col" in unknown
         assert "custom_col" in df_out.columns
 
     def test_duplicate_canonical_warns(self) -> None:
-        """Un doublon de canonique émet un UserWarning et conserve la première colonne."""
+        """A duplicate canonical name emits a ``UserWarning`` and keeps the first column."""
         df = pd.DataFrame(columns=["x", "pos_x", "y", "z"])
         with pytest.warns(UserWarning, match="pos_x"):
             df_out, _ = resolve_columns(df)
         assert df_out.columns.tolist().count("x") == 1
 
     def test_accent_and_case_resolved(self) -> None:
-        """Accents et casse mixte sont résolus correctement."""
+        """Mixed casing and accents are resolved correctly."""
         df = pd.DataFrame(columns=["Répère", "VITESSE", "PosX", "PosY", "PosZ"])
         df_out, unknown = resolve_columns(df)
         assert "wobj" in df_out.columns
@@ -131,30 +146,30 @@ class TestResolveColumns:
 
 
 # ---------------------------------------------------------------------------
-# Tests — logique commune _TabularConverter (via CsvConverter)
+# Tests — shared _TabularConverter logic (via CsvConverter)
 # ---------------------------------------------------------------------------
 
 
 class TestTabularConverterLogic:
-    """Tests de la logique commune via CsvConverter comme proxy concret."""
+    """Tests for shared tabular converter logic via CsvConverter as a concrete proxy."""
 
-    # --- Erreurs de base ---
+    # --- Basic errors ---
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
-        """convert() lève FileNotFoundError si le fichier n'existe pas."""
+        """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
         with pytest.raises(FileNotFoundError, match="introuvable"):
             CsvConverter().convert(tmp_path / "inexistant.csv")
 
     def test_missing_xyz_raises(self, tmp_path: Path) -> None:
-        """convert() lève ValueError si les colonnes XYZ sont absentes."""
+        """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
         csv = _write_csv(tmp_path, "bad.csv", "q1,q2,q3,q4\n1,0,0,0\n")
         with pytest.raises(ValueError, match="obligatoires manquantes"):
             CsvConverter().convert(csv)
 
-    # --- Quaternion identité ---
+    # --- Identity quaternion ---
 
     def test_xyz_only_quaternion_identity(self, tmp_path: Path) -> None:
-        """Sans quaternions, l'orientation identité est appliquée."""
+        """Without quaternion columns, identity orientation is applied."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter().convert(csv)
         assert traj.points["q1"].iloc[0] == pytest.approx(1.0)
@@ -163,37 +178,37 @@ class TestTabularConverterLogic:
         assert traj.points["q4"].iloc[0] == pytest.approx(0.0)
 
     def test_xyz_only_quaternion_autocompleted(self, tmp_path: Path) -> None:
-        """Les colonnes quaternion sont listées dans autocompleted."""
+        """Quaternion columns are listed in ``autocompleted``."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter().convert(csv)
         for col in ("q1", "q2", "q3", "q4"):
             assert col in traj.meta.autocompleted
 
-    # --- Autocomplétion ---
+    # --- Autocompletion ---
 
     def test_speed_autocompleted(self, tmp_path: Path) -> None:
-        """speed est autocomplétée si absente."""
+        """``speed`` is autocompleted when absent from the source."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter().convert(csv)
         assert "speed" in traj.meta.autocompleted
 
     def test_custom_default_speed(self, tmp_path: Path) -> None:
-        """La vitesse par défaut personnalisée est appliquée."""
+        """The custom default speed is applied during autocompletion."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter(defaults=ConversionDefaults(speed="v250")).convert(csv)
         assert traj.points["speed"].iloc[0] == "v250"
 
     def test_move_type_not_autocompleted_when_present(self, tmp_path: Path) -> None:
-        """move_type présent dans la source n'est pas autocomplété."""
+        """``move_type`` present in the source is not listed in ``autocompleted``."""
         csv = _write_csv(tmp_path, "full.csv", "x,y,z,move_type\n1.0,2.0,3.0,MoveL\n")
         traj = CsvConverter().convert(csv)
         assert "move_type" not in traj.meta.autocompleted
         assert traj.points["move_type"].iloc[0] == "MoveL"
 
-    # --- Alias colonnes ---
+    # --- Column aliases ---
 
     def test_alias_columns_resolved(self, tmp_path: Path) -> None:
-        """Les alias de colonnes sont correctement résolus."""
+        """Column aliases are correctly resolved."""
         csv = _write_csv(
             tmp_path, "alias.csv", "PosX,PosY,PosZ,VITESSE\n1.0,2.0,3.0,v500\n"
         )
@@ -202,17 +217,17 @@ class TestTabularConverterLogic:
         assert traj.points["speed"].iloc[0] == "v500"
 
     def test_unknown_columns_warned(self, tmp_path: Path) -> None:
-        """Les colonnes inconnues émettent un UserWarning."""
+        """Unknown columns emit a ``UserWarning``."""
         csv = _write_csv(
             tmp_path, "unknown.csv", "x,y,z,colonne_inconnue\n1.0,2.0,3.0,foo\n"
         )
         with pytest.warns(UserWarning, match="non reconnues"):
             CsvConverter().convert(csv)
 
-    # --- Tables tools / wobjs ---
+    # --- Tools / wobjs tables ---
 
     def test_tool_column_extracted(self, tmp_path: Path) -> None:
-        """La colonne tool est extraite et convertie en tool_index."""
+        """The ``tool`` column is extracted and converted to ``tool_index``."""
         csv = _write_csv(
             tmp_path,
             "tools.csv",
@@ -225,33 +240,33 @@ class TestTabularConverterLogic:
         assert "tool_index" in traj.points.columns
 
     def test_wobj_column_extracted(self, tmp_path: Path) -> None:
-        """La colonne wobj est extraite et convertie en wobj_index."""
+        """The ``wobj`` column is extracted and converted to ``wobj_index``."""
         csv = _write_csv(tmp_path, "wobj.csv", "x,y,z,wobj\n1.0,2.0,3.0,Wobj_A\n")
         traj = CsvConverter().convert(csv)
         assert "Wobj_A" in traj.wobjs
 
-    # --- Feuilles de meta ---
+    # --- Metadata defaults ---
 
     def test_no_meta_overrides_name_is_stem(self, tmp_path: Path) -> None:
-        """Sans feuille meta, le nom est le stem du fichier source."""
+        """Without a meta sheet, the name defaults to the source file stem."""
         csv = _write_csv(tmp_path, "ma_traj.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter().convert(csv)
         assert traj.meta.name == "ma_traj"
 
     def test_no_meta_overrides_robot_model_is_none(self, tmp_path: Path) -> None:
-        """Sans feuille meta, robot_model est None."""
+        """Without a meta sheet, ``robot_model`` is ``None``."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         assert CsvConverter().convert(csv).meta.robot_model is None
 
     def test_no_meta_overrides_extra_is_empty(self, tmp_path: Path) -> None:
-        """Sans feuille meta, extra{} est vide."""
+        """Without a meta sheet, ``extra{}`` is empty."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         assert CsvConverter().convert(csv).meta.extra == {}
 
-    # --- Lignes vides ---
+    # --- Empty rows ---
 
     def test_empty_rows_dropped(self, tmp_path: Path) -> None:
-        """Les lignes entièrement vides sont supprimées."""
+        """Fully empty rows are dropped."""
         csv = _write_csv(
             tmp_path, "empty_rows.csv", "x,y,z\n1.0,2.0,3.0\n,,\n4.0,5.0,6.0\n"
         )
@@ -261,6 +276,6 @@ class TestTabularConverterLogic:
     # --- is_complete ---
 
     def test_is_complete(self, tmp_path: Path) -> None:
-        """La trajectoire produite est toujours complète."""
+        """The produced trajectory is always complete."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         assert CsvConverter().convert(csv).is_complete is True

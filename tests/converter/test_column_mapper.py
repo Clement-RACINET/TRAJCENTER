@@ -1,10 +1,14 @@
+#!/usr/bin/env python3
 # tests/converter/test_column_mapper.py
-"""Tests unitaires pour :mod:`trajcenter.converter.column_mapper`.
+"""Unit tests for :mod:`trajcenter.converter.column_mapper`.
 
-Couvre :
-- _normalize()
-- canonical_name() — cas nominaux, casse, accents, confdata, eax, inconnu
-- resolve_columns() — renommage, conflit de colonnes, colonnes inconnues
+Author: Clement RACINET
+
+Covers:
+
+- ``_normalize()``
+- ``canonical_name()`` — nominal cases, casing, accents, confdata, eax, unknown
+- ``resolve_columns()`` — renaming, column conflicts, unknown columns
 """
 
 from __future__ import annotations
@@ -29,40 +33,40 @@ from trajcenter.converter.column_mapper import (
 
 
 class TestNormalize:
-    """Tests de la fonction _normalize."""
+    """Tests for the ``_normalize`` function."""
 
     def test_lowercase(self) -> None:
-        """Les majuscules sont converties en minuscules."""
+        """Uppercase letters are converted to lowercase."""
         assert _normalize("VITESSE") == "vitesse"
 
     def test_diacritics_removed(self) -> None:
-        """Les accents sont supprimés."""
+        """Diacritics (accents) are stripped."""
         assert _normalize("Répère") == "repere"
         assert _normalize("précision") == "precision"
 
     def test_underscore_preserved(self) -> None:
-        """Les underscores sont conservés."""
+        """Underscores are preserved."""
         assert _normalize("pos_x") == "pos_x"
         assert _normalize("eax_a") == "eax_a"
 
     def test_digits_preserved(self) -> None:
-        """Les chiffres sont conservés."""
+        """Digits are preserved."""
         assert _normalize("cf1") == "cf1"
         assert _normalize("eax3") == "eax3"
 
     def test_mixed(self) -> None:
-        """Combinaison casse + accent + underscore."""
+        """Combination of casing, accents and underscores."""
         assert _normalize("PosX") == "posx"
         assert _normalize("Trans_X") == "trans_x"
 
 
 # ---------------------------------------------------------------------------
-# canonical_name — colonnes géométriques
+# canonical_name — geometric columns
 # ---------------------------------------------------------------------------
 
 
 class TestCanonicalNameGeometry:
-    """Tests canonical_name pour les colonnes de position et orientation."""
+    """Tests for ``canonical_name`` on position and orientation columns."""
 
     @pytest.mark.parametrize(
         "alias,expected",
@@ -92,37 +96,37 @@ class TestCanonicalNameGeometry:
         ],
     )
     def test_geometry_aliases(self, alias: str, expected: str) -> None:
-        """Les alias géométriques (position + quaternion) sont correctement résolus."""
+        """Geometric aliases (position + quaternion) are correctly resolved."""
         assert canonical_name(alias) == expected
 
 
 # ---------------------------------------------------------------------------
-# canonical_name — confdata  ← NOUVELLES ENTRÉES
+# canonical_name — confdata
 # ---------------------------------------------------------------------------
 
 
 class TestCanonicalNameConfdata:
-    """Tests canonical_name pour les colonnes confdata ABB.
+    """Tests for ``canonical_name`` on ABB confdata columns.
 
-    Ces colonnes représentent la configuration articulaire d'un robtarget
-    (cf1, cf4, cf6, cfx). Elles doivent être reconnues sous leur forme
-    canonique ET sous les alias longs.
+    These columns represent the joint configuration of a robtarget
+    (cf1, cf4, cf6, cfx). They must be recognised both in their canonical
+    form and via their long aliases.
     """
 
     @pytest.mark.parametrize(
         "alias,expected",
         [
-            # Forme canonique directe
+            # Canonical form
             ("cf1", "cf1"),
             ("cf4", "cf4"),
             ("cf6", "cf6"),
             ("cfx", "cfx"),
-            # Casse variée
+            # Mixed casing
             ("CF1", "cf1"),
             ("Cf4", "cf4"),
             ("CF6", "cf6"),
             ("CFX", "cfx"),
-            # Alias longs
+            # Long aliases
             ("confdata1", "cf1"),
             ("CONFDATA1", "cf1"),
             ("conf1", "cf1"),
@@ -141,14 +145,14 @@ class TestCanonicalNameConfdata:
         ],
     )
     def test_confdata_aliases(self, alias: str, expected: str) -> None:
-        """Tous les alias confdata (casse insensible) résolvent vers le canonique."""
+        """All confdata aliases (case-insensitive) resolve to their canonical name."""
         assert canonical_name(alias) == expected
 
     def test_confdata_not_in_unresolved_after_export(self) -> None:
-        """Après export tabulaire, les colonnes cf* ne tombent pas dans unresolved.
+        """After tabular export, cf* columns do not fall into ``unresolved``.
 
-        Simule le DataFrame produit par tabular_exporter._build_traj_df()
-        et vérifie que resolve_columns() ne génère aucun UserWarning.
+        Simulates the DataFrame produced by ``tabular_exporter._build_traj_df()``
+        and verifies that ``resolve_columns()`` emits no ``UserWarning``.
         """
         df = pd.DataFrame(
             {
@@ -172,7 +176,7 @@ class TestCanonicalNameConfdata:
         )
         with warnings.catch_warnings():
             warnings.simplefilter("error", UserWarning)
-            # Ne doit pas lever de UserWarning
+            # Must not raise a UserWarning
             _, unresolved = resolve_columns(df)
 
         assert "cf1" not in unresolved
@@ -182,12 +186,12 @@ class TestCanonicalNameConfdata:
 
 
 # ---------------------------------------------------------------------------
-# canonical_name — axes externes
+# canonical_name — external axes
 # ---------------------------------------------------------------------------
 
 
 class TestCanonicalNameExternalAxes:
-    """Tests canonical_name pour les colonnes eax_*."""
+    """Tests for ``canonical_name`` on ``eax_*`` columns."""
 
     @pytest.mark.parametrize(
         "alias,expected",
@@ -205,17 +209,17 @@ class TestCanonicalNameExternalAxes:
         ],
     )
     def test_eax_aliases(self, alias: str, expected: str) -> None:
-        """Les alias eax_* sont correctement résolus."""
+        """``eax_*`` aliases are correctly resolved."""
         assert canonical_name(alias) == expected
 
 
 # ---------------------------------------------------------------------------
-# canonical_name — mouvement / références
+# canonical_name — movement / references
 # ---------------------------------------------------------------------------
 
 
 class TestCanonicalNameMovement:
-    """Tests canonical_name pour les colonnes de mouvement et références."""
+    """Tests for ``canonical_name`` on movement and reference columns."""
 
     @pytest.mark.parametrize(
         "alias,expected",
@@ -238,17 +242,17 @@ class TestCanonicalNameMovement:
         ],
     )
     def test_movement_aliases(self, alias: str, expected: str) -> None:
-        """Les alias de mouvement et références sont correctement résolus."""
+        """Movement and reference aliases are correctly resolved."""
         assert canonical_name(alias) == expected
 
 
 # ---------------------------------------------------------------------------
-# canonical_name — inconnu
+# canonical_name — unknown
 # ---------------------------------------------------------------------------
 
 
 class TestCanonicalNameUnknown:
-    """Tests canonical_name pour les colonnes non reconnues."""
+    """Tests for ``canonical_name`` on unrecognised columns."""
 
     @pytest.mark.parametrize(
         "col",
@@ -265,7 +269,7 @@ class TestCanonicalNameUnknown:
         ],
     )
     def test_unknown_returns_none(self, col: str) -> None:
-        """Une colonne non reconnue retourne None."""
+        """An unrecognised column name returns ``None``."""
         assert canonical_name(col) is None
 
 
@@ -275,10 +279,10 @@ class TestCanonicalNameUnknown:
 
 
 class TestResolveColumns:
-    """Tests de la fonction resolve_columns."""
+    """Tests for the ``resolve_columns`` function."""
 
     def test_rename_known_columns(self) -> None:
-        """Les colonnes connues sont renommées vers leur canonique."""
+        """Known columns are renamed to their canonical form."""
         df = pd.DataFrame({"PosX": [1.0], "PosY": [2.0], "PosZ": [3.0]})
         result, unresolved = resolve_columns(df)
         assert "x" in result.columns
@@ -287,14 +291,14 @@ class TestResolveColumns:
         assert unresolved == []
 
     def test_unknown_columns_in_unresolved(self) -> None:
-        """Les colonnes inconnues sont retournées dans unresolved."""
+        """Unknown columns are returned in ``unresolved``."""
         df = pd.DataFrame({"x": [1.0], "custom_col": [42]})
         result, unresolved = resolve_columns(df)
         assert "custom_col" in unresolved
         assert "x" in result.columns
 
     def test_confdata_columns_resolved(self) -> None:
-        """Les colonnes cf1/cf4/cf6/cfx sont renommées sans warning."""
+        """cf1/cf4/cf6/cfx columns are renamed without emitting a warning."""
         df = pd.DataFrame({"cf1": [0], "cf4": [1], "cf6": [-1], "cfx": [0]})
         with warnings.catch_warnings():
             warnings.simplefilter("error", UserWarning)
@@ -304,7 +308,7 @@ class TestResolveColumns:
             assert col in result.columns
 
     def test_confdata_alias_resolved(self) -> None:
-        """Les alias longs confdata sont renommés vers le canonique."""
+        """Long confdata aliases are renamed to their canonical form."""
         df = pd.DataFrame(
             {
                 "confdata1": [0],
@@ -321,34 +325,34 @@ class TestResolveColumns:
         assert "cfx" in result.columns
 
     def test_duplicate_canonical_emits_warning(self) -> None:
-        """Deux colonnes résolvant vers le même canonique émettent un UserWarning."""
+        """Two columns resolving to the same canonical name emit a ``UserWarning``."""
         df = pd.DataFrame({"x": [1.0], "PosX": [2.0]})
         with pytest.warns(UserWarning, match="résolvent vers 'x'"):
             result, _ = resolve_columns(df)
-        # La première colonne est conservée
+        # The first column is kept
         assert result["x"].iloc[0] == 1.0
 
     def test_no_columns_unchanged(self) -> None:
-        """Un DataFrame sans colonnes reconnues est retourné intact."""
+        """A DataFrame with no recognised columns is returned unchanged."""
         df = pd.DataFrame({"foo": [1], "bar": [2]})
         result, unresolved = resolve_columns(df)
         assert list(result.columns) == ["foo", "bar"]
         assert unresolved == ["foo", "bar"]
 
     def test_empty_dataframe(self) -> None:
-        """Un DataFrame vide est traité sans erreur."""
+        """An empty DataFrame is handled without error."""
         df = pd.DataFrame()
         result, unresolved = resolve_columns(df)
         assert result.empty
         assert unresolved == []
 
     def test_alias_index_completeness(self) -> None:
-        """Chaque alias de COLUMN_ALIASES est présent dans _ALIAS_INDEX."""
+        """Every alias in COLUMN_ALIASES is present in ``_ALIAS_INDEX``."""
         for canonical, aliases in COLUMN_ALIASES.items():
             for alias in aliases:
                 norm = _normalize(alias)
                 assert norm in _ALIAS_INDEX, (
-                    f"Alias '{alias}' (normalisé: '{norm}') absent de _ALIAS_INDEX "
-                    f"pour le canonique '{canonical}'"
+                    f"Alias '{alias}' (normalised: '{norm}') missing from _ALIAS_INDEX "
+                    f"for canonical '{canonical}'"
                 )
                 assert _ALIAS_INDEX[norm] == canonical

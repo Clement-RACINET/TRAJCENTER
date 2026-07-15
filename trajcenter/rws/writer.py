@@ -1,9 +1,12 @@
+#!/usr/bin/env python3
 # trajcenter/rws/writer.py
 """RWS writer — transfers a :class:`~trajcenter.core.trajectory.Trajectory`
 to the ABB controller via RWS RAPID symbol writes.
 
+Author: Clement RACINET
+
 This module is the **only** place in TrajCenter that calls
-``set_variable_with_mastership``.  It owns the full Mastership lifecycle:
+``set_variable_with_mastership``. It owns the full Mastership lifecycle:
 acquire → write all variables → release (always, even on error).
 
 RAPID variable map (module ``TRAJCENTER``, task ``T_ROB1`` by default)
@@ -11,30 +14,30 @@ RAPID variable map (module ``TRAJCENTER``, task ``T_ROB1`` by default)
 
 Metadata block (written once per store refresh):
 
-=====  ========================  =========  ================================
-Ref    RAPID variable            RAPID type  Python source
-=====  ========================  =========  ================================
-W1     NbTrajDispo               num         ``len(store.names)``
-W2     NomsTraj{1..MAX_TRAJ}     string      ``store.names`` (padded)
-W3     NbPointsTraj{1..MAX_TRAJ} num         ``store.point_counts`` (padded)
-=====  ========================  =========  ================================
+=====  ========================  ===========  ================================
+Ref    RAPID variable            RAPID type   Python source
+=====  ========================  ===========  ================================
+W1     NbTrajDispo               num          ``len(store.names)``
+W2     NomsTraj{1..MAX_TRAJ}     string       ``store.names`` (padded)
+W3     NbPointsTraj{1..MAX_TRAJ} num          ``store.point_counts`` (padded)
+=====  ========================  ===========  ================================
 
 Trajectory block (written on each transfer):
 
-=====  ========================  =========  ================================
-Ref    RAPID variable            RAPID type  Python source
-=====  ========================  =========  ================================
-W4     NbRobtargetsTraj          num         ``len(traj.points)``
-W5     RobtTRAJCENTER{1..N}      robtarget   rows of ``traj.points``
-W6     NbTool                    num         ``len(traj.tools)``
-W7     NomsTool{1..MAX_TOOLS}    string      ``traj.tools`` (padded)
-W8     NbWobj                    num         ``len(traj.wobjs)``
-W9     NomsWobj{1..MAX_WOBJS}    string      ``traj.wobjs`` (padded)
-W10    TrajReady                 bool        ``TRUE`` (written last)
-=====  ========================  =========  ================================
+=====  ========================  ===========  ================================
+Ref    RAPID variable            RAPID type   Python source
+=====  ========================  ===========  ================================
+W4     NbRobtargetsTraj          num          ``len(traj.points)``
+W5     RobtTRAJCENTER{1..N}      robtarget    rows of ``traj.points``
+W6     NbTool                    num          ``len(traj.tools)``
+W7     NomsTool{1..MAX_TOOLS}    string       ``traj.tools`` (padded)
+W8     NbWobj                    num          ``len(traj.wobjs)``
+W9     NomsWobj{1..MAX_WOBJS}    string       ``traj.wobjs`` (padded)
+W10    TrajReady                 bool         ``TRUE`` (written last)
+=====  ========================  ===========  ================================
 
 All writes happen under a **single Mastership acquisition** per call to
-:func:`write_trajectory` or :func:`write_store_metadata`.  The
+:func:`write_trajectory` or :func:`write_store_metadata`. The
 ``try / finally`` pattern guarantees Mastership release even on error.
 
 ABB constraints
@@ -43,8 +46,8 @@ ABB constraints
   ``value=<rapid_string>`` — handled by ``set_variable_with_mastership``.
 - RAPID arrays are 1-based on the controller side.
 - ``9E+9`` sentinel for inactive external axes is injected here via
-  :func:`~abb_rws_client.robtarget_to_rws`; it is **never** stored in the
-  Parquet file.
+  :func:`~abb_rws_client_python_rw6.robtarget_to_rws`; it is **never**
+  stored in the Parquet file.
 - ``MAX_TRAJ``, ``MAX_TOOLS``, ``MAX_WOBJS`` must match the RAPID array
   declarations in ``TRAJCENTER.sys``.
 """
@@ -64,9 +67,11 @@ from abb_rws_client_python_rw6 import (
     robtarget_to_rws,
 )
 from abb_rws_client_python_rw6.highlevel.rapid import set_variable_with_mastership
+
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.rws._utils import symbol
+
 
 logger = get_logger(__name__)
 
@@ -108,10 +113,12 @@ def _fmt_num(value: int | float) -> str:
         String representation with no trailing ``.0`` for integers.
 
     Example:
-        >>> _fmt_num(42)
-        '42'
-        >>> _fmt_num(3.14)
-        '3.14'
+        ::
+
+            >>> _fmt_num(42)
+            '42'
+            >>> _fmt_num(3.14)
+            '3.14'
     """
     if isinstance(value, float) and value == int(value):
         return str(int(value))
@@ -128,8 +135,10 @@ def _fmt_bool(value: bool) -> str:  # noqa: FBT001
         ``"TRUE"`` or ``"FALSE"``.
 
     Example:
-        >>> _fmt_bool(True)
-        'TRUE'
+        ::
+
+            >>> _fmt_bool(True)
+            'TRUE'
     """
     return "TRUE" if value else "FALSE"
 
@@ -138,27 +147,33 @@ def _fmt_string(value: str) -> str:
     """Wrap a string in RAPID double-quotes.
 
     Args:
-        value: Raw string value (must not contain embedded double-quotes).
+        value: Raw string value (must not contain embedded
+            double-quotes).
 
     Returns:
         RAPID string literal, e.g. ``'"Tool_formage"'``.
 
     Example:
-        >>> _fmt_string("Tool_formage")
-        '"Tool_formage"'
+        ::
+
+            >>> _fmt_string("Tool_formage")
+            '"Tool_formage"'
     """
     return f'"{value}"'
 
 
-def _row_to_robtarget(row: pd.Series, eax_present: tuple[bool, ...]) -> RobTarget:  # type: ignore[type-arg]
-    """Convert a single Parquet row to a :class:`~abb_rws_client.RobTarget`.
+def _row_to_robtarget(
+    row: pd.Series,  # type: ignore[type-arg]
+    eax_present: tuple[bool, ...],
+) -> RobTarget:
+    """Convert a single Parquet row to a :class:`~abb_rws_client_python_rw6.RobTarget`.
 
     Column mapping (Parquet → RobTarget):
 
-    - ``x, y, z``       → ``x, y, z``
-    - ``q1, q2, q3, q4`` → ``qw, qx, qy, qz``  (ABB: scalar first)
+    - ``x, y, z``            → ``x, y, z``
+    - ``q1, q2, q3, q4``     → ``qw, qx, qy, qz`` (ABB: scalar first)
     - ``cf1, cf4, cf6, cfx`` → ``cf1, cf4, cf6, cfx``
-    - ``eax_a…eax_f``   → ``eax[0]…eax[5]``  (9E+9 if column absent)
+    - ``eax_a…eax_f``        → ``eax[0]…eax[5]`` (``9e9`` if column absent)
 
     ABB constraints:
         Quaternion convention ``[q1, q2, q3, q4] = [w, x, y, z]`` is
@@ -166,27 +181,31 @@ def _row_to_robtarget(row: pd.Series, eax_present: tuple[bool, ...]) -> RobTarge
         reordering needed.
 
     Args:
-        row: A single row from ``Trajectory.points`` (via ``itertuples``
-             converted to a Series, or directly from ``iterrows``).
-        eax_present: Tuple of 6 booleans indicating which ``eax_a…eax_f``
-                     columns exist in the DataFrame.
+        row: A single row from ``Trajectory.points`` (via ``iterrows``).
+        eax_present: Tuple of 6 booleans indicating which
+            ``eax_a…eax_f`` columns exist in the ``DataFrame``.
 
     Returns:
-        A fully populated :class:`~abb_rws_client.RobTarget` instance.
+        A fully populated
+        :class:`~abb_rws_client_python_rw6.RobTarget` instance.
         Inactive external axes carry the sentinel value ``9e9``.
 
     Raises:
-        KeyError: If a mandatory column (``x``, ``y``, ``z``, ``q1``…``q4``,
-                  ``cf1``, ``cf4``, ``cf6``, ``cfx``) is missing from *row*.
+        KeyError: If a mandatory column (``x``, ``y``, ``z``,
+            ``q1``…``q4``, ``cf1``, ``cf4``, ``cf6``, ``cfx``) is
+            missing from *row*.
 
     Example:
-        >>> import pandas as pd
-        >>> row = pd.Series({"x": 100.0, "y": 200.0, "z": 300.0,
-        ...                   "q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0,
-        ...                   "cf1": 0, "cf4": 0, "cf6": 0, "cfx": 0})
-        >>> rt = _row_to_robtarget(row, (False,)*6)
-        >>> rt.x
-        100.0
+        ::
+
+            import pandas as pd
+            row = pd.Series({
+                "x": 100.0, "y": 200.0, "z": 300.0,
+                "q1": 1.0, "q2": 0.0, "q3": 0.0, "q4": 0.0,
+                "cf1": 0, "cf4": 0, "cf6": 0, "cfx": 0,
+            })
+            rt = _row_to_robtarget(row, (False,) * 6)
+            assert rt.x == 100.0
     """
     _INACTIVE: Final[float] = 9e9
 
@@ -215,16 +234,17 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
     """Detect which external axis columns are present in *df*.
 
     Args:
-        df: The ``Trajectory.points`` DataFrame.
+        df: The ``Trajectory.points`` ``DataFrame``.
 
     Returns:
         Tuple of 6 booleans, one per axis ``eax_a``…``eax_f``.
 
     Example:
-        >>> import pandas as pd
-        >>> df = pd.DataFrame({"eax_a": [100.0]})
-        >>> _eax_presence(df)
-        (True, False, False, False, False, False)
+        ::
+
+            import pandas as pd
+            df = pd.DataFrame({"eax_a": [100.0]})
+            assert _eax_presence(df) == (True, False, False, False, False, False)
     """
     return tuple(col in df.columns for col in _EAX_COLUMNS)  # type: ignore[return-value]
 
@@ -246,37 +266,43 @@ async def write_store_metadata(
     """Write store metadata (W1, W2, W3) to the controller under Mastership.
 
     Writes the number of available trajectories, their names, and their
-    point counts into the RAPID persistent variables.  This must be called
+    point counts into the RAPID persistent variables. This must be called
     once at startup and whenever the trajectory store changes.
 
-    Route (delegated): ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
+    Route (delegated):
+        ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
 
     ABB constraints:
         Mastership is acquired once for all writes and released in a
-        ``finally`` block.  Retries up to *mastership_retries* times on
-        :exc:`~abb_rws_client.MastershipDenied`.
+        ``finally`` block. Retries up to *mastership_retries* times on
+        :exc:`~abb_rws_client_python_rw6.MastershipDenied`.
 
     Args:
-        client: Open :class:`~abb_rws_client.RWSClient` instance.
-        names: Ordered list of trajectory names (max :data:`MAX_TRAJ`).
+        client: Open :class:`~abb_rws_client_python_rw6.RWSClient`
+            instance.
+        names: Ordered list of trajectory names
+            (max :data:`MAX_TRAJ`).
         point_counts: Ordered list of point counts matching *names*.
         task: RAPID task name. Defaults to ``"T_ROB1"``.
         module: RAPID module name. Defaults to ``"TRAJCENTER"``.
-        mastership_retries: Number of Mastership acquisition retries before
-            raising. Defaults to ``3``.
+        mastership_retries: Number of Mastership acquisition retries
+            before raising. Defaults to ``3``.
 
     Raises:
         ValueError: If ``len(names) != len(point_counts)`` or if
             ``len(names) > MAX_TRAJ``.
-        MastershipDenied: If Mastership cannot be acquired after all retries.
+        MastershipDenied: If Mastership cannot be acquired after all
+            retries.
         RWSHTTPError: On any unexpected HTTP error from the controller.
 
     Example:
-        >>> await write_store_metadata(
-        ...     client,
-        ...     names=["Traj1", "Traj2"],
-        ...     point_counts=[320, 150],
-        ... )
+        ::
+
+            await write_store_metadata(
+                client,
+                names=["Traj1", "Traj2"],
+                point_counts=[320, 150],
+            )
     """
     if len(names) != len(point_counts):
         raise ValueError(
@@ -302,7 +328,9 @@ async def write_store_metadata(
 
         # W1 — NbTrajDispo
         await set_variable_with_mastership(
-            client, symbolurl=sym("NbTrajDispo"), value=_fmt_num(nb)
+            client,
+            symbolurl=sym("NbTrajDispo"),
+            value=_fmt_num(nb),
         )
 
         # W2 — NomsTraj{i} (1-based RAPID array)
@@ -336,41 +364,50 @@ async def write_trajectory(
 ) -> None:
     """Transfer a full trajectory to the controller (W4 → W10).
 
-    Writes all robtargets and associated metadata (tool names, wobj names,
-    counts) then sets ``TrajReady = TRUE`` as the final atomic signal to
-    RAPID.
+    Writes all robtargets and associated metadata (tool names, wobj
+    names, counts) then sets ``TrajReady = TRUE`` as the final atomic
+    signal to RAPID.
 
-    Route (delegated): ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
+    Route (delegated):
+        ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
 
     ABB constraints:
         - A **single** Mastership is held for the entire write sequence.
-        - ``TrajReady`` is written **last** so RAPID never sees a partially
-          transferred trajectory.
+        - ``TrajReady`` is written **last** so RAPID never sees a
+          partially transferred trajectory.
         - Mastership is **always** released in a ``finally`` block.
-        - ``9E+9`` sentinel for inactive external axes is injected here via
-          :func:`~abb_rws_client.robtarget_to_rws`; it is never stored in
-          the Parquet file.
+        - ``9E+9`` sentinel for inactive external axes is injected here
+          via :func:`~abb_rws_client_python_rw6.robtarget_to_rws`; it
+          is never stored in the Parquet file.
 
     Args:
-        client: Open :class:`~abb_rws_client.RWSClient` instance.
-        traj: :class:`~trajcenter.core.trajectory.Trajectory` to transfer.
+        client: Open :class:`~abb_rws_client_python_rw6.RWSClient`
+            instance.
+        traj: :class:`~trajcenter.core.trajectory.Trajectory` to
+            transfer.
         task: RAPID task name. Defaults to ``"T_ROB1"``.
         module: RAPID module name. Defaults to ``"TRAJCENTER"``.
-        on_progress: Optional callback ``(current_index, total)`` called
-            after each robtarget write. Useful for progress bars.
-        mastership_retries: Number of Mastership acquisition retries before
-            raising. Defaults to ``3``.
+        on_progress: Optional callback ``(current_index, total)``
+            called after each robtarget write. Useful for progress
+            bars.
+        mastership_retries: Number of Mastership acquisition retries
+            before raising. Defaults to ``3``.
 
     Raises:
-        MastershipDenied: If Mastership cannot be acquired after all retries.
+        MastershipDenied: If Mastership cannot be acquired after all
+            retries.
         RWSHTTPError: On any unexpected HTTP error from the controller.
-        ValueError: If the trajectory has no points.
+        ValueError: If the trajectory has no points, or if the number
+            of tools or wobjs exceeds the declared RAPID array sizes.
 
     Example:
-        >>> await write_trajectory(
-        ...     client, traj,
-        ...     on_progress=lambda i, n: print(f"{i}/{n}"),
-        ... )
+        ::
+
+            await write_trajectory(
+                client,
+                traj,
+                on_progress=lambda i, n: print(f"{i}/{n}"),
+            )
     """
     n_points = len(traj.points)
     if n_points == 0:
@@ -478,27 +515,32 @@ async def _retry_mastership(
     *,
     retry_delay_s: float = 1.0,
 ) -> None:
-    """Execute *coro_fn* retrying on :exc:`~abb_rws_client.MastershipDenied`.
+    """Execute *coro_fn* retrying on :exc:`~abb_rws_client_python_rw6.MastershipDenied`.
 
     ``set_variable_with_mastership`` internally acquires and releases
-    Mastership for each call.  If the controller refuses Mastership (another
-    client holds it), we wait *retry_delay_s* seconds and retry.
+    Mastership for each call. If the controller refuses Mastership
+    (another client holds it), we wait *retry_delay_s* seconds and
+    retry.
 
     ABB constraints:
-        Mastership is managed by ``set_variable_with_mastership`` from the
-        ``highlevel`` layer — this wrapper only handles the retry loop.
+        Mastership is managed by ``set_variable_with_mastership`` from
+        the ``highlevel`` layer — this wrapper only handles the retry
+        loop.
 
     Args:
         coro_fn: Zero-argument async callable to execute.
         retries: Maximum number of attempts (must be >= 1).
-        retry_delay_s: Delay in seconds between attempts. Defaults to ``1.0``.
+        retry_delay_s: Delay in seconds between attempts. Defaults to
+            ``1.0``.
 
     Raises:
         MastershipDenied: If all *retries* attempts fail.
         RWSHTTPError: On any non-Mastership HTTP error (not retried).
 
     Example:
-        >>> await _retry_mastership(my_write_fn, retries=3)
+        ::
+
+            await _retry_mastership(my_write_fn, retries=3)
     """
     last_exc: MastershipDenied | None = None
     for attempt in range(1, retries + 1):

@@ -1,17 +1,18 @@
-# examples/convert_excel_example.py
-
 #!/usr/bin/env python3
-"""
-Exemple de conversion d'un fichier Excel (.xlsx) vers .trajcenter.
+# scripts/examples/convert_excel_example.py
+"""Excel (``.xlsx``) to ``.trajcenter`` conversion example.
 
-Deux cas sont illustrés :
-  1. Classeur à feuille unique  → convert()
-  2. Classeur multi-feuilles    → convert_all()
+Author: Clement RACINET
 
-Modifiez les variables de la section "Configuration" ci-dessous,
-puis lancez directement :
+Demonstrates two conversion scenarios for an Excel workbook:
 
-    python examples/convert_excel_example.py
+1. **Single-sheet workbook** — :meth:`~trajcenter.converter.excel_converter.ExcelConverter.convert`.
+2. **Multi-sheet workbook** — :meth:`~trajcenter.converter.excel_converter.ExcelConverter.convert_all`.
+
+Edit the variables in the "Configuration" section below, then run
+directly::
+
+    python scripts/examples/convert_excel_example.py
 """
 
 from __future__ import annotations
@@ -23,32 +24,32 @@ from trajcenter.converter.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
 
 # ---------------------------------------------------------------------------
-# Configuration — à adapter selon votre contexte
+# Configuration — adjust to your context
 # ---------------------------------------------------------------------------
 
-# Cas 1 — classeur à feuille unique (XYZ + colonnes optionnelles)
+# Case 1 — single-sheet workbook (XYZ + optional columns)
 SOURCE_SINGLE = Path("trajectory_files/trajectoires_mono.xlsx")
 
-# Cas 2 — classeur multi-feuilles (une trajectoire par feuille)
-SOURCE_MULTI  = Path("trajectory_files/trajectoires_multi.xlsx")
+# Case 2 — multi-sheet workbook (one trajectory per sheet)
+SOURCE_MULTI = Path("trajectory_files/trajectoires_multi.xlsx")
 
 OUTPUT_DIR = Path("trajectory_store")
 
-# Valeurs de remplacement pour les colonnes absentes dans le fichier Excel.
-# Utile notamment si le classeur ne contient que des colonnes XYZ
-# (les quaternions seront complétés avec l'orientation identité).
+# Fallback values for columns absent from the Excel file.
+# Useful when the workbook contains only XYZ columns
+# (quaternions will be filled with the identity orientation).
 DEFAULTS = ConversionDefaults(
-    move_type = "MoveL",
-    speed     = "v10",
-    zone      = "z0",
+    move_type="MoveL",
+    speed="v10",
+    zone="z0",
 )
 
 # ---------------------------------------------------------------------------
-# Cas 1 — feuille unique
+# Case 1 — single sheet
 # ---------------------------------------------------------------------------
 
 print("=" * 60)
-print("Cas 1 — Classeur à feuille unique")
+print("Case 1 — Single-sheet workbook")
 print("=" * 60)
 
 traj: Trajectory = ExcelConverter(defaults=DEFAULTS).convert(SOURCE_SINGLE)
@@ -62,23 +63,25 @@ print()
 print(traj.points.head())
 
 dest = traj.save(OUTPUT_DIR / f"{traj.meta.name}.trajcenter")
-print(f"\nSauvegardé → {dest}")
+print(f"\nSaved → {dest}")
 
 # ---------------------------------------------------------------------------
-# Cas 2 — multi-feuilles
+# Case 2 — multi-sheet
 # ---------------------------------------------------------------------------
 
 print()
 print("=" * 60)
-print("Cas 2 — Classeur multi-feuilles")
+print("Case 2 — Multi-sheet workbook")
 print("=" * 60)
 
 trajs: list[Trajectory] = ExcelConverter(defaults=DEFAULTS).convert_all(SOURCE_MULTI)
 
-print(f"{len(trajs)} trajectoire(s) extraite(s) :\n")
+print(f"{len(trajs)} trajectory/trajectories extracted:\n")
 
 for traj in trajs:
-    print(f"  [{traj.meta.name}]  {traj.point_count} points  "
-          f"| tools={traj.tools}  wobjs={traj.wobjs}")
+    print(
+        f"  [{traj.meta.name}]  {traj.point_count} points  "
+        f"| tools={traj.tools}  wobjs={traj.wobjs}"
+    )
     dest = traj.save(OUTPUT_DIR / f"{traj.meta.name}.trajcenter")
-    print(f"    → Sauvegardé : {dest}")
+    print(f"    → Saved: {dest}")

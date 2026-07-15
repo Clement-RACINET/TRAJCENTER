@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
 # trajcenter/exporter/tabular_exporter.py
+"""Abstract tabular exporter — shared logic for Excel and CSV.
 
-"""
-Exporteur tabulaire abstrait — logique commune Excel et CSV.
+Author: Clement RACINET
 
-Ce module factorise la construction des quatre DataFrames (traj, tools,
-wobjs, meta) dans :class:`_TabularExporter`.
+This module factors out the construction of the four ``DataFrames``
+(traj, tools, wobjs, meta) into :class:`_TabularExporter`.
 
-Les sous-classes n'ont qu'une seule méthode à implémenter :
-:meth:`_write_sheets` qui reçoit les DataFrames prêts et écrit le(s) fichier(s).
+Subclasses only need to implement one method: :meth:`_write_sheets`,
+which receives the ready-to-write ``DataFrames`` and writes the
+output file(s).
 
 Architecture
 -------------
@@ -16,14 +18,18 @@ Architecture
     BaseExporter (ABC)
         └── _TabularExporter (ABC)
                 ├── ExcelExporter   → _write_sheets() via openpyxl
-                └── CsvExporter     → _write_sheets() via 4 fichiers CSV
+                └── CsvExporter     → _write_sheets() via 4 CSV files
 
-Symétrie import / export
+Import / export symmetry
 -------------------------
-La feuille ``traj`` exportée est le miroir exact de la feuille importée :
-- ``tool_index`` et ``wobj_index`` sont résolus en noms (colonnes ``tool`` et ``wobj``).
-- Les floats sont arrondis selon :attr:`ExportOptions.float_precision`.
-- La feuille ``meta`` est produite en format clé/valeur, relisible à l'import.
+The exported ``traj`` sheet is the exact mirror of the imported sheet:
+
+- ``tool_index`` and ``wobj_index`` are resolved to names (``tool``
+  and ``wobj`` columns).
+- Floats are rounded according to
+  :attr:`~trajcenter.exporter.options.ExportOptions.float_precision`.
+- The ``meta`` sheet is produced in key/value format, re-readable at
+  import time.
 """
 
 from __future__ import annotations
@@ -38,44 +44,64 @@ from trajcenter.exporter.base import BaseExporter
 from trajcenter.exporter.options import ExportOptions
 
 
-#: Colonnes flottantes à arrondir à l'export.
+#: Float columns to round at export time.
 _FLOAT_COLS: frozenset[str] = frozenset({"x", "y", "z", "q1", "q2", "q3", "q4"})
 
-#: Champs de TrajectoryMeta à ignorer à l'export
-#: (recalculés à l'import ou redondants).
-_META_SKIP_FIELDS: frozenset[str] = frozenset({
-    "point_count",   # recalculé depuis le DataFrame
-    "autocompleted", # propre à l'import, sans sens à la relecture
-})
+#: TrajectoryMeta fields to skip at export time
+#: (recalculated at import or redundant).
+_META_SKIP_FIELDS: frozenset[str] = frozenset(
+    {
+        "point_count",  # recalculated from the DataFrame
+        "autocompleted",  # specific to import, meaningless on re-read
+    }
+)
 
-#: Ordre préféré des colonnes dans la feuille traj.
+#: Preferred column order in the traj sheet.
 _TRAJ_COL_ORDER: list[str] = [
-    "x", "y", "z",
-    "q1", "q2", "q3", "q4",
-    "cf1", "cf4", "cf6", "cfx",
-    "move_type", "speed", "zone",
-    "tool", "wobj",
+    "x",
+    "y",
+    "z",
+    "q1",
+    "q2",
+    "q3",
+    "q4",
+    "cf1",
+    "cf4",
+    "cf6",
+    "cfx",
+    "move_type",
+    "speed",
+    "zone",
+    "tool",
+    "wobj",
 ]
 
 
 class _TabularExporter(BaseExporter):
-    """Exporteur abstrait pour les formats tabulaires (Excel, CSV).
+    """Abstract exporter for tabular formats (Excel, CSV).
 
-    Sous-classes concrètes :
-    :class:`~trajcenter.exporter.excel_exporter.ExcelExporter` et
+    Concrete subclasses:
+    :class:`~trajcenter.exporter.excel_exporter.ExcelExporter` and
     :class:`~trajcenter.exporter.csv_exporter.CsvExporter`.
 
-    Les sous-classes doivent implémenter :meth:`_write_sheets`.
+    Subclasses must implement :meth:`_write_sheets`.
 
     Attributes:
-        options: Options d'export.
+        options: Export options.
     """
 
     def __init__(self, options: ExportOptions | None = None) -> None:
+        """Initialise the tabular exporter.
+
+        Args:
+            options: Export options. When ``None``,
+                :class:`~trajcenter.exporter.options.ExportOptions`
+                is instantiated with its own default values.
+        """
         super().__init__(options)
 
     # ------------------------------------------------------------------
-    # Interface à implémenter
+    # Interface to implement
     # ------------------------------------------------------------------
 
     @abstractmethod
@@ -88,43 +114,43 @@ class _TabularExporter(BaseExporter):
         wobjs_df: pd.DataFrame,
         meta_df: pd.DataFrame | None,
     ) -> Path:
-        """Écrit le(s) fichier(s) de sortie depuis les DataFrames préparés.
+        """Write the output file(s) from the prepared ``DataFrames``.
 
         Args:
-            stem:      Nom de base du fichier (sans extension).
-            dest_dir:  Dossier de destination (déjà créé).
-            traj_df:   DataFrame des points (tool/wobj résolus en noms).
-            tools_df:  DataFrame des tools (colonne ``name``).
-            wobjs_df:  DataFrame des wobjs (colonne ``name``).
-            meta_df:   DataFrame clé/valeur des métadonnées, ou ``None``
-                       si ``options.include_meta`` est ``False``.
+            stem: Base name for the file(s) (without extension).
+            dest_dir: Destination directory (already created).
+            traj_df: Points ``DataFrame`` (tool/wobj resolved to names).
+            tools_df: Tools ``DataFrame`` (``name`` column).
+            wobjs_df: Wobjs ``DataFrame`` (``name`` column).
+            meta_df: Key/value metadata ``DataFrame``, or ``None``
+                when ``options.include_meta`` is ``False``.
 
         Returns:
-            Chemin du fichier principal produit.
+            Path of the main produced file.
         """
         ...
 
     # ------------------------------------------------------------------
-    # API publique
+    # Public API
     # ------------------------------------------------------------------
 
     def export(self, trajectory: Trajectory, dest_dir: Path) -> Path:
-        """Exporte une trajectoire vers un fichier tabulaire.
+        """Export a trajectory to a tabular file.
 
         Args:
-            trajectory: Trajectoire à exporter.
-            dest_dir:   Dossier de destination (créé si absent).
+            trajectory: Trajectory to export.
+            dest_dir: Destination directory (created when absent).
 
         Returns:
-            Chemin du fichier principal produit.
+            Path of the main produced file.
         """
         dest_dir = self._ensure_dir(dest_dir)
         stem = trajectory.meta.name
 
-        traj_df  = self._build_traj_df(trajectory)
+        traj_df = self._build_traj_df(trajectory)
         tools_df = self._build_tools_df(trajectory)
         wobjs_df = self._build_wobjs_df(trajectory)
-        meta_df  = self._build_meta_df(trajectory) if self.options.include_meta else None
+        meta_df = self._build_meta_df(trajectory) if self.options.include_meta else None
 
         return self._write_sheets(
             stem=stem,
@@ -136,104 +162,111 @@ class _TabularExporter(BaseExporter):
         )
 
     # ------------------------------------------------------------------
-    # Construction des DataFrames
+    # DataFrame construction
     # ------------------------------------------------------------------
 
     def _build_traj_df(self, trajectory: Trajectory) -> pd.DataFrame:
-        """Construit le DataFrame des points prêt à l'export.
+        """Build the points ``DataFrame`` ready for export.
 
-        - ``tool_index`` → colonne ``tool`` (noms résolus depuis ``trajectory.tools``).
-        - ``wobj_index`` → colonne ``wobj`` (noms résolus depuis ``trajectory.wobjs``).
-        - Floats arrondis selon :attr:`ExportOptions.float_precision`.
-        - Colonnes ordonnées selon :data:`_TRAJ_COL_ORDER`.
+        - ``tool_index`` → ``tool`` column (names resolved from
+          ``trajectory.tools``).
+        - ``wobj_index`` → ``wobj`` column (names resolved from
+          ``trajectory.wobjs``).
+        - Floats rounded according to
+          :attr:`~trajcenter.exporter.options.ExportOptions.float_precision`.
+        - Columns ordered according to :data:`_TRAJ_COL_ORDER`.
 
         Args:
-            trajectory: Trajectoire source.
+            trajectory: Source trajectory.
 
         Returns:
-            DataFrame prêt à l'écriture.
+            ``DataFrame`` ready for writing.
         """
         df = trajectory.points.copy()
         prec = self.options.float_precision
 
-        # Résolution tool_index → nom
+        # Resolve tool_index → name
         if "tool_index" in df.columns and trajectory.tools:
             df["tool"] = df["tool_index"].apply(
-                lambda i: trajectory.tools[int(i)]
-                if 0 <= int(i) < len(trajectory.tools)
-                else trajectory.tools[0]
+                lambda i: (
+                    trajectory.tools[int(i)]
+                    if 0 <= int(i) < len(trajectory.tools)
+                    else trajectory.tools[0]
+                )
             )
             df = df.drop(columns=["tool_index"])
 
-        # Résolution wobj_index → nom
+        # Resolve wobj_index → name
         if "wobj_index" in df.columns and trajectory.wobjs:
             df["wobj"] = df["wobj_index"].apply(
-                lambda i: trajectory.wobjs[int(i)]
-                if 0 <= int(i) < len(trajectory.wobjs)
-                else trajectory.wobjs[0]
+                lambda i: (
+                    trajectory.wobjs[int(i)]
+                    if 0 <= int(i) < len(trajectory.wobjs)
+                    else trajectory.wobjs[0]
+                )
             )
             df = df.drop(columns=["wobj_index"])
 
-        # Arrondi des floats
+        # Round floats
         float_cols = [c for c in df.columns if c in _FLOAT_COLS]
         df[float_cols] = df[float_cols].round(prec)
 
-        # Réordonnancement des colonnes
+        # Reorder columns
         ordered = [c for c in _TRAJ_COL_ORDER if c in df.columns]
-        extras  = [c for c in df.columns if c not in _TRAJ_COL_ORDER]
+        extras = [c for c in df.columns if c not in _TRAJ_COL_ORDER]
         df = df[ordered + extras]
 
         return df.reset_index(drop=True)
 
     @staticmethod
     def _build_tools_df(trajectory: Trajectory) -> pd.DataFrame:
-        """Construit le DataFrame de la table tools.
+        """Build the tools table ``DataFrame``.
 
         Args:
-            trajectory: Trajectoire source.
+            trajectory: Source trajectory.
 
         Returns:
-            DataFrame à une colonne ``name``.
+            Single-column ``DataFrame`` with a ``name`` column.
         """
         return pd.DataFrame({"name": trajectory.tools})
 
     @staticmethod
     def _build_wobjs_df(trajectory: Trajectory) -> pd.DataFrame:
-        """Construit le DataFrame de la table wobjs.
+        """Build the wobjs table ``DataFrame``.
 
         Args:
-            trajectory: Trajectoire source.
+            trajectory: Source trajectory.
 
         Returns:
-            DataFrame à une colonne ``name``.
+            Single-column ``DataFrame`` with a ``name`` column.
         """
         return pd.DataFrame({"name": trajectory.wobjs})
 
     @staticmethod
     def _build_meta_df(trajectory: Trajectory) -> pd.DataFrame:
-        """Sérialise :class:`TrajectoryMeta` en DataFrame clé/valeur.
+        """Serialise :class:`~trajcenter.core.trajectory.TrajectoryMeta` to a key/value ``DataFrame``.
 
-        Les champs dans :data:`_META_SKIP_FIELDS` sont omis.
-        Les champs ``None`` ou listes vides sont omis.
-        Les champs ``extra`` sont dépliés comme entrées individuelles.
+        Fields in :data:`_META_SKIP_FIELDS` are omitted.
+        Fields that are ``None`` or empty lists are omitted.
+        ``extra`` fields are unfolded as individual entries.
 
         Args:
-            trajectory: Trajectoire source.
+            trajectory: Source trajectory.
 
         Returns:
-            DataFrame à deux colonnes ``key`` et ``value``.
+            Two-column ``DataFrame`` with ``key`` and ``value`` columns.
         """
         meta: TrajectoryMeta = trajectory.meta
         rows: list[dict[str, str]] = []
 
-        # Champs directs de TrajectoryMeta
+        # Direct TrajectoryMeta fields
         direct_fields: dict[str, object] = {
-            "name":          meta.name,
-            "source_file":   meta.source_file,
-            "source_format": meta.source_format.value if meta.source_format else None,
-            "robot_model":   meta.robot_model,
-            "created_at":    meta.created_at.isoformat() if meta.created_at else None,
-            "version":       meta.version,
+            "name": meta.name,
+            "source_file": meta.source_file,
+            "source_format": (meta.source_format.value if meta.source_format else None),
+            "robot_model": meta.robot_model,
+            "created_at": (meta.created_at.isoformat() if meta.created_at else None),
+            "version": meta.version,
         }
 
         for key, value in direct_fields.items():
@@ -243,7 +276,7 @@ class _TabularExporter(BaseExporter):
                 continue
             rows.append({"key": key, "value": str(value)})
 
-        # Champs extra{} dépliés
+        # Unfolded extra{} fields
         if meta.extra:
             for key, value in meta.extra.items():
                 if value is not None:
