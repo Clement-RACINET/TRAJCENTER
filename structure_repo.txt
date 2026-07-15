@@ -106,5 +106,4 @@ trajcenter
 ├── pyproject.toml
 ├── README.md
 ├── ROUTES.md
-├── ROUTES.pdf
-└── tests.txt
+└── ROUTES.pdf
