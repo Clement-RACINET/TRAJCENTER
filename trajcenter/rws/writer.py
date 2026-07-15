@@ -66,6 +66,7 @@ from abb_rws_client_python_rw6 import (
 from abb_rws_client_python_rw6.highlevel.rapid import set_variable_with_mastership
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
+from trajcenter.rws._utils import symbol
 
 logger = get_logger(__name__)
 
@@ -95,25 +96,6 @@ _EAX_COLUMNS: Final[tuple[str, ...]] = (
 # ---------------------------------------------------------------------------
 # Private helpers
 # ---------------------------------------------------------------------------
-
-
-def _symbol(task: str, module: str, var: str) -> str:
-    """Build a RWS RAPID symbol URL path.
-
-    Args:
-        task: RAPID task name, e.g. ``"T_ROB1"``.
-        module: RAPID module name, e.g. ``"TRAJCENTER"``.
-        var: Variable name, e.g. ``"NbTrajDispo"`` or ``"RobtTRAJCENTER/[1]"``.
-
-    Returns:
-        Symbol URL path suitable for ``set_variable_with_mastership``,
-        e.g. ``"RAPID/T_ROB1/TRAJCENTER/NbTrajDispo"``.
-
-    Example:
-        >>> _symbol("T_ROB1", "TRAJCENTER", "TrajReady")
-        'RAPID/T_ROB1/TRAJCENTER/TrajReady'
-    """
-    return f"RAPID/{task}/{module}/{var}"
 
 
 def _fmt_num(value: int | float) -> str:
@@ -316,7 +298,7 @@ async def write_store_metadata(
     padded_counts = point_counts + [0] * (MAX_TRAJ - nb)
 
     async def _do_write() -> None:
-        sym = lambda var: _symbol(task, module, var)  # noqa: E731
+        sym = lambda var: symbol(task, module, var)  # noqa: E731
 
         # W1 — NbTrajDispo
         await set_variable_with_mastership(
@@ -413,7 +395,7 @@ async def write_trajectory(
     )
 
     eax_present = _eax_presence(traj.points)
-    sym = lambda var: _symbol(task, module, var)  # noqa: E731
+    sym = lambda var: symbol(task, module, var)  # noqa: E731
 
     padded_tools = traj.tools + [""] * (MAX_TOOLS - n_tools)
     padded_wobjs = traj.wobjs + [""] * (MAX_WOBJS - n_wobjs)

@@ -5,7 +5,7 @@ All RWS calls are mocked via ``unittest.mock.AsyncMock``.
 No HTTP traffic is made.
 
 Covers:
-- _symbol helper
+- symbol helper
 - _fmt_num / _fmt_bool / _fmt_string helpers
 - _row_to_robtarget — nominal, inactive eax, all eax active
 - _eax_presence detection
@@ -32,10 +32,10 @@ from trajcenter.rws.writer import (
     _fmt_num,
     _fmt_string,
     _row_to_robtarget,
-    _symbol,
     write_store_metadata,
     write_trajectory,
 )
+from trajcenter.rws._utils import symbol
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -91,28 +91,28 @@ def _make_traj(
 
 
 # ---------------------------------------------------------------------------
-# _symbol
+# symbol
 # ---------------------------------------------------------------------------
 
 
 class TestSymbol:
-    """Tests for _symbol()."""
+    """Tests for symbol()."""
 
     def test_simple_variable(self) -> None:
         """Simple variable name is correctly assembled."""
-        assert _symbol("T_ROB1", "TRAJCENTER", "TrajReady") == (
+        assert symbol("T_ROB1", "TRAJCENTER", "TrajReady") == (
             "RAPID/T_ROB1/TRAJCENTER/TrajReady"
         )
 
     def test_array_element(self) -> None:
         """Array element notation is preserved verbatim."""
-        assert _symbol("T_ROB1", "TRAJCENTER", "RobtTRAJCENTER/[1]") == (
+        assert symbol("T_ROB1", "TRAJCENTER", "RobtTRAJCENTER/[1]") == (
             "RAPID/T_ROB1/TRAJCENTER/RobtTRAJCENTER/[1]"
         )
 
     def test_custom_task_and_module(self) -> None:
         """Custom task and module names are used."""
-        assert _symbol("T_ROB2", "MY_MOD", "Var") == "RAPID/T_ROB2/MY_MOD/Var"
+        assert symbol("T_ROB2", "MY_MOD", "Var") == "RAPID/T_ROB2/MY_MOD/Var"
 
 
 # ---------------------------------------------------------------------------

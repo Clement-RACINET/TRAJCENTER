@@ -15,24 +15,27 @@ Couvre :
 
 from __future__ import annotations
 
-import warnings
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from trajcenter.converter.column_mapper import COLUMN_ALIASES, canonical_name, resolve_columns
+from trajcenter.converter.column_mapper import (
+    COLUMN_ALIASES,
+    canonical_name,
+    resolve_columns,
+)
 from trajcenter.converter.csv_converter import CsvConverter
 from trajcenter.converter.defaults import ConversionDefaults
-from trajcenter.core.trajectory import SourceFormat
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
-def _write_csv(tmp_path: Path, name: str, content: str, encoding: str = "utf-8") -> Path:
+def _write_csv(
+    tmp_path: Path, name: str, content: str, encoding: str = "utf-8"
+) -> Path:
     p = tmp_path / name
     p.write_text(content, encoding=encoding)
     return p
@@ -182,10 +185,7 @@ class TestTabularConverterLogic:
 
     def test_move_type_not_autocompleted_when_present(self, tmp_path: Path) -> None:
         """move_type présent dans la source n'est pas autocomplété."""
-        csv = _write_csv(
-            tmp_path, "full.csv",
-            "x,y,z,move_type\n1.0,2.0,3.0,MoveL\n"
-        )
+        csv = _write_csv(tmp_path, "full.csv", "x,y,z,move_type\n1.0,2.0,3.0,MoveL\n")
         traj = CsvConverter().convert(csv)
         assert "move_type" not in traj.meta.autocompleted
         assert traj.points["move_type"].iloc[0] == "MoveL"
@@ -195,8 +195,7 @@ class TestTabularConverterLogic:
     def test_alias_columns_resolved(self, tmp_path: Path) -> None:
         """Les alias de colonnes sont correctement résolus."""
         csv = _write_csv(
-            tmp_path, "alias.csv",
-            "PosX,PosY,PosZ,VITESSE\n1.0,2.0,3.0,v500\n"
+            tmp_path, "alias.csv", "PosX,PosY,PosZ,VITESSE\n1.0,2.0,3.0,v500\n"
         )
         traj = CsvConverter().convert(csv)
         assert traj.points["x"].iloc[0] == pytest.approx(1.0)
@@ -205,8 +204,7 @@ class TestTabularConverterLogic:
     def test_unknown_columns_warned(self, tmp_path: Path) -> None:
         """Les colonnes inconnues émettent un UserWarning."""
         csv = _write_csv(
-            tmp_path, "unknown.csv",
-            "x,y,z,colonne_inconnue\n1.0,2.0,3.0,foo\n"
+            tmp_path, "unknown.csv", "x,y,z,colonne_inconnue\n1.0,2.0,3.0,foo\n"
         )
         with pytest.warns(UserWarning, match="non reconnues"):
             CsvConverter().convert(csv)
@@ -216,8 +214,9 @@ class TestTabularConverterLogic:
     def test_tool_column_extracted(self, tmp_path: Path) -> None:
         """La colonne tool est extraite et convertie en tool_index."""
         csv = _write_csv(
-            tmp_path, "tools.csv",
-            "x,y,z,tool\n1.0,2.0,3.0,Tool_A\n4.0,5.0,6.0,Tool_B\n"
+            tmp_path,
+            "tools.csv",
+            "x,y,z,tool\n1.0,2.0,3.0,Tool_A\n4.0,5.0,6.0,Tool_B\n",
         )
         traj = CsvConverter().convert(csv)
         assert "Tool_A" in traj.tools
@@ -227,10 +226,7 @@ class TestTabularConverterLogic:
 
     def test_wobj_column_extracted(self, tmp_path: Path) -> None:
         """La colonne wobj est extraite et convertie en wobj_index."""
-        csv = _write_csv(
-            tmp_path, "wobj.csv",
-            "x,y,z,wobj\n1.0,2.0,3.0,Wobj_A\n"
-        )
+        csv = _write_csv(tmp_path, "wobj.csv", "x,y,z,wobj\n1.0,2.0,3.0,Wobj_A\n")
         traj = CsvConverter().convert(csv)
         assert "Wobj_A" in traj.wobjs
 
@@ -257,8 +253,7 @@ class TestTabularConverterLogic:
     def test_empty_rows_dropped(self, tmp_path: Path) -> None:
         """Les lignes entièrement vides sont supprimées."""
         csv = _write_csv(
-            tmp_path, "empty_rows.csv",
-            "x,y,z\n1.0,2.0,3.0\n,,\n4.0,5.0,6.0\n"
+            tmp_path, "empty_rows.csv", "x,y,z\n1.0,2.0,3.0\n,,\n4.0,5.0,6.0\n"
         )
         traj = CsvConverter().convert(csv)
         assert traj.point_count == 2

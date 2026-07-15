@@ -1,7 +1,5 @@
 # trajcenter/converter/column_mapper.py
-
-"""
-Normalisation des noms de colonnes pour les convertisseurs TrajCenter.
+"""Normalisation des noms de colonnes pour les convertisseurs TrajCenter.
 
 La résolution est insensible à la casse et aux diacritiques via
 :func:`_normalize`. Les alias dans :data:`COLUMN_ALIASES` doivent être
@@ -39,7 +37,7 @@ def _normalize(s: str) -> str:
             _normalize("Répère")  # → "repere"
             _normalize("VITESSE") # → "vitesse"
             _normalize("PosX")    # → "posx"
-            _normalize("pos_x")   # → "pos_x"   ← underscore conservé
+            _normalize("pos_x")   # → "pos_x"  ← underscore conservé
     """
     return (
         unicodedata.normalize("NFD", s.casefold())
@@ -57,33 +55,42 @@ def _normalize(s: str) -> str:
 #: Si un utilisateur peut écrire "PosX" ou "pos_x", il faut les DEUX
 #: formes normalisées : "posx" et "pos_x".
 COLUMN_ALIASES: dict[str, frozenset[str]] = {
-    # ── Position ──────────────────────────────────────────────────────────
+    # ── Position ────────────────────────────────────────────────────────────
     "x": frozenset({
-        "x", "posx", "pos_x", "positionx", "position_x", "tx", "transx", "trans_x",
+        "x", "posx", "pos_x", "positionx", "position_x",
+        "tx", "transx", "trans_x",
     }),
     "y": frozenset({
-        "y", "posy", "pos_y", "positiony", "position_y", "ty", "transy", "trans_y",
+        "y", "posy", "pos_y", "positiony", "position_y",
+        "ty", "transy", "trans_y",
     }),
     "z": frozenset({
-        "z", "posz", "pos_z", "positionz", "position_z", "tz", "transz", "trans_z",
+        "z", "posz", "pos_z", "positionz", "position_z",
+        "tz", "transz", "trans_z",
     }),
-
-    # ── Orientation (quaternion scalar-first : q1=qw, q2=qi, q3=qj, q4=qk)
+    # ── Orientation (quaternion scalar-first : q1=qw, q2=qi, q3=qj, q4=qk) ─
     "q1": frozenset({"q1", "qw", "quaternionw", "quaternion_w", "rotw", "rot_w"}),
     "q2": frozenset({"q2", "qi", "qx", "quaternionx", "quaternion_x", "rotx", "rot_x"}),
     "q3": frozenset({"q3", "qj", "qy", "quaterniony", "quaternion_y", "roty", "rot_y"}),
     "q4": frozenset({"q4", "qk", "qz", "quaternionz", "quaternion_z", "rotz", "rot_z"}),
-
-    # ── Mouvement ─────────────────────────────────────────────────────────
+    # ── Confdata (configuration axes robot ABB — robtarget.confdata) ────────
+    # Représentent les quadrants de configuration articulaire du robtarget.
+    # cf1 : quadrant de l'axe 1  (Int8 nullable)
+    # cf4 : quadrant de l'axe 4  (Int8 nullable)
+    # cf6 : quadrant de l'axe 6  (Int8 nullable)
+    # cfx : configuration étendue (Int8 nullable, bit-field)
+    "cf1": frozenset({"cf1", "confdata1", "conf1", "config1", "configdata1"}),
+    "cf4": frozenset({"cf4", "confdata4", "conf4", "config4", "configdata4"}),
+    "cf6": frozenset({"cf6", "confdata6", "conf6", "config6", "configdata6"}),
+    "cfx": frozenset({"cfx", "confdatax", "confx", "configx", "configdatax"}),
+    # ── Mouvement ───────────────────────────────────────────────────────────
     "move_type": frozenset({"move_type", "movetype", "type", "mouvement", "motion"}),
     "speed":     frozenset({"speed", "vitesse", "feedrate", "feed"}),
     "zone":      frozenset({"zone", "precision", "accuracy", "blend"}),
-
-    # ── Références outil / repère ──────────────────────────────────────────
+    # ── Références outil / repère ────────────────────────────────────────────
     "tool": frozenset({"tool", "outil", "toolname", "tool_name"}),
     "wobj": frozenset({"wobj", "workobject", "repere", "frame", "wobj_name", "wobjectname"}),
-
-    # ── Axes externes ─────────────────────────────────────────────────────
+    # ── Axes externes ────────────────────────────────────────────────────────
     "eax_a": frozenset({"eax_a", "eaxa", "eax1", "externala", "external_a", "exta", "ext_a"}),
     "eax_b": frozenset({"eax_b", "eaxb", "eax2", "externalb", "external_b", "extb", "ext_b"}),
     "eax_c": frozenset({"eax_c", "eaxc", "eax3", "externalc", "external_c", "extc", "ext_c"}),
@@ -119,10 +126,13 @@ def canonical_name(col: str) -> str | None:
     Example:
         ::
 
-            canonical_name("PosX")   # → "x"
-            canonical_name("pos_x")  # → "x"
-            canonical_name("REPÈRE") # → "wobj"
-            canonical_name("foobar") # → None
+            canonical_name("PosX")    # → "x"
+            canonical_name("pos_x")   # → "x"
+            canonical_name("REPÈRE")  # → "wobj"
+            canonical_name("CF1")     # → "cf1"
+            canonical_name("Cf4")     # → "cf4"
+            canonical_name("CONFDATA6") # → "cf6"
+            canonical_name("foobar")  # → None
     """
     return _ALIAS_INDEX.get(_normalize(col))
 
@@ -147,11 +157,9 @@ def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
     for col in df.columns:
         col_str = str(col)
         canon = canonical_name(col_str)
-
         if canon is None:
             unresolved.append(col_str)
             continue
-
         if canon in seen_canonical:
             warnings.warn(
                 f"Deux colonnes résolvent vers '{canon}' : "
@@ -160,7 +168,6 @@ def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
                 stacklevel=2,
             )
             continue
-
         seen_canonical[canon] = col_str
         rename_map[col_str] = canon
 
