@@ -2,7 +2,7 @@
 name = "trajcenter"
 requires-python = ">= 3.11"
 version = "2.1.0"
-dependencies = ["httpx>=0.28.1,<0.29", "pandas>=3.0.3,<4", "numpy>=2.5.1,<3", "pydantic>=2", "openpyxl>=3.1.5,<4", "rich>=15.0.0,<16", "typer>=0.26.8,<0.27", "textual>=8.2.8,<9", "mkdocs-coverage>=2.0.0,<3"]
+dependencies = ["httpx>=0.28.1,<0.29", "pandas>=3.0.3,<4", "numpy>=2.5.1,<3", "pydantic>=2", "openpyxl>=3.1.5,<4", "rich>=15.0.0,<16", "typer>=0.26.8,<0.27", "textual>=8.2.8,<9", "mkdocs-coverage>=2.0.0,<3", "abb-rws-client-python-rw6 @ git+https://gitlab.ensam.eu/lcfc/abb-rws-client-python-rw6.git"]
 
 [build-system]
 build-backend = "hatchling.build"

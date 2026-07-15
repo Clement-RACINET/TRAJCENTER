@@ -105,3 +105,9 @@ config_local.*
 # pixi environments
 .pixi
 *.egg-info
+
+
+# -----------------------------------------------------------------------------
+# Les fichiers de travail ou d'expérimentation
+# -----------------------------------------------------------------------------
+sandbox/
