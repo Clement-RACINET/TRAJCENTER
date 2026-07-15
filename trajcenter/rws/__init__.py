@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from ._utils import symbol
 from .reader import (
-    logger,
     read_nb_robtargets,
     read_nb_traj_dispo,
     read_selected_traj_index,
@@ -19,7 +18,6 @@ from .writer import (
     MAX_TOOLS,
     MAX_TRAJ,
     MAX_WOBJS,
-    logger,
     write_store_metadata,
     write_trajectory,
 )
@@ -28,7 +26,6 @@ __all__ = [
     "MAX_TOOLS",
     "MAX_TRAJ",
     "MAX_WOBJS",
-    "logger",
     "read_nb_robtargets",
     "read_nb_traj_dispo",
     "read_selected_traj_index",

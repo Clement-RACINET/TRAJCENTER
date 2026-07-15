@@ -101,20 +101,35 @@ FLAT_SUBDIRS: set[str] = set()
 
 
 def _collect_public_names(py_file: Path, blocklist: set[str]) -> list[str]:
-    """Parse *py_file* with AST and return top-level public names.
+    """Return the public names declared in *py_file*.
 
-    Only top-level definitions are inspected (functions, classes,
-    annotated assignments, plain assignments).  Import statements are
-    intentionally ignored so that re-exported names from dependencies
-    do not pollute ``__all__``.
+    Resolution order (first match wins):
+
+    1. **``__all__``** — if the module declares ``__all__`` at the top
+       level, it is the authoritative source of truth.  Only those names
+       are returned, minus the *blocklist*.
+    2. **Heuristic fallback** — if no ``__all__`` is found, top-level
+       definitions whose names do not start with ``_`` are collected,
+       with the following automatic exclusions:
+
+       - Assignments whose right-hand side is a call to ``get_logger``
+         (bare or attribute form) — logger instances are internal
+         implementation details and must never be re-exported.
+       - Import statements (``import`` / ``from … import``) — re-exported
+         names from dependencies must not pollute ``__all__``.
 
     Args:
-        py_file: Path to the Python source file.
-        blocklist: Set of names to suppress even if they are public.
+        py_file: Path to the Python source file to inspect.
+        blocklist: Set of names to suppress even if declared public.
+            Applied to both the ``__all__`` path and the heuristic path.
 
     Returns:
-        Deduplicated, sorted list of public names (no leading
-        underscore, not in *blocklist*).
+        Deduplicated, sorted list of public names.
+
+    Example:
+        >>> names = _collect_public_names(Path("trajcenter/rws/reader.py"), set())
+        >>> "logger" not in names
+        True
     """
     try:
         tree = ast.parse(py_file.read_text(encoding="utf-8"))
@@ -122,6 +137,24 @@ def _collect_public_names(py_file: Path, blocklist: set[str]) -> list[str]:
         print(f"  [WARN] Cannot parse {py_file}: {exc}", file=sys.stderr)
         return []
 
+    # ------------------------------------------------------------------
+    # Priority 1 — explicit __all__
+    # ------------------------------------------------------------------
+    for node in tree.body:
+        match node:
+            case ast.Assign(targets=targets, value=ast.List(elts=elts)):
+                for t in targets:
+                    if isinstance(t, ast.Name) and t.id == "__all__":
+                        names = [
+                            e.value
+                            for e in elts
+                            if isinstance(e, ast.Constant) and isinstance(e.value, str)
+                        ]
+                        return sorted(n for n in names if n not in blocklist)
+
+    # ------------------------------------------------------------------
+    # Priority 2 — heuristic fallback (no __all__ in module)
+    # ------------------------------------------------------------------
     names: list[str] = []
 
     for node in tree.body:
@@ -133,6 +166,14 @@ def _collect_public_names(py_file: Path, blocklist: set[str]) -> list[str]:
                 if not n.startswith("_"):
                     names.append(n)
             case ast.Assign(targets=targets):
+                # Exclude logger instances: logger = get_logger(...)
+                if isinstance(node.value, ast.Call):
+                    func = node.value.func
+                    is_get_logger = (
+                        isinstance(func, ast.Name) and func.id == "get_logger"
+                    ) or (isinstance(func, ast.Attribute) and func.attr == "get_logger")
+                    if is_get_logger:
+                        continue
                 for t in targets:
                     if isinstance(t, ast.Name) and not t.id.startswith("_"):
                         names.append(t.id)
@@ -366,9 +407,7 @@ def _gen_subpkg_init(pkg_dir: Path) -> str:
                 import_blocks.append(block)
             all_names.extend(names)
 
-    imports_block = (
-        "\n".join(import_blocks) if import_blocks else "# No public symbols"
-    )
+    imports_block = "\n".join(import_blocks) if import_blocks else "# No public symbols"
     pkg_name = PKG_ROOT.name
 
     return f"""\
@@ -460,9 +499,7 @@ def _gen_nested_subpkg_init(pkg_dir: Path) -> str:
             import_blocks.append(block)
         all_names.extend(names)
 
-    imports_block = (
-        "\n".join(import_blocks) if import_blocks else "# No public symbols"
-    )
+    imports_block = "\n".join(import_blocks) if import_blocks else "# No public symbols"
 
     return f"""\
 # {pkg_name}/{rel}/__init__.py
@@ -524,9 +561,7 @@ def _gen_package_init() -> str:
                     import_blocks.append(block)
                 all_names.extend(names)
 
-    imports_block = (
-        "\n".join(import_blocks) if import_blocks else "# No public symbols"
-    )
+    imports_block = "\n".join(import_blocks) if import_blocks else "# No public symbols"
 
     return f"""\
 # {pkg_name}/__init__.py
@@ -666,8 +701,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         description=(
-            f"Audit and fix all __init__.py files in "
-            f"{PKG_ROOT.name}/ and tests/."
+            f"Audit and fix all __init__.py files in {PKG_ROOT.name}/ and tests/."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
