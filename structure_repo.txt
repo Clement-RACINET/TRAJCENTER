@@ -49,6 +49,7 @@ trajcenter
 │   │   └── tabular_converter.py
 │   ├── core
 │   │   ├── __init__.py
+│   │   ├── logger.py
 │   │   └── trajectory.py
 │   ├── exporter
 │   │   ├── __init__.py
