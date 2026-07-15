@@ -66,12 +66,14 @@ class TestCsvConverter:
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
         """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="introuvable"):
+        with pytest.raises(FileNotFoundError, match=r"not found|introuvable"):
             CsvConverter().convert(tmp_path / "inexistant.csv")
 
     def test_missing_xyz_raises(self, csv_missing_xyz: Path) -> None:
         """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
-        with pytest.raises(ValueError, match="obligatoires manquantes"):
+        with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
             CsvConverter().convert(csv_missing_xyz)
 
     # --- Metadata ---

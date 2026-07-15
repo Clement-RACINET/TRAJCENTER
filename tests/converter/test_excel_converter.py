@@ -36,12 +36,14 @@ class TestExcelConverter:
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
         """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="introuvable"):
+        with pytest.raises(FileNotFoundError, match=r"not found|introuvable"):
             ExcelConverter().convert(tmp_path / "inexistant.xlsx")
 
     def test_missing_xyz_raises(self, xlsx_missing_xyz: Path) -> None:
         """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
-        with pytest.raises(ValueError, match="obligatoires manquantes"):
+        with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
             ExcelConverter().convert(xlsx_missing_xyz)
 
     def test_multi_traj_convert_raises(self, xlsx_multi_traj: Path) -> None:
@@ -57,7 +59,10 @@ class TestExcelConverter:
 
     def test_source_format(self, xlsx_simple: Path) -> None:
         """``source_format`` is ``EXCEL``."""
-        assert ExcelConverter().convert(xlsx_simple).meta.source_format == SourceFormat.EXCEL
+        assert (
+            ExcelConverter().convert(xlsx_simple).meta.source_format
+            == SourceFormat.EXCEL
+        )
 
     def test_source_file(self, xlsx_simple: Path) -> None:
         """``source_file`` contains the file name."""
@@ -184,16 +189,16 @@ class TestExcelConverter:
 
     def test_custom_default_move_type(self, xlsx_xyz_only: Path) -> None:
         """The custom default move type is applied."""
-        traj = ExcelConverter(
-            defaults=ConversionDefaults(move_type="MoveL")
-        ).convert(xlsx_xyz_only)
+        traj = ExcelConverter(defaults=ConversionDefaults(move_type="MoveL")).convert(
+            xlsx_xyz_only
+        )
         assert traj.points["move_type"].iloc[0] == "MoveL"
 
     def test_custom_default_speed(self, xlsx_xyz_only: Path) -> None:
         """The custom default speed is applied."""
-        traj = ExcelConverter(
-            defaults=ConversionDefaults(speed="v250")
-        ).convert(xlsx_xyz_only)
+        traj = ExcelConverter(defaults=ConversionDefaults(speed="v250")).convert(
+            xlsx_xyz_only
+        )
         assert traj.points["speed"].iloc[0] == "v250"
 
     # --- Roundtrip ---

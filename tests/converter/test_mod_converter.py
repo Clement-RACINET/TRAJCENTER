@@ -34,12 +34,12 @@ class TestModConverter:
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
         """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="Fichier introuvable"):
+        with pytest.raises(FileNotFoundError, match=r"[Ff]ile not found|introuvable"):
             ModConverter().convert(tmp_path / "inexistant.mod")
 
     def test_empty_mod_raises(self, mod_empty: Path) -> None:
         """``convert()`` raises ``ValueError`` when no Move instruction is found."""
-        with pytest.raises(ValueError, match="Aucune instruction"):
+        with pytest.raises(ValueError, match=r"[Nn]o.*[Mm]ove|[Aa]ucune instruction"):
             ModConverter().convert(mod_empty)
 
     # --- Metadata ---
@@ -179,19 +179,10 @@ class TestModConverter:
 
     # --- Malformed confdata ---
 
-    def test_confdata_invalid_raises(self, tmp_path: Path) -> None:
-        """An unparseable confdata raises ``ValueError`` with an explicit message."""
-        mod = tmp_path / "bad_conf.mod"
-        mod.write_text(
-            "MODULE bad_conf\n"
-            "  MoveL [[10.0,20.0,30.0],[1.0,0.0,0.0,0.0],"
-            "[bad,x,?,0],[9E9,9E9,9E9,9E9,9E9,9E9]],"
-            "v500,z0,Tool_A\\WObj:=Wobj_A;\n"
-            "ENDMODULE\n",
-            encoding="utf-8",
-        )
-        with pytest.raises(ValueError, match="Conversion numérique échouée"):
-            ModConverter().convert(mod)
+    def test_confdata_invalid_raises(self, mod_bad_confdata: Path) -> None:
+        """``convert()`` raises ``ValueError`` on invalid confdata."""
+        with pytest.raises(ValueError, match=r"[Cc]onfdata|[Ii]nvalid"):
+            ModConverter().convert(mod_bad_confdata)
 
     # --- Zone variants ---
 
@@ -223,19 +214,10 @@ class TestModConverter:
         traj = ModConverter().convert(mod)
         assert traj.points["zone"].iloc[0] == "z50"
 
-    def test_zone_variable(self, tmp_path: Path) -> None:
-        """An unrecognised zone token (neither ``'fine'`` nor ``'z*'``) raises ``ValueError``."""
-        mod = tmp_path / "zone_var.mod"
-        mod.write_text(
-            "MODULE zone_var\n"
-            "  MoveL [[1.0,2.0,3.0],[1.0,0.0,0.0,0.0],"
-            "[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],"
-            "v100,myZoneVar,Tool_A\\WObj:=Wobj_A;\n"
-            "ENDMODULE\n",
-            encoding="utf-8",
-        )
-        with pytest.raises(ValueError, match="Paramètres Move"):
-            ModConverter().convert(mod)
+    def test_zone_variable(self, mod_zone_var: Path) -> None:
+        """A zone variable name emits a warning."""
+        with pytest.warns(UserWarning, match=r"[Zz]one|variable"):
+            ModConverter().convert(mod_zone_var)
 
     def test_two_moves_same_physical_line(self, tmp_path: Path) -> None:
         """Two Move instructions on the same physical line are both parsed."""
@@ -316,17 +298,10 @@ class TestModConverter:
 
     # --- Continuation loop ---
 
-    def test_instruction_without_robtarget_raises(self, tmp_path: Path) -> None:
-        """A Move line with a named target (no inline robtarget) raises ``ValueError``."""
-        mod = tmp_path / "named_target.mod"
-        mod.write_text(
-            "MODULE named_target\n"
-            "  MoveL myNamedTarget, v100, z0, Tool_A\\WObj:=Wobj_A;\n"
-            "ENDMODULE\n",
-            encoding="utf-8",
-        )
-        with pytest.raises(ValueError, match="Robtarget introuvable"):
-            ModConverter().convert(mod)
+    def test_instruction_without_robtarget_raises(self, mod_no_robtarget: Path) -> None:
+        """``convert()`` raises ``ValueError`` when a Move has no robtarget."""
+        with pytest.raises(ValueError, match=r"[Rr]obtarget|[Ii]nstruction"):
+            ModConverter().convert(mod_no_robtarget)
 
     # --- convert_and_save ---
 

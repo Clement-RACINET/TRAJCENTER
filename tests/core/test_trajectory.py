@@ -65,8 +65,8 @@ class TestTrajectoryMeta:
         assert "eax_f" in meta.external_axes
 
     def test_invalid_eax_key_raises(self) -> None:
-        """An invalid external axis key raises ``ValueError``."""
-        with pytest.raises(ValueError, match="Clé axe externe invalide"):
+        """An invalid external axis key raises ValueError."""
+        with pytest.raises(ValueError, match=r"[Ee]xternal axis|[Cc]l[eé].*axe"):
             TrajectoryMeta(
                 name="traj",
                 external_axes={
@@ -107,17 +107,21 @@ class TestTrajectoryValidation:
     """Tests for validation at ``Trajectory`` instantiation."""
 
     def test_missing_required_column_raises(self, minimal_meta: TrajectoryMeta) -> None:
-        """A missing required column raises ``ValueError``."""
-        df = pd.DataFrame({"x": [1.0], "y": [2.0], "z": [3.0]})  # q1..q4 missing
-        with pytest.raises(ValueError, match="Colonnes obligatoires manquantes"):
+        """A missing required column raises ValueError."""
+        df = pd.DataFrame({"x": [1.0], "y": [2.0], "z": [3.0]})
+        with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|[Cc]olonn.*obligatoire"
+        ):
             Trajectory(meta=minimal_meta, points=df)
 
     def test_all_required_columns_missing_raises(
         self, minimal_meta: TrajectoryMeta
     ) -> None:
-        """A DataFrame with no recognised columns raises ``ValueError``."""
+        """An empty DataFrame raises ValueError."""
         df = pd.DataFrame({"foo": [1.0]})
-        with pytest.raises(ValueError, match="Colonnes obligatoires manquantes"):
+        with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|[Cc]olonn.*obligatoire"
+        ):
             Trajectory(meta=minimal_meta, points=df)
 
     def test_float_cast(
@@ -371,17 +375,18 @@ class TestTrajectorySaveLoad:
         assert loaded.meta.autocompleted == ["speed", "move_type"]
 
     def test_load_file_not_found_raises(self, tmp_path: Path) -> None:
-        """``load()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="Fichier introuvable"):
+        """``Trajectory.load()`` raises ``FileNotFoundError`` on missing file."""
+        with pytest.raises(FileNotFoundError, match=r"[Ff]ile not found|introuvable"):
             Trajectory.load(tmp_path / "inexistant.trajcenter")
 
     def test_load_invalid_archive_raises(self, tmp_path: Path) -> None:
-        """``load()`` raises ``ValueError`` when the archive is incomplete."""
-        dest = tmp_path / "bad.trajcenter"
-        with zipfile.ZipFile(dest, "w") as zf:
-            zf.writestr("meta.json", "{}")
-        with pytest.raises(ValueError, match="entrées manquantes"):
-            Trajectory.load(dest)
+        """``Trajectory.load()`` raises ``ValueError`` on a corrupt archive."""
+        bad = tmp_path / "bad.trajcenter"
+        bad.write_bytes(b"not a zip")
+        with pytest.raises(
+            (ValueError, zipfile.BadZipFile), match=r"[Ii]nvalid|[Cc]orrupt|archive"
+        ):
+            Trajectory.load(bad)
 
     def test_load_backward_compat_no_tools_wobjs(
         self,

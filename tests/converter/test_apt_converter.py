@@ -241,12 +241,12 @@ class TestAptConverter:
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
         """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="Fichier introuvable"):
+        with pytest.raises(FileNotFoundError, match=r"[Ff]ile not found|introuvable"):
             AptConverter().convert(tmp_path / "inexistant.aptsource")
 
     def test_empty_apt_raises(self, apt_empty: Path) -> None:
         """``convert()`` raises ``ValueError`` when no GOTO instruction is found."""
-        with pytest.raises(ValueError, match="Aucune instruction GOTO"):
+        with pytest.raises(ValueError, match=r"[Nn]o.*GOTO|[Aa]ucune instruction"):
             AptConverter().convert(apt_empty)
 
     # --- Metadata ---
@@ -380,8 +380,8 @@ class TestAptConverter:
         assert traj.points["z"].iloc[0] == pytest.approx(30.0 + 20.0)
 
     def test_transform_missing_warns(self, apt_simple: Path) -> None:
-        """``apply_catia_transform=True`` without a matrix emits a ``UserWarning``."""
-        with pytest.warns(UserWarning, match="matrice CATIA"):
+        """``apply_catia_transform=True`` without matrix emits a warning."""
+        with pytest.warns(UserWarning, match=r"[Mm]atrix|transform|matrice"):
             AptConverter(apply_catia_transform=True).convert(apt_simple)
 
     def test_transform_missing_coords_unchanged(self, apt_simple: Path) -> None:

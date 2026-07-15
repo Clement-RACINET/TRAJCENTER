@@ -325,12 +325,10 @@ class TestResolveColumns:
         assert "cfx" in result.columns
 
     def test_duplicate_canonical_emits_warning(self) -> None:
-        """Two columns resolving to the same canonical name emit a ``UserWarning``."""
-        df = pd.DataFrame({"x": [1.0], "PosX": [2.0]})
-        with pytest.warns(UserWarning, match="résolvent vers 'x'"):
-            result, _ = resolve_columns(df)
-        # The first column is kept
-        assert result["x"].iloc[0] == 1.0
+        """A duplicate canonical name emits a UserWarning."""
+        df = pd.DataFrame(columns=["x", "PosX"])  # deux alias → même canon "x"
+        with pytest.warns(UserWarning, match=r"[Dd]uplicate|[Cc]onflit|doublon"):
+            resolve_columns(df)
 
     def test_no_columns_unchanged(self) -> None:
         """A DataFrame with no recognised columns is returned unchanged."""

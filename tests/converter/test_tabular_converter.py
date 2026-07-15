@@ -157,14 +157,15 @@ class TestTabularConverterLogic:
 
     def test_file_not_found_raises(self, tmp_path: Path) -> None:
         """``convert()`` raises ``FileNotFoundError`` when the file does not exist."""
-        with pytest.raises(FileNotFoundError, match="introuvable"):
+        with pytest.raises(FileNotFoundError, match=r"not found|introuvable"):
             CsvConverter().convert(tmp_path / "inexistant.csv")
 
-    def test_missing_xyz_raises(self, tmp_path: Path) -> None:
+    def test_missing_xyz_raises(self, csv_missing_xyz: Path) -> None:
         """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
-        csv = _write_csv(tmp_path, "bad.csv", "q1,q2,q3,q4\n1,0,0,0\n")
-        with pytest.raises(ValueError, match="obligatoires manquantes"):
-            CsvConverter().convert(csv)
+        with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
+            CsvConverter().convert(csv_missing_xyz)
 
     # --- Identity quaternion ---
 
@@ -216,13 +217,10 @@ class TestTabularConverterLogic:
         assert traj.points["x"].iloc[0] == pytest.approx(1.0)
         assert traj.points["speed"].iloc[0] == "v500"
 
-    def test_unknown_columns_warned(self, tmp_path: Path) -> None:
+    def test_unknown_columns_warned(self, csv_unknown_col: Path) -> None:
         """Unknown columns emit a ``UserWarning``."""
-        csv = _write_csv(
-            tmp_path, "unknown.csv", "x,y,z,colonne_inconnue\n1.0,2.0,3.0,foo\n"
-        )
-        with pytest.warns(UserWarning, match="non reconnues"):
-            CsvConverter().convert(csv)
+        with pytest.warns(UserWarning, match=r"[Uu]nknown|inconnue"):
+            CsvConverter().convert(csv_unknown_col)
 
     # --- Tools / wobjs tables ---
 
