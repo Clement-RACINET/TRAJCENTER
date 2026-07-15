@@ -20,10 +20,6 @@ trajcenter
 │   ├── Image1.png
 │   ├── Image2.png
 │   └── Image3.png
-├── sandbox
-│   └── rapid
-│       ├── MainModule.mod
-│       └── module_sys.sys
 ├── scripts
 │   ├── doc
 │   │   ├── config.py
