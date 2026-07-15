@@ -34,6 +34,9 @@ trajcenter
 │   │   ├── test_csv_exporter.py
 │   │   ├── test_excel_exporter.py
 │   │   └── test_tabular_exporter.py
+│   ├── rws
+│   │   ├── __init__.py
+│   │   └── test_writer.py
 │   ├── __init__.py
 │   └── conftest.py
 ├── trajcenter
@@ -59,7 +62,8 @@ trajcenter
 │   │   ├── options.py
 │   │   └── tabular_exporter.py
 │   ├── rws
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── writer.py
 │   ├── server
 │   │   └── __init__.py
 │   └── __init__.py

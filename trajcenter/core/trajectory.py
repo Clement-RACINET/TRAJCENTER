@@ -101,10 +101,10 @@ class SourceFormat(StrEnum):
         MANUAL: Créé programmatiquement, sans fichier source.
     """
 
-    EXCEL  = "excel"
-    APT    = "apt"
-    CSV    = "csv"
-    RAPID  = "rapid"
+    EXCEL = "excel"
+    APT = "apt"
+    CSV = "csv"
+    RAPID = "rapid"
     MANUAL = "manual"
     TRAJCENTER = "trajcenter"
 
@@ -136,7 +136,10 @@ REQUIRED_COLUMNS: list[str] = ["x", "y", "z", "q1", "q2", "q3", "q4"]
 #: Toujours présentes dans un ``.trajcenter`` produit par un convertisseur.
 #: Absentes uniquement si la trajectoire est créée manuellement (``SourceFormat.MANUAL``).
 CONVERTER_COLUMNS: list[str] = [
-    "cf1", "cf4", "cf6", "cfx",
+    "cf1",
+    "cf4",
+    "cf6",
+    "cfx",
     "speed",
     "zone",
     "move_type",
@@ -147,8 +150,12 @@ CONVERTER_COLUMNS: list[str] = [
 #: Colonnes optionnelles pures — présence = axe externe actif sur ce robot.
 #: Jamais autocomplétées. Absentes = axe inexistant (9E9 injecté côté RWS).
 EXTERNAL_AXIS_COLUMNS: list[str] = [
-    "eax_a", "eax_b", "eax_c",
-    "eax_d", "eax_e", "eax_f",
+    "eax_a",
+    "eax_b",
+    "eax_c",
+    "eax_d",
+    "eax_e",
+    "eax_f",
 ]
 
 #: Union de toutes les colonnes reconnues (hors REQUIRED).
@@ -156,19 +163,19 @@ OPTIONAL_COLUMNS: list[str] = CONVERTER_COLUMNS + EXTERNAL_AXIS_COLUMNS
 
 #: Mapping colonne → dtype numpy pour le cast à la validation.
 COLUMN_DTYPES: dict[str, np.dtype[np.generic]] = {
-    "x":          np.dtype("float64"),
-    "y":          np.dtype("float64"),
-    "z":          np.dtype("float64"),
-    "q1":         np.dtype("float64"),
-    "q2":         np.dtype("float64"),
-    "q3":         np.dtype("float64"),
-    "q4":         np.dtype("float64"),
-    "eax_a":      np.dtype("float64"),
-    "eax_b":      np.dtype("float64"),
-    "eax_c":      np.dtype("float64"),
-    "eax_d":      np.dtype("float64"),
-    "eax_e":      np.dtype("float64"),
-    "eax_f":      np.dtype("float64"),
+    "x": np.dtype("float64"),
+    "y": np.dtype("float64"),
+    "z": np.dtype("float64"),
+    "q1": np.dtype("float64"),
+    "q2": np.dtype("float64"),
+    "q3": np.dtype("float64"),
+    "q4": np.dtype("float64"),
+    "eax_a": np.dtype("float64"),
+    "eax_b": np.dtype("float64"),
+    "eax_c": np.dtype("float64"),
+    "eax_d": np.dtype("float64"),
+    "eax_e": np.dtype("float64"),
+    "eax_f": np.dtype("float64"),
     "tool_index": np.dtype("int16"),
     "wobj_index": np.dtype("int16"),
     # cf* → Int8 nullable pandas  (géré séparément via CONFDATA_COLUMNS)
@@ -181,26 +188,26 @@ CONFDATA_COLUMNS: frozenset[str] = frozenset({"cf1", "cf4", "cf6", "cfx"})
 #: Mapping colonne → type PyArrow pour la construction du schéma Parquet.
 #: Colonnes absentes de ce dict → ``pa.string()``.
 _PA_TYPE_MAP: dict[str, pa.DataType] = {
-    "x":          pa.float64(),
-    "y":          pa.float64(),
-    "z":          pa.float64(),
-    "q1":         pa.float64(),
-    "q2":         pa.float64(),
-    "q3":         pa.float64(),
-    "q4":         pa.float64(),
-    "cf1":        pa.int8(),
-    "cf4":        pa.int8(),
-    "cf6":        pa.int8(),
-    "cfx":        pa.int8(),
-    "eax_a":      pa.float64(),
-    "eax_b":      pa.float64(),
-    "eax_c":      pa.float64(),
-    "eax_d":      pa.float64(),
-    "eax_e":      pa.float64(),
-    "eax_f":      pa.float64(),
-    "speed":      pa.string(),
-    "zone":       pa.string(),
-    "move_type":  pa.string(),
+    "x": pa.float64(),
+    "y": pa.float64(),
+    "z": pa.float64(),
+    "q1": pa.float64(),
+    "q2": pa.float64(),
+    "q3": pa.float64(),
+    "q4": pa.float64(),
+    "cf1": pa.int8(),
+    "cf4": pa.int8(),
+    "cf6": pa.int8(),
+    "cfx": pa.int8(),
+    "eax_a": pa.float64(),
+    "eax_b": pa.float64(),
+    "eax_c": pa.float64(),
+    "eax_d": pa.float64(),
+    "eax_e": pa.float64(),
+    "eax_f": pa.float64(),
+    "speed": pa.string(),
+    "zone": pa.string(),
+    "move_type": pa.string(),
     "tool_index": pa.int16(),
     "wobj_index": pa.int16(),
 }
@@ -233,7 +240,7 @@ class ExternalAxisConfig(BaseModel):
     """
 
     axis_type: str = Field(..., description="'rotational' ou 'linear'")
-    unit: str      = Field(..., description="'deg' ou 'mm'")
+    unit: str = Field(..., description="'deg' ou 'mm'")
     label: str | None = Field(None, description="Nom lisible, ex. 'Positionneur A'")
 
 
@@ -391,10 +398,10 @@ class Trajectory:
             # Trajectory(name='test', points=2, tools=1, wobjs=1, eax=none)
     """
 
-    meta:   TrajectoryMeta
+    meta: TrajectoryMeta
     points: pd.DataFrame
-    tools:  list[str]
-    wobjs:  list[str]
+    tools: list[str]
+    wobjs: list[str]
 
     def __init__(
         self,
@@ -419,10 +426,10 @@ class Trajectory:
                         si un cast de type échoue, ou si un index
                         ``tool_index`` / ``wobj_index`` est hors bornes.
         """
-        self.meta   = meta
+        self.meta = meta
         self.points = self._validate_and_cast(points)
-        self.tools  = tools or []
-        self.wobjs  = wobjs or []
+        self.tools = tools or []
+        self.wobjs = wobjs or []
         self._validate_index_bounds()
 
     # ------------------------------------------------------------------
@@ -445,9 +452,7 @@ class Trajectory:
         """
         missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
         if missing:
-            raise ValueError(
-                f"Colonnes obligatoires manquantes : {sorted(missing)}"
-            )
+            raise ValueError(f"Colonnes obligatoires manquantes : {sorted(missing)}")
 
         df = df.copy()
 
@@ -476,9 +481,15 @@ class Trajectory:
     def _validate_index_bounds(self) -> None:
         """Vérifie que les index tool/wobj ne dépassent pas la taille des tables.
 
+        No-op if the DataFrame has no rows (empty trajectory under construction).
+
         Raises:
             ValueError: Si un index ``tool_index`` ou ``wobj_index`` est hors bornes.
         """
+        # Guard: an empty DataFrame has no rows to validate — skip entirely.
+        if len(self.points) == 0:
+            return
+
         if "tool_index" in self.points.columns and self.tools:
             max_idx = int(self.points["tool_index"].max())
             if max_idx >= len(self.tools):
@@ -602,9 +613,7 @@ class Trajectory:
             for col in self.points.columns
         ]
         schema = pa.schema(pa_fields)
-        table = pa.Table.from_pandas(
-            self.points, schema=schema, preserve_index=False
-        )
+        table = pa.Table.from_pandas(self.points, schema=schema, preserve_index=False)
 
         with zipfile.ZipFile(dest, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             zf.writestr("meta.json", self.meta.model_dump_json(indent=2))
@@ -665,14 +674,14 @@ class Trajectory:
                     f"{sorted(missing)} : {src}"
                 )
 
-            meta   = TrajectoryMeta.model_validate_json(zf.read("meta.json"))
+            meta = TrajectoryMeta.model_validate_json(zf.read("meta.json"))
             tools: list[str] = (
                 json.loads(zf.read("tools.json")) if "tools.json" in names else []
             )
             wobjs: list[str] = (
                 json.loads(zf.read("wobjs.json")) if "wobjs.json" in names else []
             )
-            buf    = io.BytesIO(zf.read("points.parquet"))
+            buf = io.BytesIO(zf.read("points.parquet"))
             points = pq.read_table(buf).to_pandas()
 
         return cls(meta=meta, points=points, tools=tools, wobjs=wobjs)
