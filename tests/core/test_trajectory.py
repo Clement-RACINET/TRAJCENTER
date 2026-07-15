@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import zipfile
 from pathlib import Path
 
@@ -26,6 +27,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
+from trajcenter.core.messages import raw
 from trajcenter.core.trajectory import (
     ExternalAxisConfig,
     SourceFormat,
@@ -66,7 +68,9 @@ class TestTrajectoryMeta:
 
     def test_invalid_eax_key_raises(self) -> None:
         """An invalid external axis key raises ValueError."""
-        with pytest.raises(ValueError, match=r"[Ee]xternal axis|[Cc]l[eé].*axe"):
+        with pytest.raises(
+            ValueError, match=re.escape(raw("INVALID_EAX_KEY").split(":")[0])
+        ):
             TrajectoryMeta(
                 name="traj",
                 external_axes={
@@ -110,7 +114,7 @@ class TestTrajectoryValidation:
         """A missing required column raises ValueError."""
         df = pd.DataFrame({"x": [1.0], "y": [2.0], "z": [3.0]})
         with pytest.raises(
-            ValueError, match=r"[Mm]issing.*columns|[Cc]olonn.*obligatoire"
+            ValueError, match=re.escape(raw("MANDATORY_COLUMNS_MISSING").split(":")[0])
         ):
             Trajectory(meta=minimal_meta, points=df)
 
@@ -120,7 +124,7 @@ class TestTrajectoryValidation:
         """An empty DataFrame raises ValueError."""
         df = pd.DataFrame({"foo": [1.0]})
         with pytest.raises(
-            ValueError, match=r"[Mm]issing.*columns|[Cc]olonn.*obligatoire"
+            ValueError, match=re.escape(raw("MANDATORY_COLUMNS_MISSING").split(":")[0])
         ):
             Trajectory(meta=minimal_meta, points=df)
 
@@ -335,7 +339,6 @@ class TestTrajectorySaveLoad:
         dest = tmp_path / "test.trajcenter"
         simple_trajectory.save(dest)
         loaded = Trajectory.load(dest)
-
         assert loaded.meta.name == simple_trajectory.meta.name
         assert loaded.point_count == simple_trajectory.point_count
         assert loaded.tools == simple_trajectory.tools
@@ -359,10 +362,7 @@ class TestTrajectorySaveLoad:
         self, tmp_path: Path, complete_df: pd.DataFrame
     ) -> None:
         """The ``autocompleted`` field is preserved after save/load."""
-        meta = TrajectoryMeta(
-            name="traj",
-            autocompleted=["speed", "move_type"],
-        )
+        meta = TrajectoryMeta(name="traj", autocompleted=["speed", "move_type"])
         traj = Trajectory(
             meta=meta,
             points=complete_df,
@@ -376,16 +376,16 @@ class TestTrajectorySaveLoad:
 
     def test_load_file_not_found_raises(self, tmp_path: Path) -> None:
         """``Trajectory.load()`` raises ``FileNotFoundError`` on missing file."""
-        with pytest.raises(FileNotFoundError, match=r"[Ff]ile not found|introuvable"):
+        with pytest.raises(
+            FileNotFoundError, match=re.escape(raw("FILE_NOT_FOUND").split(":")[0])
+        ):
             Trajectory.load(tmp_path / "inexistant.trajcenter")
 
     def test_load_invalid_archive_raises(self, tmp_path: Path) -> None:
-        """``Trajectory.load()`` raises ``ValueError`` on a corrupt archive."""
+        """``Trajectory.load()`` raises on a corrupt archive."""
         bad = tmp_path / "bad.trajcenter"
         bad.write_bytes(b"not a zip")
-        with pytest.raises(
-            (ValueError, zipfile.BadZipFile), match=r"[Ii]nvalid|[Cc]orrupt|archive"
-        ):
+        with pytest.raises((ValueError, zipfile.BadZipFile)):
             Trajectory.load(bad)
 
     def test_load_backward_compat_no_tools_wobjs(

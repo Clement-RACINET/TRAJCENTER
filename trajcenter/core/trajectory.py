@@ -89,6 +89,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from pydantic import BaseModel, Field, model_validator
 
+from trajcenter.core.messages import msg
+
 
 # ---------------------------------------------------------------------------
 # Enums
@@ -99,10 +101,10 @@ class SourceFormat(StrEnum):
     """Origin format of the source file that produced the trajectory.
 
     Attributes:
-        EXCEL: Microsoft Excel file (.xlsx / .xls).
-        APT: CATIA APT source file (.aptsource).
-        CSV: Delimited text file (.csv / .txt).
-        RAPID: ABB RAPID module (.mod).
+        EXCEL: Microsoft Excel file (``.xlsx`` / ``.xls``).
+        APT: CATIA APT source file (``.aptsource``).
+        CSV: Delimited text file (``.csv`` / ``.txt``).
+        RAPID: ABB RAPID module (``.mod``).
         MANUAL: Created programmatically, without a source file.
         TRAJCENTER: Loaded from an existing ``.trajcenter`` archive.
     """
@@ -119,9 +121,9 @@ class MoveType(StrEnum):
     """RAPID movement type associated with a trajectory point.
 
     Attributes:
-        MOVE_J: Joint movement (MoveJ).
-        MOVE_L: Linear Cartesian movement (MoveL).
-        MOVE_C: Circular movement (MoveC).
+        MOVE_J: Joint movement (``MoveJ``).
+        MOVE_L: Linear Cartesian movement (``MoveL``).
+        MOVE_C: Circular movement (``MoveC``).
     """
 
     MOVE_J = "MoveJ"
@@ -279,7 +281,7 @@ class TrajectoryMeta(BaseModel):
         robot_model: Target ABB robot model
             (e.g. ``"IRB6700-205/2.80"``).
         point_count: Number of points. Updated automatically at
-            ``save()``.
+            :meth:`Trajectory.save`.
         external_axes: Dict of active external axes.
             Keys: ``"eax_a"`` … ``"eax_f"``.
         autocompleted: List of columns whose values were inferred from
@@ -316,7 +318,7 @@ class TrajectoryMeta(BaseModel):
     point_count: int = Field(0, description="Updated automatically at save time")
     external_axes: dict[str, ExternalAxisConfig] = Field(
         default_factory=dict,
-        description=("Active external axes. Keys: 'eax_a'…'eax_f'. Absent = inactive."),
+        description="Active external axes. Keys: 'eax_a'…'eax_f'. Absent = inactive.",
     )
     autocompleted: list[str] = Field(
         default_factory=list,
@@ -345,8 +347,11 @@ class TrajectoryMeta(BaseModel):
         for key in self.external_axes:
             if key not in valid:
                 raise ValueError(
-                    f"Invalid external axis key: '{key}'. "
-                    f"Expected one of: {sorted(valid)}"
+                    msg(
+                        "INVALID_EAX_KEY",
+                        key=key,
+                        valid=sorted(valid),
+                    )
                 )
         return self
 
@@ -472,7 +477,7 @@ class Trajectory:
         """
         missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
         if missing:
-            raise ValueError(f"Mandatory columns missing: {sorted(missing)}")
+            raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
 
         df = df.copy()
 
@@ -485,14 +490,16 @@ class Trajectory:
                     df[col] = df[col].astype(target)
                 except (ValueError, TypeError) as exc:
                     raise ValueError(
-                        f"Cannot cast '{col_str}' to {target}: {exc}"
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
                     ) from exc
 
             elif col_str in CONFDATA_COLUMNS:
                 try:
                     df[col] = df[col].astype(pd.Int8Dtype())
                 except (ValueError, TypeError) as exc:
-                    raise ValueError(f"Cannot cast '{col_str}' to Int8: {exc}") from exc
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
+                    ) from exc
 
         return df
 
@@ -506,7 +513,6 @@ class Trajectory:
             ValueError: If a ``tool_index`` or ``wobj_index`` value is
                 out of bounds.
         """
-        # Guard: an empty DataFrame has no rows to validate — skip entirely.
         if len(self.points) == 0:
             return
 
@@ -514,15 +520,13 @@ class Trajectory:
             max_idx = int(self.points["tool_index"].max())
             if max_idx >= len(self.tools):
                 raise ValueError(
-                    f"tool_index max ({max_idx}) out of bounds "
-                    f"(tools contains {len(self.tools)} entries)."
+                    msg("TOOL_INDEX_OUT_OF_BOUNDS", max=max_idx, n=len(self.tools))
                 )
         if "wobj_index" in self.points.columns and self.wobjs:
             max_idx = int(self.points["wobj_index"].max())
             if max_idx >= len(self.wobjs):
                 raise ValueError(
-                    f"wobj_index max ({max_idx}) out of bounds "
-                    f"(wobjs contains {len(self.wobjs)} entries)."
+                    msg("WOBJ_INDEX_OUT_OF_BOUNDS", max=max_idx, n=len(self.wobjs))
                 )
 
     # ------------------------------------------------------------------
@@ -683,15 +687,15 @@ class Trajectory:
         """
         src = Path(path)
         if not src.exists():
-            raise FileNotFoundError(f"File not found: {src}")
+            raise FileNotFoundError(msg("FILE_NOT_FOUND", path=src))
 
         with zipfile.ZipFile(src, "r") as zf:
             names = set(zf.namelist())
-            missing = _REQUIRED_ZIP_ENTRIES - names
-            if missing:
+            missing_entries = _REQUIRED_ZIP_ENTRIES - names
+            if missing_entries:
                 raise ValueError(
                     f"Invalid .trajcenter archive — missing entries "
-                    f"{sorted(missing)}: {src}"
+                    f"{sorted(missing_entries)}: {src}"
                 )
 
             meta = TrajectoryMeta.model_validate_json(zf.read("meta.json"))

@@ -6,8 +6,13 @@ Author: Clement RACINET
 
 Resolution is case-insensitive and diacritic-insensitive via
 :func:`_normalize`. Aliases in :data:`COLUMN_ALIASES` must be written
-in their *normalised* form (lowercase, no accent, underscores preserved)
-— i.e. exactly as they come out of ``_normalize()``.
+in their *normalised* form (lowercase, no accent, underscores
+preserved) — i.e. as they come out of ``_normalize()``.
+
+Note:
+    If a user can write both ``"PosX"`` and ``"pos_x"``, both
+    normalised forms must appear in the alias set: ``"posx"`` and
+    ``"pos_x"``.
 """
 
 from __future__ import annotations
@@ -16,6 +21,8 @@ import unicodedata
 import warnings
 
 import pandas as pd
+
+from trajcenter.core.messages import msg
 
 
 # ---------------------------------------------------------------------------
@@ -29,7 +36,7 @@ def _normalize(s: str) -> str:
     Underscores and digits are preserved.
 
     Args:
-        s: Raw string.
+        s: Raw string to normalise.
 
     Returns:
         Normalised string: lowercase, no accent.
@@ -40,7 +47,7 @@ def _normalize(s: str) -> str:
             _normalize("Répère")  # → "repere"
             _normalize("VITESSE") # → "vitesse"
             _normalize("PosX")    # → "posx"
-            _normalize("pos_x")   # → "pos_x"  ← underscore preserved
+            _normalize("pos_x")   # → "pos_x"
     """
     return unicodedata.normalize("NFD", s.casefold()).encode("ascii", "ignore").decode()
 
@@ -49,12 +56,12 @@ def _normalize(s: str) -> str:
 # Alias table
 # ---------------------------------------------------------------------------
 
-#: Every alias must be written exactly as it comes out of ``_normalize()``.
-#: Practical rule: lowercase, no accent, underscores preserved.
-#: If a user may write both ``"PosX"`` and ``"pos_x"``, both normalised
-#: forms must be listed: ``"posx"`` and ``"pos_x"``.
+#: Each alias must be written as it comes out of ``_normalize()``:
+#: lowercase, no accent, underscores preserved.
+#: If a user can write "PosX" or "pos_x", both normalised forms must
+#: appear: "posx" and "pos_x".
 COLUMN_ALIASES: dict[str, frozenset[str]] = {
-    # ── Position ────────────────────────────────────────────────────────────
+    # ── Position ────────────────────────────────────────────────────────
     "x": frozenset(
         {
             "x",
@@ -91,54 +98,136 @@ COLUMN_ALIASES: dict[str, frozenset[str]] = {
             "trans_z",
         }
     ),
-    # ── Orientation (quaternion scalar-first: q1=qw, q2=qi, q3=qj, q4=qk) ─
+    # ── Orientation (scalar-first quaternion: q1=qw, q2=qi, q3=qj, q4=qk)
     "q1": frozenset({"q1", "qw", "quaternionw", "quaternion_w", "rotw", "rot_w"}),
     "q2": frozenset({"q2", "qi", "qx", "quaternionx", "quaternion_x", "rotx", "rot_x"}),
     "q3": frozenset({"q3", "qj", "qy", "quaterniony", "quaternion_y", "roty", "rot_y"}),
     "q4": frozenset({"q4", "qk", "qz", "quaternionz", "quaternion_z", "rotz", "rot_z"}),
-    # ── Confdata (ABB robot axis configuration — robtarget.confdata) ────────
-    # Represent the joint configuration quadrants of the robtarget.
-    # cf1 : axis 1 quadrant  (nullable Int8)
-    # cf4 : axis 4 quadrant  (nullable Int8)
-    # cf6 : axis 6 quadrant  (nullable Int8)
-    # cfx : extended configuration (nullable Int8, bit-field)
-    "cf1": frozenset({"cf1", "confdata1", "conf1", "config1", "configdata1"}),
-    "cf4": frozenset({"cf4", "confdata4", "conf4", "config4", "configdata4"}),
-    "cf6": frozenset({"cf6", "confdata6", "conf6", "config6", "configdata6"}),
-    "cfx": frozenset({"cfx", "confdatax", "confx", "configx", "configdatax"}),
-    # ── Movement ────────────────────────────────────────────────────────────
+    # ── Movement ────────────────────────────────────────────────────────
     "move_type": frozenset({"move_type", "movetype", "type", "mouvement", "motion"}),
     "speed": frozenset({"speed", "vitesse", "feedrate", "feed"}),
     "zone": frozenset({"zone", "precision", "accuracy", "blend"}),
-    # ── Tool / work-object references ───────────────────────────────────────
+    # ── Tool / wobj references ───────────────────────────────────────────
     "tool": frozenset({"tool", "outil", "toolname", "tool_name"}),
     "wobj": frozenset(
-        {"wobj", "workobject", "repere", "frame", "wobj_name", "wobjectname"}
+        {
+            "wobj",
+            "workobject",
+            "repere",
+            "frame",
+            "wobj_name",
+            "wobjectname",
+        }
     ),
-    # ── External axes ────────────────────────────────────────────────────────
+    # ── Confdata (ABB joint configuration) ──────────────────────────────
+    "cf1": frozenset(
+        {
+            "cf1",
+            "confdata1",
+            "conf1",
+            "config1",
+            "configdata1",
+        }
+    ),
+    "cf4": frozenset(
+        {
+            "cf4",
+            "confdata4",
+            "conf4",
+            "config4",
+            "configdata4",
+        }
+    ),
+    "cf6": frozenset(
+        {
+            "cf6",
+            "confdata6",
+            "conf6",
+            "config6",
+            "configdata6",
+        }
+    ),
+    "cfx": frozenset(
+        {
+            "cfx",
+            "confdatax",
+            "confx",
+            "configx",
+            "configdatax",
+        }
+    ),
+    # ── External axes ────────────────────────────────────────────────────
     "eax_a": frozenset(
-        {"eax_a", "eaxa", "eax1", "externala", "external_a", "exta", "ext_a"}
+        {
+            "eax_a",
+            "eaxa",
+            "eax1",
+            "externala",
+            "external_a",
+            "exta",
+            "ext_a",
+        }
     ),
     "eax_b": frozenset(
-        {"eax_b", "eaxb", "eax2", "externalb", "external_b", "extb", "ext_b"}
+        {
+            "eax_b",
+            "eaxb",
+            "eax2",
+            "externalb",
+            "external_b",
+            "extb",
+            "ext_b",
+        }
     ),
     "eax_c": frozenset(
-        {"eax_c", "eaxc", "eax3", "externalc", "external_c", "extc", "ext_c"}
+        {
+            "eax_c",
+            "eaxc",
+            "eax3",
+            "externalc",
+            "external_c",
+            "extc",
+            "ext_c",
+        }
     ),
     "eax_d": frozenset(
-        {"eax_d", "eaxd", "eax4", "externald", "external_d", "extd", "ext_d"}
+        {
+            "eax_d",
+            "eaxd",
+            "eax4",
+            "externald",
+            "external_d",
+            "extd",
+            "ext_d",
+        }
     ),
     "eax_e": frozenset(
-        {"eax_e", "eaxe", "eax5", "externe", "external_e", "exte", "ext_e"}
+        {
+            "eax_e",
+            "eaxe",
+            "eax5",
+            "externe",
+            "external_e",
+            "exte",
+            "ext_e",
+        }
     ),
     "eax_f": frozenset(
-        {"eax_f", "eaxf", "eax6", "externalf", "external_f", "extf", "ext_f"}
+        {
+            "eax_f",
+            "eaxf",
+            "eax6",
+            "externalf",
+            "external_f",
+            "extf",
+            "ext_f",
+        }
     ),
 }
 
-# Reverse index: normalised alias → canonical name.
-# ``_normalize()`` is applied to aliases AT BUILD TIME to guarantee that
-# the lookup (also normalised) always finds its entries.
+#: Reverse index: normalised alias → canonical name.
+#: ``_normalize()`` is applied to aliases **at construction time** to
+#: guarantee that the lookup (also normalised) always finds its entries.
 _ALIAS_INDEX: dict[str, str] = {
     _normalize(alias): canonical
     for canonical, aliases in COLUMN_ALIASES.items()
@@ -152,24 +241,22 @@ _ALIAS_INDEX: dict[str, str] = {
 
 
 def canonical_name(col: str) -> str | None:
-    """Return the canonical name of a column, or ``None`` if unrecognised.
+    """Return the canonical column name, or ``None`` if unrecognised.
 
     Args:
         col: Column name as it appears in the source file.
 
     Returns:
-        TrajCenter canonical name, or ``None``.
+        Canonical TrajCenter name, or ``None``.
 
     Example:
         ::
 
-            canonical_name("PosX")      # → "x"
-            canonical_name("pos_x")     # → "x"
-            canonical_name("REPÈRE")    # → "wobj"
-            canonical_name("CF1")       # → "cf1"
-            canonical_name("Cf4")       # → "cf4"
-            canonical_name("CONFDATA6") # → "cf6"
-            canonical_name("foobar")    # → None
+            canonical_name("PosX")    # → "x"
+            canonical_name("pos_x")   # → "x"
+            canonical_name("REPÈRE")  # → "wobj"
+            canonical_name("cf1")     # → "cf1"
+            canonical_name("foobar")  # → None
     """
     return _ALIAS_INDEX.get(_normalize(col))
 
@@ -177,16 +264,22 @@ def canonical_name(col: str) -> str | None:
 def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
     """Rename ``DataFrame`` columns to their canonical names.
 
-    Unrecognised columns are left intact and returned in the
-    ``unresolved`` list. If two columns resolve to the same canonical
-    name, the first one is kept and a ``UserWarning`` is emitted.
+    Unrecognised columns are left intact and returned in ``unresolved``.
+    When two columns resolve to the same canonical name, the first one
+    is kept and a :class:`UserWarning` is emitted.
 
     Args:
         df: Source ``DataFrame``.
 
     Returns:
-        Tuple ``(renamed_df, unresolved)`` where ``unresolved`` is the
-        list of column names that could not be mapped to a canonical name.
+        Tuple ``(renamed_df, unresolved_columns)``.
+
+    Example:
+        ::
+
+            df_out, unknown = resolve_columns(df)
+            if unknown:
+                warnings.warn(f"Unknown columns: {unknown}")
     """
     rename_map: dict[str, str] = {}
     seen_canonical: dict[str, str] = {}
@@ -200,8 +293,12 @@ def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
             continue
         if canon in seen_canonical:
             warnings.warn(
-                f"Two columns resolve to '{canon}': "
-                f"'{seen_canonical[canon]}' (kept) and '{col_str}' (ignored).",
+                msg(
+                    "DUPLICATE_CANONICAL",
+                    canon=canon,
+                    kept=seen_canonical[canon],
+                    ignored=col_str,
+                ),
                 UserWarning,
                 stacklevel=2,
             )

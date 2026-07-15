@@ -1,24 +1,23 @@
 {
-  "_comment": "Canonical error and warning messages for TrajCenter. Edit here, never in source files.",
+  "_comment": "Canonical error and warning messages for TrajCenter. Edit here only — never inline in source files.",
 
-  "FILE_NOT_FOUND": "File not found: {path}",
-  "INVALID_ARCHIVE": "File is not a zip file",
+  "FILE_NOT_FOUND":                    "File not found: {path}",
+  "INVALID_ARCHIVE":                   "File is not a zip file",
 
-  "MANDATORY_COLUMNS_MISSING": "Mandatory columns missing: {cols}",
-  "SHEET_MANDATORY_COLUMNS_MISSING": "Sheet '{sheet}' — mandatory columns missing: {cols}",
-  "UNKNOWN_COLUMNS": "Unknown columns ignored: {cols}",
+  "MANDATORY_COLUMNS_MISSING":         "Mandatory columns missing: {cols}",
+  "SHEET_MANDATORY_COLUMNS_MISSING":   "Sheet '{sheet}' — mandatory columns missing: {cols}",
+  "UNKNOWN_COLUMNS":                   "Unknown columns ignored: {cols}",
+  "DUPLICATE_CANONICAL":               "Two columns resolve to '{canon}': '{kept}' (kept) and '{ignored}' (ignored).",
 
-  "DUPLICATE_CANONICAL": "Two columns resolve to '{canon}': '{kept}' (kept) and '{ignored}' (ignored).",
+  "INVALID_EAX_KEY":                   "Invalid external axis key: '{key}'. Expected eax_a … eax_f.",
+  "TOOL_INDEX_OUT_OF_BOUNDS":          "tool_index max ({max}) >= len(tools) ({n})",
+  "WOBJ_INDEX_OUT_OF_BOUNDS":          "wobj_index max ({max}) >= len(wobjs) ({n})",
 
-  "INVALID_EAX_KEY": "Invalid external axis key: '{key}'. Expected eax_a … eax_f.",
-  "TOOL_INDEX_OUT_OF_BOUNDS": "tool_index max ({max}) >= len(tools) ({n})",
-  "WOBJ_INDEX_OUT_OF_BOUNDS": "wobj_index max ({max}) >= len(wobjs) ({n})",
+  "NO_MOVE_INSTRUCTION":               "No Move instruction found in: {path}",
+  "INSTRUCTION_WITHOUT_ROBTARGET":     "Instruction without robtarget at line {line}: {content}",
+  "INVALID_CONFDATA":                  "Invalid confdata at line {line}: {content}",
+  "ZONE_VARIABLE_WARNING":             "Zone is a variable name (not a RAPID literal): '{zone}' at point {idx}. Autocompleted.",
 
-  "NO_MOVE_INSTRUCTION": "No Move instruction found in: {path}",
-  "INSTRUCTION_WITHOUT_ROBTARGET": "Instruction without robtarget at line {line}: {content}",
-  "INVALID_CONFDATA": "Invalid confdata at line {line}: {content}",
-  "ZONE_VARIABLE_WARNING": "Zone is a variable name (not a RAPID literal): '{zone}' at point {idx}. Autocompleted.",
-
-  "NO_GOTO_INSTRUCTION": "No GOTO instruction found in: {path}",
-  "CATIA_MATRIX_MISSING": "apply_catia_transform=True but no CATIA matrix found in: {path}. Transform skipped."
+  "NO_GOTO_INSTRUCTION":               "No GOTO instruction found in: {path}",
+  "CATIA_MATRIX_MISSING":              "apply_catia_transform=True but no CATIA matrix found in: {path}. Transform skipped."
 }

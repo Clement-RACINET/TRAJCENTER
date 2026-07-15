@@ -427,3 +427,47 @@ def xlsx_with_full_meta(tmp_path: Path) -> Path:
             ],
         },
     )
+
+@pytest.fixture
+def mod_bad_confdata(tmp_path: Path) -> Path:
+    """A .mod file with malformed confdata (non-integer values)."""
+    content = dedent("""\
+        MODULE TestModule
+        PROC TestProc()
+          MoveL [[100.0,200.0,300.0],[1.0,0.0,0.0,0.0],[X,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+        ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "bad_confdata.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_zone_var(tmp_path: Path) -> Path:
+    """A .mod file with a zone specified as a variable name (not a RAPID literal)."""
+    content = dedent("""\
+        MODULE TestModule
+        PROC TestProc()
+          MoveL [[100.0,200.0,300.0],[1.0,0.0,0.0,0.0],[0,0,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]],vitesse,ma_zone,Tool_formage\\wobj:=Wobj_SerreFlan;
+        ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "zone_var.mod"
+    p.write_text(content, encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def mod_no_robtarget(tmp_path: Path) -> Path:
+    """A .mod file where a Move instruction has no inline robtarget."""
+    content = dedent("""\
+        MODULE TestModule
+        PROC TestProc()
+          MoveL pTarget1,vitesse,z0,Tool_formage\\wobj:=Wobj_SerreFlan;
+        ENDPROC
+        ENDMODULE
+    """)
+    p = tmp_path / "no_robtarget.mod"
+    p.write_text(content, encoding="utf-8")
+    return p

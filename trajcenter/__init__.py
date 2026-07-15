@@ -29,6 +29,8 @@ from .core import (
     SourceFormat,
     Trajectory,
     TrajectoryMeta,
+    msg,
+    raw,
 )
 from .exporter import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
 from .rws import (
@@ -74,6 +76,8 @@ __all__ = [
     "TrajectoryMeta",
     "canonical_name",
     "logger",
+    "msg",
+    "raw",
     "read_nb_robtargets",
     "read_nb_traj_dispo",
     "read_selected_traj_index",

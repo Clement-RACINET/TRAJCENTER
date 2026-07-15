@@ -57,6 +57,7 @@ trajcenter
 │   │   ├── __init__.py
 │   │   ├── logger.py
 │   │   ├── messages.json
+│   │   ├── messages.py
 │   │   └── trajectory.py
 │   ├── exporter
 │   │   ├── __init__.py
