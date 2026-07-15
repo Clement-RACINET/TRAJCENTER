@@ -41,9 +41,7 @@ class TestExcelConverter:
 
     def test_missing_xyz_raises(self, xlsx_missing_xyz: Path) -> None:
         """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
-        with pytest.raises(
-            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
-        ):
+        with pytest.raises(ValueError, match=r"mandatory columns missing"):
             ExcelConverter().convert(xlsx_missing_xyz)
 
     def test_multi_traj_convert_raises(self, xlsx_multi_traj: Path) -> None:

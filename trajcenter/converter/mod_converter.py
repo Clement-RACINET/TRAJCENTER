@@ -26,6 +26,9 @@ Parsing rules
   literal (e.g. ``v500``). Otherwise the ``speed`` column is
   autocompleted from
   :class:`~trajcenter.converter.defaults.ConversionDefaults`.
+- Zone is stored as-is when it is a recognised RAPID literal
+  (``fine`` or ``z<digits>``). When it is a variable name, a
+  :class:`UserWarning` is emitted and the default zone is used.
 - External axes equal to ``9E9`` are considered **inactive** and are
   not stored in the ``DataFrame`` (absent ``eax_*`` column = axis does
   not exist).
@@ -57,12 +60,14 @@ Example:
 from __future__ import annotations
 
 import re
+import warnings
 from pathlib import Path
 
 import pandas as pd
 
 from trajcenter.converter.base import BaseConverter
 from trajcenter.converter.defaults import ConversionDefaults
+from trajcenter.core.messages import msg
 from trajcenter.core.trajectory import (
     MoveType,
     SourceFormat,
@@ -92,15 +97,18 @@ _RE_ROBTARGET: re.Pattern[str] = re.compile(
 )
 
 #: Captures speed, zone, tool and wobj after the last ``]]`` of the robtarget.
-#: Looks for the ``]],`` sequence that closes the robtarget before the parameters.
+#: Zone accepts any RAPID identifier (fine, z10, or a variable name).
 _RE_PARAMS: re.Pattern[str] = re.compile(
     r"\]\]\s*,"  # ]] closing the robtarget
     r"\s*(?P<speed>\S+?)\s*,"  # speed
-    r"\s*(?P<zone>fine|z\w*)\s*,"  # zone (fine or z0, z10, …)
+    r"\s*(?P<zone>\w+)\s*,"  # zone (any RAPID identifier)
     r"\s*(?P<tool>\w+)"  # tool
-    r"(?:\s*\\wobj\s*:=\s*(?P<wobj>\w+))?",  # \wobj:=WobjName (optional)
+    r"(?:\s*\\[Ww][Oo][Bb][Jj]\s*:=\s*(?P<wobj>\w+))?",  # \wobj:=WobjName (optional)
     re.IGNORECASE,
 )
+
+#: Recognised RAPID zone literals: ``fine`` or ``z`` followed by digits only.
+_RE_ZONE_LITERAL: re.Pattern[str] = re.compile(r"^(?:fine|z\d+)$", re.IGNORECASE)
 
 #: ABB sentinel value for an inactive external axis.
 _EAX_INACTIVE: float = 9e9
@@ -169,6 +177,12 @@ class ModConverter(BaseConverter):
     def convert(self, source: Path) -> Trajectory:
         """Convert a RAPID ``.mod`` file to a :class:`~trajcenter.core.trajectory.Trajectory`.
 
+        ABB Route:
+            N/A — local file conversion, no RWS call.
+
+        ABB Constraints:
+            None.
+
         Args:
             source: Path to the ``.mod`` file to convert.
 
@@ -180,16 +194,21 @@ class ModConverter(BaseConverter):
             FileNotFoundError: If the source file does not exist.
             ValueError: If no Move instruction is found, or if parsing
                 a line fails.
+
+        Example:
+            ::
+
+                traj = ModConverter().convert(Path("trajectory_files/sphere05mm.mod"))
         """
         source = Path(source)
         if not source.exists():
-            raise FileNotFoundError(f"File not found: {source}")
+            raise FileNotFoundError(msg("FILE_NOT_FOUND", path=source))
 
         raw_lines = source.read_text(encoding="utf-8", errors="replace").splitlines()
         move_lines = self._extract_move_lines(raw_lines)
 
         if not move_lines:
-            raise ValueError(f"No MoveL/MoveJ/MoveC instruction found in: {source}")
+            raise ValueError(msg("NO_MOVE_INSTRUCTION", path=source))
 
         rows, tools, wobjs = self._parse_move_lines(move_lines, source)
 
@@ -228,28 +247,23 @@ class ModConverter(BaseConverter):
         """
         result: list[str] = []
         buffer: str = ""
-        in_move: bool = False  # True once accumulation of a Move has started
+        in_move: bool = False
 
         for line in lines:
             stripped = line.strip()
 
-            # Empty lines and comments → always ignored
             if not stripped or stripped.startswith("!"):
                 continue
 
             if not in_move:
-                # Enter accumulation mode only when the line starts with Move*
                 if _RE_MOVE_TYPE.match(stripped):
                     in_move = True
                     buffer = stripped
-                # Otherwise (MODULE, PROC, VAR, ENDPROC, …) → ignored
                 else:
                     continue
             else:
-                # Inside a multi-line Move → keep accumulating
                 buffer = buffer + " " + stripped
 
-            # Flush as soon as a ";" appears in the buffer
             if ";" in buffer:
                 instruction, _, remainder = buffer.partition(";")
                 instruction = instruction.strip()
@@ -288,7 +302,7 @@ class ModConverter(BaseConverter):
 
         for line_no, line in enumerate(move_lines, start=1):
             try:
-                row = self._parse_single_move(line, tools_index, wobjs_index)
+                row = self._parse_single_move(line, tools_index, wobjs_index, line_no)
             except ValueError as exc:
                 raise ValueError(
                     f"{source.name} — Move line #{line_no}: {exc}\n"
@@ -301,21 +315,27 @@ class ModConverter(BaseConverter):
 
         return rows, tools, wobjs
 
-    @staticmethod
     def _parse_single_move(
+        self,
         line: str,
         tools_index: dict[str, int],
         wobjs_index: dict[str, int],
+        point_idx: int = 0,
     ) -> dict[str, str | int | float]:
         """Parse a single Move line and return a point dict.
 
         Updates ``tools_index`` and ``wobjs_index`` in place when new
         names are encountered.
 
+        When the zone token is not a recognised RAPID literal
+        (``fine`` or ``z<digits>``), a :class:`UserWarning` is emitted
+        and the default zone from :attr:`defaults` is substituted.
+
         Args:
             line: Complete Move line (one instruction).
             tools_index: Mutable dict name → index (updated in place).
             wobjs_index: Mutable dict name → index (updated in place).
+            point_idx: 0-based point index used in warning messages.
 
         Returns:
             Dict with keys: ``x, y, z, q1, q2, q3, q4``,
@@ -337,7 +357,9 @@ class ModConverter(BaseConverter):
         # --- Robtarget ---
         m_robt = _RE_ROBTARGET.search(line)
         if not m_robt:
-            raise ValueError("Robtarget not found.")
+            raise ValueError(
+                msg("INSTRUCTION_WITHOUT_ROBTARGET", line=point_idx, content=line[:80])
+            )
 
         # Extract the 4 sub-lists: [trans],[rot],[conf],[eax]
         sublists = re.findall(r"\[([^\[\]]+)\]", m_robt.group(1))
@@ -349,10 +371,17 @@ class ModConverter(BaseConverter):
         try:
             trans = [float(v) for v in sublists[0].split(",")]
             rot = [float(v) for v in sublists[1].split(",")]
-            conf = [int(float(v)) for v in sublists[2].split(",")]
             eax = [float(v) for v in sublists[3].split(",")]
         except ValueError as exc:
             raise ValueError(f"Numeric conversion failed in robtarget: {exc}") from exc
+
+        # Confdata: may contain non-integer values → raise with dedicated message
+        try:
+            conf = [int(float(v)) for v in sublists[2].split(",")]
+        except ValueError as exc:
+            raise ValueError(
+                msg("INVALID_CONFDATA", line=point_idx, content=sublists[2])
+            ) from exc
 
         if len(trans) != 3:
             raise ValueError(f"trans must have 3 values, got {len(trans)}.")
@@ -372,6 +401,15 @@ class ModConverter(BaseConverter):
         zone_raw: str = m_params.group("zone")
         tool_name: str = m_params.group("tool")
         wobj_name: str = m_params.group("wobj") or "wobj0"
+
+        # --- Zone: warn and substitute default when not a RAPID literal ---
+        if not _RE_ZONE_LITERAL.match(zone_raw):
+            warnings.warn(
+                msg("ZONE_VARIABLE_WARNING", zone=zone_raw, idx=point_idx),
+                UserWarning,
+                stacklevel=2,
+            )
+            zone_raw = self.defaults.zone
 
         # --- tool / wobj index ---
         if tool_name not in tools_index:

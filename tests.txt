@@ -1,0 +1,160 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\cleme\Documents\GitLab_ENSAM\trajcenter
+configfile: pyproject.toml
+plugins: anyio-4.14.2, asyncio-1.4.0, cov-7.1.0, respx-0.23.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 451 items
+
+tests\converter\test_apt_converter.py .................................. [  7%]
+.....                                                                    [  8%]
+tests\converter\test_base_converter.py .......                           [ 10%]
+tests\converter\test_column_mapper.py .................................. [ 17%]
+...........................................................              [ 30%]
+tests\converter\test_csv_converter.py .....F.............F...........    [ 37%]
+tests\converter\test_excel_converter.py .F.........F.................    [ 44%]
+tests\converter\test_mod_converter.py .................................. [ 51%]
+......                                                                   [ 52%]
+tests\converter\test_tabular_converter.py ............F.F............    [ 58%]
+tests\core\test_trajectory.py ......................................     [ 67%]
+tests\exporter\test_csv_exporter.py .............................        [ 73%]
+tests\exporter\test_excel_exporter.py ...............................    [ 80%]
+tests\exporter\test_tabular_exporter.py ........................         [ 86%]
+tests\rws\test_reader.py .....................                           [ 90%]
+tests\rws\test_utils.py .....                                            [ 91%]
+tests\rws\test_writer.py .....................................           [100%]
+
+================================== FAILURES ===================================
+__________________ TestCsvConverter.test_missing_xyz_raises ___________________
+
+self = <tests.converter.test_csv_converter.TestCsvConverter object at 0x000001698D14A5D0>
+csv_missing_xyz = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_missing_xyz_raises0/missing_xyz.csv')
+
+    def test_missing_xyz_raises(self, csv_missing_xyz: Path) -> None:
+        """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
+>       with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: '[Mm]issing.*columns|obligatoires manquantes'
+E         Actual message: "Sheet 'sheet' — mandatory columns missing: ['x', 'y', 'z']"
+
+tests\converter\test_csv_converter.py:74: AssertionError
+___________ TestCsvConverter.test_xyz_only_quaternion_autocompleted ___________
+
+self = <tests.converter.test_csv_converter.TestCsvConverter object at 0x000001698D184C50>
+csv_xyz_only = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_xyz_only_quaternion_autoc0/xyz_only.csv')
+
+    def test_xyz_only_quaternion_autocompleted(self, csv_xyz_only: Path) -> None:
+        """Quaternion columns are listed in ``autocompleted``."""
+        traj = CsvConverter().convert(csv_xyz_only)
+        for col in ("q1", "q2", "q3", "q4"):
+>           assert col in traj.meta.autocompleted
+E           AssertionError: assert 'q1' in ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...]
+E            +  where ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...] = TrajectoryMeta(name='xyz_only', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 24, 998533, tzinfo=da...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}).autocompleted
+E            +    where TrajectoryMeta(name='xyz_only', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 24, 998533, tzinfo=da...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}) = Trajectory(name='xyz_only', points=2, tools=1, wobjs=1, eax=none, complete=True).meta
+
+tests\converter\test_csv_converter.py:163: AssertionError
+_________________ TestExcelConverter.test_missing_xyz_raises __________________
+
+self = <tests.converter.test_excel_converter.TestExcelConverter object at 0x000001698D14A850>
+xlsx_missing_xyz = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_missing_xyz_raises1/missing_xyz.xlsx')
+
+    def test_missing_xyz_raises(self, xlsx_missing_xyz: Path) -> None:
+        """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
+>       with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: '[Mm]issing.*columns|obligatoires manquantes'
+E         Actual message: "Sheet 'traj' — mandatory columns missing: ['x', 'y', 'z']"
+
+tests\converter\test_excel_converter.py:44: AssertionError
+__________ TestExcelConverter.test_xyz_only_quaternion_autocompleted __________
+
+self = <tests.converter.test_excel_converter.TestExcelConverter object at 0x000001698D1B9C50>
+xlsx_xyz_only = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_xyz_only_quaternion_autoc1/xyz_only.xlsx')
+
+    def test_xyz_only_quaternion_autocompleted(self, xlsx_xyz_only: Path) -> None:
+        """Quaternion columns are listed in ``autocompleted``."""
+        traj = ExcelConverter().convert(xlsx_xyz_only)
+        for col in ("q1", "q2", "q3", "q4"):
+>           assert col in traj.meta.autocompleted
+E           AssertionError: assert 'q1' in ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...]
+E            +  where ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...] = TrajectoryMeta(name='xyz_only', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 25, 429602, tzinfo=da...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}).autocompleted
+E            +    where TrajectoryMeta(name='xyz_only', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 25, 429602, tzinfo=da...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}) = Trajectory(name='xyz_only', points=2, tools=1, wobjs=1, eax=none, complete=True).meta
+
+tests\converter\test_excel_converter.py:104: AssertionError
+______________ TestTabularConverterLogic.test_missing_xyz_raises ______________
+
+self = <tests.converter.test_tabular_converter.TestTabularConverterLogic object at 0x000001698D14B750>
+csv_missing_xyz = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_missing_xyz_raises2/missing_xyz.csv')
+
+    def test_missing_xyz_raises(self, csv_missing_xyz: Path) -> None:
+        """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
+>       with pytest.raises(
+            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
+        ):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: '[Mm]issing.*columns|obligatoires manquantes'
+E         Actual message: "Sheet 'sheet' — mandatory columns missing: ['x', 'y', 'z']"
+
+tests\converter\test_tabular_converter.py:165: AssertionError
+______ TestTabularConverterLogic.test_xyz_only_quaternion_autocompleted _______
+
+self = <tests.converter.test_tabular_converter.TestTabularConverterLogic object at 0x000001698D1B1940>
+tmp_path = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-93/test_xyz_only_quaternion_autoc2')
+
+    def test_xyz_only_quaternion_autocompleted(self, tmp_path: Path) -> None:
+        """Quaternion columns are listed in ``autocompleted``."""
+        csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
+        traj = CsvConverter().convert(csv)
+        for col in ("q1", "q2", "q3", "q4"):
+>           assert col in traj.meta.autocompleted
+E           AssertionError: assert 'q1' in ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...]
+E            +  where ['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', ...] = TrajectoryMeta(name='xyz', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 26, 334751, tzinfo=datetim...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}).autocompleted
+E            +    where TrajectoryMeta(name='xyz', version='1.0', created_at=datetime.datetime(2026, 7, 15, 16, 15, 26, 334751, tzinfo=datetim...e, point_count=0, external_axes={}, autocompleted=['cf1', 'cf4', 'cf6', 'cfx', 'speed', 'zone', 'move_type'], extra={}) = Trajectory(name='xyz', points=1, tools=1, wobjs=1, eax=none, complete=True).meta
+
+tests\converter\test_tabular_converter.py:186: AssertionError
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.14.6-final-0 _______________
+
+Name                                        Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------------
+trajcenter\__init__.py                          7      0      0      0   100%
+trajcenter\converter\__init__.py                9      0      0      0   100%
+trajcenter\converter\apt_converter.py         128      2     48      3    97%   154->157, 202, 211
+trajcenter\converter\base.py                   41      1     14      1    96%   113, 195->182
+trajcenter\converter\column_mapper.py          27      0      6      0   100%
+trajcenter\converter\csv_converter.py          36      0      6      1    98%   78->80
+trajcenter\converter\defaults.py                9      0      0      0   100%
+trajcenter\converter\excel_converter.py        15      0      0      0   100%
+trajcenter\converter\mod_converter.py         125      9     48      8    90%   270->272, 354, 367, 375-376, 387, 389, 391, 393, 398
+trajcenter\converter\tabular_converter.py     105      3     42      3    96%   159, 174, 267, 390->388, 407->405
+trajcenter\core\__init__.py                     4      0      0      0   100%
+trajcenter\core\logger.py                       3      0      0      0   100%
+trajcenter\core\messages.py                     8      0      0      0   100%
+trajcenter\core\trajectory.py                 154      5     26      1    97%   491-492, 499-500, 696
+trajcenter\exporter\__init__.py                 6      0      0      0   100%
+trajcenter\exporter\base.py                    16      1      0      0    94%   58
+trajcenter\exporter\csv_exporter.py            18      0      2      0   100%
+trajcenter\exporter\excel_exporter.py          17      0      2      0   100%
+trajcenter\exporter\options.py                  8      0      0      0   100%
+trajcenter\exporter\tabular_exporter.py        61      2     16      4    92%   131, 189->200, 200->211, 274, 282->281
+trajcenter\rws\__init__.py                      5      0      0      0   100%
+trajcenter\rws\_utils.py                        3      0      0      0   100%
+trajcenter\rws\reader.py                       55      2     12      0    97%   248-249
+trajcenter\rws\writer.py                       93      0     28      0   100%
+trajcenter\server\__init__.py                   0      0      0      0   100%
+---------------------------------------------------------------------------------------
+TOTAL                                         953     25    250     21    96%
+Coverage HTML written to dir docs/coverage
+Coverage XML written to file coverage.xml
+=========================== short test summary info ===========================
+FAILED tests/converter/test_csv_converter.py::TestCsvConverter::test_missing_xyz_raises
+FAILED tests/converter/test_csv_converter.py::TestCsvConverter::test_xyz_only_quaternion_autocompleted
+FAILED tests/converter/test_excel_converter.py::TestExcelConverter::test_missing_xyz_raises
+FAILED tests/converter/test_excel_converter.py::TestExcelConverter::test_xyz_only_quaternion_autocompleted
+FAILED tests/converter/test_tabular_converter.py::TestTabularConverterLogic::test_missing_xyz_raises
+FAILED tests/converter/test_tabular_converter.py::TestTabularConverterLogic::test_xyz_only_quaternion_autocompleted
+======================== 6 failed, 445 passed in 5.17s ========================

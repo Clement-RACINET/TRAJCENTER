@@ -17,6 +17,7 @@ import warnings
 
 import pandas as pd
 import pytest
+import re
 
 from trajcenter.converter.column_mapper import (
     COLUMN_ALIASES,
@@ -325,9 +326,9 @@ class TestResolveColumns:
         assert "cfx" in result.columns
 
     def test_duplicate_canonical_emits_warning(self) -> None:
-        """A duplicate canonical name emits a UserWarning."""
+        """A duplicate canonical name emits a UserWarning whose text contains the ignored alias."""
         df = pd.DataFrame(columns=["x", "PosX"])  # deux alias → même canon "x"
-        with pytest.warns(UserWarning, match=r"[Dd]uplicate|[Cc]onflit|doublon"):
+        with pytest.warns(UserWarning, match=re.escape("PosX")):
             resolve_columns(df)
 
     def test_no_columns_unchanged(self) -> None:

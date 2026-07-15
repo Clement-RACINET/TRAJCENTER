@@ -71,9 +71,7 @@ class TestCsvConverter:
 
     def test_missing_xyz_raises(self, csv_missing_xyz: Path) -> None:
         """``convert()`` raises ``ValueError`` when XYZ columns are absent."""
-        with pytest.raises(
-            ValueError, match=r"[Mm]issing.*columns|obligatoires manquantes"
-        ):
+        with pytest.raises(ValueError, match=r"mandatory columns missing"):
             CsvConverter().convert(csv_missing_xyz)
 
     # --- Metadata ---

@@ -10,7 +10,7 @@ the abstract class :class:`_TabularConverter`.
 
 Subclasses only need to implement :meth:`_TabularConverter._read_sheets`,
 which returns a ``dict[str, pd.DataFrame]`` (sheet name → raw
-DataFrame).
+DataFrame), and the :attr:`_source_format` property.
 
 Architecture
 -------------
@@ -118,33 +118,45 @@ class _TabularConverter(BaseConverter):
 
     Author: Clement RACINET
 
-    Subclasses must implement :meth:`_read_sheets`.
+    Subclasses must implement :meth:`_read_sheets` and the
+    :attr:`_source_format` property.
+
+    The source format is provided by the subclass via the
+    ``_source_format`` abstract property, not by a constructor
+    parameter.  This avoids ``AttributeError`` when a subclass defines
+    ``_source_format`` as a read-only property.
 
     Args:
         defaults: Autocompletion defaults. ``None`` uses
             :class:`~trajcenter.converter.defaults.ConversionDefaults`
             built-in values.
-        source_format: :class:`~trajcenter.core.trajectory.SourceFormat`
-            tag stamped on the produced trajectory.
     """
 
     def __init__(
         self,
         defaults: ConversionDefaults | None = None,
-        source_format: SourceFormat = SourceFormat.EXCEL,
     ) -> None:
         """Initialise the tabular converter.
 
         Args:
             defaults: Autocompletion defaults.
-            source_format: Source format tag for trajectory metadata.
         """
         super().__init__(defaults=defaults)
-        self._source_format = source_format
 
     # ------------------------------------------------------------------
     # Interface to implement
     # ------------------------------------------------------------------
+
+    @property
+    @abstractmethod
+    def _source_format(self) -> SourceFormat:
+        """Source format tag stamped on the produced trajectory.
+
+        Returns:
+            The :class:`~trajcenter.core.trajectory.SourceFormat` value
+            for this converter (e.g. ``SourceFormat.CSV``).
+        """
+        ...
 
     @abstractmethod
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
@@ -317,9 +329,12 @@ class _TabularConverter(BaseConverter):
                 msg("SHEET_MANDATORY_COLUMNS_MISSING", sheet=sheet_name, cols=missing)
             )
 
+        # Identity quaternion — track injected columns for autocompleted list
+        quat_autocompleted: list[str] = []
         for qcol, qval in _IDENTITY_QUATERNION.items():
             if qcol not in df.columns:
                 df[qcol] = qval
+                quat_autocompleted.append(qcol)
 
         if not tools:
             tools, df = self._extract_inline_tools(df, "tool")
@@ -332,6 +347,8 @@ class _TabularConverter(BaseConverter):
             df["wobj_index"] = 0
 
         df, autocompleted = self._autocomplete(df, tools, wobjs)
+        # Quaternion columns injected before _autocomplete must be prepended
+        autocompleted = quat_autocompleted + autocompleted
 
         stem = source.stem
         sheet_lower = sheet_name.lower()
