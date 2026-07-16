@@ -30,9 +30,9 @@ Ref    RAPID variable            RAPID type   Python source
 W4     NbRobtargetsTraj          num          ``len(traj.points)``
 W5     RobtTRAJCENTER{1..N}      robtarget    rows of ``traj.points``
 W6     NbTool                    num          ``len(traj.tools)``
-W7     NomsTool{1..MAX_TOOLS}    string       ``traj.tools`` (padded)
+W7     ToolNames{1..MAX_TOOLS}    string       ``traj.tools`` (padded)
 W8     NbWobj                    num          ``len(traj.wobjs)``
-W9     NomsWobj{1..MAX_WOBJS}    string       ``traj.wobjs`` (padded)
+W9     WobjNames{1..MAX_WOBJS}    string       ``traj.wobjs`` (padded)
 W10    TrajReady                 bool         ``TRUE`` (written last)
 =====  ========================  ===========  ================================
 
@@ -452,11 +452,11 @@ async def write_trajectory(
             value=_fmt_num(n_tools),
         )
 
-        # W7 — NomsTool{i}
+        # W7 — ToolNames{i}
         for i, name in enumerate(padded_tools, start=1):
             await set_variable_with_mastership(
                 client,
-                symbolurl=sym(f"NomsTool/[{i}]"),
+                symbolurl=sym(f"ToolNames/[{i}]"),
                 value=_fmt_string(name),
             )
 
@@ -467,11 +467,11 @@ async def write_trajectory(
             value=_fmt_num(n_wobjs),
         )
 
-        # W9 — NomsWobj{i}
+        # W9 — WobjNames{i}
         for i, name in enumerate(padded_wobjs, start=1):
             await set_variable_with_mastership(
                 client,
-                symbolurl=sym(f"NomsWobj/[{i}]"),
+                symbolurl=sym(f"WobjNames/[{i}]"),
                 value=_fmt_string(name),
             )
 

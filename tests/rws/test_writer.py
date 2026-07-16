@@ -586,7 +586,7 @@ class TestWriteTrajectory:
         tool_calls = [
             c
             for c in mock_set.call_args_list
-            if "NomsTool" in str(c.kwargs.get("symbolurl", ""))
+            if "ToolNames" in str(c.kwargs.get("symbolurl", ""))
         ]
         assert len(tool_calls) == MAX_TOOLS
         assert tool_calls[0].kwargs["value"] == '"MyTool"'
