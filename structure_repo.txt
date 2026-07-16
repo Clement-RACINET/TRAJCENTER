@@ -99,7 +99,6 @@ trajcenter
 │   ├── trajectoires_mono.trajcenter
 │   ├── trajectoires_multi.trajcenter
 │   └── trajectoires_multi_Traj2.trajcenter
-├── __old_refacto.md
 ├── coverage.xml
 ├── mkdocs.yml
 ├── pixi.lock
