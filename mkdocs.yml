@@ -13,7 +13,6 @@ plugins:
             docstring_style: google
             show_source: true
   - coverage:
-      page_name: coverage        #URL : /coverage/
       html_report_dir: docs/coverage  # le rapport HTML
 
 markdown_extensions:
@@ -35,6 +34,8 @@ nav:
         - Mod Converter: api/trajcenter/converter/mod_converter.md
         - Tabular Converter: api/trajcenter/converter/tabular_converter.md
       - Core:
+        - Logger: api/trajcenter/core/logger.md
+        - Messages: api/trajcenter/core/messages.md
         - Trajectory: api/trajcenter/core/trajectory.md
       - Exporter:
         - Base: api/trajcenter/exporter/base.md
@@ -42,6 +43,10 @@ nav:
         - Excel Exporter: api/trajcenter/exporter/excel_exporter.md
         - Options: api/trajcenter/exporter/options.md
         - Tabular Exporter: api/trajcenter/exporter/tabular_exporter.md
+      - Rws:
+        - Utils: api/trajcenter/rws/_utils.md
+        - Reader: api/trajcenter/rws/reader.md
+        - Writer: api/trajcenter/rws/writer.md
 # --- AUTOGEN_API_END ---
   - Coverage: coverage.md 
 

@@ -1,6 +1,6 @@
 [project]
 name = "trajcenter"
-requires-python = ">= 3.11"
+requires-python = ">=3.11"
 version = "2.1.0"
 dependencies = [
     "httpx>=0.28.1,<0.29",
@@ -11,7 +11,6 @@ dependencies = [
     "rich>=15.0.0,<16",
     "typer>=0.26.8,<0.27",
     "textual>=8.2.8,<9",
-    "mkdocs-coverage>=2.0.0,<3",
 ]
 
 [build-system]
@@ -30,14 +29,15 @@ trajcenter = { path = ".", editable = true }
 abb_rws_client_python_rw6 = { git = "https://gitlab.ensam.eu/lcfc/abb-rws-client-python-rw6.git", branch = "main" }
 
 [tool.pixi.environments]
-default = { features = [],      solve-group = "default" }
+default = { features = [], solve-group = "default" }
 dev     = { features = ["dev"], solve-group = "default" }
+docs    = { features = ["docs"], solve-group = "default" }
+all     = { features = ["dev", "docs"], solve-group = "default" }
 
 # ── Tâches disponibles dans TOUS les environnements ──────────────────────────
 [tool.pixi.tasks]
 server  = "python -m trajcenter.server.app"
 convert = "python -m trajcenter.converter"
-docs    = "python scripts/doc/run_docs.py"
 
 # ── Tâches disponibles UNIQUEMENT dans l'environnement dev ───────────────────
 [tool.pixi.feature.dev.tasks]
@@ -46,26 +46,35 @@ lint      = "ruff check trajcenter/"
 fmt       = "ruff format trajcenter/"
 typecheck = "mypy trajcenter/"
 
+# ── Tâches disponibles UNIQUEMENT dans l'environnement docs ──────────────────
+[tool.pixi.feature.docs.tasks]
+docs       = "python scripts/doc/run_docs.py"
+docs-build = "python -m mkdocs build --strict"
+docs-serve = "python -m mkdocs serve"
+
 [tool.pixi.dependencies]
-python            = ">=3.14.6,<3.15"
+python            = ">=3.12,<3.13"
 pyarrow           = ">=24.0.0,<25"
 pandas-stubs      = ">=3.0.3.260530,<4"
 typing_extensions = ">=4.16.0,<5"
-pytest = ">=9.1.1,<10"
-pytest-cov = ">=7.1.0,<8"
-pytest-asyncio = ">=1.4.0,<2"
 
 [tool.pixi.feature.dev.pypi-dependencies]
-pytest            = ">=8"
-pytest-asyncio    = ">=0.24"
-pytest-cov        = ">=5"
-respx             = "*"
-ruff              = "*"
-mypy              = "*"
-pre-commit        = "*"
-mkdocs            = ">=1.6.1,<2"
-mkdocs-material   = ">=9.7.6,<10"
-mkdocstrings      = {version = ">=1.0.4,<2", extras = ["python"]}
+pytest         = ">=8"
+pytest-asyncio = ">=0.24"
+pytest-cov     = ">=5"
+respx          = "*"
+ruff           = "*"
+mypy           = "*"
+pre-commit     = "*"
+
+[tool.pixi.feature.docs.pypi-dependencies]
+mkdocs = ">=1.6.1,<2"
+mkdocs-material = ">=9.7.6,<10"
+mkdocstrings = { version = ">=1.0.4,<2", extras = ["python"] }
+mkdocs-coverage = ">=2.0.0,<3"
+pytest = ">=8"
+pytest-cov = ">=5"
+pytest-asyncio = ">=0.24"
 
 [tool.basedpyright]
 pythonVersion          = "3.11"

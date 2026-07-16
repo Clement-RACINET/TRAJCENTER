@@ -1,0 +1,3 @@
+# Messages
+
+::: trajcenter.core.messages

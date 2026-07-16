@@ -1,0 +1,4559 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../messages/">
+      
+      
+        <link rel="next" href="../../exporter/base/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Trajectory - TrajCenter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#trajectory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="TrajCenter" class="md-header__button md-logo" aria-label="TrajCenter" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TrajCenter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Trajectory
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="TrajCenter" class="md-nav__button md-logo" aria-label="TrajCenter" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    TrajCenter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accueil
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Référence API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajcenter
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Trajcenter
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_1" id="__nav_2_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Converter
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Converter
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/apt_converter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apt Converter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/column_mapper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Column Mapper
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/csv_converter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Csv Converter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/defaults/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Defaults
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/excel_converter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excel Converter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/mod_converter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mod Converter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../converter/tabular_converter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tabular Converter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_2" id="__nav_2_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logger
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../messages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Messages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajectory
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trajectory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trajectory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="trajectory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--trajcenter-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .trajcenter file format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--abb-rapid-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABB RAPID conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--autocompletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocompletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.ExternalAxisConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExternalAxisConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.MoveType" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoveType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.SourceFormat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SourceFormat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trajectory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trajectory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.active_external_axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        active_external_axes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_confdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_confdata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_move_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_move_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_tool_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_tool_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_wobj_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_wobj_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.is_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.point_count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        point_count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.__repr__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __repr__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.save" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.TrajectoryMeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TrajectoryMeta
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_3" id="__nav_2_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exporter
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Exporter
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exporter/base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exporter/csv_exporter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Csv Exporter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exporter/excel_exporter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excel Exporter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exporter/options/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exporter/tabular_exporter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tabular Exporter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_4" id="__nav_2_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rws
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rws
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rws/_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rws/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rws/writer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        trajectory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="trajectory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--trajcenter-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .trajcenter file format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--abb-rapid-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABB RAPID conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory--autocompletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autocompletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.ExternalAxisConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ExternalAxisConfig
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.MoveType" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoveType
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.SourceFormat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SourceFormat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trajectory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Trajectory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.active_external_axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        active_external_axes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_confdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_confdata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_move_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_move_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_tool_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_tool_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.has_wobj_table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        has_wobj_table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.is_complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_complete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.point_count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        point_count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.__init__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.__repr__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __repr__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.load" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.Trajectory.save" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trajcenter.core.trajectory.TrajectoryMeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TrajectoryMeta
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="trajectory">Trajectory</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.core.trajectory"></a>
+    <div class="doc doc-contents first">
+
+        <p>Central data model for an ABB robot trajectory.</p>
+<p>Author: Clement RACINET</p>
+<p>This module defines the main data structure of the TrajCenter project.
+A trajectory is composed of metadata (:class:<code>TrajectoryMeta</code>), a set
+of points stored in a <code>pandas.DataFrame</code>, and naming tables for tools
+and wobjs.</p>
+<h3 id="trajcenter.core.trajectory--trajcenter-file-format"><code>.trajcenter</code> file format</h3>
+<p>ZIP archive containing four entries:</p>
+<ul>
+<li><code>meta.json</code>      : serialised metadata (Pydantic → JSON)</li>
+<li><code>points.parquet</code> : trajectory points (PyArrow, zstd compression)</li>
+<li><code>tools.json</code>     : ordered list of tool names (index → name)</li>
+<li><code>wobjs.json</code>     : ordered list of wobj names (index → name)</li>
+</ul>
+<p>The <code>tool_index</code> and <code>wobj_index</code> columns of the <code>DataFrame</code>
+reference entries in these lists by their position (<code>int16</code> integer).
+These lists are <strong>always present</strong> in the archive (empty array <code>[]</code>
+when not applicable).</p>
+<h3 id="trajcenter.core.trajectory--abb-rapid-conventions">ABB RAPID conventions</h3>
+<ul>
+<li>Quaternions: <code>[q1, q2, q3, q4]</code> = <code>[w, x, y, z]</code> (scalar-first)</li>
+<li>External axes: <code>eax_a</code> … <code>eax_f</code> (presence in the DataFrame =
+  active axis)</li>
+<li>The sentinel value <code>9E9</code> for inactive axes is injected only at RWS
+  serialisation time, never stored in the Parquet file.</li>
+<li>Units: positions in mm, rotations in degrees (linear axes in mm)</li>
+</ul>
+<h3 id="trajcenter.core.trajectory--autocompletion">Autocompletion</h3>
+<p>At the output of any converter, the <code>.trajcenter</code> file is <strong>always
+complete</strong>: any column absent from the source is filled with values
+from :class:<code>~trajcenter.converter.defaults.ConversionDefaults</code>.
+Autocompleted columns are listed in
+:attr:<code>TrajectoryMeta.autocompleted</code>. This module does not know about
+<code>ConversionDefaults</code> — the autocompletion logic belongs to the
+<code>converter</code> package.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create and save a minimal trajectory::</p>
+<pre><code>import pandas as pd
+from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
+
+df = pd.DataFrame({
+    "x": [100.0], "y": [200.0], "z": [300.0],
+    "q1": [1.0], "q2": [0.0], "q3": [0.0], "q4": [0.0],
+    "move_type":  ["MoveL"],
+    "speed":      ["v500"],
+    "zone":       ["z10"],
+    "cf1": [0], "cf4": [0], "cf6": [0], "cfx": [0],
+    "tool_index": [0],
+    "wobj_index": [0],
+})
+meta = TrajectoryMeta(
+    name="my_trajectory",
+    robot_model="IRB6700",
+    autocompleted=["move_type", "speed", "zone", "cf1", "cf4", "cf6", "cfx"],
+)
+traj = Trajectory(
+    meta=meta,
+    points=df,
+    tools=["Tool_formage"],
+    wobjs=["Wobj_SerreFlan"],
+)
+traj.save("trajectory_store/my_trajectory.trajcenter")
+</code></pre>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.core.trajectory.ExternalAxisConfig" class="doc doc-heading">
+            <code>ExternalAxisConfig</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Description of an active external axis in the trajectory.</p>
+<p>This configuration is independent of the target cell.
+The mapping to a physical actuator is resolved at RWS transfer time.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.ExternalAxisConfig.axis_type">axis_type</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Kinematic type of the axis.
+Values: <code>"rotational"</code> or <code>"linear"</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.ExternalAxisConfig.unit">unit</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Unit of the stored value.
+<code>"deg"</code> for rotational, <code>"mm"</code> for linear.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.ExternalAxisConfig.label">label</span></code></td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional human-readable name
+(e.g. <code>"Positionneur A"</code>).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>ExternalAxisConfig(
+    axis_type="rotational", unit="deg", label="Positionneur A"
+)
+</code></pre>
+</details>
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ExternalAxisConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Description of an active external axis in the trajectory.</span>
+
+<span class="sd">    This configuration is independent of the target cell.</span>
+<span class="sd">    The mapping to a physical actuator is resolved at RWS transfer time.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        axis_type: Kinematic type of the axis.</span>
+<span class="sd">            Values: ``&quot;rotational&quot;`` or ``&quot;linear&quot;``.</span>
+<span class="sd">        unit: Unit of the stored value.</span>
+<span class="sd">            ``&quot;deg&quot;`` for rotational, ``&quot;mm&quot;`` for linear.</span>
+<span class="sd">        label: Optional human-readable name</span>
+<span class="sd">            (e.g. ``&quot;Positionneur A&quot;``).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            ExternalAxisConfig(</span>
+<span class="sd">                axis_type=&quot;rotational&quot;, unit=&quot;deg&quot;, label=&quot;Positionneur A&quot;</span>
+<span class="sd">            )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">axis_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&#39;rotational&#39; or &#39;linear&#39;&quot;</span><span class="p">)</span>
+    <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&#39;deg&#39; or &#39;mm&#39;&quot;</span><span class="p">)</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Human-readable name, e.g. &#39;Positionneur A&#39;&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.core.trajectory.MoveType" class="doc doc-heading">
+            <code>MoveType</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>RAPID movement type associated with a trajectory point.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.MoveType.MOVE_J">MOVE_J</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Joint movement (<code>MoveJ</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.MoveType.MOVE_L">MOVE_L</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Linear Cartesian movement (<code>MoveL</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.MoveType.MOVE_C">MOVE_C</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Circular movement (<code>MoveC</code>).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MoveType</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RAPID movement type associated with a trajectory point.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        MOVE_J: Joint movement (``MoveJ``).</span>
+<span class="sd">        MOVE_L: Linear Cartesian movement (``MoveL``).</span>
+<span class="sd">        MOVE_C: Circular movement (``MoveC``).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MOVE_J</span> <span class="o">=</span> <span class="s2">&quot;MoveJ&quot;</span>
+    <span class="n">MOVE_L</span> <span class="o">=</span> <span class="s2">&quot;MoveL&quot;</span>
+    <span class="n">MOVE_C</span> <span class="o">=</span> <span class="s2">&quot;MoveC&quot;</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.core.trajectory.SourceFormat" class="doc doc-heading">
+            <code>SourceFormat</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Origin format of the source file that produced the trajectory.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.EXCEL">EXCEL</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Microsoft Excel file (<code>.xlsx</code> / <code>.xls</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.APT">APT</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>CATIA APT source file (<code>.aptsource</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.CSV">CSV</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Delimited text file (<code>.csv</code> / <code>.txt</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.RAPID">RAPID</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>ABB RAPID module (<code>.mod</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.MANUAL">MANUAL</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Created programmatically, without a source file.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.SourceFormat.TRAJCENTER">TRAJCENTER</span></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Loaded from an existing <code>.trajcenter</code> archive.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SourceFormat</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Origin format of the source file that produced the trajectory.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        EXCEL: Microsoft Excel file (``.xlsx`` / ``.xls``).</span>
+<span class="sd">        APT: CATIA APT source file (``.aptsource``).</span>
+<span class="sd">        CSV: Delimited text file (``.csv`` / ``.txt``).</span>
+<span class="sd">        RAPID: ABB RAPID module (``.mod``).</span>
+<span class="sd">        MANUAL: Created programmatically, without a source file.</span>
+<span class="sd">        TRAJCENTER: Loaded from an existing ``.trajcenter`` archive.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">EXCEL</span> <span class="o">=</span> <span class="s2">&quot;excel&quot;</span>
+    <span class="n">APT</span> <span class="o">=</span> <span class="s2">&quot;apt&quot;</span>
+    <span class="n">CSV</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span>
+    <span class="n">RAPID</span> <span class="o">=</span> <span class="s2">&quot;rapid&quot;</span>
+    <span class="n">MANUAL</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
+    <span class="n">TRAJCENTER</span> <span class="o">=</span> <span class="s2">&quot;trajcenter&quot;</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.core.trajectory.Trajectory" class="doc doc-heading">
+            <code>Trajectory</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>ABB robot trajectory.</p>
+<p>Encapsulates metadata (:class:<code>TrajectoryMeta</code>), trajectory points
+(<code>pandas.DataFrame</code>), and tool/wobj naming tables in a coherent
+object.</p>
+<p>The <code>.trajcenter</code> file format is a ZIP archive containing:</p>
+<ul>
+<li><code>meta.json</code>      : JSON metadata</li>
+<li><code>points.parquet</code> : points (PyArrow, zstd compression)</li>
+<li><code>tools.json</code>     : ordered list of tool names (index → name)</li>
+<li><code>wobjs.json</code>     : ordered list of wobj names (index → name)</li>
+</ul>
+<p>The <code>tool_index</code> and <code>wobj_index</code> columns of the <code>DataFrame</code>
+are <code>int16</code> integers referencing the <code>tools</code> and <code>wobjs</code> lists.</p>
+<p>A <code>.trajcenter</code> produced by a converter is <strong>always complete</strong>:
+the columns <code>cf1/cf4/cf6/cfx</code>, <code>move_type</code>, <code>speed</code>, <code>zone</code>,
+<code>tool_index</code>, <code>wobj_index</code> are always present. The <code>eax_*</code>
+columns remain optional (presence = active axis).</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.Trajectory.meta">meta</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="TrajectoryMeta (trajcenter.core.trajectory.TrajectoryMeta)" href="#trajcenter.core.trajectory.TrajectoryMeta">TrajectoryMeta</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trajectory metadata.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.Trajectory.points">points</span></code></td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Points <code>DataFrame</code>. Mandatory columns:
+<code>x, y, z, q1, q2, q3, q4</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.Trajectory.tools">tools</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ordered list of tool names. <code>tools[i]</code> = name of tool
+at index <code>i</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.Trajectory.wobjs">wobjs</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ordered list of wobj names. <code>wobjs[i]</code> = name of wobj
+at index <code>i</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create, save and reload::</p>
+<pre><code>import pandas as pd
+from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
+
+df = pd.DataFrame({
+    "x": [100.0, 200.0], "y": [150.0, 250.0], "z": [50.0, 60.0],
+    "q1": [1.0, 1.0], "q2": [0.0, 0.0],
+    "q3": [0.0, 0.0], "q4": [0.0, 0.0],
+    "move_type":  ["MoveL", "MoveL"],
+    "speed":      ["v500", "v500"],
+    "zone":       ["z0", "z0"],
+    "cf1": [0, 0], "cf4": [0, 0], "cf6": [0, 0], "cfx": [0, 0],
+    "tool_index": [0, 0],
+    "wobj_index": [0, 0],
+})
+meta = TrajectoryMeta(name="test", autocompleted=["speed"])
+traj = Trajectory(
+    meta=meta,
+    points=df,
+    tools=["Tool_formage"],
+    wobjs=["Wobj_SerreFlan"],
+)
+traj.save("trajectory_store/test.trajcenter")
+
+traj2 = Trajectory.load("trajectory_store/test.trajcenter")
+print(traj2)
+# Trajectory(name='test', points=2, tools=1, wobjs=1, eax=none, complete=True)
+</code></pre>
+</details>
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Trajectory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ABB robot trajectory.</span>
+
+<span class="sd">    Encapsulates metadata (:class:`TrajectoryMeta`), trajectory points</span>
+<span class="sd">    (``pandas.DataFrame``), and tool/wobj naming tables in a coherent</span>
+<span class="sd">    object.</span>
+
+<span class="sd">    The ``.trajcenter`` file format is a ZIP archive containing:</span>
+
+<span class="sd">    - ``meta.json``      : JSON metadata</span>
+<span class="sd">    - ``points.parquet`` : points (PyArrow, zstd compression)</span>
+<span class="sd">    - ``tools.json``     : ordered list of tool names (index → name)</span>
+<span class="sd">    - ``wobjs.json``     : ordered list of wobj names (index → name)</span>
+
+<span class="sd">    The ``tool_index`` and ``wobj_index`` columns of the ``DataFrame``</span>
+<span class="sd">    are ``int16`` integers referencing the ``tools`` and ``wobjs`` lists.</span>
+
+<span class="sd">    A ``.trajcenter`` produced by a converter is **always complete**:</span>
+<span class="sd">    the columns ``cf1/cf4/cf6/cfx``, ``move_type``, ``speed``, ``zone``,</span>
+<span class="sd">    ``tool_index``, ``wobj_index`` are always present. The ``eax_*``</span>
+<span class="sd">    columns remain optional (presence = active axis).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        meta: Trajectory metadata.</span>
+<span class="sd">        points: Points ``DataFrame``. Mandatory columns:</span>
+<span class="sd">            ``x, y, z, q1, q2, q3, q4``.</span>
+<span class="sd">        tools: Ordered list of tool names. ``tools[i]`` = name of tool</span>
+<span class="sd">            at index ``i``.</span>
+<span class="sd">        wobjs: Ordered list of wobj names. ``wobjs[i]`` = name of wobj</span>
+<span class="sd">            at index ``i``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        Create, save and reload::</span>
+
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            from trajcenter.core.trajectory import Trajectory, TrajectoryMeta</span>
+
+<span class="sd">            df = pd.DataFrame({</span>
+<span class="sd">                &quot;x&quot;: [100.0, 200.0], &quot;y&quot;: [150.0, 250.0], &quot;z&quot;: [50.0, 60.0],</span>
+<span class="sd">                &quot;q1&quot;: [1.0, 1.0], &quot;q2&quot;: [0.0, 0.0],</span>
+<span class="sd">                &quot;q3&quot;: [0.0, 0.0], &quot;q4&quot;: [0.0, 0.0],</span>
+<span class="sd">                &quot;move_type&quot;:  [&quot;MoveL&quot;, &quot;MoveL&quot;],</span>
+<span class="sd">                &quot;speed&quot;:      [&quot;v500&quot;, &quot;v500&quot;],</span>
+<span class="sd">                &quot;zone&quot;:       [&quot;z0&quot;, &quot;z0&quot;],</span>
+<span class="sd">                &quot;cf1&quot;: [0, 0], &quot;cf4&quot;: [0, 0], &quot;cf6&quot;: [0, 0], &quot;cfx&quot;: [0, 0],</span>
+<span class="sd">                &quot;tool_index&quot;: [0, 0],</span>
+<span class="sd">                &quot;wobj_index&quot;: [0, 0],</span>
+<span class="sd">            })</span>
+<span class="sd">            meta = TrajectoryMeta(name=&quot;test&quot;, autocompleted=[&quot;speed&quot;])</span>
+<span class="sd">            traj = Trajectory(</span>
+<span class="sd">                meta=meta,</span>
+<span class="sd">                points=df,</span>
+<span class="sd">                tools=[&quot;Tool_formage&quot;],</span>
+<span class="sd">                wobjs=[&quot;Wobj_SerreFlan&quot;],</span>
+<span class="sd">            )</span>
+<span class="sd">            traj.save(&quot;trajectory_store/test.trajcenter&quot;)</span>
+
+<span class="sd">            traj2 = Trajectory.load(&quot;trajectory_store/test.trajcenter&quot;)</span>
+<span class="sd">            print(traj2)</span>
+<span class="sd">            # Trajectory(name=&#39;test&#39;, points=2, tools=1, wobjs=1, eax=none, complete=True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">meta</span><span class="p">:</span> <span class="n">TrajectoryMeta</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">wobjs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">meta</span><span class="p">:</span> <span class="n">TrajectoryMeta</span><span class="p">,</span>
+        <span class="n">points</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">wobjs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise the trajectory with validation and type casting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            meta: Trajectory metadata.</span>
+<span class="sd">            points: Points ``DataFrame``. Must contain at minimum the</span>
+<span class="sd">                columns ``x, y, z, q1, q2, q3, q4``.</span>
+<span class="sd">            tools: Ordered list of tool names (index → name).</span>
+<span class="sd">                Initialised to an empty list when ``None``.</span>
+<span class="sd">            wobjs: Ordered list of wobj names (index → name).</span>
+<span class="sd">                Initialised to an empty list when ``None``.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If mandatory columns are missing, if a type</span>
+<span class="sd">                cast fails, or if a ``tool_index`` / ``wobj_index``</span>
+<span class="sd">                value is out of bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_and_cast</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tools</span> <span class="o">=</span> <span class="n">tools</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span> <span class="o">=</span> <span class="n">wobjs</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_index_bounds</span><span class="p">()</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Internal validation</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_and_cast</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify mandatory columns and normalise pandas types.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df: Raw ``DataFrame`` to validate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``DataFrame`` with normalised types.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If mandatory columns are absent or if a type</span>
+<span class="sd">                cast is impossible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">REQUIRED_COLUMNS</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">(</span><span class="s2">&quot;MANDATORY_COLUMNS_MISSING&quot;</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing</span><span class="p">)))</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">col_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">col_str</span> <span class="ow">in</span> <span class="n">COLUMN_DTYPES</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">COLUMN_DTYPES</span><span class="p">[</span><span class="n">col_str</span><span class="p">]</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;CANNOT_CAST_COLUMN&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col_str</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">exc</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+            <span class="k">elif</span> <span class="n">col_str</span> <span class="ow">in</span> <span class="n">CONFDATA_COLUMNS</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Int8Dtype</span><span class="p">())</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;CANNOT_CAST_COLUMN&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col_str</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;Int8&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_index_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that tool/wobj indices do not exceed the table sizes.</span>
+
+<span class="sd">        No-op if the ``DataFrame`` has no rows (empty trajectory under</span>
+<span class="sd">        construction).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If a ``tool_index`` or ``wobj_index`` value is</span>
+<span class="sd">                out of bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="s2">&quot;tool_index&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">:</span>
+            <span class="n">max_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="s2">&quot;tool_index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">max_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;TOOL_INDEX_OUT_OF_BOUNDS&quot;</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">max_idx</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">))</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;wobj_index&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">:</span>
+            <span class="n">max_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="s2">&quot;wobj_index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">max_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">msg</span><span class="p">(</span><span class="s2">&quot;WOBJ_INDEX_OUT_OF_BOUNDS&quot;</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">max_idx</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">))</span>
+                <span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Utility properties</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">point_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of points in the trajectory.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">active_external_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of external axes actually present in the ``DataFrame``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Sorted list of ``eax_*`` column names that are present.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                &gt;&gt;&gt; traj.active_external_axes</span>
+<span class="sd">                [&#39;eax_a&#39;, &#39;eax_b&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eax_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">EXTERNAL_AXIS_COLUMNS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="n">eax_cols</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_confdata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether robot configuration data (confdata) columns are present.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;cf1&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_move_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the ``move_type`` column (MoveJ/MoveL/MoveC) is present.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;move_type&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_tool_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether a tool naming table is defined.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if ``tools`` is non-empty and the ``tool_index``</span>
+<span class="sd">            column is present in the ``DataFrame``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;tool_index&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_wobj_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether a wobj naming table is defined.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if ``wobjs`` is non-empty and the ``wobj_index``</span>
+<span class="sd">            column is present in the ``DataFrame``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;wobj_index&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether all converter columns are present.</span>
+
+<span class="sd">        A complete ``.trajcenter`` contains ``cf1/cf4/cf6/cfx``,</span>
+<span class="sd">        ``move_type``, ``speed``, ``zone``, ``tool_index``,</span>
+<span class="sd">        ``wobj_index`` in addition to the mandatory geometric columns.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ``True`` if all :data:`CONVERTER_COLUMNS` are present.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">CONVERTER_COLUMNS</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Serialisation → .trajcenter</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the trajectory to a ``.trajcenter`` file.</span>
+
+<span class="sd">        The produced file is a ZIP archive containing:</span>
+
+<span class="sd">        - ``meta.json``      : metadata (JSON, UTF-8)</span>
+<span class="sd">        - ``points.parquet`` : points (PyArrow, zstd compression)</span>
+<span class="sd">        - ``tools.json``     : ordered list of tool names</span>
+<span class="sd">        - ``wobjs.json``     : ordered list of wobj names</span>
+
+<span class="sd">        The parent directory is created automatically when necessary.</span>
+<span class="sd">        The :attr:`TrajectoryMeta.point_count` counter is updated</span>
+<span class="sd">        before writing.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: Destination path (str or Path).</span>
+<span class="sd">                The ``.trajcenter`` extension is recommended.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Absolute path of the created file.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                saved_path = traj.save(&quot;trajectory_store/pointage.trajcenter&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">dest</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">point_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_count</span>
+
+        <span class="n">pa_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">_PA_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">]</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">pa_fields</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;meta.json&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span>
+                <span class="s2">&quot;tools.json&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span>
+                <span class="s2">&quot;wobjs.json&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+            <span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">)</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;points.parquet&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">dest</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Deserialisation ← .trajcenter</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a trajectory from a ``.trajcenter`` file.</span>
+
+<span class="sd">        The ``tools.json`` and ``wobjs.json`` entries are optional to</span>
+<span class="sd">        ensure compatibility with potential legacy files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: Path to the ``.trajcenter`` file to load.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Reconstructed :class:`Trajectory` instance.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the file does not exist.</span>
+<span class="sd">            ValueError: If the archive does not contain the mandatory</span>
+<span class="sd">                entries (``meta.json``, ``points.parquet``).</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                traj = Trajectory.load(&quot;trajectory_store/pointage.trajcenter&quot;)</span>
+<span class="sd">                print(traj.point_count)</span>
+<span class="sd">                print(traj.tools)               # [&#39;Tool_formage&#39;]</span>
+<span class="sd">                print(traj.meta.autocompleted)  # [&#39;speed&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">(</span><span class="s2">&quot;FILE_NOT_FOUND&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">src</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">())</span>
+            <span class="n">missing_entries</span> <span class="o">=</span> <span class="n">_REQUIRED_ZIP_ENTRIES</span> <span class="o">-</span> <span class="n">names</span>
+            <span class="k">if</span> <span class="n">missing_entries</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Invalid .trajcenter archive — missing entries &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing_entries</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">meta</span> <span class="o">=</span> <span class="n">TrajectoryMeta</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;meta.json&quot;</span><span class="p">))</span>
+            <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tools.json&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="s2">&quot;tools.json&quot;</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="p">)</span>
+            <span class="n">wobjs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;wobjs.json&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="s2">&quot;wobjs.json&quot;</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;points.parquet&quot;</span><span class="p">))</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">wobjs</span><span class="o">=</span><span class="n">wobjs</span><span class="p">)</span>
+
+    <span class="c1"># ------------------------------------------------------------------</span>
+    <span class="c1"># Representation</span>
+    <span class="c1"># ------------------------------------------------------------------</span>
+
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Concise representation for debugging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String of the form</span>
+<span class="sd">            ``Trajectory(name=&#39;...&#39;, points=N, tools=T, wobjs=W,</span>
+<span class="sd">            eax=[...], complete=bool)``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_external_axes</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Trajectory(&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;points=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">point_count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;tools=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;wobjs=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;eax=</span><span class="si">{</span><span class="n">eax</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">eax</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;complete=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;)&quot;</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.active_external_axes" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">active_external_axes</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>List of external axes actually present in the <code>DataFrame</code>.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Sorted list of <code>eax_*</code> column names that are present.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>&gt;&gt;&gt; traj.active_external_axes
+['eax_a', 'eax_b']
+</code></pre>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.has_confdata" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">has_confdata</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Whether robot configuration data (confdata) columns are present.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.has_move_type" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">has_move_type</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Whether the <code>move_type</code> column (MoveJ/MoveL/MoveC) is present.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.has_tool_table" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">has_tool_table</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Whether a tool naming table is defined.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>True</code> if <code>tools</code> is non-empty and the <code>tool_index</code></p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>column is present in the <code>DataFrame</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.has_wobj_table" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">has_wobj_table</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Whether a wobj naming table is defined.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>True</code> if <code>wobjs</code> is non-empty and the <code>wobj_index</code></p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>column is present in the <code>DataFrame</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.is_complete" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">is_complete</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Whether all converter columns are present.</p>
+<p>A complete <code>.trajcenter</code> contains <code>cf1/cf4/cf6/cfx</code>,
+<code>move_type</code>, <code>speed</code>, <code>zone</code>, <code>tool_index</code>,
+<code>wobj_index</code> in addition to the mandatory geometric columns.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>True</code> if all :data:<code>CONVERTER_COLUMNS</code> are present.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.point_count" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">point_count</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Number of points in the trajectory.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wobjs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise the trajectory with validation and type casting.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>meta</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="TrajectoryMeta (trajcenter.core.trajectory.TrajectoryMeta)" href="#trajcenter.core.trajectory.TrajectoryMeta">TrajectoryMeta</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trajectory metadata.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>points</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Points <code>DataFrame</code>. Must contain at minimum the
+columns <code>x, y, z, q1, q2, q3, q4</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>tools</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ordered list of tool names (index → name).
+Initialised to an empty list when <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>wobjs</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Ordered list of wobj names (index → name).
+Initialised to an empty list when <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If mandatory columns are missing, if a type
+cast fails, or if a <code>tool_index</code> / <code>wobj_index</code>
+value is out of bounds.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">meta</span><span class="p">:</span> <span class="n">TrajectoryMeta</span><span class="p">,</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">wobjs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise the trajectory with validation and type casting.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        meta: Trajectory metadata.</span>
+<span class="sd">        points: Points ``DataFrame``. Must contain at minimum the</span>
+<span class="sd">            columns ``x, y, z, q1, q2, q3, q4``.</span>
+<span class="sd">        tools: Ordered list of tool names (index → name).</span>
+<span class="sd">            Initialised to an empty list when ``None``.</span>
+<span class="sd">        wobjs: Ordered list of wobj names (index → name).</span>
+<span class="sd">            Initialised to an empty list when ``None``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If mandatory columns are missing, if a type</span>
+<span class="sd">            cast fails, or if a ``tool_index`` / ``wobj_index``</span>
+<span class="sd">            value is out of bounds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="n">meta</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_and_cast</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tools</span> <span class="o">=</span> <span class="n">tools</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span> <span class="o">=</span> <span class="n">wobjs</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate_index_bounds</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.__repr__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__repr__</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Concise representation for debugging.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>String of the form</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>``Trajectory(name='...', points=N, tools=T, wobjs=W,</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>eax=[...], complete=bool)``.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concise representation for debugging.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String of the form</span>
+<span class="sd">        ``Trajectory(name=&#39;...&#39;, points=N, tools=T, wobjs=W,</span>
+<span class="sd">        eax=[...], complete=bool)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">eax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_external_axes</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Trajectory(&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;points=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">point_count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;tools=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;wobjs=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;eax=</span><span class="si">{</span><span class="n">eax</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">eax</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="si">}</span><span class="s2">, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;complete=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;)&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.load" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Load a trajectory from a <code>.trajcenter</code> file.</p>
+<p>The <code>tools.json</code> and <code>wobjs.json</code> entries are optional to
+ensure compatibility with potential legacy files.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to the <code>.trajcenter</code> file to load.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>Reconstructed</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="Trajectory (trajcenter.core.trajectory.Trajectory)" href="#trajcenter.core.trajectory.Trajectory">Trajectory</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>class:<code>Trajectory</code> instance.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the file does not exist.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the archive does not contain the mandatory
+entries (<code>meta.json</code>, <code>points.parquet</code>).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>traj = Trajectory.load("trajectory_store/pointage.trajcenter")
+print(traj.point_count)
+print(traj.tools)               # ['Tool_formage']
+print(traj.meta.autocompleted)  # ['speed']
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a trajectory from a ``.trajcenter`` file.</span>
+
+<span class="sd">    The ``tools.json`` and ``wobjs.json`` entries are optional to</span>
+<span class="sd">    ensure compatibility with potential legacy files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Path to the ``.trajcenter`` file to load.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Reconstructed :class:`Trajectory` instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the file does not exist.</span>
+<span class="sd">        ValueError: If the archive does not contain the mandatory</span>
+<span class="sd">            entries (``meta.json``, ``points.parquet``).</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            traj = Trajectory.load(&quot;trajectory_store/pointage.trajcenter&quot;)</span>
+<span class="sd">            print(traj.point_count)</span>
+<span class="sd">            print(traj.tools)               # [&#39;Tool_formage&#39;]</span>
+<span class="sd">            print(traj.meta.autocompleted)  # [&#39;speed&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">src</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">(</span><span class="s2">&quot;FILE_NOT_FOUND&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">src</span><span class="p">))</span>
+
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">namelist</span><span class="p">())</span>
+        <span class="n">missing_entries</span> <span class="o">=</span> <span class="n">_REQUIRED_ZIP_ENTRIES</span> <span class="o">-</span> <span class="n">names</span>
+        <span class="k">if</span> <span class="n">missing_entries</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid .trajcenter archive — missing entries &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing_entries</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">TrajectoryMeta</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;meta.json&quot;</span><span class="p">))</span>
+        <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;tools.json&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="s2">&quot;tools.json&quot;</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">wobjs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;wobjs.json&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="s2">&quot;wobjs.json&quot;</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">zf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;points.parquet&quot;</span><span class="p">))</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">wobjs</span><span class="o">=</span><span class="n">wobjs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.core.trajectory.Trajectory.save" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Save the trajectory to a <code>.trajcenter</code> file.</p>
+<p>The produced file is a ZIP archive containing:</p>
+<ul>
+<li><code>meta.json</code>      : metadata (JSON, UTF-8)</li>
+<li><code>points.parquet</code> : points (PyArrow, zstd compression)</li>
+<li><code>tools.json</code>     : ordered list of tool names</li>
+<li><code>wobjs.json</code>     : ordered list of wobj names</li>
+</ul>
+<p>The parent directory is created automatically when necessary.
+The :attr:<code>TrajectoryMeta.point_count</code> counter is updated
+before writing.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Destination path (str or Path).
+The <code>.trajcenter</code> extension is recommended.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Absolute path of the created file.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>saved_path = traj.save("trajectory_store/pointage.trajcenter")
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the trajectory to a ``.trajcenter`` file.</span>
+
+<span class="sd">    The produced file is a ZIP archive containing:</span>
+
+<span class="sd">    - ``meta.json``      : metadata (JSON, UTF-8)</span>
+<span class="sd">    - ``points.parquet`` : points (PyArrow, zstd compression)</span>
+<span class="sd">    - ``tools.json``     : ordered list of tool names</span>
+<span class="sd">    - ``wobjs.json``     : ordered list of wobj names</span>
+
+<span class="sd">    The parent directory is created automatically when necessary.</span>
+<span class="sd">    The :attr:`TrajectoryMeta.point_count` counter is updated</span>
+<span class="sd">    before writing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path: Destination path (str or Path).</span>
+<span class="sd">            The ``.trajcenter`` extension is recommended.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Absolute path of the created file.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            saved_path = traj.save(&quot;trajectory_store/pointage.trajcenter&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">dest</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">point_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_count</span>
+
+    <span class="n">pa_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pa</span><span class="o">.</span><span class="n">Field</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pa</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">_PA_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()))</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">columns</span>
+    <span class="p">]</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="n">pa_fields</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;meta.json&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span>
+            <span class="s2">&quot;tools.json&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tools</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span>
+            <span class="s2">&quot;wobjs.json&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wobjs</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;points.parquet&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">dest</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.core.trajectory.TrajectoryMeta" class="doc doc-heading">
+            <code>TrajectoryMeta</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Metadata for an ABB trajectory — stored in <code>meta.json</code>.</p>
+<p>These metadata are <strong>independent of the target cell</strong>. They describe
+the origin, external axis configuration, and autocompletion
+traceability performed during conversion.</p>
+<p>The autocompletion logic (default values applied to columns absent
+from the source) belongs to the <code>converter</code> package via
+:class:<code>~trajcenter.converter.defaults.ConversionDefaults</code>.
+This model only <strong>stores the result</strong> in <code>autocompleted</code>.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.name">name</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Trajectory name (human identifier).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.version">version</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>.trajcenter</code> format version.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.created_at">created_at</span></code></td>
+            <td>
+                  <code><span title="datetime.datetime">datetime</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Creation timestamp (UTC).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.source_file">source_file</span></code></td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path or name of the original source file.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.source_format">source_format</span></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="SourceFormat (trajcenter.core.trajectory.SourceFormat)" href="#trajcenter.core.trajectory.SourceFormat">SourceFormat</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Source file format (:class:<code>SourceFormat</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.robot_model">robot_model</span></code></td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target ABB robot model
+(e.g. <code>"IRB6700-205/2.80"</code>).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.point_count">point_count</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of points. Updated automatically at
+:meth:<code>Trajectory.save</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.external_axes">external_axes</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="ExternalAxisConfig (trajcenter.core.trajectory.ExternalAxisConfig)" href="#trajcenter.core.trajectory.ExternalAxisConfig">ExternalAxisConfig</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dict of active external axes.
+Keys: <code>"eax_a"</code> … <code>"eax_f"</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.autocompleted">autocompleted</span></code></td>
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of columns whose values were inferred from
+<code>ConversionDefaults</code> (not present in the source). Empty
+when all columns come from the source.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="trajcenter.core.trajectory.TrajectoryMeta.extra">extra</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="str">str</span> | <span title="int">int</span> | <span title="float">float</span> | <span title="bool">bool</span> | None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Free field for project-specific metadata.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>meta = TrajectoryMeta(
+    name="Pointage_Flan_A",
+    robot_model="IRB6700",
+    autocompleted=["speed", "move_type"],
+    external_axes={
+        "eax_a": ExternalAxisConfig(
+            axis_type="rotational",
+            unit="deg",
+            label="Positionneur A",
+        )
+    },
+)
+</code></pre>
+</details>
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>trajcenter\core\trajectory.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajectoryMeta</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metadata for an ABB trajectory — stored in ``meta.json``.</span>
+
+<span class="sd">    These metadata are **independent of the target cell**. They describe</span>
+<span class="sd">    the origin, external axis configuration, and autocompletion</span>
+<span class="sd">    traceability performed during conversion.</span>
+
+<span class="sd">    The autocompletion logic (default values applied to columns absent</span>
+<span class="sd">    from the source) belongs to the ``converter`` package via</span>
+<span class="sd">    :class:`~trajcenter.converter.defaults.ConversionDefaults`.</span>
+<span class="sd">    This model only **stores the result** in ``autocompleted``.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Trajectory name (human identifier).</span>
+<span class="sd">        version: ``.trajcenter`` format version.</span>
+<span class="sd">        created_at: Creation timestamp (UTC).</span>
+<span class="sd">        source_file: Path or name of the original source file.</span>
+<span class="sd">        source_format: Source file format (:class:`SourceFormat`).</span>
+<span class="sd">        robot_model: Target ABB robot model</span>
+<span class="sd">            (e.g. ``&quot;IRB6700-205/2.80&quot;``).</span>
+<span class="sd">        point_count: Number of points. Updated automatically at</span>
+<span class="sd">            :meth:`Trajectory.save`.</span>
+<span class="sd">        external_axes: Dict of active external axes.</span>
+<span class="sd">            Keys: ``&quot;eax_a&quot;`` … ``&quot;eax_f&quot;``.</span>
+<span class="sd">        autocompleted: List of columns whose values were inferred from</span>
+<span class="sd">            ``ConversionDefaults`` (not present in the source). Empty</span>
+<span class="sd">            when all columns come from the source.</span>
+<span class="sd">        extra: Free field for project-specific metadata.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            meta = TrajectoryMeta(</span>
+<span class="sd">                name=&quot;Pointage_Flan_A&quot;,</span>
+<span class="sd">                robot_model=&quot;IRB6700&quot;,</span>
+<span class="sd">                autocompleted=[&quot;speed&quot;, &quot;move_type&quot;],</span>
+<span class="sd">                external_axes={</span>
+<span class="sd">                    &quot;eax_a&quot;: ExternalAxisConfig(</span>
+<span class="sd">                        axis_type=&quot;rotational&quot;,</span>
+<span class="sd">                        unit=&quot;deg&quot;,</span>
+<span class="sd">                        label=&quot;Positionneur A&quot;,</span>
+<span class="sd">                    )</span>
+<span class="sd">                },</span>
+<span class="sd">            )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Trajectory name&quot;</span><span class="p">)</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;.trajcenter format version&quot;</span><span class="p">)</span>
+    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Creation timestamp (UTC)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Original source file&quot;</span><span class="p">)</span>
+    <span class="n">source_format</span><span class="p">:</span> <span class="n">SourceFormat</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">SourceFormat</span><span class="o">.</span><span class="n">MANUAL</span><span class="p">)</span>
+    <span class="n">robot_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;E.g. &#39;IRB6700-205/2.80&#39;&quot;</span><span class="p">)</span>
+    <span class="n">point_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Updated automatically at save time&quot;</span><span class="p">)</span>
+    <span class="n">external_axes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ExternalAxisConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Active external axes. Keys: &#39;eax_a&#39;…&#39;eax_f&#39;. Absent = inactive.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">autocompleted</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Columns whose values were autocompleted from ConversionDefaults. &quot;</span>
+            <span class="s2">&quot;E.g.: [&#39;speed&#39;, &#39;move_type&#39;, &#39;cf1&#39;]. &quot;</span>
+            <span class="s2">&quot;Empty when all columns come from the source.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Free field for project-specific metadata.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_eax_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrajectoryMeta</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that external axis keys belong to the valid set.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The validated instance.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If a key does not match ``eax_a``…``eax_f``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;eax_</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="s2">&quot;abcdef&quot;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_axes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="n">msg</span><span class="p">(</span>
+                        <span class="s2">&quot;INVALID_EAX_KEY&quot;</span><span class="p">,</span>
+                        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+                        <span class="n">valid</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">valid</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
