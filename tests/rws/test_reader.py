@@ -64,7 +64,7 @@ class TestReadSelectedTrajIndex:
     async def test_invalid_value_raises(self, client: MagicMock) -> None:
         """A non-numeric raw value raises ``ValueError``."""
         with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="abc")):
-            with pytest.raises(ValueError, match="TrajSelectedIndex"):
+            with pytest.raises(ValueError, match="SelectedTrajIndex"):
                 await read_selected_traj_index(client)
 
     @pytest.mark.asyncio
@@ -74,7 +74,7 @@ class TestReadSelectedTrajIndex:
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_selected_traj_index(client, task="T_ROB1", module="TRAJCENTER")
         _, kwargs = mock_get.call_args
-        assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/TrajSelectedIndex"
+        assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/SelectedTrajIndex"
 
 
 # ---------------------------------------------------------------------------

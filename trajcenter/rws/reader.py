@@ -13,7 +13,7 @@ RAPID variable map (read operations):
 =====  ========================  ===========  ================================
 Ref    RAPID variable            RAPID type   Python return
 =====  ========================  ===========  ================================
-R1     TrajSelectedIndex         num          ``int`` — 1-based RAPID index
+R1     SelectedTrajIndex         num          ``int`` — 1-based RAPID index
 R2     TrajReady                 bool         ``bool``
 R3     NbRobtargetsTraj          num          ``int``
 R4     NbTrajDispo               num          ``int``
@@ -59,7 +59,7 @@ async def read_selected_traj_index(
 ) -> int:
     """Read the trajectory index currently selected by RAPID.
 
-    Reads ``TrajSelectedIndex`` — a RAPID ``num`` variable set by the
+    Reads ``SelectedTrajIndex`` — a RAPID ``num`` variable set by the
     robot program to indicate which trajectory it wants TrajCenter to
     transfer next. The value is **1-based** (RAPID convention).
 
@@ -67,7 +67,7 @@ async def read_selected_traj_index(
         ``GET /rw/rapid/symbol/data/{symbolurl}``
 
     ABB constraints:
-        ``TrajSelectedIndex`` must be declared as ``PERS num`` in the
+        ``SelectedTrajIndex`` must be declared as ``PERS num`` in the
         TRAJCENTER module. Returns ``0`` if RAPID has not yet written
         a selection.
 
@@ -91,14 +91,14 @@ async def read_selected_traj_index(
             idx = await read_selected_traj_index(client)
             print(idx)  # e.g. 3  → RAPID wants trajectory #3
     """
-    symbolurl = symbol(task, module, "TrajSelectedIndex")
+    symbolurl = symbol(task, module, "SelectedTrajIndex")
     raw = await get_variable(client, symbolurl=symbolurl)
-    logger.debug("TrajSelectedIndex = %r", raw)
+    logger.debug("SelectedTrajIndex = %r", raw)
     try:
         return int(float(raw))
     except ValueError as exc:
         raise ValueError(
-            f"Cannot parse TrajSelectedIndex value {raw!r} as int"
+            f"Cannot parse SelectedTrajIndex value {raw!r} as int"
         ) from exc
 
 
