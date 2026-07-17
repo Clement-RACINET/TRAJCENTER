@@ -112,7 +112,9 @@ COLUMN_ALIASES: dict[str, frozenset[str]] = {
     "wobj": frozenset(
         {
             "wobj",
+            "wobjs",
             "workobject",
+            "workobjects",
             "repere",
             "frame",
             "wobj_name",
