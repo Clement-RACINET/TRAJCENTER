@@ -5,7 +5,18 @@ trajcenter
 │   ├── Image2.png
 │   └── Image3.png
 ├── RAPID
-│   └── TRAJCENTER_Webservices.modx
+│   ├── JS_TRAJCENTER_Webservices.modx
+│   ├── TRAJCENTER_CellConfig.mod
+│   ├── TRAJCENTER_ProcessConfig.mod
+│   ├── TRAJCENTER_Types.mod
+│   └── TRAJCENTER_WebServices.mod
+├── routes
+│   ├── route3.md
+│   ├── route3.pdf
+│   ├── routes.md
+│   ├── routes.pdf
+│   ├── routes2.md
+│   └── routes2.pdf
 ├── scripts
 │   ├── doc
 │   │   ├── config.py
@@ -113,10 +124,4 @@ trajcenter
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pyproject.toml
-├── README.md
-├── ROUTES.md
-├── ROUTES.pdf
-├── routes2.md
-├── routes2.pdf
-├── routes4.md
-└── routes4.pdf
+└── README.md
