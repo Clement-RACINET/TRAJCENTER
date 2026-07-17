@@ -2,24 +2,23 @@ MODULE TRAJCENTER_WebServices
 !_______________________________________________________________________________________________________________________________________________________________
 !STRUCTURES
 !°°°°°°°°°°°°°°°°°°°°
-    !Structure complÃ¨te de donnÃ©es de traj
+    !Structure complète de données de traj
     RECORD trajcenterData
-        num mvtType;        !0=Â«Â LÂ Â», 1=Â«Â JÂ Â», 2=Â«Â CÂ Â», type de dÃ©placement au point
+        num mvtType;        !0=« L », 1=« J », 2=« C », type de déplacement au point
         robtarget point;    !robt du point cible
         num vitesse;        !vitesse de mouvement en mm/s
         num zoneType;       !0(=z0), 1, 5, 10, 15, 20, 30, 40, 50, 60, 80, 100, 150, 200, 255(=fine)
         bool readConfs;     !Prise en compte ou non des confdatas
         num toolIndex;      !index outil
         num wobjIndex;      !index wobj
-        num processParamIndex;   !index des paramÃ¨tres process
+        num processParamIndex;   !index des paramètres process
     ENDRECORD
     
-    !Structure de mÃ©tadonnÃ©es des trajs
+    !Structure de métadonnées des trajs
     RECORD trajcenterTraj
         string name;
         num dim;
-        num processType;    !0 (=pas de process), 1 (=ACF), 2 (=AAK), 3 (=Pushcorp), 4 â€¦ 255 (process futurs)        
-    ENDRECORD
+        num processType;    !0 (=pas de process), 1 (=ACF), 2 (=AAK), 3 (=Pushcorp), 4 ? 255 (process futurs) 
     
     !Structure des Wobjs
     RECORD trajcenterWobj
@@ -33,7 +32,7 @@ MODULE TRAJCENTER_WebServices
         tooldata value;
     ENDRECORD
     
-    !Structure des paramÃ¨tres process
+    !Structure des paramètres process
     RECORD trajcenterProcessParameter
         string name;
         num value;   
@@ -50,12 +49,12 @@ MODULE TRAJCENTER_WebServices
 !°°°°°°°°°°°°°°°°
     !TABLEAUX DE STOCKAGE DES DONNEES VENANT DE PYTHON
     VAR trajcenterTraj Trajectoires{256};                   !Tableau de stockages des trajectoires dispos Python (nom, nb points, et type de process)
-    VAR trajcenterData TrajData{100000};                    !Tableau de stockage des donnÃ©es de la traj (valeurs des points, vts...)
-    VAR trajcenterProcessParameter processParams{256,10};   !Tableau de ParamÃ¨tres process (dimension 1 = index des paramÃ¨tres pour le point considÃ©rÃ©, dimension 2 = valeurs des paramÃ¨tres)
+    VAR trajcenterData TrajData{100000};                    !Tableau de stockage des données de la traj (valeurs des points, vts...)
+    VAR trajcenterProcessParameter processParams{256,10};   !Tableau de Paramètres process (dimension 1 = index des paramètres pour le point considéré, dimension 2 = valeurs des paramètres)
 
 
     !TABLEAUX DE STOCKAGE LOCAL DES WOBJDATA ET TOOLDATA
-    !(prÃ©voir une routine de maintenance pour les remplir/modifier Ã  partir de "tempTool" et "tempWobj")
+    !(prévoir une routine de maintenance pour les remplir/modifier à  partir de "tempTool" et "tempWobj")
     PERS trajcenterWobj TrajWobjs{2}:=[ ["nom1",[FALSE, TRUE, "",[[0, 0, 0],[1, 0, 0, 0]],[[0,0,0],[1,0,0,0]]]],
                                         ["nom2",[FALSE, TRUE, "",[[0, 0, 0],[1, 0, 0, 0]],[[0,0,0],[1,0,0,0]]]]];
     PERS trajcenterTool TrajTools{2}:=[ ["nom3",[TRUE,[[0,0,0],[1,0,0,0]],[0,[0,0,0],[1,0,0,0],0,0,0]]],
