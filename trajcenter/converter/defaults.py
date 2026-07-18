@@ -1,122 +1,163 @@
 #!/usr/bin/env python3
 # trajcenter/converter/defaults.py
-"""Default values applied during conversion to ``.trajcenter``.
+"""Optional conversion defaults for TrajCenter v2 converters.
 
 Author: Clement RACINET
 
-This module defines :class:`ConversionDefaults`, the Pydantic model that
-centralises values used to fill selected columns absent from a source
-file.
+This module defines :class:`ConversionDefaults`, the configuration model
+used by converters when the caller explicitly requests column
+autocompletion.
 
 TrajCenter v2 principle
 -----------------------
-Converters may safely autocomplete only structural robot-target columns:
+Converters should preserve source data by default. They must not invent
+robot/process values silently.
 
-- ``cf1``, ``cf4``, ``cf6``, ``cfx``
-- ``move_type`` when configured
+Autocompletion is therefore opt-in through
+:attr:`ConversionDefaults.autocomplete_columns`.
 
-Cell-specific process and send parameters must not be invented by
-default. Therefore ``tcp_speed``, ``zone_type``, ``tool_name`` and
-``wobj_name`` default to ``None`` and are added only when explicitly
-configured.
+For example, importing an APT file without defaults keeps only source
+geometry and source-derived information. If the user wants to re-export
+the trajectory to Excel and edit process values locally, selected columns
+can be added explicitly.
 
 ABB Route:
-    N/A — local conversion defaults, no RWS route.
+    N/A — local conversion configuration.
 
 ABB Constraints:
-    These defaults do not acquire mastership and do not write RAPID
-    variables. They also must not inject the RWS inactive-axis sentinel
-    ``9E+9``.
+    No ABB controller access. Values are not written to RAPID variables.
+    The inactive external axis sentinel ``9E+9`` must never be configured
+    or stored here.
 
 Example:
     ::
 
-        from trajcenter.converter.defaults import ConversionDefaults
-
-        defaults = ConversionDefaults()
-        assert defaults.move_type == "MoveL"
-        assert defaults.tcp_speed is None
-
-        defaults_cell = ConversionDefaults(
-            tcp_speed=500.0,
+        defaults = ConversionDefaults(
+            autocomplete_columns={"tcp_speed", "zone_type"},
+            tcp_speed=300.0,
             zone_type=10,
-            tool_name="Tool_formage",
-            wobj_name="Wobj_SerreFlan",
         )
 """
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+
+_AUTOCOMPLETE_ALLOWED_COLUMNS: frozenset[str] = frozenset(
+    {
+        "cf1",
+        "cf4",
+        "cf6",
+        "cfx",
+        "move_type",
+        "readconfs",
+        "tcp_speed",
+        "zone_type",
+        "tool_name",
+        "wobj_name",
+    }
+)
 
 
 class ConversionDefaults(BaseModel):
-    """Default values applied to absent columns during conversion.
+    """Optional default values for explicit converter autocompletion.
+
+    Autocompletion is disabled by default. A value is injected only when
+    its column name is present in :attr:`autocomplete_columns`.
 
     Attributes:
-        move_type: Default RAPID movement type. When ``None``,
-            ``move_type`` is not autocompleted.
-        cf_value: Integer value applied to the four confdata columns
-            ``cf1``, ``cf4``, ``cf6`` and ``cfx``.
-        readconfs: Optional ABB ``readconf`` flag. Added only when not
-            ``None``.
-        tcp_speed: Optional TCP speed value. Added only when not
-            ``None``.
-        zone_type: Optional zone type value. Added only when not
-            ``None``.
-        tool_name: Optional RAPID tool name. Added only when not
-            ``None``.
-        wobj_name: Optional RAPID work-object name. Added only when not
-            ``None``.
+        autocomplete_columns: Canonical column names to create when
+            absent from the converted source.
+        cf_value: Default value for ``cf1``, ``cf4``, ``cf6`` and ``cfx``.
+        move_type: Default movement type, for example ``"MoveL"``.
+        readconfs: Default RAPID ``ConfL``/configuration flag.
+        tcp_speed: Default numeric TCP speed.
+        zone_type: Default integer zone code. ``255`` represents ``fine``.
+        tool_name: Default inline RAPID tool name.
+        wobj_name: Default inline RAPID workobject name.
 
     ABB Route:
-        N/A — local conversion defaults.
+        N/A — local conversion configuration.
 
     ABB Constraints:
-        Defaults are metadata only. No RAPID write is performed.
-
-    Raises:
-        pydantic.ValidationError: If field types are invalid.
+        Defaults are local file values only. No controller access is made.
 
     Example:
         ::
 
-            d = ConversionDefaults(tcp_speed=500.0, zone_type=10)
-            assert d.tcp_speed == 500.0
+            defaults = ConversionDefaults(
+                autocomplete_columns={"zone_type"},
+                zone_type=10,
+            )
     """
 
-    move_type: str | None = Field(
-        "MoveL",
+    autocomplete_columns: set[str] = Field(
+        default_factory=set,
         description=(
-            "Default RAPID movement type. Use None to disable move_type autocompletion."
+            "Canonical columns to autocomplete when absent. Empty set means "
+            "no optional autocompletion."
         ),
     )
     cf_value: int = Field(
         0,
-        description=(
-            "Default confdata value applied to cf1, cf4, cf6 and cfx. "
-            "0 = unconstrained configuration."
-        ),
+        description="Default value for cf1, cf4, cf6 and cfx.",
+    )
+    move_type: str | None = Field(
+        None,
+        description="Default movement type, e.g. 'MoveL'.",
     )
     readconfs: bool | None = Field(
         None,
-        description="Optional readconf flag. Added only when explicitly configured.",
+        description="Default read/configuration flag.",
     )
     tcp_speed: float | None = Field(
         None,
-        description="Optional TCP speed. Added only when explicitly configured.",
+        description="Default numeric TCP speed.",
     )
     zone_type: int | None = Field(
         None,
-        description="Optional zone type. Added only when explicitly configured.",
+        description="Default zone code. Use 255 for fine.",
     )
     tool_name: str | None = Field(
         None,
-        description="Optional RAPID tool name. Added only when explicitly configured.",
+        description="Default inline RAPID tool name.",
     )
     wobj_name: str | None = Field(
         None,
-        description=(
-            "Optional RAPID work-object name. Added only when explicitly configured."
-        ),
+        description="Default inline RAPID workobject name.",
     )
+
+    @field_validator("autocomplete_columns")
+    @classmethod
+    def _validate_autocomplete_columns(cls, value: set[str]) -> set[str]:
+        """Validate explicitly requested autocompletion columns.
+
+        ABB Route:
+            N/A — local Pydantic validation.
+
+        ABB Constraints:
+            External axes and RWS-only sentinels cannot be requested here.
+
+        Args:
+            value: Requested column names.
+
+        Returns:
+            Validated column names.
+
+        Raises:
+            ValueError: If an unsupported column is requested.
+
+        Example:
+            ::
+
+                ConversionDefaults(autocomplete_columns={"zone_type"})
+        """
+        invalid = sorted(value - _AUTOCOMPLETE_ALLOWED_COLUMNS)
+        if invalid:
+            allowed = ", ".join(sorted(_AUTOCOMPLETE_ALLOWED_COLUMNS))
+            raise ValueError(
+                f"Unsupported autocomplete column(s): {invalid}. "
+                f"Allowed columns: {allowed}."
+            )
+        return value

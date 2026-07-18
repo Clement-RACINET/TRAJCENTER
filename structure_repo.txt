@@ -90,6 +90,7 @@ trajcenter
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports
+│   └── test_basic.xlsx
 ├── trajectory_files
 │   ├── 0.2.xlsx
 │   ├── 0.5.xlsx
@@ -108,6 +109,7 @@ trajcenter
 │   ├── mod_exemple.trajcenter
 │   ├── PrepaFlans_Pointage.trajcenter
 │   ├── PrepaFlans_Pointage_custom_defaults.trajcenter
+│   ├── PrepaFlans_Pointage_editable.trajcenter
 │   ├── PrepaFlans_Pointage_transformed.trajcenter
 │   ├── test_basic.trajcenter
 │   ├── trajectoires_mono.trajcenter
@@ -118,4 +120,4 @@ trajcenter
 ├── pixi.lock
 ├── pyproject.toml
 ├── README.md
-└── test.txt
+└── tests.txt

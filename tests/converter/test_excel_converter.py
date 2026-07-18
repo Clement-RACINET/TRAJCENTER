@@ -190,18 +190,28 @@ class TestExcelConverter:
     # --- Custom defaults ---
 
     def test_custom_default_move_type(self, xlsx_xyz_only: Path) -> None:
-        """The custom default move type is applied."""
-        traj = ExcelConverter(defaults=ConversionDefaults(move_type="MoveL")).convert(
-            xlsx_xyz_only
-        )
+        """The requested custom default move type is applied."""
+        traj = ExcelConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"move_type"},
+                move_type="MoveL",
+            )
+        ).convert(xlsx_xyz_only)
+
         assert traj.points["move_type"].iloc[0] == "MoveL"
+        assert "move_type" in traj.meta.autocompleted
 
     def test_custom_default_speed(self, xlsx_xyz_only: Path) -> None:
-        """The custom default speed is applied."""
-        traj = ExcelConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
-            xlsx_xyz_only
-        )
+        """The requested custom default speed is applied."""
+        traj = ExcelConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed"},
+                tcp_speed=250.0,
+            )
+        ).convert(xlsx_xyz_only)
+
         assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
+        assert "tcp_speed" in traj.meta.autocompleted
 
     # --- Roundtrip ---
 

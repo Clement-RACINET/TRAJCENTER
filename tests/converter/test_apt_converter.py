@@ -16,6 +16,7 @@ import pytest
 
 from trajcenter.converter.apt_converter import (
     AptConverter,
+    _normalise_tprint_tool_name,
     _parse_catia_matrix,
     _tool_vector_to_quaternion,
 )
@@ -190,6 +191,34 @@ class TestParseCatiaMatrix:
         assert _parse_catia_matrix([]) is None
 
 
+class TestNormaliseTprintToolName:
+    """Tests for CATIA APT TPRINT tool name normalisation."""
+
+    def test_strips_catian_t_prefix(self) -> None:
+        """A leading CATIA tool identifier is removed."""
+        assert _normalise_tprint_tool_name("T1 PointeurD10") == "PointeurD10"
+
+    def test_strips_multi_digit_t_prefix(self) -> None:
+        """A multi-digit CATIA tool identifier is removed."""
+        assert _normalise_tprint_tool_name("T12 ForetD6") == "ForetD6"
+
+    def test_keeps_plain_tool_name(self) -> None:
+        """A plain tool name is preserved."""
+        assert _normalise_tprint_tool_name("PointeurD10") == "PointeurD10"
+
+    def test_keeps_lonely_tool_identifier(self) -> None:
+        """A lonely T-number is preserved because no name follows it."""
+        assert _normalise_tprint_tool_name("T1") == "T1"
+
+    def test_keeps_identifier_without_whitespace(self) -> None:
+        """A compact name is preserved when no separator exists."""
+        assert _normalise_tprint_tool_name("T1_PointeurD10") == "T1_PointeurD10"
+
+    def test_strips_surrounding_whitespace(self) -> None:
+        """Surrounding whitespace is removed."""
+        assert _normalise_tprint_tool_name("  T1 PointeurD10  ") == "PointeurD10"
+
+
 class TestAptConverter:
     """Tests for the APT converter."""
 
@@ -272,10 +301,14 @@ class TestAptConverter:
         assert "tool_name" not in traj.points.columns
 
     def test_default_tool_name_used_when_no_tprint(self, apt_simple: Path) -> None:
-        """Explicit default tool_name is applied when TPRINT is absent."""
-        traj = AptConverter(defaults=ConversionDefaults(tool_name="myTool")).convert(
-            apt_simple
-        )
+        """Explicit requested default tool_name is applied when TPRINT is absent."""
+        traj = AptConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tool_name"},
+                tool_name="myTool",
+            )
+        ).convert(apt_simple)
+
         assert "tool_name" in traj.points.columns
         assert (traj.points["tool_name"] == "myTool").all()
         assert "tool_name" in traj.meta.autocompleted
@@ -284,14 +317,18 @@ class TestAptConverter:
         """TPRINT is stored as inline tool_name."""
         traj = AptConverter().convert(apt_with_tprint)
         assert "tool_name" in traj.points.columns
-        assert (traj.points["tool_name"] == "T1 PointeurD10").all()
+        assert (traj.points["tool_name"] == "PointeurD10").all()
         assert "tool_index" not in traj.points.columns
 
     def test_default_wobj_name(self, apt_simple: Path) -> None:
-        """Explicit default wobj_name is applied to APT trajectories."""
-        traj = AptConverter(defaults=ConversionDefaults(wobj_name="myWobj")).convert(
-            apt_simple
-        )
+        """Explicit requested default wobj_name is applied to APT trajectories."""
+        traj = AptConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"wobj_name"},
+                wobj_name="myWobj",
+            )
+        ).convert(apt_simple)
+
         assert "wobj_name" in traj.points.columns
         assert (traj.points["wobj_name"] == "myWobj").all()
         assert "wobj_name" in traj.meta.autocompleted
@@ -315,19 +352,26 @@ class TestAptConverter:
         assert "move_type" not in traj.meta.autocompleted
 
     def test_custom_default_tcp_speed(self, apt_simple: Path) -> None:
-        """Explicit tcp_speed default is applied."""
-        traj = AptConverter(defaults=ConversionDefaults(tcp_speed=200.0)).convert(
-            apt_simple
-        )
+        """Explicit requested tcp_speed default is applied."""
+        traj = AptConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed"},
+                tcp_speed=200.0,
+            )
+        ).convert(apt_simple)
 
         assert traj.points["tcp_speed"].tolist() == pytest.approx([200.0, 200.0])
         assert "tcp_speed" in traj.meta.autocompleted
 
     def test_custom_default_zone_type(self, apt_simple: Path) -> None:
-        """Explicit zone_type default is applied."""
-        traj = AptConverter(defaults=ConversionDefaults(zone_type=255)).convert(
-            apt_simple
-        )
+        """Explicit requested zone_type default is applied."""
+        traj = AptConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"zone_type"},
+                zone_type=255,
+            )
+        ).convert(apt_simple)
+
         assert (traj.points["zone_type"] == 255).all()
         assert "zone_type" in traj.meta.autocompleted
 
@@ -364,7 +408,7 @@ class TestAptConverter:
         """The tool name is extracted from TPRINT in the full file."""
         traj = AptConverter().convert(apt_full)
         assert "tool_name" in traj.points.columns
-        assert (traj.points["tool_name"] == "T1 PointeurD10").all()
+        assert (traj.points["tool_name"] == "PointeurD10").all()
 
     def test_full_apt_move_types(self, apt_full: Path) -> None:
         """Legacy RAPID/FEDRAT movement logic is preserved."""

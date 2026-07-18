@@ -4,8 +4,16 @@
 
 Author: Clement RACINET
 
-This script demonstrates APT source conversion and validates local
-``.trajcenter`` save/load roundtrip.
+This script demonstrates three APT conversion scenarios:
+
+1. Faithful APT source conversion.
+2. APT conversion with CATIA coordinate transform.
+3. APT conversion with explicit opt-in enrichment for local Excel editing.
+
+The third scenario shows how to intentionally add editable process/send
+columns such as ``tcp_speed``, ``zone_type`` and ``wobj_name``. These
+columns are not invented by default; they are added only because they are
+listed in ``ConversionDefaults.autocomplete_columns``.
 
 Run:
     python scripts/exemples/convert_apt_example.py
@@ -22,6 +30,7 @@ from _demo_utils import (
     preview_columns,
 )
 from trajcenter.converter.apt_converter import AptConverter
+from trajcenter.converter.defaults import ConversionDefaults
 from trajcenter.core.trajectory import Trajectory
 
 
@@ -36,7 +45,9 @@ def print_summary(title: str, traj: Trajectory) -> None:
         N/A — local conversion demonstration.
 
     ABB Constraints:
-        No ABB controller access.
+        No ABB controller access. No RAPID variable is read or written.
+        The RWS inactive-axis sentinel ``9E+9`` is not stored in
+        ``.trajcenter`` files.
 
     Args:
         title: Section title.
@@ -64,8 +75,11 @@ def print_summary(title: str, traj: Trajectory) -> None:
             "q3",
             "q4",
             "move_type",
-            "speed",
-            "zone",
+            "tool_name",
+            "wobj_name",
+            "tcp_speed",
+            "zone_type",
+            "readconfs",
             "cf1",
             "cf4",
             "cf6",
@@ -127,7 +141,8 @@ def main() -> None:
         N/A — local APT parsing demonstration.
 
     ABB Constraints:
-        No ABB controller access.
+        No ABB controller access. Enrichment values are local file values
+        only and are not written to a controller.
 
     Args:
         None.
@@ -151,7 +166,7 @@ def main() -> None:
         raise FileNotFoundError(f"APT source not found: {SOURCE}")
 
     standard = AptConverter().convert(SOURCE)
-    print_summary("Case 1 — APT standard conversion", standard)
+    print_summary("Case 1 — APT standard faithful conversion", standard)
     assert_valid_roundtrip(
         standard,
         OUTPUT_DIR / f"{standard.meta.name}.trajcenter",
@@ -177,6 +192,38 @@ def main() -> None:
         f"y={transformed_pt['y']:.3f}, "
         f"z={transformed_pt['z']:.3f}"
     )
+    print()
+
+    editable_defaults = ConversionDefaults(
+        autocomplete_columns={
+            "tcp_speed",
+            "zone_type",
+            "wobj_name",
+            "readconfs",
+        },
+        tcp_speed=300.0,
+        zone_type=10,
+        wobj_name="Wobj_Flan",
+        readconfs=False,
+    )
+
+    editable = AptConverter(defaults=editable_defaults).convert(SOURCE)
+    print_summary("Case 3 — APT with explicit editable enrichment", editable)
+    assert_valid_roundtrip(
+        editable,
+        OUTPUT_DIR / f"{editable.meta.name}_editable.trajcenter",
+    )
+
+    print("Enrichment explanation:")
+    print("  These columns were intentionally added for local editing:")
+    print("    - tcp_speed = 300.0")
+    print("    - zone_type = 10")
+    print("    - wobj_name = Wobj_Flan")
+    print("    - readconfs = False")
+    print()
+    print("  They appear in traj.meta.autocompleted because they were not")
+    print("  present in the APT source and were explicitly requested through")
+    print("  ConversionDefaults.autocomplete_columns.")
     print()
 
     print("OK — APT conversion scenarios validated.")

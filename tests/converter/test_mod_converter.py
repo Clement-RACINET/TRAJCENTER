@@ -110,10 +110,14 @@ class TestModConverter:
         assert "tcp_speed" not in traj.meta.autocompleted
 
     def test_variable_speed_custom_default(self, mod_simple: Path) -> None:
-        """Explicit tcp_speed default is applied for variable speed files."""
-        traj = ModConverter(defaults=ConversionDefaults(tcp_speed=200.0)).convert(
-            mod_simple
-        )
+        """Explicit requested tcp_speed default is applied for variable speed files."""
+        traj = ModConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed"},
+                tcp_speed=200.0,
+            )
+        ).convert(mod_simple)
+
         assert traj.points["tcp_speed"].iloc[0] == pytest.approx(200.0)
         assert "tcp_speed" in traj.meta.autocompleted
 
@@ -198,10 +202,14 @@ class TestModConverter:
         assert traj.points["zone_type"].iloc[0] == 50
 
     def test_zone_variable_custom_default(self, mod_zone_var: Path) -> None:
-        """Explicit zone_type default is applied for variable zone files."""
-        traj = ModConverter(defaults=ConversionDefaults(zone_type=10)).convert(
-            mod_zone_var
-        )
+        """Explicit requested zone_type default is applied for variable zone files."""
+        traj = ModConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"zone_type"},
+                zone_type=10,
+            )
+        ).convert(mod_zone_var)
+
         assert traj.points["zone_type"].iloc[0] == 10
         assert "zone_type" in traj.meta.autocompleted
 

@@ -197,19 +197,28 @@ class TestCsvConverter:
     # --- Custom defaults ---
 
     def test_custom_default_tcp_speed(self, csv_xyz_only: Path) -> None:
-        """The custom default tcp_speed is applied."""
-        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
-            csv_xyz_only
-        )
+        """The requested custom default tcp_speed is applied."""
+        traj = CsvConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed"},
+                tcp_speed=250.0,
+            )
+        ).convert(csv_xyz_only)
+
         assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
         assert "tcp_speed" in traj.meta.autocompleted
 
     def test_custom_default_move_type(self, csv_xyz_only: Path) -> None:
-        """The custom default move type is applied."""
-        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
-            csv_xyz_only
-        )
-        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
+        """The requested custom default move_type is applied."""
+        traj = CsvConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"move_type"},
+                move_type="MoveL",
+            )
+        ).convert(csv_xyz_only)
+
+        assert traj.points["move_type"].iloc[0] == "MoveL"
+        assert "move_type" in traj.meta.autocompleted
 
     # --- Full CSV ---
 

@@ -91,6 +91,11 @@ _RE_GOTO: re.Pattern[str] = re.compile(
 _RE_RAPID: re.Pattern[str] = re.compile(r"^\s*RAPID\s*$", re.IGNORECASE)
 _RE_FEDRAT: re.Pattern[str] = re.compile(r"^\s*FEDRAT\s*/", re.IGNORECASE)
 _RE_TPRINT: re.Pattern[str] = re.compile(r"^\s*TPRINT\s*/\s*(.+)", re.IGNORECASE)
+_RE_TPRINT_TOOL_PREFIX: re.Pattern[str] = re.compile(
+    r"^\s*T\d+\s+(?P<name>.+?)\s*$",
+    re.IGNORECASE,
+)
+
 
 _RE_CATIA_MATRIX_ROW: re.Pattern[str] = re.compile(
     r"^\s*\$\$\s+"
@@ -263,6 +268,43 @@ def _apply_transform(
         )
 
     return transformed
+
+
+def _normalise_tprint_tool_name(value: str) -> str:
+    """Normalise a CATIA APT TPRINT tool label.
+
+    CATIA APT commonly emits labels such as ``TPRINT/T1 PointeurD10``.
+    In this form, ``T1`` is a tool identifier prefix and the useful
+    TrajCenter/RAPID inline tool name is ``PointeurD10``.
+
+    The prefix is removed only when it matches ``T`` followed by digits
+    and at least one whitespace before a non-empty remaining name.
+
+    ABB Route:
+        N/A — local APT parsing.
+
+    ABB Constraints:
+        No ABB controller access.
+
+    Args:
+        value: Raw value extracted after ``TPRINT/``.
+
+    Returns:
+        Normalised tool name.
+
+    Raises:
+        ValueError: Never intentionally raised.
+
+    Example:
+        ::
+
+            name = _normalise_tprint_tool_name("T1 PointeurD10")
+    """
+    cleaned = value.strip()
+    match = _RE_TPRINT_TOOL_PREFIX.fullmatch(cleaned)
+    if match is None:
+        return cleaned
+    return match.group("name").strip()
 
 
 class AptConverter(BaseConverter):
@@ -444,7 +486,7 @@ class AptConverter(BaseConverter):
             if tool_name is None:
                 tprint_match = _RE_TPRINT.match(line)
                 if tprint_match:
-                    tool_name = tprint_match.group(1).strip()
+                    tool_name = _normalise_tprint_tool_name(tprint_match.group(1))
                     continue
 
             if _RE_RAPID.match(line):

@@ -154,6 +154,7 @@ class TestResolveColumns:
         assert "custom_col" not in traj.points.columns
         assert traj.meta.extra["unmapped_columns"] == "custom_col"
 
+
 # ---------------------------------------------------------------------------
 # Tests — shared _TabularConverter logic (via CsvConverter)
 # ---------------------------------------------------------------------------
@@ -202,9 +203,15 @@ class TestTabularConverterLogic:
         assert "tcp_speed" not in traj.meta.autocompleted
 
     def test_custom_default_tcp_speed(self, tmp_path: Path) -> None:
-        """An explicit default tcp_speed is applied during autocompletion."""
+        """An explicit requested default tcp_speed is applied during autocompletion."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
-        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(csv)
+        traj = CsvConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed"},
+                tcp_speed=250.0,
+            )
+        ).convert(csv)
+
         assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
         assert "tcp_speed" in traj.meta.autocompleted
 

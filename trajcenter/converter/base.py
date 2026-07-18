@@ -10,22 +10,16 @@ CSV, Excel or APT, into a
 
 TrajCenter v2 autocompletion principle
 --------------------------------------
-:meth:`BaseConverter._autocomplete` adds only converter-safe columns:
+Converters preserve the source by default. They do not invent RAPID,
+process or cell-specific values unless the caller explicitly requests
+column autocompletion through
+:attr:`trajcenter.converter.defaults.ConversionDefaults.autocomplete_columns`.
 
-- ``cf1``, ``cf4``, ``cf6``, ``cfx``
-- ``move_type`` when configured
+This enables two workflows:
 
-Optional send metadata columns are added only when explicitly configured
-in :class:`~trajcenter.converter.defaults.ConversionDefaults`:
-
-- ``readconfs``
-- ``tcp_speed``
-- ``zone_type``
-- ``tool_name``
-- ``wobj_name``
-
-The ``eax_*`` columns and ``process_param_index`` are never
-autocompleted here.
+1. **Faithful import**: keep only source-derived data.
+2. **Editable preparation**: explicitly add selected columns, export to
+   Excel, edit locally, then re-import.
 
 ABB Route:
     N/A — local file conversion, no RWS route.
@@ -40,13 +34,16 @@ Example:
 
         from pathlib import Path
         from trajcenter.converter.defaults import ConversionDefaults
-        from trajcenter.converter.mod_converter import ModConverter
+        from trajcenter.converter.apt_converter import AptConverter
 
-        converter = ModConverter(
-            defaults=ConversionDefaults(tcp_speed=500.0, zone_type=10)
+        converter = AptConverter(
+            defaults=ConversionDefaults(
+                autocomplete_columns={"tcp_speed", "zone_type"},
+                tcp_speed=300.0,
+                zone_type=10,
+            )
         )
-        traj = converter.convert(Path("trajectory_files/soudure.mod"))
-        traj.save("trajectory_store/soudure.trajcenter")
+        traj = converter.convert(Path("trajectory_files/path.aptsource"))
 """
 
 from __future__ import annotations
@@ -82,9 +79,8 @@ class BaseConverter(ABC):
         """Initialise the converter with optional default values.
 
         Args:
-            defaults: Autocompletion defaults. When ``None``,
-                :class:`~trajcenter.converter.defaults.ConversionDefaults`
-                is instantiated with its built-in values.
+            defaults: Optional autocompletion defaults. When ``None``,
+                autocompletion is disabled.
 
         ABB Route:
             N/A.
@@ -133,35 +129,34 @@ class BaseConverter(ABC):
         ...
 
     def _autocomplete(self, df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
-        """Fill missing converter-safe columns with default values.
+        """Fill explicitly requested missing columns with default values.
 
-        The method never overwrites existing columns.
+        The method never overwrites existing columns. No column is added
+        unless its name is present in
+        ``self.defaults.autocomplete_columns``.
 
-        Always autocompleted when absent:
+        Supported explicit autocompletion columns are:
 
         - ``cf1``
         - ``cf4``
         - ``cf6``
         - ``cfx``
+        - ``move_type``
+        - ``readconfs``
+        - ``tcp_speed``
+        - ``zone_type``
+        - ``tool_name``
+        - ``wobj_name``
 
-        Autocompleted only if configured and absent:
-
-        - ``move_type`` if ``defaults.move_type is not None``
-        - ``readconfs`` if ``defaults.readconfs is not None``
-        - ``tcp_speed`` if ``defaults.tcp_speed is not None``
-        - ``zone_type`` if ``defaults.zone_type is not None``
-        - ``tool_name`` if ``defaults.tool_name is not None``
-        - ``wobj_name`` if ``defaults.wobj_name is not None``
-
-        ``process_param_index`` is never added here because it is valid
-        only when ``TrajectoryMeta.process.process_type > 0``.
+        ``eax_*`` columns and ``process_param_index`` are never added
+        here.
 
         ABB Route:
             N/A — local DataFrame transformation.
 
         ABB Constraints:
             The method must not infer cell-specific values unless they
-            are explicitly provided in ``defaults``.
+            are explicitly requested.
 
         Args:
             df: Partially filled point DataFrame.
@@ -170,7 +165,7 @@ class BaseConverter(ABC):
             Tuple ``(completed_df, autocompleted_columns)``.
 
         Raises:
-            ValueError: If pandas cannot create one of the typed columns.
+            ValueError: If a requested column has no configured value.
 
         Example:
             ::
@@ -179,10 +174,11 @@ class BaseConverter(ABC):
         """
         out = df.copy()
         autocompleted: list[str] = []
+        requested = self.defaults.autocomplete_columns
         row_count = len(out)
 
         for col in sorted(CONFDATA_COLUMNS):
-            if col in out.columns:
+            if col not in requested or col in out.columns:
                 continue
             out[col] = pd.Series(
                 [self.defaults.cf_value] * row_count,
@@ -190,24 +186,23 @@ class BaseConverter(ABC):
             )
             autocompleted.append(col)
 
-        optional_values: dict[str, str | int | float | bool] = {}
-
-        if self.defaults.move_type is not None:
-            optional_values["move_type"] = self.defaults.move_type
-        if self.defaults.readconfs is not None:
-            optional_values["readconfs"] = self.defaults.readconfs
-        if self.defaults.tcp_speed is not None:
-            optional_values["tcp_speed"] = self.defaults.tcp_speed
-        if self.defaults.zone_type is not None:
-            optional_values["zone_type"] = self.defaults.zone_type
-        if self.defaults.tool_name is not None:
-            optional_values["tool_name"] = self.defaults.tool_name
-        if self.defaults.wobj_name is not None:
-            optional_values["wobj_name"] = self.defaults.wobj_name
+        optional_values: dict[str, str | int | float | bool | None] = {
+            "move_type": self.defaults.move_type,
+            "readconfs": self.defaults.readconfs,
+            "tcp_speed": self.defaults.tcp_speed,
+            "zone_type": self.defaults.zone_type,
+            "tool_name": self.defaults.tool_name,
+            "wobj_name": self.defaults.wobj_name,
+        }
 
         for col, value in optional_values.items():
-            if col in out.columns:
+            if col not in requested or col in out.columns:
                 continue
+            if value is None:
+                raise ValueError(
+                    f"Column {col!r} was requested for autocompletion but "
+                    "no default value was configured."
+                )
             out[col] = value
             autocompleted.append(col)
 
