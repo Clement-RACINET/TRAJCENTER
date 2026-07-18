@@ -4,7 +4,7 @@ trajcenter
 │   ├── Image1.png
 │   ├── Image2.png
 │   └── Image3.png
-├── RAPID
+├── rapid
 │   ├── JS_TRAJCENTER_Webservices.modx
 │   ├── TRAJCENTER_CellConfig.mod
 │   ├── TRAJCENTER_ProcessConfig.mod
@@ -84,8 +84,6 @@ trajcenter
 │   │   ├── _utils.py
 │   │   ├── reader.py
 │   │   └── writer.py
-│   ├── server
-│   │   └── __init__.py
 │   └── __init__.py
 ├── trajectory_exports
 │   └── test_basic.xlsx
