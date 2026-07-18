@@ -438,7 +438,7 @@ class _TabularConverter(BaseConverter):
         if "name" in meta_overrides and meta_overrides["name"]:
             name = meta_overrides["name"]
 
-        extra: dict[str, object] = {
+        extra: dict[str, str | int | float | bool | None] = {
             k: v
             for k, v in meta_overrides.items()
             if k not in _META_APPLICABLE_FIELDS and k not in _META_IGNORED_FIELDS

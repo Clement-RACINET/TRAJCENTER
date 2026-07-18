@@ -82,6 +82,7 @@ import zipfile
 from datetime import datetime, timezone
 from enum import StrEnum
 from pathlib import Path
+from typing import cast
 
 from typing_extensions import override
 
@@ -206,6 +207,76 @@ _PA_TYPE_MAP: dict[str, pa.DataType] = {
 _PROCESS_PARAM_INDEX_COLUMN = "process_param_index"
 _REQUIRED_ZIP_ENTRIES: frozenset[str] = frozenset({"meta.json", "points.parquet"})
 _PROCESS_PARAMS_ENTRY = "process_params.parquet"
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+
+def _write_parquet_table(
+    table: pa.Table,
+    sink: io.BytesIO,
+    *,
+    compression: str,
+) -> None:
+    """Write a PyArrow table to an in-memory Parquet buffer.
+
+    ABB Route:
+        N/A — local ``.trajcenter`` archive serialization.
+
+    ABB Constraints:
+        The RWS inactive-axis sentinel ``9E+9`` is never written to the
+        ``.trajcenter`` archive. It is injected only during RWS transfer.
+
+    Args:
+        table: PyArrow table to serialize.
+        sink: In-memory binary buffer receiving Parquet bytes.
+        compression: Parquet compression codec name.
+
+    Returns:
+        None.
+
+    Raises:
+        OSError: If PyArrow cannot write the table to the buffer.
+        ValueError: If the table schema is invalid for Parquet.
+
+    Example:
+        ::
+
+            buffer = io.BytesIO()
+            _write_parquet_table(table, buffer, compression="zstd")
+    """
+    pq.write_table(table, sink, compression=compression)  # type: ignore[no-untyped-call]
+
+
+def _read_parquet_table(source: io.BytesIO) -> pd.DataFrame:
+    """Read a PyArrow Parquet buffer as a pandas DataFrame.
+
+    ABB Route:
+        N/A — local ``.trajcenter`` archive deserialization.
+
+    ABB Constraints:
+        The ``.trajcenter`` archive must not contain ``9E+9`` sentinel
+        values for inactive external axes.
+
+    Args:
+        source: In-memory binary buffer containing Parquet bytes.
+
+    Returns:
+        Deserialized pandas DataFrame.
+
+    Raises:
+        OSError: If the Parquet payload cannot be read.
+        ValueError: If the Parquet payload is invalid.
+
+    Example:
+        ::
+
+            points = _read_parquet_table(buffer)
+    """
+    table = pq.read_table(source)  # type: ignore[no-untyped-call]
+    return cast(pd.DataFrame, table.to_pandas())
 
 
 # ---------------------------------------------------------------------------
@@ -739,13 +810,13 @@ class Trajectory:
             zf.writestr("meta.json", self.meta.model_dump_json(indent=2))
 
             point_buf = io.BytesIO()
-            pq.write_table(point_table, point_buf, compression="zstd")
+            _write_parquet_table(point_table, point_buf, compression="zstd")
             zf.writestr("points.parquet", point_buf.getvalue())
 
             if self.process_params is not None:
                 process_table = self._dataframe_to_table(self.process_params)
                 process_buf = io.BytesIO()
-                pq.write_table(process_table, process_buf, compression="zstd")
+                _write_parquet_table(process_table, process_buf, compression="zstd")
                 zf.writestr(_PROCESS_PARAMS_ENTRY, process_buf.getvalue())
 
         return dest.resolve()
@@ -792,12 +863,12 @@ class Trajectory:
             meta = TrajectoryMeta.model_validate_json(zf.read("meta.json"))
 
             point_buf = io.BytesIO(zf.read("points.parquet"))
-            points = pq.read_table(point_buf).to_pandas()
+            points = _read_parquet_table(point_buf)
 
             process_params: pd.DataFrame | None = None
             if _PROCESS_PARAMS_ENTRY in names:
                 process_buf = io.BytesIO(zf.read(_PROCESS_PARAMS_ENTRY))
-                process_params = pq.read_table(process_buf).to_pandas()
+                process_params = _read_parquet_table(process_buf)
 
         return cls(meta=meta, points=points, process_params=process_params)
 

@@ -2612,7 +2612,7 @@ packages:
 - pypi: ./
   name: trajcenter
   version: 2.1.0
-  sha256: 99012f64195b11df2e2ac3471c82f0e4999df5afe4c2ffd80d11e082fd5ed346
+  sha256: 4de0c08fb54ba7d91bc8f59c62973d3caa3a87a971fddb30c6817e6d6fabe204
   requires_dist:
   - httpx>=0.28.1,<0.29
   - pandas>=3.0.3,<4
