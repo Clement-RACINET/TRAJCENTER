@@ -119,5 +119,4 @@ trajcenter
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pyproject.toml
-├── README.md
-└── tests.txt
+└── README.md
