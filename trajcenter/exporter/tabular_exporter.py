@@ -4,24 +4,36 @@
 
 Author: Clement RACINET
 
-This module factors out the construction of the two tabular outputs used
-by CSV and Excel exporters:
+This module factors out the construction of tabular outputs used by CSV
+and Excel exporters:
 
 - trajectory points;
-- optional key/value metadata.
+- optional key/value metadata;
+- optional process parameter table.
 
 TrajCenter v2 export policy
 ---------------------------
 The exporter writes canonical v2 columns. It does not reintroduce v1
-tables or index-based references.
+tables or index-based tool/work-object references.
 
-Exported process columns keep their internal representation:
+Exported send columns keep their internal representation:
 
 - ``tcp_speed`` is numeric, without a RAPID ``v`` prefix.
 - ``zone_type`` is numeric. ``255`` represents ``fine``.
 - ``tool_name`` and ``wobj_name`` are inline names.
 - ``tool_index`` and ``wobj_index`` are never exported by default.
 - ``speed`` and ``zone`` legacy aliases are never created.
+
+Process data
+------------
+When a trajectory has process parameters, tabular exporters write:
+
+- ``process_param_index`` in the trajectory point table;
+- ``process_type`` and ``process_param_names`` in the metadata table;
+- a process parameter table through the concrete exporter.
+
+Excel writes this table as a ``process_params`` sheet.
+CSV writes it as ``{stem}_process_params.csv``.
 
 Column selection
 ----------------
@@ -43,6 +55,16 @@ ABB Route:
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
+    The RWS inactive-axis sentinel ``9E+9`` must not be injected by
+    exporters.
+
+Example:
+    ::
+
+        from pathlib import Path
+        from trajcenter.exporter.excel_exporter import ExcelExporter
+
+        ExcelExporter().export(traj, Path("trajectory_exports"))
 """
 
 from __future__ import annotations
@@ -100,6 +122,7 @@ _OPTIONAL_TRAJ_COLS: tuple[str, ...] = (
     "tool_name",
     "wobj_name",
     "readconfs",
+    "process_param_index",
     "eax_a",
     "eax_b",
     "eax_c",
@@ -172,8 +195,9 @@ class _TabularExporter(BaseExporter):
         dest_dir: Path,
         traj_df: pd.DataFrame,
         meta_df: pd.DataFrame | None,
+        process_params_df: pd.DataFrame | None,
     ) -> Path:
-        """Write the output file or files from prepared DataFrames.
+        """Write output file or files from prepared DataFrames.
 
         ABB Route:
             N/A — local file write.
@@ -187,6 +211,8 @@ class _TabularExporter(BaseExporter):
             traj_df: Points DataFrame.
             meta_df: Key/value metadata DataFrame, or ``None`` when
                 ``options.include_meta`` is ``False``.
+            process_params_df: Process parameter DataFrame, or ``None``
+                when the trajectory has no process parameter table.
 
         Returns:
             Path of the main produced file.
@@ -197,7 +223,13 @@ class _TabularExporter(BaseExporter):
         Example:
             ::
 
-                path = exporter._write_sheets("traj", dest, traj_df, meta_df)
+                path = exporter._write_sheets(
+                    "traj",
+                    dest,
+                    traj_df,
+                    meta_df,
+                    process_params_df,
+                )
         """
         ...
 
@@ -231,12 +263,18 @@ class _TabularExporter(BaseExporter):
 
         traj_df = self._build_traj_df(trajectory)
         meta_df = self._build_meta_df(trajectory) if self.options.include_meta else None
+        process_params_df = (
+            trajectory.process_params.copy()
+            if trajectory.process_params is not None
+            else None
+        )
 
         return self._write_sheets(
             stem=stem,
             dest_dir=dest_dir,
             traj_df=traj_df,
             meta_df=meta_df,
+            process_params_df=process_params_df,
         )
 
     def _build_traj_df(self, trajectory: Trajectory) -> pd.DataFrame:
@@ -423,6 +461,21 @@ class _TabularExporter(BaseExporter):
             if value is None:
                 continue
             rows.append({"key": key, "value": str(value)})
+
+        rows.append(
+            {
+                "key": "process_type",
+                "value": str(meta.process.process_type),
+            }
+        )
+
+        if meta.process.process_param_names:
+            rows.append(
+                {
+                    "key": "process_param_names",
+                    "value": ";".join(meta.process.process_param_names),
+                }
+            )
 
         if meta.extra:
             for key, value in meta.extra.items():

@@ -23,8 +23,6 @@ from .core import (
     CONVERTER_COLUMNS,
     EXTERNAL_AXIS_COLUMNS,
     ExternalAxisConfig,
-    MAX_PROCESS_PARAM_PER_SET,
-    MAX_PROCESS_PARAM_SET_COUNT,
     MoveType,
     OPTIONAL_COLUMNS,
     REQUIRED_COLUMNS,

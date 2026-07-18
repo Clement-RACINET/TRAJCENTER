@@ -15,10 +15,11 @@ TrajCenter v2 import policy
 ---------------------------
 The internal v2 schema stores machine-oriented canonical columns:
 
-- ``tcp_speed`` as numeric TCP speed
-- ``zone_type`` as integer zone code
-- ``tool_name`` as inline RAPID tool name
-- ``wobj_name`` as inline RAPID work-object name
+- ``tcp_speed`` as numeric TCP speed.
+- ``zone_type`` as integer zone code.
+- ``tool_name`` as inline RAPID tool name.
+- ``wobj_name`` as inline RAPID work-object name.
+- ``process_param_index`` as point-to-process-parameter reference.
 
 For migration convenience, CSV and Excel imports still accept RAPID-like
 human literals:
@@ -26,6 +27,21 @@ human literals:
 - ``v500`` -> ``tcp_speed = 500.0``
 - ``z10`` -> ``zone_type = 10``
 - ``fine`` -> ``zone_type = 255``
+
+Process import policy
+---------------------
+A tabular source may define process metadata through a ``meta`` sheet or
+sidecar with these keys:
+
+- ``process_type``: integer process identifier.
+- ``process_param_names``: parameter names separated by ``;``, ``,``, or
+  ``|``.
+
+When ``process_type > 0``, the core trajectory model requires:
+
+- ``process_param_names`` to be non-empty.
+- ``process_param_index`` in the trajectory point table.
+- a ``process_params`` table/sheet with one row per parameter set.
 
 Unmapped columns
 ----------------
@@ -36,12 +52,13 @@ recorded in ``Trajectory.meta.extra["unmapped_columns"]`` for audit.
 This strict policy avoids exposing columns that TrajCenter does not
 understand and that the robot would not recognise.
 
-
 Reserved Excel sheets
 ---------------------
 The legacy ``tools`` and ``wobjs`` sheets are ignored by v2. Tool and
 work-object references are now carried directly by the point columns
 ``tool_name`` and ``wobj_name``.
+
+The ``process_params`` sheet is reserved for process parameter sets.
 
 ABB Route:
     N/A — local file conversion, no RWS route.
@@ -75,12 +92,23 @@ from trajcenter.converter.base import BaseConverter
 from trajcenter.converter.column_mapper import resolve_columns
 from trajcenter.converter.defaults import ConversionDefaults
 from trajcenter.core.messages import msg
-from trajcenter.core.trajectory import SourceFormat, Trajectory, TrajectoryMeta
+from trajcenter.core.trajectory import (
+    SourceFormat,
+    Trajectory,
+    TrajectoryMeta,
+    TrajectoryProcess,
+)
 
 _SHEET_TOOLS: frozenset[str] = frozenset({"tools", "tool"})
 _SHEET_WOBJS: frozenset[str] = frozenset({"wobjs", "wobj"})
 _SHEET_META: frozenset[str] = frozenset({"meta", "metadata"})
-_SHEET_RESERVED: frozenset[str] = _SHEET_TOOLS | _SHEET_WOBJS | _SHEET_META
+_SHEET_PROCESS_PARAMS: frozenset[str] = frozenset(
+    {"process_params", "processparams", "process"}
+)
+
+_SHEET_RESERVED: frozenset[str] = (
+    _SHEET_TOOLS | _SHEET_WOBJS | _SHEET_META | _SHEET_PROCESS_PARAMS
+)
 
 _REQUIRED_COLS: frozenset[str] = frozenset({"x", "y", "z"})
 
@@ -101,7 +129,14 @@ _SHEET_DEFAULT_NAMES: frozenset[str] = frozenset(
     }
 )
 
-_META_APPLICABLE_FIELDS: frozenset[str] = frozenset({"name", "robot_model"})
+_META_APPLICABLE_FIELDS: frozenset[str] = frozenset(
+    {
+        "name",
+        "robot_model",
+        "process_type",
+        "process_param_names",
+    }
+)
 
 _META_IGNORED_FIELDS: frozenset[str] = frozenset(
     {
@@ -116,6 +151,7 @@ _META_IGNORED_FIELDS: frozenset[str] = frozenset(
 
 _SPEED_LITERAL_RE = re.compile(r"^v(?P<value>\d+(?:[.,]\d+)?)$", re.IGNORECASE)
 _ZONE_LITERAL_RE = re.compile(r"^z(?P<value>-?\d+)$", re.IGNORECASE)
+_PROCESS_PARAM_NAMES_SEPARATOR_RE = re.compile(r"[;,|]")
 _FINE_ZONE_CODE = 255
 
 
@@ -250,6 +286,7 @@ class _TabularConverter(BaseConverter):
 
         sheets = self._read_sheets(source)
         meta_overrides = self._extract_meta(sheets)
+        process_params = self._extract_process_params(sheets)
         traj_sheets = {
             name: df
             for name, df in sheets.items()
@@ -271,6 +308,7 @@ class _TabularConverter(BaseConverter):
             sheet_name=sheet_name,
             source=source,
             meta_overrides=meta_overrides,
+            process_params=process_params,
         )
 
     def convert_all(self, source: Path) -> list[Trajectory]:
@@ -302,6 +340,7 @@ class _TabularConverter(BaseConverter):
 
         sheets = self._read_sheets(source)
         meta_overrides = self._extract_meta(sheets)
+        process_params = self._extract_process_params(sheets)
 
         return [
             self._build_trajectory(
@@ -309,6 +348,7 @@ class _TabularConverter(BaseConverter):
                 sheet_name=sheet_name,
                 source=source,
                 meta_overrides=meta_overrides,
+                process_params=process_params,
             )
             for sheet_name, df in sheets.items()
             if sheet_name.lower() not in _SHEET_RESERVED
@@ -320,6 +360,7 @@ class _TabularConverter(BaseConverter):
         sheet_name: str,
         source: Path,
         meta_overrides: dict[str, str],
+        process_params: pd.DataFrame | None,
     ) -> Trajectory:
         """Build one trajectory from one tabular DataFrame.
 
@@ -340,18 +381,26 @@ class _TabularConverter(BaseConverter):
             sheet_name: Sheet name used for naming and diagnostics.
             source: Source file path.
             meta_overrides: Metadata extracted from a ``meta`` sheet.
+            process_params: Optional process parameter table.
 
         Returns:
             Converted trajectory.
 
         Raises:
-            ValueError: If mandatory XYZ columns are missing or if
-                RAPID literals cannot be normalised.
+            ValueError: If mandatory XYZ columns are missing, if RAPID
+                literals cannot be normalised, or if process metadata is
+                inconsistent with point/process parameter tables.
 
         Example:
             ::
 
-                traj = converter._build_trajectory(df, "traj", source, {})
+                traj = converter._build_trajectory(
+                    df,
+                    "traj",
+                    source,
+                    {},
+                    None,
+                )
         """
         points = df.dropna(how="all").reset_index(drop=True)
         points, unknown = resolve_columns(points)
@@ -386,7 +435,7 @@ class _TabularConverter(BaseConverter):
         stem = source.stem
         sheet_lower = sheet_name.lower()
         name = stem if sheet_lower in _SHEET_DEFAULT_NAMES else f"{stem}_{sheet_name}"
-        if "name" in meta_overrides:
+        if "name" in meta_overrides and meta_overrides["name"]:
             name = meta_overrides["name"]
 
         extra: dict[str, object] = {
@@ -397,15 +446,23 @@ class _TabularConverter(BaseConverter):
         if unknown:
             extra["unmapped_columns"] = ",".join(sorted(unknown))
 
+        process = TrajectoryProcess(
+            process_type=self._parse_process_type(meta_overrides.get("process_type")),
+            process_param_names=self._parse_process_param_names(
+                meta_overrides.get("process_param_names")
+            ),
+        )
+
         meta = TrajectoryMeta(
             name=name,
             source_format=self._source_format,
             source_file=source.name,
-            robot_model=meta_overrides.get("robot_model"),
+            robot_model=meta_overrides.get("robot_model") or None,
             autocompleted=autocompleted,
+            process=process,
             extra=extra,
         )
-        return Trajectory(meta=meta, points=points)
+        return Trajectory(meta=meta, points=points, process_params=process_params)
 
     @classmethod
     def _normalise_tabular_values(cls, df: pd.DataFrame) -> pd.DataFrame:
@@ -421,11 +478,12 @@ class _TabularConverter(BaseConverter):
             df: DataFrame with canonical column names.
 
         Returns:
-            DataFrame with normalised ``tcp_speed`` and ``zone_type``
-            columns when present.
+            DataFrame with normalised ``tcp_speed``, ``zone_type`` and
+            ``readconfs`` columns when present.
 
         Raises:
-            ValueError: If a non-empty speed or zone literal is invalid.
+            ValueError: If a non-empty speed, zone or boolean literal is
+                invalid.
 
         Example:
             ::
@@ -631,6 +689,102 @@ class _TabularConverter(BaseConverter):
 
         raise ValueError(f"Invalid readconfs value {value!r}.")
 
+    @classmethod
+    def _parse_process_type(cls, value: str | None) -> int:
+        """Parse process type metadata.
+
+        ABB Route:
+            N/A — local metadata parsing.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            value: Raw metadata value.
+
+        Returns:
+            Integer process type. Empty value returns ``0``.
+
+        Raises:
+            ValueError: If the value is not an integer.
+
+        Example:
+            ::
+
+                assert _TabularConverter._parse_process_type("1") == 1
+        """
+        if value is None or not value.strip():
+            return 0
+
+        try:
+            return int(value.strip())
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid process_type value {value!r}. Expected integer."
+            ) from exc
+
+    @classmethod
+    def _parse_process_param_names(cls, value: str | None) -> list[str]:
+        """Parse process parameter names metadata.
+
+        ABB Route:
+            N/A — local metadata parsing.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            value: Raw metadata value. Names may be separated by ``;``,
+                ``,`` or ``|``.
+
+        Returns:
+            Ordered list of process parameter names.
+
+        Raises:
+            ValueError: Validation is performed by ``TrajectoryProcess``.
+
+        Example:
+            ::
+
+                names = _TabularConverter._parse_process_param_names("force;speed")
+        """
+        if value is None or not value.strip():
+            return []
+
+        return [
+            name.strip()
+            for name in _PROCESS_PARAM_NAMES_SEPARATOR_RE.split(value)
+            if name.strip()
+        ]
+
+    @staticmethod
+    def _clean_meta_value(value: object) -> str:
+        """Convert a metadata cell to a clean string.
+
+        ABB Route:
+            N/A — local metadata parsing.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            value: Raw metadata cell value.
+
+        Returns:
+            Clean metadata string, or an empty string for null values.
+
+        Raises:
+            TypeError: If pandas scalar inspection fails.
+
+        Example:
+            ::
+
+                text = _TabularConverter._clean_meta_value(value)
+        """
+        if _TabularConverter._is_empty_value(value):
+            return ""
+        return str(value).strip()
+
     @staticmethod
     def _extract_meta(sheets: dict[str, pd.DataFrame]) -> dict[str, str]:
         """Extract key/value metadata from a meta sheet.
@@ -659,11 +813,69 @@ class _TabularConverter(BaseConverter):
         for sheet_name, df in sheets.items():
             if sheet_name.lower() in _SHEET_META:
                 if "key" in df.columns and "value" in df.columns:
-                    return dict(
-                        zip(
-                            df["key"].astype(str),
-                            df["value"].astype(str),
+                    return {
+                        str(key).strip(): _TabularConverter._clean_meta_value(value)
+                        for key, value in zip(
+                            df["key"],
+                            df["value"],
                             strict=False,
                         )
-                    )
+                        if not _TabularConverter._is_empty_value(key)
+                    }
         return {}
+
+    @staticmethod
+    def _extract_process_params(
+        sheets: dict[str, pd.DataFrame],
+    ) -> pd.DataFrame | None:
+        """Extract optional process parameter table.
+
+        Only the ``process_param_index`` column is canonicalised through
+        the normal column resolver. Parameter columns such as ``force`` or
+        ``pressure`` are intentionally kept unchanged because they are
+        user/process-specific and validated later against
+        ``meta.process.process_param_names``.
+
+        ABB Route:
+            N/A — local process parameter extraction.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            sheets: All read sheets.
+
+        Returns:
+            Process parameter DataFrame, or ``None`` when absent.
+
+        Raises:
+            ValueError: If multiple process parameter sheets are found.
+
+        Example:
+            ::
+
+                params = _TabularConverter._extract_process_params(sheets)
+        """
+        matches = [
+            df
+            for sheet_name, df in sheets.items()
+            if sheet_name.lower() in _SHEET_PROCESS_PARAMS
+        ]
+
+        if len(matches) > 1:
+            raise ValueError("Multiple process parameter sheets found.")
+
+        if not matches:
+            return None
+
+        out = matches[0].dropna(how="all").reset_index(drop=True)
+        out, unknown = resolve_columns(out)
+
+        if unknown:
+            warnings.warn(
+                msg("UNKNOWN_COLUMNS", cols=unknown),
+                UserWarning,
+                stacklevel=3,
+            )
+
+        return out

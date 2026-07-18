@@ -1,0 +1,1081 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\cleme\Documents\GitLab_ENSAM\trajcenter
+configfile: pyproject.toml
+plugins: anyio-4.14.2, asyncio-1.4.0, cov-7.1.0, respx-0.23.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 78 items
+
+tests\core\test_trajectory_edge_cases.py FFFFF..........F                [ 20%]
+tests\converter\test_tabular_converter_edge_cases.py F.................. [ 44%]
+...........................................                              [100%]
+
+================================== FAILURES ===================================
+_______ TestTrajectoryPointCastErrors.test_invalid_float_column_raises ________
+
+self = NumpyBlock: 1 dtype: float64, indexer = (0,), value = 'not-a-float'
+
+    def setitem(self, indexer, value) -> Block:
+        """
+        Attempt self.values[indexer] = value, possibly creating a new array.
+    
+        Parameters
+        ----------
+        indexer : tuple, list-like, array-like, slice, int
+            The subset of self.values to set
+        value : object
+            The value being set
+    
+        Returns
+        -------
+        Block
+    
+        Notes
+        -----
+        `indexer` is a direct slice/positional indexer. `value` must
+        be a compatible shape.
+        """
+    
+        value = self._standardize_fill_value(value)
+    
+        values = cast(np.ndarray, self.values)
+        if self.ndim == 2:
+            values = values.T
+    
+        # length checking
+        check_setitem_lengths(indexer, value, values)
+    
+        if self.dtype != _dtype_obj:
+            # GH48933: extract_array would convert a pd.Series value to np.ndarray
+            value = extract_array(value, extract_numpy=True)
+        try:
+>           casted = np_can_hold_element(values.dtype, value)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:1115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dtype = dtype('float64'), element = 'not-a-float'
+
+    def np_can_hold_element(dtype: np.dtype, element: Any) -> Any:
+        """
+        Raise if we cannot losslessly set this element into an ndarray with this dtype.
+    
+        Specifically about places where we disagree with numpy.  i.e. there are
+        cases where numpy will raise in doing the setitem that we do not check
+        for here, e.g. setting str "X" into a numeric ndarray.
+    
+        Returns
+        -------
+        Any
+            The element, potentially cast to the dtype.
+    
+        Raises
+        ------
+        ValueError : If we cannot losslessly store this element with this dtype.
+        """
+        if dtype == _dtype_obj:
+            return element
+    
+        tipo = _maybe_infer_dtype_type(element)
+    
+        if dtype.kind in "iu":
+            if isinstance(element, range):
+                if _dtype_can_hold_range(element, dtype):
+                    return element
+                raise LossySetitemError
+    
+            if is_integer(element) or (is_float(element) and element.is_integer()):
+                # e.g. test_setitem_series_int8 if we have a python int 1
+                #  tipo may be np.int32, despite the fact that it will fit
+                #  in smaller int dtypes.
+                info = np.iinfo(dtype)
+                if info.min <= element <= info.max:
+                    return dtype.type(element)
+                raise LossySetitemError
+    
+            if tipo is not None:
+                if tipo.kind not in "iu":
+                    if isinstance(element, np.ndarray) and element.dtype.kind == "f":
+                        # If all can be losslessly cast to integers, then we can hold them
+                        with np.errstate(invalid="ignore"):
+                            # We check afterwards if cast was losslessly, so no need to show
+                            # the warning
+                            casted = element.astype(dtype)
+                        comp = casted == element
+                        if comp.all():
+                            # Return the casted values bc they can be passed to
+                            #  np.putmask, whereas the raw values cannot.
+                            #  see TestSetitemFloatNDarrayIntoIntegerSeries
+                            return casted
+                        raise LossySetitemError
+    
+                    elif isinstance(element, ABCExtensionArray) and isinstance(
+                        element.dtype, CategoricalDtype
+                    ):
+                        # GH#52927 setting Categorical value into non-EA frame
+                        # TODO: general-case for EAs?
+                        try:
+                            casted = element.astype(dtype)
+                        except (ValueError, TypeError) as err:
+                            raise LossySetitemError from err
+                        # Check for cases of either
+                        #  a) lossy overflow/rounding or
+                        #  b) semantic changes like dt64->int64
+                        comp = casted == element
+                        if not comp.all():
+                            raise LossySetitemError
+                        return casted
+    
+                    # Anything other than integer we cannot hold
+                    raise LossySetitemError
+                if (
+                    dtype.kind == "u"
+                    and isinstance(element, np.ndarray)
+                    and element.dtype.kind == "i"
+                ):
+                    # see test_where_uint64
+                    casted = element.astype(dtype)
+                    if (casted == element).all():
+                        # TODO: faster to check (element >=0).all()?  potential
+                        #  itemsize issues there?
+                        return casted
+                    raise LossySetitemError
+                if dtype.itemsize < tipo.itemsize:
+                    raise LossySetitemError
+                if not isinstance(tipo, np.dtype):
+                    # i.e. nullable IntegerDtype; we can put this into an ndarray
+                    #  losslessly iff it has no NAs
+                    arr = element._values if isinstance(element, ABCSeries) else element
+                    if arr._hasna:
+                        raise LossySetitemError
+                    return element
+    
+                return element
+    
+            raise LossySetitemError
+    
+        if dtype.kind == "f":
+            if lib.is_integer(element) or lib.is_float(element):
+                casted = dtype.type(element)
+                if np.isnan(casted) or casted == element:
+                    return casted
+                # otherwise e.g. overflow see TestCoercionFloat32
+                raise LossySetitemError
+    
+            if tipo is not None:
+                # TODO: itemsize check?
+    
+                if isinstance(tipo, CategoricalDtype):
+                    # GH#56376
+                    if tipo.categories.dtype.kind not in "iuf":
+                        # Anything other than float/integer we cannot hold
+                        raise LossySetitemError
+                    casted = np.asarray(element, dtype=dtype)
+                    if np.array_equal(casted, element, equal_nan=True):
+                        return casted
+                    raise LossySetitemError
+    
+                if tipo.kind not in "iuf":
+                    # Anything other than float/integer we cannot hold
+                    raise LossySetitemError
+                if not isinstance(tipo, np.dtype):
+                    # i.e. nullable IntegerDtype or FloatingDtype;
+                    #  we can put this into an ndarray losslessly iff it has no NAs
+                    if element._hasna:
+                        raise LossySetitemError
+                    return element
+                elif tipo.itemsize > dtype.itemsize or tipo.kind != dtype.kind:
+                    if isinstance(element, np.ndarray):
+                        # e.g. TestDataFrameIndexingWhere::test_where_alignment
+                        casted = element.astype(dtype)
+                        if np.array_equal(casted, element, equal_nan=True):
+                            return casted
+                        raise LossySetitemError
+    
+                return element
+    
+>           raise LossySetitemError
+E           pandas.errors.LossySetitemError
+
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\cast.py:1792: LossySetitemError
+
+During handling of the above exception, another exception occurred:
+
+self = <core.test_trajectory_edge_cases.TestTrajectoryPointCastErrors object at 0x00000277C27594F0>
+
+    def test_invalid_float_column_raises(self) -> None:
+        """Invalid geometry values raise a cast error."""
+        points = _minimal_points()
+>       points.loc[0, "x"] = "not-a-float"
+        ^^^^^^^^^^^^^^^^^^
+
+tests\core\test_trajectory_edge_cases.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.pixi\envs\all\Lib\site-packages\pandas\core\indexing.py:938: in __setitem__
+    iloc._setitem_with_indexer(indexer, value, self.name)
+.pixi\envs\all\Lib\site-packages\pandas\core\indexing.py:1953: in _setitem_with_indexer
+    self._setitem_with_indexer_split_path(indexer, value, name)
+.pixi\envs\all\Lib\site-packages\pandas\core\indexing.py:2044: in _setitem_with_indexer_split_path
+    self._setitem_single_column(loc, value, pi)
+.pixi\envs\all\Lib\site-packages\pandas\core\indexing.py:2181: in _setitem_single_column
+    self.obj._mgr.column_setitem(loc, plane_indexer, value)
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:1528: in column_setitem
+    new_mgr = col_mgr.setitem((idx,), value)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:607: in setitem
+    return self.apply("setitem", indexer=indexer, value=value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:445: in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:1118: in setitem
+    nb = self.coerce_to_target_dtype(value, raise_on_upcast=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = NumpyBlock: 1 dtype: float64, other = 'not-a-float'
+raise_on_upcast = True
+
+    @final
+    def coerce_to_target_dtype(self, other, raise_on_upcast: bool) -> Block:
+        """
+        coerce the current block to a dtype compat for other
+        we will return a block, possibly object, and not raise
+    
+        we can also safely try to coerce to the same dtype
+        and will receive the same block
+        """
+        new_dtype = find_result_type(self.values.dtype, other)
+        if new_dtype == self.dtype:
+            # GH#52927 avoid RecursionError
+            raise AssertionError(
+                "Something has gone wrong, please report a bug at "
+                "https://github.com/pandas-dev/pandas/issues"
+            )
+    
+        # In a future version of pandas, the default will be that
+        # setting `nan` into an integer series won't raise.
+        if (
+            is_scalar(other)
+            and is_integer_dtype(self.values.dtype)
+            and isna(other)
+            and other is not NaT
+            and not (
+                isinstance(other, (np.datetime64, np.timedelta64)) and np.isnat(other)
+            )
+        ):
+            raise_on_upcast = False
+        elif (
+            isinstance(other, np.ndarray)
+            and other.ndim == 1
+            and is_integer_dtype(self.values.dtype)
+            and is_float_dtype(other.dtype)
+            and lib.has_only_ints_or_nan(other)
+        ):
+            raise_on_upcast = False
+    
+        if raise_on_upcast:
+>           raise TypeError(f"Invalid value '{other}' for dtype '{self.values.dtype}'")
+E           TypeError: Invalid value 'not-a-float' for dtype 'float64'
+
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:468: TypeError
+______ TestTrajectoryPointCastErrors.test_invalid_confdata_column_raises ______
+
+df =      x    y    z   q1   q2   q3   q4  cf1
+0  1.0  2.0  3.0  1.0  0.0  0.0  0.0  bad
+
+    @staticmethod
+    def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
+        """Validate mandatory point columns and cast known dtypes.
+    
+        ABB Route:
+            N/A — local DataFrame validation.
+    
+        ABB Constraints:
+            No ABB controller access.
+    
+        Args:
+            df: Raw point DataFrame.
+    
+        Returns:
+            Validated and cast copy of the input DataFrame.
+    
+        Raises:
+            ValueError: If mandatory columns are missing or casting fails.
+    
+        Example:
+            ::
+    
+                points = Trajectory._validate_and_cast_points(points)
+        """
+        missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
+        if missing:
+            raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
+    
+        out = df.copy()
+    
+        for col in out.columns:
+            col_str = str(col)
+    
+            if col_str in COLUMN_DTYPES:
+                target = COLUMN_DTYPES[col_str]
+                try:
+                    out[col] = out[col].astype(target)
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
+                    ) from exc
+    
+            elif col_str in CONFDATA_COLUMNS:
+                try:
+>                   out[col] = out[col].astype(pd.Int8Dtype())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+trajcenter\core\trajectory.py:453: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.pixi\envs\all\Lib\site-packages\pandas\core\generic.py:6541: in astype
+    new_data = self._mgr.astype(dtype=dtype, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:614: in astype
+    return self.apply("astype", dtype=dtype, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:445: in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:607: in astype
+    new_values = astype_array_safe(values, dtype, errors=errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:240: in astype_array_safe
+    new_values = astype_array(values, dtype, copy=copy)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:182: in astype_array
+    values = values.astype(dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\string_arrow.py:333: in astype
+    data = self._pa_array.cast(pa.from_numpy_dtype(dtype.numpy_dtype))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/table.pxi:597: in pyarrow.lib.ChunkedArray.cast
+    ???
+.pixi\envs\all\Lib\site-packages\pyarrow\compute.py:414: in cast
+    return call_function("cast", [arr], options, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/_compute.pyx:604: in pyarrow._compute.call_function
+    ???
+pyarrow/_compute.pyx:399: in pyarrow._compute.Function.call
+    ???
+pyarrow/error.pxi:155: in pyarrow.lib.pyarrow_internal_check_status
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+>   ???
+E   pyarrow.lib.ArrowInvalid: Failed to parse string: 'bad' as a scalar of type int8
+
+pyarrow/error.pxi:92: ArrowInvalid
+
+During handling of the above exception, another exception occurred:
+
+self = <core.test_trajectory_edge_cases.TestTrajectoryPointCastErrors object at 0x00000277C2D961E0>
+
+    def test_invalid_confdata_column_raises(self) -> None:
+        """Invalid confdata values raise a cast error."""
+        points = _minimal_points()
+        points["cf1"] = ["bad"]
+    
+        with pytest.raises(ValueError, match="cf1|Int8|cast"):
+>           Trajectory(meta=TrajectoryMeta(name="bad_cf"), points=points)
+
+tests\core\test_trajectory_edge_cases.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+trajcenter\core\trajectory.py:401: in __init__
+    self.points = self._validate_and_cast_points(points)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trajcenter\core\trajectory.py:456: in _validate_and_cast_points
+    msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+_key = 'CANNOT_CAST_COLUMN'
+kwargs = {'col': 'cf1', 'dtype': 'Int8', 'exc': ArrowInvalid("Failed to parse string: 'bad' as a scalar of type int8")}
+
+    def msg(_key: str, **kwargs: object) -> str:
+        """Return the formatted message for *_key*.
+    
+        The first parameter is named ``_key`` (with leading underscore) to
+        avoid collisions with message placeholders that may also be named
+        ``key`` (e.g. ``INVALID_EAX_KEY`` uses ``{key}`` as a placeholder).
+    
+        Args:
+            _key: Message key defined in ``messages.json``.
+            **kwargs: Format arguments interpolated into the message
+                template via :meth:`str.format`.
+    
+        Returns:
+            Formatted message string ready to be passed to an exception
+            or :func:`warnings.warn`.
+    
+        Raises:
+            KeyError: If *_key* is not defined in ``messages.json``.
+            KeyError: If a required placeholder is missing from *kwargs*.
+    
+        Example:
+            ::
+    
+                msg("FILE_NOT_FOUND", path="/tmp/foo.mod")
+                # \u2192 "File not found: /tmp/foo.mod"
+    
+                msg("INVALID_EAX_KEY", key="eax_z")
+                # \u2192 "Invalid external axis key: 'eax_z'. Expected eax_a \u2026 eax_f."
+        """
+>       return _MESSAGES[_key].format(**kwargs)
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'CANNOT_CAST_COLUMN'
+
+trajcenter\core\messages.py:71: KeyError
+_____ TestTrajectoryPointCastErrors.test_invalid_zone_type_column_raises ______
+
+df =      x    y    z   q1   q2   q3   q4 zone_type
+0  1.0  2.0  3.0  1.0  0.0  0.0  0.0       bad
+
+    @staticmethod
+    def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
+        """Validate mandatory point columns and cast known dtypes.
+    
+        ABB Route:
+            N/A — local DataFrame validation.
+    
+        ABB Constraints:
+            No ABB controller access.
+    
+        Args:
+            df: Raw point DataFrame.
+    
+        Returns:
+            Validated and cast copy of the input DataFrame.
+    
+        Raises:
+            ValueError: If mandatory columns are missing or casting fails.
+    
+        Example:
+            ::
+    
+                points = Trajectory._validate_and_cast_points(points)
+        """
+        missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
+        if missing:
+            raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
+    
+        out = df.copy()
+    
+        for col in out.columns:
+            col_str = str(col)
+    
+            if col_str in COLUMN_DTYPES:
+                target = COLUMN_DTYPES[col_str]
+                try:
+                    out[col] = out[col].astype(target)
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
+                    ) from exc
+    
+            elif col_str in CONFDATA_COLUMNS:
+                try:
+                    out[col] = out[col].astype(pd.Int8Dtype())
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
+                    ) from exc
+    
+            elif col_str in {"zone_type", "process_param_index"}:
+                try:
+>                   out[col] = out[col].astype(pd.Int16Dtype())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+trajcenter\core\trajectory.py:461: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.pixi\envs\all\Lib\site-packages\pandas\core\generic.py:6541: in astype
+    new_data = self._mgr.astype(dtype=dtype, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:614: in astype
+    return self.apply("astype", dtype=dtype, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:445: in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:607: in astype
+    new_values = astype_array_safe(values, dtype, errors=errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:240: in astype_array_safe
+    new_values = astype_array(values, dtype, copy=copy)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:182: in astype_array
+    values = values.astype(dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\string_arrow.py:333: in astype
+    data = self._pa_array.cast(pa.from_numpy_dtype(dtype.numpy_dtype))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/table.pxi:597: in pyarrow.lib.ChunkedArray.cast
+    ???
+.pixi\envs\all\Lib\site-packages\pyarrow\compute.py:414: in cast
+    return call_function("cast", [arr], options, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/_compute.pyx:604: in pyarrow._compute.call_function
+    ???
+pyarrow/_compute.pyx:399: in pyarrow._compute.Function.call
+    ???
+pyarrow/error.pxi:155: in pyarrow.lib.pyarrow_internal_check_status
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+>   ???
+E   pyarrow.lib.ArrowInvalid: Failed to parse string: 'bad' as a scalar of type int16
+
+pyarrow/error.pxi:92: ArrowInvalid
+
+During handling of the above exception, another exception occurred:
+
+self = <core.test_trajectory_edge_cases.TestTrajectoryPointCastErrors object at 0x00000277C30A1250>
+
+    def test_invalid_zone_type_column_raises(self) -> None:
+        """Invalid zone_type values raise a cast error."""
+        points = _minimal_points()
+        points["zone_type"] = ["bad"]
+    
+        with pytest.raises(ValueError, match="zone_type|Int16|cast"):
+>           Trajectory(meta=TrajectoryMeta(name="bad_zone"), points=points)
+
+tests\core\test_trajectory_edge_cases.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+trajcenter\core\trajectory.py:401: in __init__
+    self.points = self._validate_and_cast_points(points)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trajcenter\core\trajectory.py:464: in _validate_and_cast_points
+    msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int16", exc=exc)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+_key = 'CANNOT_CAST_COLUMN'
+kwargs = {'col': 'zone_type', 'dtype': 'Int16', 'exc': ArrowInvalid("Failed to parse string: 'bad' as a scalar of type int16")}
+
+    def msg(_key: str, **kwargs: object) -> str:
+        """Return the formatted message for *_key*.
+    
+        The first parameter is named ``_key`` (with leading underscore) to
+        avoid collisions with message placeholders that may also be named
+        ``key`` (e.g. ``INVALID_EAX_KEY`` uses ``{key}`` as a placeholder).
+    
+        Args:
+            _key: Message key defined in ``messages.json``.
+            **kwargs: Format arguments interpolated into the message
+                template via :meth:`str.format`.
+    
+        Returns:
+            Formatted message string ready to be passed to an exception
+            or :func:`warnings.warn`.
+    
+        Raises:
+            KeyError: If *_key* is not defined in ``messages.json``.
+            KeyError: If a required placeholder is missing from *kwargs*.
+    
+        Example:
+            ::
+    
+                msg("FILE_NOT_FOUND", path="/tmp/foo.mod")
+                # \u2192 "File not found: /tmp/foo.mod"
+    
+                msg("INVALID_EAX_KEY", key="eax_z")
+                # \u2192 "Invalid external axis key: 'eax_z'. Expected eax_a \u2026 eax_f."
+        """
+>       return _MESSAGES[_key].format(**kwargs)
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'CANNOT_CAST_COLUMN'
+
+trajcenter\core\messages.py:71: KeyError
+_ TestTrajectoryPointCastErrors.test_invalid_process_param_index_column_raises _
+
+df =      x    y    z   q1   q2   q3   q4 process_param_index
+0  1.0  2.0  3.0  1.0  0.0  0.0  0.0                 bad
+
+    @staticmethod
+    def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
+        """Validate mandatory point columns and cast known dtypes.
+    
+        ABB Route:
+            N/A — local DataFrame validation.
+    
+        ABB Constraints:
+            No ABB controller access.
+    
+        Args:
+            df: Raw point DataFrame.
+    
+        Returns:
+            Validated and cast copy of the input DataFrame.
+    
+        Raises:
+            ValueError: If mandatory columns are missing or casting fails.
+    
+        Example:
+            ::
+    
+                points = Trajectory._validate_and_cast_points(points)
+        """
+        missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
+        if missing:
+            raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
+    
+        out = df.copy()
+    
+        for col in out.columns:
+            col_str = str(col)
+    
+            if col_str in COLUMN_DTYPES:
+                target = COLUMN_DTYPES[col_str]
+                try:
+                    out[col] = out[col].astype(target)
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
+                    ) from exc
+    
+            elif col_str in CONFDATA_COLUMNS:
+                try:
+                    out[col] = out[col].astype(pd.Int8Dtype())
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
+                    ) from exc
+    
+            elif col_str in {"zone_type", "process_param_index"}:
+                try:
+>                   out[col] = out[col].astype(pd.Int16Dtype())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+trajcenter\core\trajectory.py:461: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.pixi\envs\all\Lib\site-packages\pandas\core\generic.py:6541: in astype
+    new_data = self._mgr.astype(dtype=dtype, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:614: in astype
+    return self.apply("astype", dtype=dtype, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:445: in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:607: in astype
+    new_values = astype_array_safe(values, dtype, errors=errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:240: in astype_array_safe
+    new_values = astype_array(values, dtype, copy=copy)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:182: in astype_array
+    values = values.astype(dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\string_arrow.py:333: in astype
+    data = self._pa_array.cast(pa.from_numpy_dtype(dtype.numpy_dtype))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/table.pxi:597: in pyarrow.lib.ChunkedArray.cast
+    ???
+.pixi\envs\all\Lib\site-packages\pyarrow\compute.py:414: in cast
+    return call_function("cast", [arr], options, memory_pool)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/_compute.pyx:604: in pyarrow._compute.call_function
+    ???
+pyarrow/_compute.pyx:399: in pyarrow._compute.Function.call
+    ???
+pyarrow/error.pxi:155: in pyarrow.lib.pyarrow_internal_check_status
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+>   ???
+E   pyarrow.lib.ArrowInvalid: Failed to parse string: 'bad' as a scalar of type int16
+
+pyarrow/error.pxi:92: ArrowInvalid
+
+During handling of the above exception, another exception occurred:
+
+self = <core.test_trajectory_edge_cases.TestTrajectoryPointCastErrors object at 0x00000277C30A1550>
+
+    def test_invalid_process_param_index_column_raises(self) -> None:
+        """Invalid point process_param_index values raise a cast error."""
+        points = _minimal_points()
+        points["process_param_index"] = ["bad"]
+    
+        meta = _process_meta()
+        params = _process_params()
+    
+        with pytest.raises(ValueError, match="process_param_index|Int16|cast"):
+>           Trajectory(meta=meta, points=points, process_params=params)
+
+tests\core\test_trajectory_edge_cases.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+trajcenter\core\trajectory.py:401: in __init__
+    self.points = self._validate_and_cast_points(points)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trajcenter\core\trajectory.py:464: in _validate_and_cast_points
+    msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int16", exc=exc)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+_key = 'CANNOT_CAST_COLUMN'
+kwargs = {'col': 'process_param_index', 'dtype': 'Int16', 'exc': ArrowInvalid("Failed to parse string: 'bad' as a scalar of type int16")}
+
+    def msg(_key: str, **kwargs: object) -> str:
+        """Return the formatted message for *_key*.
+    
+        The first parameter is named ``_key`` (with leading underscore) to
+        avoid collisions with message placeholders that may also be named
+        ``key`` (e.g. ``INVALID_EAX_KEY`` uses ``{key}`` as a placeholder).
+    
+        Args:
+            _key: Message key defined in ``messages.json``.
+            **kwargs: Format arguments interpolated into the message
+                template via :meth:`str.format`.
+    
+        Returns:
+            Formatted message string ready to be passed to an exception
+            or :func:`warnings.warn`.
+    
+        Raises:
+            KeyError: If *_key* is not defined in ``messages.json``.
+            KeyError: If a required placeholder is missing from *kwargs*.
+    
+        Example:
+            ::
+    
+                msg("FILE_NOT_FOUND", path="/tmp/foo.mod")
+                # \u2192 "File not found: /tmp/foo.mod"
+    
+                msg("INVALID_EAX_KEY", key="eax_z")
+                # \u2192 "Invalid external axis key: 'eax_z'. Expected eax_a \u2026 eax_f."
+        """
+>       return _MESSAGES[_key].format(**kwargs)
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'CANNOT_CAST_COLUMN'
+
+trajcenter\core\messages.py:71: KeyError
+_____ TestTrajectoryPointCastErrors.test_invalid_readconfs_column_raises ______
+
+df =      x    y    z   q1   q2   q3   q4   readconfs
+0  1.0  2.0  3.0  1.0  0.0  0.0  0.0  not-a-bool
+
+    @staticmethod
+    def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
+        """Validate mandatory point columns and cast known dtypes.
+    
+        ABB Route:
+            N/A — local DataFrame validation.
+    
+        ABB Constraints:
+            No ABB controller access.
+    
+        Args:
+            df: Raw point DataFrame.
+    
+        Returns:
+            Validated and cast copy of the input DataFrame.
+    
+        Raises:
+            ValueError: If mandatory columns are missing or casting fails.
+    
+        Example:
+            ::
+    
+                points = Trajectory._validate_and_cast_points(points)
+        """
+        missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
+        if missing:
+            raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
+    
+        out = df.copy()
+    
+        for col in out.columns:
+            col_str = str(col)
+    
+            if col_str in COLUMN_DTYPES:
+                target = COLUMN_DTYPES[col_str]
+                try:
+                    out[col] = out[col].astype(target)
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
+                    ) from exc
+    
+            elif col_str in CONFDATA_COLUMNS:
+                try:
+                    out[col] = out[col].astype(pd.Int8Dtype())
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
+                    ) from exc
+    
+            elif col_str in {"zone_type", "process_param_index"}:
+                try:
+                    out[col] = out[col].astype(pd.Int16Dtype())
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int16", exc=exc)
+                    ) from exc
+    
+            elif col_str == "readconfs":
+                try:
+>                   out[col] = out[col].astype("boolean")
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+trajcenter\core\trajectory.py:469: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.pixi\envs\all\Lib\site-packages\pandas\core\generic.py:6541: in astype
+    new_data = self._mgr.astype(dtype=dtype, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:614: in astype
+    return self.apply("astype", dtype=dtype, errors=errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\managers.py:445: in apply
+    applied = getattr(b, f)(**kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\internals\blocks.py:607: in astype
+    new_values = astype_array_safe(values, dtype, errors=errors)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:240: in astype_array_safe
+    new_values = astype_array(values, dtype, copy=copy)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\dtypes\astype.py:182: in astype_array
+    values = values.astype(dtype, copy=copy)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\string_arrow.py:338: in astype
+    return super().astype(dtype, copy=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\base.py:868: in astype
+    return cls._from_sequence(self, dtype=dtype, copy=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\masked.py:161: in _from_sequence
+    values, mask = cls._coerce_to_array(scalars, dtype=dtype, copy=copy)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\boolean.py:387: in _coerce_to_array
+    return coerce_to_array(value, copy=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+values = <ArrowStringArray>
+['not-a-bool']
+Length: 1, dtype: str, mask = None
+copy = False
+
+    def coerce_to_array(
+        values, mask=None, copy: bool = False
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Coerce the input values array to numpy arrays with a mask.
+    
+        Parameters
+        ----------
+        values : 1D list-like
+        mask : bool 1D array, optional
+        copy : bool, default False
+            if True, copy the input
+    
+        Returns
+        -------
+        tuple of (values, mask)
+        """
+        if isinstance(values, BooleanArray):
+            if mask is not None:
+                raise ValueError("cannot pass mask for BooleanArray input")
+            values, mask = values._data, values._mask
+            if copy:
+                values = values.copy()
+                mask = mask.copy()
+            return values, mask
+    
+        mask_values = None
+        if isinstance(values, np.ndarray) and values.dtype == np.bool_:
+            if copy:
+                values = values.copy()
+        elif isinstance(values, np.ndarray) and values.dtype.kind in "iufcb":
+            mask_values = isna(values)
+    
+            values_bool = np.zeros(len(values), dtype=bool)
+            values_bool[~mask_values] = values[~mask_values].astype(bool)
+    
+            if not np.all(
+                values_bool[~mask_values].astype(values.dtype) == values[~mask_values]
+            ):
+                raise TypeError("Need to pass bool-like values")
+    
+            values = values_bool
+        else:
+            values_object = np.asarray(values, dtype=object)
+    
+            inferred_dtype = lib.infer_dtype(values_object, skipna=True)
+            integer_like = ("floating", "integer", "mixed-integer-float")
+            if inferred_dtype not in ("boolean", "empty", *integer_like):
+>               raise TypeError("Need to pass bool-like values")
+E               TypeError: Need to pass bool-like values
+
+.pixi\envs\all\Lib\site-packages\pandas\core\arrays\boolean.py:226: TypeError
+
+During handling of the above exception, another exception occurred:
+
+self = <core.test_trajectory_edge_cases.TestTrajectoryPointCastErrors object at 0x00000277C30A17F0>
+
+    def test_invalid_readconfs_column_raises(self) -> None:
+        """Invalid readconfs values raise a boolean cast error."""
+        points = _minimal_points()
+        points["readconfs"] = ["not-a-bool"]
+    
+        with pytest.raises(ValueError, match="readconfs|boolean|cast"):
+>           Trajectory(meta=TrajectoryMeta(name="bad_bool"), points=points)
+
+tests\core\test_trajectory_edge_cases.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+trajcenter\core\trajectory.py:401: in __init__
+    self.points = self._validate_and_cast_points(points)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+trajcenter\core\trajectory.py:472: in _validate_and_cast_points
+    msg("CANNOT_CAST_COLUMN", col=col_str, dtype="boolean", exc=exc)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+_key = 'CANNOT_CAST_COLUMN'
+kwargs = {'col': 'readconfs', 'dtype': 'boolean', 'exc': TypeError('Need to pass bool-like values')}
+
+    def msg(_key: str, **kwargs: object) -> str:
+        """Return the formatted message for *_key*.
+    
+        The first parameter is named ``_key`` (with leading underscore) to
+        avoid collisions with message placeholders that may also be named
+        ``key`` (e.g. ``INVALID_EAX_KEY`` uses ``{key}`` as a placeholder).
+    
+        Args:
+            _key: Message key defined in ``messages.json``.
+            **kwargs: Format arguments interpolated into the message
+                template via :meth:`str.format`.
+    
+        Returns:
+            Formatted message string ready to be passed to an exception
+            or :func:`warnings.warn`.
+    
+        Raises:
+            KeyError: If *_key* is not defined in ``messages.json``.
+            KeyError: If a required placeholder is missing from *kwargs*.
+    
+        Example:
+            ::
+    
+                msg("FILE_NOT_FOUND", path="/tmp/foo.mod")
+                # \u2192 "File not found: /tmp/foo.mod"
+    
+                msg("INVALID_EAX_KEY", key="eax_z")
+                # \u2192 "Invalid external axis key: 'eax_z'. Expected eax_a \u2026 eax_f."
+        """
+>       return _MESSAGES[_key].format(**kwargs)
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'CANNOT_CAST_COLUMN'
+
+trajcenter\core\messages.py:71: KeyError
+_ TestTrajectorySerializationEdges.test_dataframe_to_table_unsupported_dtype_raises _
+
+self = <core.test_trajectory_edge_cases.TestTrajectorySerializationEdges object at 0x00000277C30A3680>
+
+    def test_dataframe_to_table_unsupported_dtype_raises(self) -> None:
+        """Unsupported DataFrame dtypes raise ValueError during table conversion."""
+        df = pd.DataFrame(
+            {
+                "unsupported": pd.Series(
+                    [pd.Interval(left=0, right=1)],
+                    dtype="object",
+                )
+            }
+        )
+    
+        with pytest.raises(ValueError, match="Cannot infer PyArrow type|unsupported"):
+>           Trajectory._dataframe_to_table(df)
+
+tests\core\test_trajectory_edge_cases.py:384: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+trajcenter\core\trajectory.py:863: in _dataframe_to_table
+    return pa.Table.from_pandas(df, schema=schema, preserve_index=False)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/table.pxi:4768: in pyarrow.lib.Table.from_pandas
+    ???
+.pixi\envs\all\Lib\site-packages\pyarrow\pandas_compat.py:651: in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ^^^^^^^^^^^^^^^^^^^^
+.pixi\envs\all\Lib\site-packages\pyarrow\pandas_compat.py:639: in convert_column
+    raise e
+.pixi\envs\all\Lib\site-packages\pyarrow\pandas_compat.py:633: in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyarrow/array.pxi:390: in pyarrow.lib.array
+    ???
+pyarrow/array.pxi:91: in pyarrow.lib._ndarray_to_array
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+>   ???
+E   pyarrow.lib.ArrowTypeError: ("Expected bytes, got a 'pandas._libs.interval.Interval' object", 'Conversion failed for column unsupported with type object')
+
+pyarrow/error.pxi:92: ArrowTypeError
+______ TestTabularConvertErrors.test_convert_no_trajectory_sheet_raises _______
+
+self = <converter.test_tabular_converter_edge_cases.TestTabularConvertErrors object at 0x00000277C30A1700>
+tmp_path = WindowsPath('C:/Users/cleme/AppData/Local/Temp/pytest-of-Clément RACINET/pytest-169/test_convert_no_trajectory_she0')
+
+    def test_convert_no_trajectory_sheet_raises(self, tmp_path: Path) -> None:
+        """A source containing only reserved sidecars has no trajectory sheet."""
+        main = _write_csv(tmp_path / "only_meta.csv", "key,value\nname,demo\n")
+        meta = tmp_path / "only_meta_meta.csv"
+        meta.write_text("key,value\nname,demo\n", encoding="utf-8")
+    
+>       with pytest.raises(ValueError, match="No trajectory sheet"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'No trajectory sheet'
+E         Actual message: "Sheet 'sheet' — mandatory columns missing: ['x', 'y', 'z']"
+
+tests\converter\test_tabular_converter_edge_cases.py:60: AssertionError
+============================== warnings summary ===============================
+tests/converter/test_tabular_converter_edge_cases.py::TestTabularConvertErrors::test_convert_no_trajectory_sheet_raises
+  c:\Users\cleme\Documents\GitLab_ENSAM\trajcenter\tests\converter\test_tabular_converter_edge_cases.py:61: UserWarning: Unknown columns ignored: ['key', 'value']
+    CsvConverter().convert(main)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.13-final-0 _______________
+
+Name                                        Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------------
+trajcenter\__init__.py                          7      0      0      0   100%
+trajcenter\converter\__init__.py                9      0      0      0   100%
+trajcenter\converter\apt_converter.py         129     97     50      0    18%   135-159, 186-212, 243-265, 318-319, 345-410, 439-473
+trajcenter\converter\base.py                   52     16     26     11    65%   133, 186, 195->197, 198, 200, 202, 204, 206, 210, 215, 217, 219, 258-262
+trajcenter\converter\column_mapper.py          27      2      6      1    91%   353-363
+trajcenter\converter\csv_converter.py          42      3     10      2    90%   134->136, 137, 143-144
+trajcenter\converter\defaults.py               10      0      0      0   100%
+trajcenter\converter\excel_converter.py        15      0      0      0   100%
+trajcenter\converter\mod_converter.py         154    123     58      0    15%   146, 172-195, 221-255, 285-297, 327-407, 433-436, 463-471, 507-529, 558-561
+trajcenter\converter\tabular_converter.py     202     15     88     14    90%   230, 257, 285, 297, 303, 339, 415->418, 426->425, 447, 496-497, 500-501, 504-505, 538, 676, 681->684, 874->881
+trajcenter\core\__init__.py                     5      0      0      0   100%
+trajcenter\core\logger.py                       3      0      0      0   100%
+trajcenter\core\messages.py                     8      1      0      0    88%   99
+trajcenter\core\trajectory.py                 248     39     74     20    80%   272, 275, 281, 284, 336-337, 435, 446-447, 533, 588, 591, 596, 605, 614-620, 644-645, 654, 663, 672, 681, 691, 700, 746-749, 781, 787, 798->802, 847, 849, 851, 857, 876-877
+trajcenter\exporter\__init__.py                 6      0      0      0   100%
+trajcenter\exporter\base.py                    16      5      0      0    69%   69, 97, 123-125
+trajcenter\exporter\csv_exporter.py            18     10      4      0    36%   92, 136-158
+trajcenter\exporter\excel_exporter.py          17      9      4      0    38%   91, 135-149
+trajcenter\exporter\options.py                  9      0      0      0   100%
+trajcenter\exporter\tabular_exporter.py        84     60     34      0    20%   189, 234, 261-272, 304-314, 340-377, 407-413, 446-485
+trajcenter\rws\__init__.py                      5      0      0      0   100%
+trajcenter\rws\_utils.py                       16     11      6      0    23%   46, 91-95, 147-153
+trajcenter\rws\reader.py                      113     70     16      0    33%   153-158, 185-188, 215-218, 245-248, 275-278, 320-323, 360-363, 399-400, 434-440, 475-476, 511-512, 546-547, 580-581, 615-616, 651-657, 692-693, 734-755, 792-853
+trajcenter\rws\writer.py                       85     54     22      0    29%   97-99, 125, 151-152, 186, 219-226, 268, 332-396, 438, 474-493
+---------------------------------------------------------------------------------------
+TOTAL                                        1280    515    398     48    55%
+Coverage HTML written to dir docs/coverage
+Coverage XML written to file coverage.xml
+=========================== short test summary info ===========================
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectoryPointCastErrors::test_invalid_float_column_raises
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectoryPointCastErrors::test_invalid_confdata_column_raises
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectoryPointCastErrors::test_invalid_zone_type_column_raises
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectoryPointCastErrors::test_invalid_process_param_index_column_raises
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectoryPointCastErrors::test_invalid_readconfs_column_raises
+FAILED tests/core/test_trajectory_edge_cases.py::TestTrajectorySerializationEdges::test_dataframe_to_table_unsupported_dtype_raises
+FAILED tests/converter/test_tabular_converter_edge_cases.py::TestTabularConvertErrors::test_convert_no_trajectory_sheet_raises
+=================== 7 failed, 71 passed, 1 warning in 2.98s ===================

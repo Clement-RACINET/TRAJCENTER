@@ -26,15 +26,13 @@ from .reader import (
     read_transfer_progress,
 )
 from .writer import (
-    DEFAULT_TASK,
+
     MAX_PROCESS_PARAM_PER_SET,
     MAX_PROCESS_PARAM_SET_COUNT,
-    MAX_TRAJ,
     MAX_TRAJ_POINTS,
     STATUS_METADATA_REFRESHED,
     STATUS_OK,
     STATUS_TRAJECTORY_TRANSFERRED,
-    WEB_MODULE,
     write_store_metadata,
     write_trajectory,
 )

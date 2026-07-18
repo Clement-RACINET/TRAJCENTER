@@ -38,15 +38,19 @@ trajcenter
 │   │   ├── test_csv_converter.py
 │   │   ├── test_excel_converter.py
 │   │   ├── test_mod_converter.py
-│   │   └── test_tabular_converter.py
+│   │   ├── test_process_tabular_converter.py
+│   │   ├── test_tabular_converter.py
+│   │   └── test_tabular_converter_edge_cases.py
 │   ├── core
 │   │   ├── __init__.py
-│   │   └── test_trajectory.py
+│   │   ├── test_trajectory.py
+│   │   └── test_trajectory_edge_cases.py
 │   ├── exporter
 │   │   ├── __init__.py
 │   │   ├── conftest.py
 │   │   ├── test_csv_exporter.py
 │   │   ├── test_excel_exporter.py
+│   │   ├── test_process_tabular_exporter.py
 │   │   └── test_tabular_exporter.py
 │   ├── rws
 │   │   ├── __init__.py
@@ -120,4 +124,5 @@ trajcenter
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pyproject.toml
-└── README.md
+├── README.md
+└── test.txt

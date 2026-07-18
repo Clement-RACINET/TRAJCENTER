@@ -40,6 +40,7 @@ When ``process_type == 0``:
 
 When ``process_type > 0``:
 
+- ``process_param_names`` is required.
 - ``points.parquet`` must contain ``process_param_index``.
 - ``process_params.parquet`` must exist.
 - ``process_params.parquet`` is a human-readable wide table:
@@ -247,11 +248,25 @@ class TrajectoryProcess(BaseModel):
     def _validate_process(self) -> TrajectoryProcess:
         """Validate process parameter metadata.
 
+        ABB Route:
+            N/A — local metadata validation.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            None.
+
         Returns:
             The validated process metadata.
 
         Raises:
             ValueError: If the process metadata is inconsistent.
+
+        Example:
+            ::
+
+                process = TrajectoryProcess(process_type=1, process_param_names=["force"])
         """
         if self.process_type == 0 and self.process_param_names:
             raise ValueError("process_param_names must be empty when process_type is 0")
@@ -290,18 +305,31 @@ class TrajectoryMeta(BaseModel):
     process: TrajectoryProcess = Field(
         default_factory=lambda: TrajectoryProcess(),
     )
-
     extra: dict[str, str | int | float | bool | None] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _validate_eax_keys(self) -> TrajectoryMeta:
         """Verify that external axis keys belong to ``eax_a``…``eax_f``.
 
+        ABB Route:
+            N/A — local metadata validation.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            None.
+
         Returns:
             The validated metadata.
 
         Raises:
             ValueError: If an external axis key is invalid.
+
+        Example:
+            ::
+
+                meta = TrajectoryMeta(name="demo")
         """
         valid = {f"eax_{c}" for c in "abcdef"}
         for key in self.external_axes:
@@ -347,13 +375,27 @@ class Trajectory:
     ) -> None:
         """Initialise a trajectory with schema validation.
 
+        ABB Route:
+            N/A — local trajectory construction.
+
+        ABB Constraints:
+            No ABB controller access.
+
         Args:
             meta: Trajectory metadata.
             points: Point DataFrame.
             process_params: Optional process parameter DataFrame.
 
+        Returns:
+            None.
+
         Raises:
             ValueError: If the trajectory is not valid.
+
+        Example:
+            ::
+
+                traj = Trajectory(meta=meta, points=points)
         """
         self.meta = meta
         self.points = self._validate_and_cast_points(points)
@@ -368,6 +410,12 @@ class Trajectory:
     def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
         """Validate mandatory point columns and cast known dtypes.
 
+        ABB Route:
+            N/A — local DataFrame validation.
+
+        ABB Constraints:
+            No ABB controller access.
+
         Args:
             df: Raw point DataFrame.
 
@@ -376,6 +424,11 @@ class Trajectory:
 
         Raises:
             ValueError: If mandatory columns are missing or casting fails.
+
+        Example:
+            ::
+
+                points = Trajectory._validate_and_cast_points(points)
         """
         missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
         if missing:
@@ -427,6 +480,12 @@ class Trajectory:
     ) -> pd.DataFrame | None:
         """Validate and cast process parameter table.
 
+        ABB Route:
+            N/A — local process parameter validation.
+
+        ABB Constraints:
+            No ABB controller access.
+
         Args:
             df: Optional raw process parameter table.
 
@@ -435,6 +494,11 @@ class Trajectory:
 
         Raises:
             ValueError: If the process parameter table is invalid.
+
+        Example:
+            ::
+
+                process_params = traj._validate_and_cast_process_params(df)
         """
         if df is None:
             return None
@@ -492,8 +556,26 @@ class Trajectory:
     def _validate_process_consistency(self) -> None:
         """Validate consistency between metadata, points and process params.
 
+        ABB Route:
+            N/A — local trajectory validation.
+
+        ABB Constraints:
+            A non-zero process type means the process is active and must
+            provide parameter names, point references and a parameter table.
+
+        Args:
+            None.
+
+        Returns:
+            None.
+
         Raises:
             ValueError: If process metadata and data are inconsistent.
+
+        Example:
+            ::
+
+                traj._validate_process_consistency()
         """
         process = self.meta.process
 
@@ -624,11 +706,27 @@ class Trajectory:
     def save(self, path: str | Path) -> Path:
         """Save the trajectory to a ``.trajcenter`` archive.
 
+        ABB Route:
+            N/A — local ``.trajcenter`` archive write.
+
+        ABB Constraints:
+            The inactive external-axis sentinel ``9E+9`` must not be
+            injected here.
+
         Args:
             path: Destination path.
 
         Returns:
             Absolute path of the created archive.
+
+        Raises:
+            OSError: If the archive cannot be written.
+            ValueError: If a DataFrame cannot be converted to Parquet.
+
+        Example:
+            ::
+
+                path = traj.save("trajectory_store/demo.trajcenter")
         """
         dest = Path(path)
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -656,6 +754,12 @@ class Trajectory:
     def load(cls, path: str | Path) -> Trajectory:
         """Load a trajectory from a ``.trajcenter`` archive.
 
+        ABB Route:
+            N/A — local ``.trajcenter`` archive read.
+
+        ABB Constraints:
+            No ABB controller access.
+
         Args:
             path: Path to the archive.
 
@@ -664,7 +768,13 @@ class Trajectory:
 
         Raises:
             FileNotFoundError: If the archive does not exist.
-            ValueError: If mandatory archive entries are missing.
+            ValueError: If mandatory archive entries are missing or if
+                trajectory validation fails.
+
+        Example:
+            ::
+
+                traj = Trajectory.load("trajectory_store/demo.trajcenter")
         """
         src = Path(path)
         if not src.exists():

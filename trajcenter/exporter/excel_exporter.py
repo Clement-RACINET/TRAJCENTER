@@ -9,6 +9,8 @@ The exporter writes a single ``.xlsx`` workbook containing:
 - ``traj``: trajectory points.
 - ``meta``: optional key/value metadata when ``options.include_meta`` is
   ``True``.
+- ``process_params``: optional process parameter table when the
+  trajectory has process parameters.
 
 Legacy v1 ``tools`` and ``wobjs`` sheets are no longer produced. Tool and
 work-object names are exported inline through ``tool_name`` and
@@ -19,6 +21,15 @@ ABB Route:
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
+    The RWS inactive-axis sentinel ``9E+9`` is never exported.
+
+Example:
+    ::
+
+        from pathlib import Path
+        from trajcenter.exporter.excel_exporter import ExcelExporter
+
+        ExcelExporter().export(traj, Path("trajectory_exports"))
 """
 
 from __future__ import annotations
@@ -85,6 +96,7 @@ class ExcelExporter(_TabularExporter):
         dest_dir: Path,
         traj_df: pd.DataFrame,
         meta_df: pd.DataFrame | None,
+        process_params_df: pd.DataFrame | None,
     ) -> Path:
         """Write the Excel workbook.
 
@@ -100,6 +112,8 @@ class ExcelExporter(_TabularExporter):
             traj_df: Points DataFrame.
             meta_df: Metadata DataFrame, or ``None`` when
                 ``options.include_meta`` is ``False``.
+            process_params_df: Process parameter DataFrame, or ``None``
+                when the trajectory has no process parameter table.
 
         Returns:
             Path of the produced ``.xlsx`` file.
@@ -110,7 +124,13 @@ class ExcelExporter(_TabularExporter):
         Example:
             ::
 
-                path = exporter._write_sheets("traj", dest, traj_df, meta_df)
+                path = exporter._write_sheets(
+                    "traj",
+                    dest,
+                    traj_df,
+                    meta_df,
+                    process_params_df,
+                )
         """
         dest = dest_dir / f"{stem}.xlsx"
 
@@ -118,5 +138,12 @@ class ExcelExporter(_TabularExporter):
             traj_df.to_excel(writer, sheet_name="traj", index=False)
             if meta_df is not None:
                 meta_df.to_excel(writer, sheet_name="meta", index=False)
+
+            if process_params_df is not None:
+                process_params_df.to_excel(
+                    writer,
+                    sheet_name="process_params",
+                    index=False,
+                )
 
         return dest

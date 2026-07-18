@@ -6,8 +6,8 @@ Author: Clement RACINET
 
 Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.
-This class only implements CSV file reading with automatic separator
-detection.
+This class implements CSV file reading with automatic separator detection
+and optional sidecar loading.
 
 TrajCenter v2 mapping
 ---------------------
@@ -23,6 +23,19 @@ trajectory columns:
 Legacy index columns such as ``tool_index`` and ``wobj_index`` are not
 part of the v2 output.
 
+CSV sidecars
+------------
+When present beside the main CSV file, these optional sidecars are loaded
+automatically:
+
+- ``{stem}_meta.csv``: key/value metadata table.
+- ``{stem}_process_params.csv``: process parameter table.
+
+For an active process, the main CSV must contain ``process_param_index``,
+the meta sidecar must contain ``process_type`` and
+``process_param_names``, and the process sidecar must contain
+``process_param_index`` plus the declared parameter columns.
+
 Unmapped columns
 ----------------
 Columns that cannot be mapped to the TrajCenter v2 schema are not stored
@@ -36,7 +49,7 @@ by reading the first non-empty lines of the file. Supported delimiters
 are comma, semicolon, tab and pipe. If detection fails, comma is used.
 
 The separator can also be forced via the ``separator`` constructor
-parameter.
+parameter. The same separator is used for detected sidecars.
 
 Encoding
 --------
@@ -113,7 +126,6 @@ def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
 
             separator = _detect_separator(Path("trajectory.csv"))
     """
-
     try:
         lines: list[str] = []
         with source.open(encoding=encoding, errors="replace") as f:
@@ -142,7 +154,8 @@ class CsvConverter(_TabularConverter):
 
     The class inherits all v2 tabular conversion rules from
     :class:`~trajcenter.converter.tabular_converter._TabularConverter` and
-    only implements CSV reading, separator detection and encoding handling.
+    implements CSV reading, separator detection, encoding handling and
+    optional sidecar loading.
 
     ABB Route:
         N/A — local CSV file conversion.
@@ -183,7 +196,7 @@ class CsvConverter(_TabularConverter):
 
         Args:
             defaults: Default values for optional v2 columns. When ``None``,
-                no optional process column is added unless present in the source.
+                no optional send column is added unless present in the source.
             separator: Forced CSV separator. When ``None``, auto-detection is
                 used.
             encoding: Source file encoding. Defaults to ``"utf-8-sig"``.
@@ -230,9 +243,16 @@ class CsvConverter(_TabularConverter):
         return SourceFormat.CSV
 
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
-        """Read the CSV file and expose it as a single tabular sheet.
+        """Read the CSV file and optional sidecars as tabular sheets.
 
-        The separator is detected automatically unless explicitly configured.
+        The main source is exposed as ``"sheet"``. If present, sidecars
+        are exposed as reserved sheets:
+
+        - ``"meta"`` from ``{stem}_meta.csv``.
+        - ``"process_params"`` from ``{stem}_process_params.csv``.
+
+        The separator is detected from the main CSV unless explicitly
+        configured, and then reused for sidecars.
 
         ABB Route:
             N/A — local CSV file read.
@@ -241,16 +261,17 @@ class CsvConverter(_TabularConverter):
             No ABB controller access.
 
         Args:
-            source: Path to the CSV file.
+            source: Path to the main CSV file.
 
         Returns:
-            Dictionary ``{"sheet": raw_dataframe}``.
+            Dictionary containing the main sheet and optional sidecar
+            sheets.
 
         Raises:
             FileNotFoundError: If the CSV path does not exist.
-            pandas.errors.ParserError: If pandas cannot parse the CSV content.
-            UnicodeDecodeError: If the configured encoding is invalid for the
-                file content.
+            pandas.errors.ParserError: If pandas cannot parse CSV content.
+            UnicodeDecodeError: If the configured encoding is invalid for
+                the file content.
 
         Example:
             ::
@@ -258,10 +279,31 @@ class CsvConverter(_TabularConverter):
                 sheets = converter._read_sheets(Path("trajectory.csv"))
         """
         sep = self.separator or _detect_separator(source, encoding=self.encoding)
-        df = pd.read_csv(
-            source,
-            sep=sep,
-            encoding=self.encoding,
-            header=0,
-        )
-        return {"sheet": df}
+        sheets: dict[str, pd.DataFrame] = {
+            "sheet": pd.read_csv(
+                source,
+                sep=sep,
+                encoding=self.encoding,
+                header=0,
+            )
+        }
+
+        meta_path = source.with_name(f"{source.stem}_meta.csv")
+        if meta_path.exists():
+            sheets["meta"] = pd.read_csv(
+                meta_path,
+                sep=sep,
+                encoding=self.encoding,
+                header=0,
+            )
+
+        process_params_path = source.with_name(f"{source.stem}_process_params.csv")
+        if process_params_path.exists():
+            sheets["process_params"] = pd.read_csv(
+                process_params_path,
+                sep=sep,
+                encoding=self.encoding,
+                header=0,
+            )
+
+        return sheets

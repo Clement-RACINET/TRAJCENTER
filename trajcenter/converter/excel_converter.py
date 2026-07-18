@@ -22,6 +22,17 @@ trajectory columns:
 Legacy ``tools`` and ``wobjs`` sheets are ignored. Tool and work-object
 names must be stored inline in the trajectory sheet.
 
+Process import
+--------------
+When a workbook contains an active process, it must provide:
+
+- Sheet ``meta`` with keys ``process_type`` and ``process_param_names``.
+- A point column ``process_param_index`` in the trajectory sheet.
+- Sheet ``process_params`` with one row per process parameter set.
+
+The process parameter sheet must contain ``process_param_index`` and the
+parameter columns listed in ``process_param_names``.
+
 Unmapped columns
 ----------------
 Columns that cannot be mapped to the TrajCenter v2 schema are not stored
@@ -32,13 +43,14 @@ Expected workbook structure
 ---------------------------
 - Trajectory sheets: any sheet whose name is not reserved.
 - Sheet ``meta``: optional key/value metadata sheet.
+- Sheet ``process_params``: optional process parameter table.
 - Sheets ``tools`` and ``wobjs``: legacy v1 sheets, ignored in v2.
 
 Mandatory columns are ``x``, ``y`` and ``z``.
 Missing quaternions are replaced by the identity orientation
 ``[1, 0, 0, 0]``.
 
-Optional process columns such as ``tcp_speed``, ``zone_type``,
+Optional send columns such as ``tcp_speed``, ``zone_type``,
 ``tool_name`` and ``wobj_name`` are preserved when present or added only
 when explicit :class:`~trajcenter.converter.defaults.ConversionDefaults`
 values are provided.
@@ -108,7 +120,7 @@ class ExcelConverter(_TabularConverter):
 
         Args:
             defaults: Default values for optional v2 columns. When ``None``,
-                no optional process column is added unless present in the source.
+                no optional send column is added unless present in the source.
 
         Returns:
             None.
