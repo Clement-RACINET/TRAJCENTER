@@ -1,138 +1,186 @@
 #!/usr/bin/env python3
-# scripts/examples/convert_apt_example.py
-"""APT source to ``.trajcenter`` conversion example.
+# scripts/exemples/convert_apt_example.py
+"""APT source to TrajCenter v2.4 conversion demonstration.
 
 Author: Clement RACINET
 
-Demonstrates three conversion scenarios for a CATIA APT source file
-(``.aptsource``):
+This script demonstrates APT source conversion and validates local
+``.trajcenter`` save/load roundtrip.
 
-1. **Standard conversion** — raw APT coordinates.
-2. **With CATIA transform** — frame matrix applied to all points.
-3. **With custom defaults** — override speed, zone, tool and wobj.
-
-Edit the variables in the "Configuration" section below, then run
-directly::
-
-    python scripts/examples/convert_apt_example.py
+Run:
+    python scripts/exemples/convert_apt_example.py
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from _demo_utils import (
+    active_external_axes,
+    assert_same_geometry,
+    point_count,
+    preview_columns,
+)
 from trajcenter.converter.apt_converter import AptConverter
-from trajcenter.converter.defaults import ConversionDefaults
 from trajcenter.core.trajectory import Trajectory
 
-# ---------------------------------------------------------------------------
-# Configuration — adjust to your context
-# ---------------------------------------------------------------------------
 
 SOURCE = Path("trajectory_files/PrepaFlans_Pointage.aptsource")
-DEST_DIR = Path("trajectory_store")
+OUTPUT_DIR = Path("trajectory_store")
 
-# ---------------------------------------------------------------------------
-# Case 1 — Standard conversion (raw coordinates)
-# ---------------------------------------------------------------------------
 
-print("=" * 60)
-print("Case 1 — Standard conversion")
-print("=" * 60)
+def print_summary(title: str, traj: Trajectory) -> None:
+    """Print a compact trajectory summary.
 
-traj = AptConverter().convert(SOURCE)
+    ABB Route:
+        N/A — local conversion demonstration.
 
-print(traj)
-print(f"  Detected tool    : {traj.tools[0]!r}")
-print(f"  Default wobj     : {traj.wobjs[0]!r}")
-print(f"  Autocompleted    : {traj.meta.autocompleted}")
-print()
+    ABB Constraints:
+        No ABB controller access.
 
-# Preview of the first 3 points
-print(
-    traj.points[["x", "y", "z", "q1", "move_type", "speed"]]
-    .head(3)
-    .to_string(index=False)
-)
-print()
+    Args:
+        title: Section title.
+        traj: Trajectory to display.
 
-dest = AptConverter().convert_and_save(source=SOURCE, dest_dir=DEST_DIR)
-print(f"  Saved → {dest}")
-print()
+    Returns:
+        None.
 
-# ---------------------------------------------------------------------------
-# Case 2 — With CATIA transform
-# ---------------------------------------------------------------------------
+    Raises:
+        None.
 
-print("=" * 60)
-print("Case 2 — With CATIA transform (apply_catia_transform=True)")
-print("=" * 60)
+    Example:
+        ::
 
-traj_transformed = AptConverter(apply_catia_transform=True).convert(SOURCE)
+            print_summary("APT", traj)
+    """
+    columns = preview_columns(
+        traj,
+        [
+            "x",
+            "y",
+            "z",
+            "q1",
+            "q2",
+            "q3",
+            "q4",
+            "move_type",
+            "speed",
+            "zone",
+            "cf1",
+            "cf4",
+            "cf6",
+            "cfx",
+        ],
+    )
 
-print(traj_transformed)
-print()
+    print("=" * 72)
+    print(title)
+    print("=" * 72)
+    print(traj)
+    print(f"  points        : {point_count(traj)}")
+    print(f"  external axes : {active_external_axes(traj)}")
+    print(f"  autocompleted : {traj.meta.autocompleted}")
+    print(f"  columns       : {list(traj.points.columns)}")
+    print()
+    print(traj.points[columns].head(5).to_string(index=False))
+    print()
 
-# Compare first point before / after transform
-traj_raw = AptConverter().convert(SOURCE)
-pt_raw = traj_raw.points.iloc[0]
-pt_tr = traj_transformed.points.iloc[0]
 
-print(
-    f"  Point 0 raw         : x={pt_raw['x']:.3f}  y={pt_raw['y']:.3f}  z={pt_raw['z']:.3f}"
-)
-print(
-    f"  Point 0 transformed : x={pt_tr['x']:.3f}  y={pt_tr['y']:.3f}  z={pt_tr['z']:.3f}"
-)
-print()
+def assert_valid_roundtrip(traj: Trajectory, path: Path) -> None:
+    """Validate save/load roundtrip for a trajectory.
 
-dest_tr = AptConverter(apply_catia_transform=True).convert_and_save(
-    source=SOURCE,
-    dest_dir=DEST_DIR,
-    stem=SOURCE.stem + "_transformed",
-)
-print(f"  Saved → {dest_tr}")
-print()
+    ABB Route:
+        N/A — local archive validation.
 
-# ---------------------------------------------------------------------------
-# Case 3 — Custom defaults
-# ---------------------------------------------------------------------------
+    ABB Constraints:
+        No ABB controller access.
 
-print("=" * 60)
-print("Case 3 — Custom defaults")
-print("=" * 60)
+    Args:
+        traj: Source trajectory.
+        path: Destination archive path.
 
-custom_defaults = ConversionDefaults(
-    speed="v300",
-    zone="z5",
-    tool="Tool_Pointeur_D10",
-    wobj="Wobj_Flan",
-)
+    Returns:
+        None.
 
-traj_custom = AptConverter(defaults=custom_defaults).convert(SOURCE)
+    Raises:
+        AssertionError: If roundtrip validation fails.
+        OSError: If the archive cannot be written or read.
 
-print(traj_custom)
-print(f"  Tool              : {traj_custom.tools[0]!r}")
-print(f"  Wobj              : {traj_custom.wobjs[0]!r}")
-print(f"  Speed at point 0  : {traj_custom.points['speed'].iloc[0]!r}")
-print(f"  Zone at point 0   : {traj_custom.points['zone'].iloc[0]!r}")
-print()
+    Example:
+        ::
 
-# ---------------------------------------------------------------------------
-# Roundtrip verification
-# ---------------------------------------------------------------------------
+            assert_valid_roundtrip(traj, Path("out.trajcenter"))
+    """
+    saved = traj.save(path)
+    loaded = Trajectory.load(saved)
 
-print("=" * 60)
-print("Roundtrip verification: save → load")
-print("=" * 60)
+    assert_same_geometry(traj, loaded)
 
-saved = traj.save(DEST_DIR / "pointage_check.trajcenter")
-loaded = Trajectory.load(saved)
+    print(f"Roundtrip OK → {saved}")
+    print()
 
-assert loaded.point_count == traj.point_count
-assert loaded.tools == traj.tools
-assert loaded.is_complete
 
-print(f"  ✓ {loaded.point_count} points reloaded successfully")
-print(f"  ✓ Complete : {loaded.is_complete}")
-print(f"  ✓ Tool     : {loaded.tools[0]!r}")
+def main() -> None:
+    """Run APT conversion demonstration scenarios.
+
+    ABB Route:
+        N/A — local APT parsing demonstration.
+
+    ABB Constraints:
+        No ABB controller access.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        FileNotFoundError: If the APT source file does not exist.
+        AssertionError: If a conversion roundtrip check fails.
+        ValueError: If the source cannot be converted.
+
+    Example:
+        ::
+
+            main()
+    """
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    if not SOURCE.exists():
+        raise FileNotFoundError(f"APT source not found: {SOURCE}")
+
+    standard = AptConverter().convert(SOURCE)
+    print_summary("Case 1 — APT standard conversion", standard)
+    assert_valid_roundtrip(
+        standard,
+        OUTPUT_DIR / f"{standard.meta.name}.trajcenter",
+    )
+
+    transformed = AptConverter(apply_catia_transform=True).convert(SOURCE)
+    print_summary("Case 2 — APT with CATIA transform", transformed)
+    assert_valid_roundtrip(
+        transformed,
+        OUTPUT_DIR / f"{transformed.meta.name}_transformed.trajcenter",
+    )
+
+    raw_pt = standard.points.iloc[0]
+    transformed_pt = transformed.points.iloc[0]
+
+    print("First point comparison:")
+    print(
+        f"  raw         : x={raw_pt['x']:.3f}, y={raw_pt['y']:.3f}, z={raw_pt['z']:.3f}"
+    )
+    print(
+        "  transformed : "
+        f"x={transformed_pt['x']:.3f}, "
+        f"y={transformed_pt['y']:.3f}, "
+        f"z={transformed_pt['z']:.3f}"
+    )
+    print()
+
+    print("OK — APT conversion scenarios validated.")
+
+
+if __name__ == "__main__":
+    main()

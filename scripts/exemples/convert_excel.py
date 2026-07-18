@@ -1,87 +1,159 @@
 #!/usr/bin/env python3
-# scripts/examples/convert_excel_example.py
-"""Excel (``.xlsx``) to ``.trajcenter`` conversion example.
+# scripts/exemples/convert_excel.py
+"""Excel to TrajCenter v2.4 conversion demonstration.
 
 Author: Clement RACINET
 
-Demonstrates two conversion scenarios for an Excel workbook:
+This script demonstrates:
 
-1. **Single-sheet workbook** — :meth:`~trajcenter.converter.excel_converter.ExcelConverter.convert`.
-2. **Multi-sheet workbook** — :meth:`~trajcenter.converter.excel_converter.ExcelConverter.convert_all`.
+1. Single trajectory extraction from an Excel workbook.
+2. Multiple trajectory extraction from a multi-sheet Excel workbook.
+3. Save/load roundtrip validation for every generated ``.trajcenter`` file.
 
-Edit the variables in the "Configuration" section below, then run
-directly::
-
-    python scripts/examples/convert_excel_example.py
+Run:
+    python scripts/exemples/convert_excel.py
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from trajcenter.converter.defaults import ConversionDefaults
+from _demo_utils import assert_same_geometry, point_count
 from trajcenter.converter.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
 
-# ---------------------------------------------------------------------------
-# Configuration — adjust to your context
-# ---------------------------------------------------------------------------
 
-# Case 1 — single-sheet workbook (XYZ + optional columns)
 SOURCE_SINGLE = Path("trajectory_files/trajectoires_mono.xlsx")
-
-# Case 2 — multi-sheet workbook (one trajectory per sheet)
 SOURCE_MULTI = Path("trajectory_files/trajectoires_multi.xlsx")
-
 OUTPUT_DIR = Path("trajectory_store")
 
-# Fallback values for columns absent from the Excel file.
-# Useful when the workbook contains only XYZ columns
-# (quaternions will be filled with the identity orientation).
-DEFAULTS = ConversionDefaults(
-    move_type="MoveL",
-    speed="v10",
-    zone="z0",
-)
 
-# ---------------------------------------------------------------------------
-# Case 1 — single sheet
-# ---------------------------------------------------------------------------
+def print_trajectory_summary(traj: Trajectory) -> None:
+    """Print a compact Excel conversion summary.
 
-print("=" * 60)
-print("Case 1 — Single-sheet workbook")
-print("=" * 60)
+    ABB Route:
+        N/A — local Excel conversion demonstration.
 
-traj: Trajectory = ExcelConverter(defaults=DEFAULTS).convert(SOURCE_SINGLE)
+    ABB Constraints:
+        No ABB controller access.
 
-print(traj)
-print(f"  tools         : {traj.tools}")
-print(f"  wobjs         : {traj.wobjs}")
-print(f"  autocompleted : {traj.meta.autocompleted}")
-print(f"  is_complete   : {traj.is_complete}")
-print()
-print(traj.points.head())
+    Args:
+        traj: Trajectory to display.
 
-dest = traj.save(OUTPUT_DIR / f"{traj.meta.name}.trajcenter")
-print(f"\nSaved → {dest}")
+    Returns:
+        None.
 
-# ---------------------------------------------------------------------------
-# Case 2 — multi-sheet
-# ---------------------------------------------------------------------------
+    Raises:
+        None.
 
-print()
-print("=" * 60)
-print("Case 2 — Multi-sheet workbook")
-print("=" * 60)
+    Example:
+        ::
 
-trajs: list[Trajectory] = ExcelConverter(defaults=DEFAULTS).convert_all(SOURCE_MULTI)
+            print_trajectory_summary(traj)
+    """
+    print(traj)
+    print(f"  name          : {traj.meta.name}")
+    print(f"  points        : {point_count(traj)}")
+    print(f"  autocompleted : {traj.meta.autocompleted}")
+    print(f"  columns       : {list(traj.points.columns)}")
+    print()
+    print(traj.points.head(5).to_string(index=False))
+    print()
 
-print(f"{len(trajs)} trajectory/trajectories extracted:\n")
 
-for traj in trajs:
-    print(
-        f"  [{traj.meta.name}]  {traj.point_count} points  "
-        f"| tools={traj.tools}  wobjs={traj.wobjs}"
-    )
-    dest = traj.save(OUTPUT_DIR / f"{traj.meta.name}.trajcenter")
-    print(f"    → Saved: {dest}")
+def save_and_validate(traj: Trajectory, output_dir: Path) -> Path:
+    """Save a trajectory and validate the ``.trajcenter`` roundtrip.
+
+    ABB Route:
+        N/A — local archive validation.
+
+    ABB Constraints:
+        No ABB controller access.
+
+    Args:
+        traj: Trajectory to save.
+        output_dir: Directory where the archive is written.
+
+    Returns:
+        Path to the saved ``.trajcenter`` archive.
+
+    Raises:
+        AssertionError: If the loaded archive differs from the source.
+        OSError: If the archive cannot be written or read.
+
+    Example:
+        ::
+
+            path = save_and_validate(traj, Path("trajectory_store"))
+    """
+    path = traj.save(output_dir / f"{traj.meta.name}.trajcenter")
+    loaded = Trajectory.load(path)
+
+    assert_same_geometry(traj, loaded)
+
+    return path
+
+
+def main() -> None:
+    """Run Excel conversion examples.
+
+    ABB Route:
+        N/A — local Excel conversion demonstration.
+
+    ABB Constraints:
+        No ABB controller access.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        FileNotFoundError: If an input workbook does not exist.
+        AssertionError: If a save/load check fails.
+        ValueError: If a workbook cannot be converted.
+
+    Example:
+        ::
+
+            main()
+    """
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    if not SOURCE_SINGLE.exists():
+        raise FileNotFoundError(f"Excel source not found: {SOURCE_SINGLE}")
+    if not SOURCE_MULTI.exists():
+        raise FileNotFoundError(f"Excel source not found: {SOURCE_MULTI}")
+
+    converter = ExcelConverter()
+
+    print("=" * 72)
+    print("Case 1 — Excel single-sheet conversion")
+    print("=" * 72)
+
+    single = converter.convert(SOURCE_SINGLE)
+    print_trajectory_summary(single)
+    single_path = save_and_validate(single, OUTPUT_DIR)
+    print(f"Saved and validated → {single_path}")
+    print()
+
+    print("=" * 72)
+    print("Case 2 — Excel multi-sheet conversion")
+    print("=" * 72)
+
+    trajectories = converter.convert_all(SOURCE_MULTI)
+    print(f"Extracted trajectories: {len(trajectories)}")
+    print()
+
+    for traj in trajectories:
+        print_trajectory_summary(traj)
+        path = save_and_validate(traj, OUTPUT_DIR)
+        print(f"Saved and validated → {path}")
+        print()
+
+    print("OK — Excel conversion scenarios validated.")
+
+
+if __name__ == "__main__":
+    main()

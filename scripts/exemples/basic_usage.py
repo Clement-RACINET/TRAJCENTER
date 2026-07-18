@@ -1,29 +1,56 @@
 #!/usr/bin/env python3
-# scripts/examples/basic_usage.py
-"""Save/load roundtrip example for the TrajCenter ``.trajcenter`` format.
+# scripts/exemples/basic_usage.py
+"""Basic TrajCenter v2.4 save/load roundtrip example.
 
 Author: Clement RACINET
 
-Demonstrates creating a :class:`~trajcenter.core.trajectory.Trajectory`
-with external axis configuration, saving it to disk, reloading it, and
-asserting data integrity.
+This script creates a minimal ABB geometry trajectory with one active external
+axis, saves it as a ``.trajcenter`` archive, reloads it, and validates data
+integrity.
+
+Run:
+    python scripts/exemples/basic_usage.py
 """
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
-from trajcenter.core.trajectory import Trajectory, TrajectoryMeta, ExternalAxisConfig
+
+from _demo_utils import active_external_axes, point_count
+from trajcenter.core.trajectory import ExternalAxisConfig, Trajectory, TrajectoryMeta
 
 
-def test_save_load_roundtrip() -> None:
-    """Create a trajectory, save it, reload it and verify integrity.
+OUTPUT_DIR = Path("trajectory_store")
+OUTPUT_FILE = OUTPUT_DIR / "demo_basic_usage.trajcenter"
 
-    Builds a two-point trajectory with one rotational external axis
-    (``eax_a``), serialises it to a ``.trajcenter`` file, deserialises
-    it, and asserts that the point count, name and external axis
-    configuration are preserved.
+
+def build_demo_trajectory() -> Trajectory:
+    """Build a minimal demonstration trajectory.
+
+    ABB Route:
+        N/A — local TrajCenter v2.4 archive generation.
+
+    ABB Constraints:
+        No ABB controller access. External axis inactivity sentinel ``9E9`` is
+        not stored in the ``.trajcenter`` file.
+
+    Args:
+        None.
+
+    Returns:
+        Demonstration trajectory with two points and one active external axis.
+
+    Raises:
+        ValueError: If the trajectory data model validation fails.
+
+    Example:
+        ::
+
+            traj = build_demo_trajectory()
     """
-    df = pd.DataFrame(
+    points = pd.DataFrame(
         {
             "x": [100.0, 200.0],
             "y": [150.0, 250.0],
@@ -35,23 +62,71 @@ def test_save_load_roundtrip() -> None:
             "eax_a": [45.0, 90.0],
         }
     )
+
     meta = TrajectoryMeta(
-        name="test_pointage",
+        name="demo_basic_usage",
         robot_model="IRB6700",
         external_axes={
             "eax_a": ExternalAxisConfig(
-                axis_type="rotational", unit="deg", label="Positionneur A"
+                axis_type="rotational",
+                unit="deg",
+                label="Positionneur A",
             )
         },
     )
-    traj = Trajectory(meta=meta, points=df)
-    path = traj.save("trajectory_store/test.trajcenter")
 
-    traj2 = Trajectory.load(path)
-    assert traj2.point_count == 2
-    assert traj2.meta.name == "test_pointage"
-    assert "eax_a" in traj2.active_external_axes
-    print(traj2)
+    return Trajectory(meta=meta, points=points)
 
 
-test_save_load_roundtrip()
+def main() -> None:
+    """Run the basic save/load roundtrip demonstration.
+
+    ABB Route:
+        N/A — local file demonstration.
+
+    ABB Constraints:
+        No ABB controller access.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+
+    Raises:
+        AssertionError: If the roundtrip integrity checks fail.
+        OSError: If the output archive cannot be written or read.
+
+    Example:
+        ::
+
+            main()
+    """
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    traj = build_demo_trajectory()
+    saved = traj.save(OUTPUT_FILE)
+    loaded = Trajectory.load(saved)
+
+    assert point_count(loaded) == 2
+    assert loaded.meta.name == "demo_basic_usage"
+    assert "eax_a" in active_external_axes(loaded)
+    assert list(loaded.points.columns) == list(traj.points.columns)
+
+    print("=" * 72)
+    print("TrajCenter v2.4 — basic save/load roundtrip")
+    print("=" * 72)
+    print(loaded)
+    print()
+    print(f"Saved archive : {saved}")
+    print(f"Point count   : {point_count(loaded)}")
+    print(f"External axes : {active_external_axes(loaded)}")
+    print(f"Columns       : {list(loaded.points.columns)}")
+    print()
+    print(loaded.points.to_string(index=False))
+    print()
+    print("OK — roundtrip validated.")
+
+
+if __name__ == "__main__":
+    main()

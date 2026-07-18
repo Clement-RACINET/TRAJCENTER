@@ -23,6 +23,7 @@ trajcenter
 │   │   ├── generate_api.py
 │   │   └── run_docs.py
 │   └── exemples
+│       ├── _demo_utils.py
 │       ├── basic_usage.py
 │       ├── convert_apt_example.py
 │       ├── convert_excel.py
@@ -103,21 +104,13 @@ trajcenter
 │   ├── trajectoires_multi.xlsx
 │   └── TrajGeo1Reel.txt
 ├── trajectory_store
-│   ├── trajectoires_mono_traj
-│   │   ├── meta.json
-│   │   ├── points.parquet
-│   │   ├── tools.json
-│   │   └── wobjs.json
-│   ├── 1.trajcenter
+│   ├── demo_basic_usage.trajcenter
 │   ├── mod_exemple.trajcenter
-│   ├── pointage_check.trajcenter
 │   ├── PrepaFlans_Pointage.trajcenter
+│   ├── PrepaFlans_Pointage_custom_defaults.trajcenter
 │   ├── PrepaFlans_Pointage_transformed.trajcenter
-│   ├── test.trajcenter
 │   ├── test_basic.trajcenter
 │   ├── trajectoires_mono.trajcenter
-│   ├── trajectoires_mono_traj.trajcenter
-│   ├── trajectoires_mono_traj.zip
 │   ├── trajectoires_multi.trajcenter
 │   └── trajectoires_multi_Traj2.trajcenter
 ├── coverage.xml
