@@ -1,34 +1,62 @@
 #!/usr/bin/env python3
 # trajcenter/converter/csv_converter.py
-"""Converter for CSV / delimited text files to ``.trajcenter``.
+"""Converter for CSV and delimited text files to ``.trajcenter``.
 
 Author: Clement RACINET
 
 Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.
 This class only implements CSV file reading with automatic separator
-detection (comma ``,`` or semicolon ``;``).
+detection.
+
+TrajCenter v2 mapping
+---------------------
+The converter imports human-readable tabular columns into canonical v2
+trajectory columns:
+
+- ``speed`` / ``v500`` / numeric speed aliases -> ``tcp_speed``.
+- ``zone`` / ``z10`` -> ``zone_type=10``.
+- ``zone`` / ``fine`` -> ``zone_type=255``.
+- ``tool`` / tool aliases -> ``tool_name``.
+- ``wobj`` / work-object aliases -> ``wobj_name``.
+
+Legacy index columns such as ``tool_index`` and ``wobj_index`` are not
+part of the v2 output.
+
+Unmapped columns
+----------------
+Columns that cannot be mapped to the TrajCenter v2 schema are not stored
+in ``Trajectory.points``. A ``UserWarning`` is emitted and their names are
+recorded in ``Trajectory.meta.extra["unmapped_columns"]`` for audit.
 
 Separator
-----------
+---------
 The separator is detected automatically via :func:`_detect_separator`
-by reading the first 4 lines of the file. If detection fails, a comma
-is used as the default.
+by reading the first non-empty lines of the file. Supported delimiters
+are comma, semicolon, tab and pipe. If detection fails, comma is used.
 
 The separator can also be forced via the ``separator`` constructor
 parameter.
 
 Encoding
----------
-The encoding is detected automatically (UTF-8 with BOM, UTF-8, Latin-1).
-It can be forced via the ``encoding`` parameter.
+--------
+The default encoding is ``"utf-8-sig"``, which supports UTF-8 files with
+or without a BOM. It can be overridden via the ``encoding`` parameter.
+
+ABB Route:
+    N/A — local CSV file conversion, no RWS route.
+
+ABB Constraints:
+    No mastership is acquired. No RAPID variable is read or written.
 
 Example:
     ::
 
+        from pathlib import Path
+        from trajcenter.converter.csv_converter import CsvConverter
+
         traj = CsvConverter().convert(Path("data/trajectoire.csv"))
 
-        # Force separator and encoding
         traj = CsvConverter(separator=";", encoding="latin-1").convert(
             Path("data/export_excel.csv")
         )
@@ -57,19 +85,35 @@ _SNIFF_LINES: int = 4
 def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
     """Automatically detect the separator of a CSV file.
 
-    Reads the first :data:`_SNIFF_LINES` non-empty lines and uses
-    :class:`csv.Sniffer` to identify the delimiter. If detection fails
-    or returns a non-standard separator, a comma is used as the default.
+    Reads the first non-empty lines and uses :class:`csv.Sniffer` to
+    identify the delimiter. If detection fails or returns an unsupported
+    separator, comma is used.
+
+    ABB Route:
+        N/A — local file inspection.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
         source: Path to the CSV file.
-        encoding: Encoding to use when reading. ``"utf-8-sig"``
-            handles the UTF-8 BOM automatically.
+        encoding: Encoding to use when reading. ``"utf-8-sig"`` handles
+            UTF-8 files with or without BOM.
 
     Returns:
-        Detected separator among ``","``, ``";"``, ``"\\t"``, ``"|"``,
-        or ``","`` by default.
+        Detected separator among ``","``, ``";"``, ``"\\t"`` and ``"|"``.
+        Returns ``","`` when detection fails.
+
+    Raises:
+        None. Detection errors are intentionally swallowed and replaced by
+        the comma fallback.
+
+    Example:
+        ::
+
+            separator = _detect_separator(Path("trajectory.csv"))
     """
+
     try:
         lines: list[str] = []
         with source.open(encoding=encoding, errors="replace") as f:
@@ -96,16 +140,22 @@ def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
 class CsvConverter(_TabularConverter):
     """Converter for CSV files to :class:`~trajcenter.core.trajectory.Trajectory`.
 
-    Inherits from
-    :class:`~trajcenter.converter.tabular_converter._TabularConverter`
-    for all business logic. Only implements CSV reading with automatic
-    separator detection.
+    The class inherits all v2 tabular conversion rules from
+    :class:`~trajcenter.converter.tabular_converter._TabularConverter` and
+    only implements CSV reading, separator detection and encoding handling.
+
+    ABB Route:
+        N/A — local CSV file conversion.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Attributes:
-        defaults: Default values for autocompletion.
-        separator: Forced separator. When ``None``, auto-detection is used.
-        encoding: File encoding. Defaults to ``"utf-8-sig"``
-            (handles UTF-8 with and without BOM).
+        defaults: Optional conversion defaults used only for missing optional
+            v2 columns.
+        separator: Forced CSV separator. When ``None``, auto-detection is
+            used.
+        encoding: Source file encoding. Defaults to ``"utf-8-sig"``.
 
     Example:
         ::
@@ -113,10 +163,7 @@ class CsvConverter(_TabularConverter):
             from pathlib import Path
             from trajcenter.converter.csv_converter import CsvConverter
 
-            # Automatic separator detection
             traj = CsvConverter().convert(Path("trajectoire.csv"))
-
-            # Forced separator (French Excel export)
             traj = CsvConverter(separator=";").convert(Path("export.csv"))
     """
 
@@ -128,12 +175,29 @@ class CsvConverter(_TabularConverter):
     ) -> None:
         """Initialise the CSV converter.
 
+        ABB Route:
+            N/A.
+
+        ABB Constraints:
+            No ABB controller access.
+
         Args:
-            defaults: Default values for autocompletion.
-            separator: Forced CSV separator (``","`` or ``";"`` etc.).
-                When ``None``, auto-detection is used.
-            encoding: Source file encoding. Defaults to ``"utf-8-sig"``
-                (handles the UTF-8 BOM from Excel exports).
+            defaults: Default values for optional v2 columns. When ``None``,
+                no optional process column is added unless present in the source.
+            separator: Forced CSV separator. When ``None``, auto-detection is
+                used.
+            encoding: Source file encoding. Defaults to ``"utf-8-sig"``.
+
+        Returns:
+            None.
+
+        Raises:
+            pydantic.ValidationError: If defaults are invalid.
+
+        Example:
+            ::
+
+                converter = CsvConverter(separator=";", encoding="utf-8-sig")
         """
         super().__init__(defaults)
         self.separator: str | None = separator
@@ -141,23 +205,57 @@ class CsvConverter(_TabularConverter):
 
     @property
     def _source_format(self) -> SourceFormat:
-        """Source format identifier for this converter.
+        """Return the source format identifier for CSV imports.
+
+        ABB Route:
+            N/A.
+
+        ABB Constraints:
+            No ABB controller access.
+
+        Args:
+            None.
 
         Returns:
-            :attr:`~trajcenter.core.trajectory.SourceFormat.CSV`.
+            :attr:`trajcenter.core.trajectory.SourceFormat.CSV`.
+
+        Raises:
+            None.
+
+        Example:
+            ::
+
+                assert converter._source_format == SourceFormat.CSV
         """
         return SourceFormat.CSV
 
     def _read_sheets(self, source: Path) -> dict[str, pd.DataFrame]:
-        """Read the CSV file and return a single ``"sheet"`` entry.
+        """Read the CSV file and expose it as a single tabular sheet.
 
-        The separator is detected automatically when not forced.
+        The separator is detected automatically unless explicitly configured.
+
+        ABB Route:
+            N/A — local CSV file read.
+
+        ABB Constraints:
+            No ABB controller access.
 
         Args:
             source: Path to the CSV file.
 
         Returns:
-            Dictionary ``{"sheet": raw_DataFrame}``.
+            Dictionary ``{"sheet": raw_dataframe}``.
+
+        Raises:
+            FileNotFoundError: If the CSV path does not exist.
+            pandas.errors.ParserError: If pandas cannot parse the CSV content.
+            UnicodeDecodeError: If the configured encoding is invalid for the
+                file content.
+
+        Example:
+            ::
+
+                sheets = converter._read_sheets(Path("trajectory.csv"))
         """
         sep = self.separator or _detect_separator(source, encoding=self.encoding)
         df = pd.read_csv(

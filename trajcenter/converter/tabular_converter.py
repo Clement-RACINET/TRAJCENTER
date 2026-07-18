@@ -27,6 +27,16 @@ human literals:
 - ``z10`` -> ``zone_type = 10``
 - ``fine`` -> ``zone_type = 255``
 
+Unmapped columns
+----------------
+Columns that cannot be resolved to the TrajCenter v2 schema are not
+stored in ``Trajectory.points``. They trigger a ``UserWarning`` and are
+recorded in ``Trajectory.meta.extra["unmapped_columns"]`` for audit.
+
+This strict policy avoids exposing columns that TrajCenter does not
+understand and that the robot would not recognise.
+
+
 Reserved Excel sheets
 ---------------------
 The legacy ``tools`` and ``wobjs`` sheets are ignored by v2. Tool and
@@ -313,6 +323,12 @@ class _TabularConverter(BaseConverter):
     ) -> Trajectory:
         """Build one trajectory from one tabular DataFrame.
 
+        Unmapped source columns are reported through a warning, recorded
+        in ``Trajectory.meta.extra["unmapped_columns"]`` and removed from
+        the trajectory points. This keeps the internal v2 schema strict:
+        a column present in ``Trajectory.points`` is always a column known
+        by TrajCenter.
+
         ABB Route:
             N/A — local DataFrame conversion.
 
@@ -346,6 +362,9 @@ class _TabularConverter(BaseConverter):
                 UserWarning,
                 stacklevel=3,
             )
+            unknown_present = [col for col in unknown if col in points.columns]
+            if unknown_present:
+                points = points.drop(columns=unknown_present)
 
         missing = sorted(_REQUIRED_COLS - set(points.columns))
         if missing:
@@ -370,17 +389,21 @@ class _TabularConverter(BaseConverter):
         if "name" in meta_overrides:
             name = meta_overrides["name"]
 
+        extra: dict[str, object] = {
+            k: v
+            for k, v in meta_overrides.items()
+            if k not in _META_APPLICABLE_FIELDS and k not in _META_IGNORED_FIELDS
+        }
+        if unknown:
+            extra["unmapped_columns"] = ",".join(sorted(unknown))
+
         meta = TrajectoryMeta(
             name=name,
             source_format=self._source_format,
             source_file=source.name,
             robot_model=meta_overrides.get("robot_model"),
             autocompleted=autocompleted,
-            extra={
-                k: v
-                for k, v in meta_overrides.items()
-                if k not in _META_APPLICABLE_FIELDS and k not in _META_IGNORED_FIELDS
-            },
+            extra=extra,
         )
         return Trajectory(meta=meta, points=points)
 

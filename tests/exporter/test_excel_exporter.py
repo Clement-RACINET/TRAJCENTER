@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 # tests/exporter/test_excel_exporter.py
-"""Integration tests for :class:`~trajcenter.exporter.excel_exporter.ExcelExporter`.
+"""Integration tests for :class:`trajcenter.exporter.excel_exporter.ExcelExporter`.
 
 Author: Clement RACINET
-
-Verifies the structure of the produced ``.xlsx`` file and the import/export
-symmetry with :class:`~trajcenter.converter.excel_converter.ExcelConverter`.
 """
 
 from __future__ import annotations
@@ -20,274 +17,260 @@ from trajcenter.exporter.excel_exporter import ExcelExporter
 from trajcenter.exporter.options import ExportOptions
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-
 def _export(
     traj: Trajectory,
     dest: Path,
     options: ExportOptions | None = None,
 ) -> Path:
-    """Run ``ExcelExporter.export()`` and return the produced file path.
+    """Export a trajectory to Excel.
+
+    ABB Route:
+        N/A — test helper.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
-        traj: Source trajectory to export.
+        traj: Source trajectory.
         dest: Destination directory.
-        options: Optional export options. Uses defaults when ``None``.
+        options: Optional export options.
 
     Returns:
-        Absolute path to the exported ``.xlsx`` file.
+        Exported workbook path.
+
+    Raises:
+        OSError: If export fails.
+
+    Example:
+        ::
+
+            path = _export(traj, tmp_path)
     """
     return ExcelExporter(options).export(traj, dest)
 
 
 def _sheets(path: Path) -> dict[str, pd.DataFrame]:
-    """Load all sheets from an Excel workbook.
+    """Read all sheets from an Excel workbook.
+
+    ABB Route:
+        N/A — test helper.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
-        path: Path to the ``.xlsx`` file.
+        path: Workbook path.
 
     Returns:
-        Dict mapping sheet name to its ``DataFrame``.
+        Mapping of sheet name to DataFrame.
+
+    Raises:
+        ValueError: If the workbook cannot be parsed.
+
+    Example:
+        ::
+
+            sheets = _sheets(path)
     """
     return pd.read_excel(path, sheet_name=None, engine="openpyxl")
 
 
-# ---------------------------------------------------------------------------
-# Produced file
-# ---------------------------------------------------------------------------
-
-
 class TestExcelExporterOutput:
-    """Tests verifying that the expected output file is created."""
+    """Tests for produced Excel workbook."""
 
     def test_produces_xlsx_file(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """An ``.xlsx`` file is created at the destination."""
+        """An .xlsx file is created."""
         path = _export(traj_basic, tmp_path)
         assert path.exists()
         assert path.suffix == ".xlsx"
 
     def test_filename_matches_traj_name(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The file stem matches the trajectory name."""
+        """The workbook stem matches the trajectory name."""
         path = _export(traj_basic, tmp_path)
         assert path.stem == traj_basic.meta.name
 
     def test_dest_dir_created_if_absent(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The destination directory is created when it does not exist."""
-        dest = tmp_path / "nested" / "output"
-        path = _export(traj_basic, dest)
+        """The destination directory is created when absent."""
+        path = _export(traj_basic, tmp_path / "nested" / "output")
         assert path.exists()
 
     def test_returns_absolute_path(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """``export()`` returns an absolute path."""
+        """export returns an absolute path."""
         path = _export(traj_basic, tmp_path)
         assert path.is_absolute()
 
 
-# ---------------------------------------------------------------------------
-# Sheets present
-# ---------------------------------------------------------------------------
-
-
 class TestExcelExporterSheets:
-    """Tests verifying which sheets are present in the workbook."""
+    """Tests for workbook sheet structure."""
 
     def test_traj_sheet_present(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``traj`` sheet is present."""
-        sheets = _sheets(_export(traj_basic, tmp_path))
-        assert "traj" in sheets
-
-    def test_tools_sheet_present(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``tools`` sheet is present."""
-        sheets = _sheets(_export(traj_basic, tmp_path))
-        assert "tools" in sheets
-
-    def test_wobjs_sheet_present(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``wobjs`` sheet is present."""
-        sheets = _sheets(_export(traj_basic, tmp_path))
-        assert "wobjs" in sheets
+        """The traj sheet is present."""
+        assert "traj" in _sheets(_export(traj_basic, tmp_path))
 
     def test_meta_sheet_present_by_default(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The ``meta`` sheet is present by default."""
-        sheets = _sheets(_export(traj_basic, tmp_path))
-        assert "meta" in sheets
+        """The meta sheet is present by default."""
+        assert "meta" in _sheets(_export(traj_basic, tmp_path))
 
     def test_meta_sheet_absent_when_disabled(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The ``meta`` sheet is absent when ``include_meta=False``."""
-        opts = ExportOptions(include_meta=False)
-        sheets = _sheets(_export(traj_basic, tmp_path, opts))
+        """The meta sheet is absent when include_meta is False."""
+        sheets = _sheets(
+            _export(traj_basic, tmp_path, ExportOptions(include_meta=False))
+        )
         assert "meta" not in sheets
 
+    def test_tools_sheet_not_present(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
+    ) -> None:
+        """Legacy tools sheet is not produced."""
+        assert "tools" not in _sheets(_export(traj_basic, tmp_path))
 
-# ---------------------------------------------------------------------------
-# traj sheet content
-# ---------------------------------------------------------------------------
+    def test_wobjs_sheet_not_present(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
+    ) -> None:
+        """Legacy wobjs sheet is not produced."""
+        assert "wobjs" not in _sheets(_export(traj_basic, tmp_path))
 
 
 class TestExcelExporterTrajSheet:
-    """Tests verifying the content of the ``traj`` sheet."""
+    """Tests for traj sheet content."""
 
     def test_row_count(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``traj`` sheet contains the same number of rows as the trajectory."""
+        """The traj sheet has the same number of rows as the trajectory."""
         df = _sheets(_export(traj_basic, tmp_path))["traj"]
         assert len(df) == len(traj_basic.points)
 
-    def test_xyz_columns_present(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The x, y, z columns are present in the ``traj`` sheet."""
+    def test_v2_columns_present(self, traj_basic: Trajectory, tmp_path: Path) -> None:
+        """Canonical v2 columns are present."""
         df = _sheets(_export(traj_basic, tmp_path))["traj"]
-        for col in ["x", "y", "z"]:
+        for col in ["x", "y", "z", "tcp_speed", "zone_type", "tool_name", "wobj_name"]:
             assert col in df.columns
 
-    def test_tool_column_resolved(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``tool`` column contains string names, not integer indices."""
+    def test_legacy_columns_absent(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
+    ) -> None:
+        """Legacy v1 columns are absent."""
         df = _sheets(_export(traj_basic, tmp_path))["traj"]
-        assert "tool" in df.columns
-        # StringDtype (pandas 2.x) or object (pandas 1.x) — both are strings
-        assert not pd.api.types.is_integer_dtype(df["tool"])
-        assert df["tool"].iloc[0] == "tool0"
+        for col in ["speed", "zone", "tool_index", "wobj_index"]:
+            assert col not in df.columns
 
-    def test_wobj_column_resolved(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """The ``wobj`` column is present in the ``traj`` sheet."""
+    def test_tcp_speed_numeric_without_v(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
+    ) -> None:
+        """tcp_speed is exported as numeric without RAPID v prefix."""
         df = _sheets(_export(traj_basic, tmp_path))["traj"]
-        assert "wobj" in df.columns
+        assert pd.api.types.is_numeric_dtype(df["tcp_speed"])
+        assert df["tcp_speed"].iloc[1] == 250.5
 
-    def test_tool_index_not_in_traj_sheet(
-        self, traj_basic: Trajectory, tmp_path: Path
+    def test_zone_type_numeric(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The raw ``tool_index`` column is not present in the ``traj`` sheet."""
+        """zone_type is exported as numeric and preserves 255."""
         df = _sheets(_export(traj_basic, tmp_path))["traj"]
-        assert "tool_index" not in df.columns
+        assert pd.api.types.is_numeric_dtype(df["zone_type"])
+        assert df["zone_type"].tolist() == [10, 5, 255]
 
-    def test_wobj_index_not_in_traj_sheet(
-        self, traj_basic: Trajectory, tmp_path: Path
+    def test_multi_names_inline(
+        self,
+        traj_multi_names: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The raw ``wobj_index`` column is not present in the ``traj`` sheet."""
-        df = _sheets(_export(traj_basic, tmp_path))["traj"]
-        assert "wobj_index" not in df.columns
+        """Multiple tool and wobj names are preserved inline."""
+        df = _sheets(_export(traj_multi_names, tmp_path))["traj"]
+        assert df["tool_name"].tolist() == ["Tool_A", "Tool_B"]
+        assert df["wobj_name"].tolist() == ["Wobj_A", "Wobj_B"]
 
-    def test_multi_tools_names_in_traj(
-        self, traj_multi_tools: Trajectory, tmp_path: Path
+    def test_minimal_no_optional_columns(
+        self,
+        traj_minimal: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """All tool names appear in the ``traj`` sheet when multiple tools are used."""
-        df = _sheets(_export(traj_multi_tools, tmp_path))["traj"]
-        assert set(df["tool"].unique()) == {"Tool_A", "Tool_B"}
-
-
-# ---------------------------------------------------------------------------
-# tools / wobjs sheets content
-# ---------------------------------------------------------------------------
-
-
-class TestExcelExporterToolsWobjsSheets:
-    """Tests verifying the content of the ``tools`` and ``wobjs`` sheets."""
-
-    def test_tools_sheet_name_column(
-        self, traj_basic: Trajectory, tmp_path: Path
-    ) -> None:
-        """The ``tools`` sheet contains a ``name`` column."""
-        df = _sheets(_export(traj_basic, tmp_path))["tools"]
-        assert "name" in df.columns
-
-    def test_tools_sheet_single_tool(
-        self, traj_basic: Trajectory, tmp_path: Path
-    ) -> None:
-        """The ``tools`` sheet lists the single tool name correctly."""
-        df = _sheets(_export(traj_basic, tmp_path))["tools"]
-        assert df["name"].tolist() == ["tool0"]
-
-    def test_tools_sheet_multi_tools(
-        self, traj_multi_tools: Trajectory, tmp_path: Path
-    ) -> None:
-        """The ``tools`` sheet lists all tool names in order."""
-        df = _sheets(_export(traj_multi_tools, tmp_path))["tools"]
-        assert df["name"].tolist() == ["Tool_A", "Tool_B"]
-
-    def test_wobjs_sheet_single_wobj(
-        self, traj_basic: Trajectory, tmp_path: Path
-    ) -> None:
-        """The ``wobjs`` sheet lists the single wobj name correctly."""
-        df = _sheets(_export(traj_basic, tmp_path))["wobjs"]
-        assert df["name"].tolist() == ["wobj0"]
-
-    def test_wobjs_sheet_multi_wobjs(
-        self, traj_multi_tools: Trajectory, tmp_path: Path
-    ) -> None:
-        """The ``wobjs`` sheet lists all wobj names in order."""
-        df = _sheets(_export(traj_multi_tools, tmp_path))["wobjs"]
-        assert df["name"].tolist() == ["Wobj_A", "Wobj_B"]
-
-
-# ---------------------------------------------------------------------------
-# meta sheet content
-# ---------------------------------------------------------------------------
+        """Optional columns are not invented during export."""
+        df = _sheets(_export(traj_minimal, tmp_path))["traj"]
+        assert df.columns.tolist() == ["x", "y", "z", "q1", "q2", "q3", "q4"]
 
 
 class TestExcelExporterMetaSheet:
-    """Tests verifying the content of the ``meta`` sheet."""
+    """Tests for meta sheet content."""
 
     def test_meta_has_key_value_columns(
-        self, traj_with_meta: Trajectory, tmp_path: Path
+        self,
+        traj_with_meta: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The ``meta`` sheet contains ``key`` and ``value`` columns."""
+        """The meta sheet contains key/value columns."""
         df = _sheets(_export(traj_with_meta, tmp_path))["meta"]
-        assert "key" in df.columns
-        assert "value" in df.columns
-
-    def test_meta_name_present(
-        self, traj_with_meta: Trajectory, tmp_path: Path
-    ) -> None:
-        """The trajectory name is present in the ``meta`` sheet."""
-        df = _sheets(_export(traj_with_meta, tmp_path))["meta"]
-        assert "name" in df["key"].values
+        assert list(df.columns) == ["key", "value"]
 
     def test_meta_robot_model_value(
-        self, traj_with_meta: Trajectory, tmp_path: Path
+        self,
+        traj_with_meta: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The ``robot_model`` value is correctly written to the ``meta`` sheet."""
+        """The robot model is exported to the meta sheet."""
         df = _sheets(_export(traj_with_meta, tmp_path))["meta"]
         row = df[df["key"] == "robot_model"]
         assert row["value"].iloc[0] == "IRB6700-205/2.80"
 
     def test_meta_extra_fields_present(
-        self, traj_with_meta: Trajectory, tmp_path: Path
+        self,
+        traj_with_meta: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """Extra metadata fields are present in the ``meta`` sheet."""
+        """Extra metadata fields are exported to the meta sheet."""
         df = _sheets(_export(traj_with_meta, tmp_path))["meta"]
         assert "author" in df["key"].values
-
-
-# ---------------------------------------------------------------------------
-# Export → import symmetry (roundtrip)
-# ---------------------------------------------------------------------------
+        assert "project" in df["key"].values
 
 
 class TestExcelExporterRoundtrip:
-    """Tests verifying the export → import roundtrip symmetry."""
+    """Tests for Excel export/import roundtrip."""
 
     def test_roundtrip_point_count(
-        self, traj_basic: Trajectory, tmp_path: Path
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """Reloading the exported workbook produces the same number of points."""
-        path = _export(traj_basic, tmp_path)
-        reloaded = ExcelConverter().convert(path)
+        """Reloading the exported workbook preserves point count."""
+        reloaded = ExcelConverter().convert(_export(traj_basic, tmp_path))
         assert len(reloaded.points) == len(traj_basic.points)
 
-    def test_roundtrip_xyz_values(self, traj_basic: Trajectory, tmp_path: Path) -> None:
-        """x, y, z values are preserved after export → import."""
-        path = _export(traj_basic, tmp_path)
-        reloaded = ExcelConverter().convert(path)
+    def test_roundtrip_xyz_values(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
+    ) -> None:
+        """XYZ values are preserved after roundtrip."""
+        reloaded = ExcelConverter().convert(_export(traj_basic, tmp_path))
         for col in ["x", "y", "z"]:
             pd.testing.assert_series_equal(
                 reloaded.points[col].reset_index(drop=True),
@@ -296,34 +279,42 @@ class TestExcelExporterRoundtrip:
                 atol=1e-4,
             )
 
-    def test_roundtrip_tools(
-        self, traj_multi_tools: Trajectory, tmp_path: Path
+    def test_roundtrip_tcp_speed(
+        self,
+        traj_basic: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The tool list is preserved after export → import."""
-        path = _export(traj_multi_tools, tmp_path)
-        reloaded = ExcelConverter().convert(path)
-        assert reloaded.tools == traj_multi_tools.tools
+        """tcp_speed values are preserved after roundtrip."""
+        reloaded = ExcelConverter().convert(_export(traj_basic, tmp_path))
+        pd.testing.assert_series_equal(
+            reloaded.points["tcp_speed"].reset_index(drop=True),
+            traj_basic.points["tcp_speed"].reset_index(drop=True),
+            check_names=False,
+        )
 
-    def test_roundtrip_wobjs(
-        self, traj_multi_tools: Trajectory, tmp_path: Path
+    def test_roundtrip_tool_names(
+        self,
+        traj_multi_names: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The wobj list is preserved after export → import."""
-        path = _export(traj_multi_tools, tmp_path)
-        reloaded = ExcelConverter().convert(path)
-        assert reloaded.wobjs == traj_multi_tools.wobjs
+        """tool_name values are preserved after roundtrip."""
+        reloaded = ExcelConverter().convert(_export(traj_multi_names, tmp_path))
+        assert reloaded.points["tool_name"].tolist() == ["Tool_A", "Tool_B"]
 
     def test_roundtrip_meta_name(
-        self, traj_with_meta: Trajectory, tmp_path: Path
+        self,
+        traj_with_meta: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The trajectory name is preserved after export → import."""
-        path = _export(traj_with_meta, tmp_path)
-        reloaded = ExcelConverter().convert(path)
+        """The trajectory name is preserved after roundtrip."""
+        reloaded = ExcelConverter().convert(_export(traj_with_meta, tmp_path))
         assert reloaded.meta.name == traj_with_meta.meta.name
 
     def test_roundtrip_robot_model(
-        self, traj_with_meta: Trajectory, tmp_path: Path
+        self,
+        traj_with_meta: Trajectory,
+        tmp_path: Path,
     ) -> None:
-        """The ``robot_model`` value is preserved after export → import."""
-        path = _export(traj_with_meta, tmp_path)
-        reloaded = ExcelConverter().convert(path)
+        """The robot model is preserved after roundtrip."""
+        reloaded = ExcelConverter().convert(_export(traj_with_meta, tmp_path))
         assert reloaded.meta.robot_model == traj_with_meta.meta.robot_model

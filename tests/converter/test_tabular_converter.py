@@ -144,6 +144,15 @@ class TestResolveColumns:
         assert "tcp_speed" in df_out.columns
         assert unknown == []
 
+    def test_unknown_columns_warn_recorded_and_removed(
+        self, csv_unknown_col: Path
+    ) -> None:
+        """Unknown source columns are warned, recorded in metadata and removed."""
+        with pytest.warns(UserWarning, match=r"custom_col|unknown|Unknown"):
+            traj = CsvConverter().convert(csv_unknown_col)
+
+        assert "custom_col" not in traj.points.columns
+        assert traj.meta.extra["unmapped_columns"] == "custom_col"
 
 # ---------------------------------------------------------------------------
 # Tests — shared _TabularConverter logic (via CsvConverter)

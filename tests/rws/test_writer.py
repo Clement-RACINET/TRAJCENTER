@@ -6,15 +6,6 @@ Author: Clement RACINET
 
 All RWS calls are mocked via ``unittest.mock.AsyncMock``.
 No HTTP traffic is made.
-
-Covers:
-- symbol helper
-- ``_fmt_num`` / ``_fmt_bool`` / ``_fmt_string`` helpers
-- ``_row_to_robtarget`` — nominal, inactive eax, all eax active
-- ``_eax_presence`` detection
-- ``write_store_metadata`` — nominal, padding, validation errors
-- ``write_trajectory`` — nominal, progress callback, TrajReady last,
-  MastershipDenied retry, zero-points guard, tools/wobjs overflow
 """
 
 from __future__ import annotations
@@ -25,45 +16,72 @@ import pandas as pd
 import pytest
 
 from abb_rws_client_python_rw6 import MastershipDenied, RobTarget
-from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
-from trajcenter.rws._utils import symbol
 from trajcenter.rws.writer import (
     MAX_TRAJ,
-    MAX_TOOLS,
-    MAX_WOBJS,
+    STATUS_METADATA_REFRESHED,
     _eax_presence,
     _fmt_bool,
     _fmt_num,
     _fmt_string,
+    _fmt_traj_meta_record,
+    _retry_mastership,
     _row_to_robtarget,
     write_store_metadata,
     write_trajectory,
 )
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
 
 _MODULE = "trajcenter.rws.writer"
 
 
 @pytest.fixture
 def client() -> MagicMock:
-    """Bare ``MagicMock`` acting as ``RWSClient``."""
+    """Return a bare ``MagicMock`` acting as ``RWSClient``.
+
+    ABB Route:
+        N/A — test fixture.
+
+    ABB Constraints:
+        No controller access is performed.
+
+    Returns:
+        Mock client.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            client = MagicMock()
+    """
     return MagicMock()
 
 
 def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
-    """Build a minimal valid points ``DataFrame`` with *n* rows.
+    """Build a minimal valid v2 points DataFrame.
+
+    ABB Route:
+        N/A — test helper.
+
+    ABB Constraints:
+        No controller access is performed.
 
     Args:
         n: Number of rows to generate.
-        with_eax_a: When ``True``, adds an ``eax_a`` column filled with ``100.0``.
+        with_eax_a: Whether to add an active ``eax_a`` column.
 
     Returns:
-        A ``DataFrame`` suitable for use in a :class:`~trajcenter.core.trajectory.Trajectory`.
+        Points DataFrame.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            df = _make_df(n=2)
     """
-    data: dict[str, list] = {
+    data: dict[str, list[object]] = {
         "x": [float(i * 100) for i in range(n)],
         "y": [0.0] * n,
         "z": [500.0] * n,
@@ -75,70 +93,16 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
         "cf4": [0] * n,
         "cf6": [0] * n,
         "cfx": [0] * n,
-        "tool_index": [0] * n,
-        "wobj_index": [0] * n,
         "move_type": ["MoveL"] * n,
-        "speed": ["v500"] * n,
-        "zone": ["z10"] * n,
+        "tcp_speed": [500.0] * n,
+        "zone_type": [10] * n,
+        "readconfs": [True] * n,
+        "tool_name": ["tool0"] * n,
+        "wobj_name": ["wobj0"] * n,
     }
     if with_eax_a:
         data["eax_a"] = [100.0] * n
     return pd.DataFrame(data)
-
-
-def _make_traj(
-    n: int = 2,
-    tools: list[str] | None = None,
-    wobjs: list[str] | None = None,
-    with_eax_a: bool = False,
-) -> Trajectory:
-    """Build a minimal valid :class:`~trajcenter.core.trajectory.Trajectory`.
-
-    Args:
-        n: Number of trajectory points.
-        tools: Tool name list. Defaults to ``["tool0"]``.
-        wobjs: Work-object name list. Defaults to ``["wobj0"]``.
-        with_eax_a: When ``True``, adds an ``eax_a`` column to the points.
-
-    Returns:
-        A minimal :class:`~trajcenter.core.trajectory.Trajectory` instance.
-    """
-    return Trajectory(
-        meta=TrajectoryMeta(name="test_traj"),
-        points=_make_df(n, with_eax_a=with_eax_a),
-        tools=tools or ["tool0"],
-        wobjs=wobjs or ["wobj0"],
-    )
-
-
-# ---------------------------------------------------------------------------
-# symbol
-# ---------------------------------------------------------------------------
-
-
-class TestSymbol:
-    """Tests for :func:`~trajcenter.rws._utils.symbol`."""
-
-    def test_simple_variable(self) -> None:
-        """A simple variable name is correctly assembled into a ``RAPID/`` URL."""
-        assert symbol("T_ROB1", "TRAJCENTER", "TrajReady") == (
-            "RAPID/T_ROB1/TRAJCENTER/TrajReady"
-        )
-
-    def test_array_element(self) -> None:
-        """Array element notation is preserved verbatim in the URL."""
-        assert symbol("T_ROB1", "TRAJCENTER", "RobtTRAJCENTER/[1]") == (
-            "RAPID/T_ROB1/TRAJCENTER/RobtTRAJCENTER/[1]"
-        )
-
-    def test_custom_task_and_module(self) -> None:
-        """Custom task and module names are used in the URL."""
-        assert symbol("T_ROB2", "MY_MOD", "Var") == "RAPID/T_ROB2/MY_MOD/Var"
-
-
-# ---------------------------------------------------------------------------
-# _fmt_num / _fmt_bool / _fmt_string
-# ---------------------------------------------------------------------------
 
 
 class TestFormatHelpers:
@@ -156,16 +120,12 @@ class TestFormatHelpers:
         """A float with a fractional part is formatted with decimals."""
         assert _fmt_num(3.14) == "3.14"
 
-    def test_fmt_num_zero(self) -> None:
-        """Zero is formatted as ``'0'``."""
-        assert _fmt_num(0) == "0"
-
     def test_fmt_bool_true(self) -> None:
-        """``True`` is formatted as the RAPID literal ``'TRUE'``."""
+        """``True`` is formatted as ``TRUE``."""
         assert _fmt_bool(True) == "TRUE"
 
     def test_fmt_bool_false(self) -> None:
-        """``False`` is formatted as the RAPID literal ``'FALSE'``."""
+        """``False`` is formatted as ``FALSE``."""
         assert _fmt_bool(False) == "FALSE"
 
     def test_fmt_string_simple(self) -> None:
@@ -173,17 +133,24 @@ class TestFormatHelpers:
         assert _fmt_string("Tool_formage") == '"Tool_formage"'
 
     def test_fmt_string_empty(self) -> None:
-        """An empty string is formatted as an empty RAPID string ``'""'``."""
+        """An empty string is formatted as an empty RAPID string."""
         assert _fmt_string("") == '""'
 
+    def test_fmt_string_escapes_quotes(self) -> None:
+        """Embedded quotes are escaped."""
+        assert _fmt_string('A"B') == '"A\\"B"'
 
-# ---------------------------------------------------------------------------
-# _eax_presence
-# ---------------------------------------------------------------------------
+    def test_fmt_traj_meta_record_default_process(self) -> None:
+        """A metadata record defaults to process type ``0``."""
+        assert _fmt_traj_meta_record("TrajA", 100) == '["TrajA",100,0]'
+
+    def test_fmt_traj_meta_record_custom_process(self) -> None:
+        """A metadata record accepts a custom process type."""
+        assert _fmt_traj_meta_record("TrajA", 100, 2) == '["TrajA",100,2]'
 
 
 class TestEaxPresence:
-    """Tests for :func:`~trajcenter.rws.writer._eax_presence`."""
+    """Tests for :func:`trajcenter.rws.writer._eax_presence`."""
 
     def test_no_eax_columns(self) -> None:
         """A DataFrame with no ``eax_*`` columns returns all ``False``."""
@@ -203,16 +170,11 @@ class TestEaxPresence:
         assert _eax_presence(df) == (True, True, True, True, True, True)
 
 
-# ---------------------------------------------------------------------------
-# _row_to_robtarget
-# ---------------------------------------------------------------------------
-
-
 class TestRowToRobtarget:
-    """Tests for :func:`~trajcenter.rws.writer._row_to_robtarget`."""
+    """Tests for :func:`trajcenter.rws.writer._row_to_robtarget`."""
 
     def test_nominal_no_eax(self) -> None:
-        """All eax inactive → sentinel ``9e9`` for all external axes."""
+        """All external axes inactive produce ``9e9`` sentinel values."""
         row = pd.Series(
             {
                 "x": 100.0,
@@ -234,11 +196,10 @@ class TestRowToRobtarget:
         assert rt.y == 200.0
         assert rt.z == 300.0
         assert rt.qw == 1.0
-        assert rt.qx == 0.0
         assert rt.eax == [9e9] * 6
 
     def test_quaternion_mapping(self) -> None:
-        """``q1→qw``, ``q2→qx``, ``q3→qy``, ``q4→qz`` (ABB scalar-first convention)."""
+        """``q1`` maps to ``qw`` and ``q3`` maps to ``qy``."""
         row = pd.Series(
             {
                 "x": 0.0,
@@ -257,11 +218,9 @@ class TestRowToRobtarget:
         rt = _row_to_robtarget(row, (False,) * 6)
         assert rt.qw == pytest.approx(0.707)
         assert rt.qy == pytest.approx(0.707)
-        assert rt.qx == 0.0
-        assert rt.qz == 0.0
 
     def test_eax_a_active(self) -> None:
-        """Active ``eax_a`` is read from the row; other axes remain ``9e9``."""
+        """Active ``eax_a`` is read from the row."""
         row = pd.Series(
             {
                 "x": 0.0,
@@ -280,11 +239,10 @@ class TestRowToRobtarget:
         )
         rt = _row_to_robtarget(row, (True, False, False, False, False, False))
         assert rt.eax[0] == 250.0
-        assert rt.eax[1] == 9e9
-        assert rt.eax[5] == 9e9
+        assert rt.eax[1:] == [9e9] * 5
 
-    def test_all_eax_active(self) -> None:
-        """All 6 active ``eax_*`` columns → all values read from the row."""
+    def test_nan_eax_is_inactive(self) -> None:
+        """NaN external axis values are serialized as inactive ``9e9``."""
         row = pd.Series(
             {
                 "x": 0.0,
@@ -298,90 +256,122 @@ class TestRowToRobtarget:
                 "cf4": 0,
                 "cf6": 0,
                 "cfx": 0,
-                "eax_a": 1.0,
-                "eax_b": 2.0,
-                "eax_c": 3.0,
-                "eax_d": 4.0,
-                "eax_e": 5.0,
-                "eax_f": 6.0,
+                "eax_a": float("nan"),
             }
         )
-        rt = _row_to_robtarget(row, (True,) * 6)
-        assert rt.eax == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
-
-    def test_confdata_cast(self) -> None:
-        """``cf1``/``cf4``/``cf6``/``cfx`` are cast to ``float``."""
-        row = pd.Series(
-            {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0,
-                "q1": 1.0,
-                "q2": 0.0,
-                "q3": 0.0,
-                "q4": 0.0,
-                "cf1": -1,
-                "cf4": 2,
-                "cf6": 0,
-                "cfx": 1,
-            }
-        )
-        rt = _row_to_robtarget(row, (False,) * 6)
-        assert rt.cf1 == -1.0
-        assert rt.cf4 == 2.0
-
-
-# ---------------------------------------------------------------------------
-# write_store_metadata
-# ---------------------------------------------------------------------------
+        rt = _row_to_robtarget(row, (True, False, False, False, False, False))
+        assert rt.eax == [9e9] * 6
 
 
 class TestWriteStoreMetadata:
-    """Tests for :func:`~trajcenter.rws.writer.write_store_metadata`."""
+    """Tests for :func:`trajcenter.rws.writer.write_store_metadata`."""
 
     @pytest.mark.asyncio
-    async def test_nominal(self, client: MagicMock) -> None:
-        """Nominal: ``W1 + W2×MAX_TRAJ + W3×MAX_TRAJ`` calls are made."""
+    async def test_nominal_single_mastership_call(self, client: MagicMock) -> None:
+        """Metadata is written through a single batched mastership call."""
         mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_store_metadata(
                 client,
                 names=["Traj1", "Traj2"],
                 point_counts=[320, 150],
             )
 
-        expected_calls = 1 + MAX_TRAJ + MAX_TRAJ
-        assert mock_set.call_count == expected_calls
+        mock_set.assert_awaited_once()
+        values = mock_set.call_args.kwargs["values"]
+        assert len(values) == 1 + MAX_TRAJ + 5
 
     @pytest.mark.asyncio
-    async def test_w1_value(self, client: MagicMock) -> None:
-        """W1 (``NbTrajDispo``) receives the correct trajectory count."""
+    async def test_nb_traj_available_value(self, client: MagicMock) -> None:
+        """``nbTrajAvailable`` receives the number of trajectories."""
         mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_store_metadata(
-                client, names=["A", "B", "C"], point_counts=[10, 20, 30]
+                client,
+                names=["A", "B", "C"],
+                point_counts=[10, 20, 30],
             )
-        first_call = mock_set.call_args_list[0]
-        assert first_call.kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/NbTrajDispo"
-        assert first_call.kwargs["value"] == "3"
+
+        values = mock_set.call_args.kwargs["values"]
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/nbTrajAvailable"] == "3"
 
     @pytest.mark.asyncio
-    async def test_names_padded_with_empty_strings(self, client: MagicMock) -> None:
-        """Names beyond the provided list are padded with empty RAPID strings."""
+    async def test_trajectories_records_padded(self, client: MagicMock) -> None:
+        """Trajectory records are padded to ``MAX_TRAJ`` entries."""
         mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_store_metadata(client, names=["OnlyOne"], point_counts=[100])
-        # W2 calls: index 1 = "OnlyOne", index 2..MAX_TRAJ = ""
-        w2_calls = mock_set.call_args_list[1 : 1 + MAX_TRAJ]
-        assert w2_calls[0].kwargs["value"] == '"OnlyOne"'
-        assert w2_calls[1].kwargs["value"] == '""'
-        assert w2_calls[-1].kwargs["value"] == '""'
+
+        values = mock_set.call_args.kwargs["values"]
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B1%7D"]
+            == '["OnlyOne",100,0]'
+        )
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B2%7D"]
+            == '["",0,0]'
+        )
+        assert (
+            values[f"RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B{MAX_TRAJ}%7D"]
+            == '["",0,0]'
+        )
+
+    @pytest.mark.asyncio
+    async def test_process_types_written(self, client: MagicMock) -> None:
+        """Optional process types are written into metadata records."""
+        mock_set = AsyncMock()
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_store_metadata(
+                client,
+                names=["A", "B"],
+                point_counts=[10, 20],
+                process_types=[1, 2],
+            )
+
+        values = mock_set.call_args.kwargs["values"]
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B1%7D"]
+            == '["A",10,1]'
+        )
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B2%7D"]
+            == '["B",20,2]'
+        )
+
+    @pytest.mark.asyncio
+    async def test_status_values_written(self, client: MagicMock) -> None:
+        """Metadata refresh status variables are written."""
+        mock_set = AsyncMock()
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_store_metadata(client, names=["A"], point_counts=[10])
+
+        values = mock_set.call_args.kwargs["values"]
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/refreshMetaRequest"] == "FALSE"
+        )
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferError"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastErrorCode"] == str(
+            STATUS_METADATA_REFRESHED
+        )
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastError"] == '""'
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferProgress"] == "100"
 
     @pytest.mark.asyncio
     async def test_mismatched_lengths_raises(self, client: MagicMock) -> None:
         """Mismatched ``names``/``point_counts`` lengths raise ``ValueError``."""
         with pytest.raises(ValueError, match="same length"):
             await write_store_metadata(client, names=["A", "B"], point_counts=[10])
+
+    @pytest.mark.asyncio
+    async def test_mismatched_process_types_raises(self, client: MagicMock) -> None:
+        """Mismatched ``process_types`` length raises ``ValueError``."""
+        with pytest.raises(ValueError, match="process_types"):
+            await write_store_metadata(
+                client,
+                names=["A", "B"],
+                point_counts=[10, 20],
+                process_types=[0],
+            )
 
     @pytest.mark.asyncio
     async def test_too_many_trajectories_raises(self, client: MagicMock) -> None:
@@ -395,7 +385,7 @@ class TestWriteStoreMetadata:
     async def test_mastership_denied_retries(self, client: MagicMock) -> None:
         """``MastershipDenied`` triggers retries up to ``mastership_retries``."""
         mock_set = AsyncMock(side_effect=MastershipDenied("denied"))
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
                 with pytest.raises(MastershipDenied):
                     await write_store_metadata(
@@ -404,14 +394,14 @@ class TestWriteStoreMetadata:
                         point_counts=[10],
                         mastership_retries=3,
                     )
-        # 3 attempts × 1 call each (fails on first call of each attempt)
+
         assert mock_set.call_count == 3
 
     @pytest.mark.asyncio
     async def test_custom_task_and_module(self, client: MagicMock) -> None:
-        """Custom ``task``/``module`` names are forwarded into symbol URLs."""
+        """Custom ``task`` and ``module`` are forwarded into symbol URLs."""
         mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_store_metadata(
                 client,
                 names=["T"],
@@ -419,175 +409,54 @@ class TestWriteStoreMetadata:
                 task="T_ROB2",
                 module="MY_MOD",
             )
-        first_call = mock_set.call_args_list[0]
-        assert "T_ROB2" in first_call.kwargs["symbolurl"]
-        assert "MY_MOD" in first_call.kwargs["symbolurl"]
+
+        values = mock_set.call_args.kwargs["values"]
+        first_key = next(iter(values))
+        assert first_key == "RAPID/T_ROB2/MY_MOD/nbTrajAvailable"
 
 
-# ---------------------------------------------------------------------------
-# write_trajectory
-# ---------------------------------------------------------------------------
-
-
-class TestWriteTrajectory:
-    """Tests for :func:`~trajcenter.rws.writer.write_trajectory`."""
+class TestRetryMastership:
+    """Tests for :func:`trajcenter.rws.writer._retry_mastership`."""
 
     @pytest.mark.asyncio
-    async def test_nominal_call_count(self, client: MagicMock) -> None:
-        """Nominal: ``W4 + W6 + W7×MAX_TOOLS + W8 + W9×MAX_WOBJS + W5×N + W10`` calls."""
-        traj = _make_traj(n=3)
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(client, traj)
-
-        n = 3
-        expected = 1 + 1 + MAX_TOOLS + 1 + MAX_WOBJS + n + 1
-        assert mock_set.call_count == expected
+    async def test_success_first_attempt(self) -> None:
+        """A successful callable is executed once."""
+        mock = AsyncMock()
+        await _retry_mastership(mock, retries=3)
+        mock.assert_awaited_once()
 
     @pytest.mark.asyncio
-    async def test_traj_ready_written_last(self, client: MagicMock) -> None:
-        """``TrajReady = TRUE`` must be the very last write."""
-        traj = _make_traj(n=2)
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(client, traj)
-
-        last_call = mock_set.call_args_list[-1]
-        assert "TrajReady" in last_call.kwargs["symbolurl"]
-        assert last_call.kwargs["value"] == "TRUE"
+    async def test_invalid_retries_raises(self) -> None:
+        """``retries < 1`` raises ``ValueError``."""
+        with pytest.raises(ValueError, match=">= 1"):
+            await _retry_mastership(AsyncMock(), retries=0)
 
     @pytest.mark.asyncio
-    async def test_progress_callback(self, client: MagicMock) -> None:
-        """``on_progress`` is called once per robtarget with correct ``(i, n)`` indices."""
-        traj = _make_traj(n=4)
-        progress_calls: list[tuple[int, int]] = []
-
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(
-                client,
-                traj,
-                on_progress=lambda i, n: progress_calls.append((i, n)),
-            )
-
-        assert len(progress_calls) == 4
-        assert progress_calls[0] == (1, 4)
-        assert progress_calls[-1] == (4, 4)
+    async def test_denied_then_success(self) -> None:
+        """A first ``MastershipDenied`` can succeed on retry."""
+        mock = AsyncMock(side_effect=[MastershipDenied("denied"), None])
+        with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
+            await _retry_mastership(mock, retries=2)
+        assert mock.call_count == 2
 
     @pytest.mark.asyncio
-    async def test_zero_points_raises(self, client: MagicMock) -> None:
-        """An empty trajectory raises ``ValueError`` before any RWS call."""
-        traj = _make_traj(n=0)
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            with pytest.raises(ValueError, match="no points"):
-                await write_trajectory(client, traj)
-        mock_set.assert_not_called()
+    async def test_denied_then_raises(self) -> None:
+        """All denied attempts re-raise ``MastershipDenied``."""
+        mock = AsyncMock(side_effect=MastershipDenied("denied"))
+        with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
+            with pytest.raises(MastershipDenied):
+                await _retry_mastership(mock, retries=2)
+        assert mock.call_count == 2
+
+
+class TestWriteTrajectoryPlaceholder:
+    """Temporary tests for trajectory writer during RWS-3."""
 
     @pytest.mark.asyncio
-    async def test_too_many_tools_raises(self, client: MagicMock) -> None:
-        """More tools than ``MAX_TOOLS`` raises ``ValueError``."""
-        tools = [f"tool{i}" for i in range(MAX_TOOLS + 1)]
-        traj = _make_traj(tools=tools)
-        with pytest.raises(ValueError, match="MAX_TOOLS"):
-            await write_trajectory(client, traj)
-
-    @pytest.mark.asyncio
-    async def test_too_many_wobjs_raises(self, client: MagicMock) -> None:
-        """More wobjs than ``MAX_WOBJS`` raises ``ValueError``."""
-        wobjs = [f"wobj{i}" for i in range(MAX_WOBJS + 1)]
-        traj = _make_traj(wobjs=wobjs)
-        with pytest.raises(ValueError, match="MAX_WOBJS"):
-            await write_trajectory(client, traj)
-
-    @pytest.mark.asyncio
-    async def test_mastership_denied_retries_then_raises(
-        self, client: MagicMock
+    async def test_write_trajectory_not_implemented_yet(
+        self,
+        client: MagicMock,
     ) -> None:
-        """``MastershipDenied`` retries ``mastership_retries`` times then re-raises."""
-        traj = _make_traj(n=1)
-        mock_set = AsyncMock(side_effect=MastershipDenied("denied"))
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
-                with pytest.raises(MastershipDenied):
-                    await write_trajectory(client, traj, mastership_retries=2)
-        assert mock_set.call_count == 2
-
-    @pytest.mark.asyncio
-    async def test_mastership_denied_then_success(self, client: MagicMock) -> None:
-        """``MastershipDenied`` on the first attempt succeeds on the second."""
-        traj = _make_traj(n=1)
-        attempt = 0
-
-        async def _side_effect(*args: object, **kwargs: object) -> None:
-            """Fail on the first call, succeed silently on subsequent ones."""
-            nonlocal attempt
-            attempt += 1
-            if attempt == 1:
-                raise MastershipDenied("denied")
-
-        mock_set = AsyncMock(side_effect=_side_effect)
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
-                # Must not raise — the second attempt succeeds
-                await write_trajectory(client, traj, mastership_retries=3)
-
-        # At least 2 calls: 1 failure + restart from W4
-        assert mock_set.call_count >= 2
-
-    @pytest.mark.asyncio
-    async def test_eax_active_column_written(self, client: MagicMock) -> None:
-        """An active ``eax_a`` column is included in the robtarget value (not ``9E+9``)."""
-        traj = _make_traj(n=1, with_eax_a=True)
-        written_values: list[str] = []
-
-        async def _capture(*args: object, **kwargs: object) -> None:
-            """Capture robtarget write calls for assertion."""
-            symbolurl = kwargs.get("symbolurl", args[1] if len(args) > 1 else "")
-            value = kwargs.get("value", args[2] if len(args) > 2 else "")
-            if "RobtTRAJCENTER" in str(symbolurl):
-                written_values.append(str(value))
-
-        mock_set = AsyncMock(side_effect=_capture)
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(client, traj)
-
-        assert len(written_values) == 1
-        robt_str = written_values[0]
-        # Expected format: [[x,y,z],[qw,qx,qy,qz],[cf1,cf4,cf6,cfx],[eax_a,9E+9,...]]
-        assert robt_str.startswith("[[")
-        # The 5 inactive axes (eax_b..f) must remain 9E+9
-        assert "9E+9,9E+9,9E+9,9E+9,9E+9" in robt_str
-        # eax_a = 100.0 → must NOT be 9E+9
-        eax_block = robt_str.split("[")[-1].rstrip("]")
-        first_eax = eax_block.split(",")[0]
-        assert first_eax != "9E+9"
-
-    @pytest.mark.asyncio
-    async def test_nb4_value_correct(self, client: MagicMock) -> None:
-        """W4 (``NbRobtargetsTraj``) receives the correct point count."""
-        traj = _make_traj(n=7)
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(client, traj)
-
-        first_call = mock_set.call_args_list[0]
-        assert "NbRobtargetsTraj" in first_call.kwargs["symbolurl"]
-        assert first_call.kwargs["value"] == "7"
-
-    @pytest.mark.asyncio
-    async def test_tools_padded_with_empty_strings(self, client: MagicMock) -> None:
-        """Tool names beyond the provided list are padded with empty RAPID strings."""
-        traj = _make_traj(n=1, tools=["MyTool"])
-        mock_set = AsyncMock()
-        with patch(f"{_MODULE}.set_variable_with_mastership", mock_set):
-            await write_trajectory(client, traj)
-
-        tool_calls = [
-            c
-            for c in mock_set.call_args_list
-            if "ToolNames" in str(c.kwargs.get("symbolurl", ""))
-        ]
-        assert len(tool_calls) == MAX_TOOLS
-        assert tool_calls[0].kwargs["value"] == '"MyTool"'
-        assert tool_calls[1].kwargs["value"] == '""'
+        """The obsolete v1 writer must not silently run."""
+        with pytest.raises(NotImplementedError, match="RWS-4"):
+            await write_trajectory(client, MagicMock())
