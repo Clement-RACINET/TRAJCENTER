@@ -67,19 +67,19 @@ class TestCanonicalName:
     def test_exact_lowercase(self) -> None:
         """An exact lowercase alias is recognised."""
         assert canonical_name("x") == "x"
-        assert canonical_name("vitesse") == "speed"
-        assert canonical_name("repere") == "wobj"
+        assert canonical_name("vitesse") == "tcp_speed"
+        assert canonical_name("repere") == "wobj_name"
 
     def test_uppercase(self) -> None:
         """Uppercase letters are ignored."""
         assert canonical_name("X") == "x"
-        assert canonical_name("VITESSE") == "speed"
+        assert canonical_name("VITESSE") == "tcp_speed"
         assert canonical_name("PosX") == "x"
 
     def test_accents(self) -> None:
         """Diacritics are stripped before comparison."""
-        assert canonical_name("Répère") == "wobj"
-        assert canonical_name("REPÈRE") == "wobj"
+        assert canonical_name("Répère") == "wobj_name"
+        assert canonical_name("REPÈRE") == "wobj_name"
 
     def test_unknown_returns_none(self) -> None:
         """An unknown name returns ``None``."""
@@ -140,8 +140,8 @@ class TestResolveColumns:
         """Mixed casing and accents are resolved correctly."""
         df = pd.DataFrame(columns=["Répère", "VITESSE", "PosX", "PosY", "PosZ"])
         df_out, unknown = resolve_columns(df)
-        assert "wobj" in df_out.columns
-        assert "speed" in df_out.columns
+        assert "wobj_name" in df_out.columns
+        assert "tcp_speed" in df_out.columns
         assert unknown == []
 
 
@@ -185,17 +185,19 @@ class TestTabularConverterLogic:
 
     # --- Autocompletion ---
 
-    def test_speed_autocompleted(self, tmp_path: Path) -> None:
-        """``speed`` is autocompleted when absent from the source."""
+    def test_tcp_speed_not_autocompleted_by_default(self, tmp_path: Path) -> None:
+        """tcp_speed is not invented by default."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
         traj = CsvConverter().convert(csv)
-        assert "speed" in traj.meta.autocompleted
+        assert "tcp_speed" not in traj.points.columns
+        assert "tcp_speed" not in traj.meta.autocompleted
 
-    def test_custom_default_speed(self, tmp_path: Path) -> None:
-        """The custom default speed is applied during autocompletion."""
+    def test_custom_default_tcp_speed(self, tmp_path: Path) -> None:
+        """An explicit default tcp_speed is applied during autocompletion."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
-        traj = CsvConverter(defaults=ConversionDefaults(speed="v250")).convert(csv)
-        assert traj.points["speed"].iloc[0] == "v250"
+        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(csv)
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
+        assert "tcp_speed" in traj.meta.autocompleted
 
     def test_move_type_not_autocompleted_when_present(self, tmp_path: Path) -> None:
         """``move_type`` present in the source is not listed in ``autocompleted``."""
@@ -213,7 +215,7 @@ class TestTabularConverterLogic:
         )
         traj = CsvConverter().convert(csv)
         assert traj.points["x"].iloc[0] == pytest.approx(1.0)
-        assert traj.points["speed"].iloc[0] == "v500"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(500.0)
 
     def test_unknown_columns_warned(self, csv_unknown_col: Path) -> None:
         """Unknown columns emit a ``UserWarning``."""
@@ -222,24 +224,72 @@ class TestTabularConverterLogic:
 
     # --- Tools / wobjs tables ---
 
-    def test_tool_column_extracted(self, tmp_path: Path) -> None:
-        """The ``tool`` column is extracted and converted to ``tool_index``."""
+    def test_tool_column_kept_as_tool_name(self, tmp_path: Path) -> None:
+        """The legacy tool alias is imported as the v2 tool_name column."""
         csv = _write_csv(
             tmp_path,
             "tools.csv",
             "x,y,z,tool\n1.0,2.0,3.0,Tool_A\n4.0,5.0,6.0,Tool_B\n",
         )
         traj = CsvConverter().convert(csv)
-        assert "Tool_A" in traj.tools
-        assert "Tool_B" in traj.tools
+        assert "tool_name" in traj.points.columns
         assert "tool" not in traj.points.columns
-        assert "tool_index" in traj.points.columns
+        assert "tool_index" not in traj.points.columns
+        assert traj.points["tool_name"].tolist() == ["Tool_A", "Tool_B"]
 
-    def test_wobj_column_extracted(self, tmp_path: Path) -> None:
-        """The ``wobj`` column is extracted and converted to ``wobj_index``."""
+    def test_wobj_column_kept_as_wobj_name(self, tmp_path: Path) -> None:
+        """The legacy wobj alias is imported as the v2 wobj_name column."""
         csv = _write_csv(tmp_path, "wobj.csv", "x,y,z,wobj\n1.0,2.0,3.0,Wobj_A\n")
         traj = CsvConverter().convert(csv)
-        assert "Wobj_A" in traj.wobjs
+        assert "wobj_name" in traj.points.columns
+        assert "wobj" not in traj.points.columns
+        assert "wobj_index" not in traj.points.columns
+        assert traj.points["wobj_name"].iloc[0] == "Wobj_A"
+
+    # --- Speed and Zone ---
+
+    def test_speed_literal_normalized_to_tcp_speed(self, tmp_path: Path) -> None:
+        """RAPID speed literal v500 is normalised to tcp_speed=500.0."""
+        csv = _write_csv(tmp_path, "speed.csv", "x,y,z,speed\n1.0,2.0,3.0,v500\n")
+        traj = CsvConverter().convert(csv)
+
+        assert "tcp_speed" in traj.points.columns
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(500.0)
+
+    def test_numeric_speed_normalized_to_tcp_speed(self, tmp_path: Path) -> None:
+        """Numeric speed values are kept as numeric tcp_speed."""
+        csv = _write_csv(tmp_path, "speed.csv", "x,y,z,speed\n1.0,2.0,3.0,750\n")
+        traj = CsvConverter().convert(csv)
+
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(750.0)
+
+    def test_zone_literal_normalized_to_zone_type(self, tmp_path: Path) -> None:
+        """RAPID zone literal z10 is normalised to zone_type=10."""
+        csv = _write_csv(tmp_path, "zone.csv", "x,y,z,zone\n1.0,2.0,3.0,z10\n")
+        traj = CsvConverter().convert(csv)
+
+        assert traj.points["zone_type"].iloc[0] == 10
+
+    def test_fine_zone_normalized_to_minus_one(self, tmp_path: Path) -> None:
+        """RAPID fine zone is normalised to zone_type=255."""
+        csv = _write_csv(tmp_path, "zone.csv", "x,y,z,zone\n1.0,2.0,3.0,fine\n")
+        traj = CsvConverter().convert(csv)
+
+        assert traj.points["zone_type"].iloc[0] == 255
+
+    def test_invalid_speed_literal_raises(self, tmp_path: Path) -> None:
+        """Unresolved RAPID speed variables are rejected in tabular import."""
+        csv = _write_csv(tmp_path, "speed.csv", "x,y,z,speed\n1.0,2.0,3.0,vitesse\n")
+
+        with pytest.raises(ValueError, match="Invalid tcp_speed"):
+            CsvConverter().convert(csv)
+
+    def test_invalid_zone_literal_raises(self, tmp_path: Path) -> None:
+        """Unresolved RAPID zone variables are rejected in tabular import."""
+        csv = _write_csv(tmp_path, "zone.csv", "x,y,z,zone\n1.0,2.0,3.0,ma_zone\n")
+
+        with pytest.raises(ValueError, match="Invalid zone_type"):
+            CsvConverter().convert(csv)
 
     # --- Metadata defaults ---
 
@@ -271,7 +321,10 @@ class TestTabularConverterLogic:
 
     # --- is_complete ---
 
-    def test_is_complete(self, tmp_path: Path) -> None:
-        """The produced trajectory is always complete."""
+    def test_required_geometry_columns_present(self, tmp_path: Path) -> None:
+        """The produced trajectory contains required geometry columns."""
         csv = _write_csv(tmp_path, "xyz.csv", "x,y,z\n1.0,2.0,3.0\n")
-        assert CsvConverter().convert(csv).is_complete is True
+        traj = CsvConverter().convert(csv)
+
+        for col in ["x", "y", "z", "q1", "q2", "q3", "q4"]:
+            assert col in traj.points.columns

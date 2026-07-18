@@ -107,9 +107,12 @@ class TestCsvConverter:
         assert traj.points["q1"].iloc[0] == pytest.approx(1.0)
         assert traj.points["q2"].iloc[0] == pytest.approx(0.0)
 
-    def test_is_complete(self, csv_simple: Path) -> None:
-        """The produced trajectory is complete."""
-        assert CsvConverter().convert(csv_simple).is_complete is True
+    def test_required_geometry_columns_present(self, csv_simple: Path) -> None:
+        """The produced trajectory contains required geometry columns."""
+        traj = CsvConverter().convert(csv_simple)
+
+        for col in ["x", "y", "z", "q1", "q2", "q3", "q4"]:
+            assert col in traj.points.columns
 
     # --- Separator ---
 
@@ -166,24 +169,24 @@ class TestCsvConverter:
         """Column aliases are correctly resolved."""
         traj = CsvConverter().convert(csv_aliases)
         assert traj.points["x"].iloc[0] == pytest.approx(1.0)
-        assert traj.points["speed"].iloc[0] == "v500"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(500.0)
+        assert traj.points["zone_type"].iloc[0] == 10
 
     # --- Tools / wobjs ---
 
-    def test_tool_wobj_columns_extracted(self, csv_with_tools: Path) -> None:
-        """``tool`` and ``wobj`` columns are extracted and converted to indices."""
+    def test_tool_wobj_columns_imported_as_names(self, csv_with_tools: Path) -> None:
+        """tool and wobj aliases are imported as v2 inline name columns."""
         traj = CsvConverter().convert(csv_with_tools)
-        assert "Tool_A" in traj.tools
-        assert "Tool_B" in traj.tools
-        assert "Wobj_A" in traj.wobjs
-        assert "tool" not in traj.points.columns
-        assert "tool_index" in traj.points.columns
 
-    def test_tool_index_consistency(self, csv_with_tools: Path) -> None:
-        """``tool_index`` consistently points to the correct entry in ``tools[]``."""
-        traj = CsvConverter().convert(csv_with_tools)
-        for _, row in traj.points.iterrows():
-            assert traj.tools[int(row["tool_index"])] in ("Tool_A", "Tool_B")
+        assert "tool_name" in traj.points.columns
+        assert "wobj_name" in traj.points.columns
+        assert "tool" not in traj.points.columns
+        assert "wobj" not in traj.points.columns
+        assert "tool_index" not in traj.points.columns
+        assert "wobj_index" not in traj.points.columns
+
+        assert traj.points["tool_name"].tolist() == ["Tool_A", "Tool_B"]
+        assert traj.points["wobj_name"].tolist() == ["Wobj_A", "Wobj_A"]
 
     # --- Empty rows ---
 
@@ -193,19 +196,20 @@ class TestCsvConverter:
 
     # --- Custom defaults ---
 
-    def test_custom_default_speed(self, csv_xyz_only: Path) -> None:
-        """The custom default speed is applied."""
-        traj = CsvConverter(defaults=ConversionDefaults(speed="v250")).convert(
+    def test_custom_default_tcp_speed(self, csv_xyz_only: Path) -> None:
+        """The custom default tcp_speed is applied."""
+        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
             csv_xyz_only
         )
-        assert traj.points["speed"].iloc[0] == "v250"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
+        assert "tcp_speed" in traj.meta.autocompleted
 
     def test_custom_default_move_type(self, csv_xyz_only: Path) -> None:
         """The custom default move type is applied."""
-        traj = CsvConverter(defaults=ConversionDefaults(move_type="MoveL")).convert(
+        traj = CsvConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
             csv_xyz_only
         )
-        assert traj.points["move_type"].iloc[0] == "MoveL"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
 
     # --- Full CSV ---
 
@@ -215,25 +219,30 @@ class TestCsvConverter:
         assert traj.points["move_type"].iloc[0] == "MoveL"
         assert traj.points["move_type"].iloc[1] == "MoveJ"
 
-    def test_full_csv_speed_not_autocompleted(self, csv_full: Path) -> None:
-        """``speed`` present in the source is not listed in ``autocompleted``."""
+    def test_full_csv_tcp_speed_not_autocompleted(self, csv_full: Path) -> None:
+        """tcp_speed present through speed alias is not listed in autocompleted."""
         traj = CsvConverter().convert(csv_full)
-        assert "speed" not in traj.meta.autocompleted
-        assert traj.points["speed"].iloc[0] == "v500"
+        assert "tcp_speed" not in traj.meta.autocompleted
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(500.0)
+        assert traj.points["tcp_speed"].iloc[1] == pytest.approx(1000.0)
+
+    def test_full_csv_zone_literals_normalized(self, csv_full: Path) -> None:
+        """RAPID zone literals are normalised to integer zone_type."""
+        traj = CsvConverter().convert(csv_full)
+        assert traj.points["zone_type"].iloc[0] == 10
+        assert traj.points["zone_type"].iloc[1] == 255
 
     # --- Roundtrip ---
 
     def test_full_roundtrip(self, tmp_path: Path, csv_simple: Path) -> None:
-        """``convert → save → load`` produces an identical trajectory."""
+        """convert → save → load produces an equivalent trajectory."""
         traj = CsvConverter().convert(csv_simple)
         dest = tmp_path / "simple.trajcenter"
         traj.save(dest)
         loaded = Trajectory.load(dest)
 
         assert loaded.point_count == traj.point_count
-        assert loaded.tools == traj.tools
-        assert loaded.wobjs == traj.wobjs
-        assert loaded.is_complete is True
+        assert list(loaded.points.columns) == list(traj.points.columns)
         pd.testing.assert_series_equal(
             loaded.points["x"].reset_index(drop=True),
             traj.points["x"].reset_index(drop=True),

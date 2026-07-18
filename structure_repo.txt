@@ -86,7 +86,6 @@ trajcenter
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports
-│   └── test_basic.xlsx
 ├── trajectory_files
 │   ├── 0.2.xlsx
 │   ├── 0.5.xlsx

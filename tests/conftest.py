@@ -3,12 +3,6 @@
 """Global fixtures shared across ``converter/``, ``core/`` and ``exporter/``.
 
 Author: Clement RACINET
-
-- ``DataFrame`` objects and ``TrajectoryMeta`` instances used by
-  ``test_trajectory.py`` and the converter tests.
-- File fixtures (``xlsx_*``, ``csv_*``, ``mod_*``) remain in
-  ``converter/conftest.py``.
-- ``Trajectory`` fixtures for exporters remain in ``exporter/conftest.py``.
 """
 
 from __future__ import annotations
@@ -16,17 +10,16 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
-
-
-# ---------------------------------------------------------------------------
-# Fixtures — DataFrames
-# ---------------------------------------------------------------------------
+from trajcenter.core.trajectory import (
+    Trajectory,
+    TrajectoryMeta,
+    TrajectoryProcess,
+)
 
 
 @pytest.fixture
 def minimal_df() -> pd.DataFrame:
-    """Minimal ``DataFrame`` containing only the mandatory columns."""
+    """Minimal ``DataFrame`` containing only mandatory geometry columns."""
     return pd.DataFrame(
         {
             "x": [100.0, 200.0],
@@ -42,7 +35,7 @@ def minimal_df() -> pd.DataFrame:
 
 @pytest.fixture
 def complete_df() -> pd.DataFrame:
-    """Complete ``DataFrame`` with all ``CONVERTER_COLUMNS`` present."""
+    """DataFrame with converter-safe columns and send metadata columns."""
     return pd.DataFrame(
         {
             "x": [100.0, 200.0],
@@ -57,17 +50,17 @@ def complete_df() -> pd.DataFrame:
             "cf6": [0, 0],
             "cfx": [0, 0],
             "move_type": ["MoveL", "MoveL"],
-            "speed": ["v500", "v500"],
-            "zone": ["z10", "z10"],
-            "tool_index": [0, 0],
-            "wobj_index": [0, 0],
+            "tcp_speed": [500.0, 500.0],
+            "zone_type": [10, 10],
+            "tool_name": ["Tool_formage", "Tool_formage"],
+            "wobj_name": ["Wobj_SerreFlan", "Wobj_SerreFlan"],
         }
     )
 
 
 @pytest.fixture
 def complete_df_with_eax() -> pd.DataFrame:
-    """Complete ``DataFrame`` with one active external axis (``eax_a``)."""
+    """Complete point DataFrame with one active external axis."""
     return pd.DataFrame(
         {
             "x": [100.0],
@@ -82,29 +75,51 @@ def complete_df_with_eax() -> pd.DataFrame:
             "cf6": [0],
             "cfx": [0],
             "move_type": ["MoveL"],
-            "speed": ["v500"],
-            "zone": ["z10"],
-            "tool_index": [0],
-            "wobj_index": [0],
+            "tcp_speed": [500.0],
+            "zone_type": [10],
+            "tool_name": ["Tool_formage"],
+            "wobj_name": ["Wobj_SerreFlan"],
             "eax_a": [45.0],
         }
     )
 
 
-# ---------------------------------------------------------------------------
-# Fixtures — metadata
-# ---------------------------------------------------------------------------
+@pytest.fixture
+def process_points_df(complete_df: pd.DataFrame) -> pd.DataFrame:
+    """Point DataFrame referencing process parameter sets."""
+    df = complete_df.copy()
+    df["process_param_index"] = [1, 2]
+    return df
+
+
+@pytest.fixture
+def process_params_df() -> pd.DataFrame:
+    """Human-readable process parameter table."""
+    return pd.DataFrame(
+        {
+            "process_param_index": [1, 2],
+            "force": [120.0, 180.0],
+            "travel_speed": [35.0, 40.0],
+        }
+    )
 
 
 @pytest.fixture
 def minimal_meta() -> TrajectoryMeta:
-    """Minimal valid :class:`~trajcenter.core.trajectory.TrajectoryMeta`."""
+    """Minimal valid trajectory metadata."""
     return TrajectoryMeta(name="test_traj")
 
 
-# ---------------------------------------------------------------------------
-# Fixtures — shared trajectories
-# ---------------------------------------------------------------------------
+@pytest.fixture
+def process_meta() -> TrajectoryMeta:
+    """Metadata for a trajectory with process parameters."""
+    return TrajectoryMeta(
+        name="process_traj",
+        process=TrajectoryProcess(
+            process_type=1,
+            process_param_names=["force", "travel_speed"],
+        ),
+    )
 
 
 @pytest.fixture
@@ -112,10 +127,22 @@ def simple_trajectory(
     minimal_meta: TrajectoryMeta,
     complete_df: pd.DataFrame,
 ) -> Trajectory:
-    """Simple :class:`~trajcenter.core.trajectory.Trajectory` without external axes."""
+    """Simple trajectory without process data."""
     return Trajectory(
         meta=minimal_meta,
         points=complete_df,
-        tools=["Tool_formage"],
-        wobjs=["Wobj_SerreFlan"],
+    )
+
+
+@pytest.fixture
+def process_trajectory(
+    process_meta: TrajectoryMeta,
+    process_points_df: pd.DataFrame,
+    process_params_df: pd.DataFrame,
+) -> Trajectory:
+    """Trajectory with process parameter data."""
+    return Trajectory(
+        meta=process_meta,
+        points=process_points_df,
+        process_params=process_params_df,
     )

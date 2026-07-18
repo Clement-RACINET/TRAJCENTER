@@ -1,81 +1,82 @@
 #!/usr/bin/env python3
 # trajcenter/core/trajectory.py
-"""Central data model for an ABB robot trajectory.
+"""Central data model for TrajCenter v2 trajectory archives.
 
 Author: Clement RACINET
 
-This module defines the main data structure of the TrajCenter project.
-A trajectory is composed of metadata (:class:`TrajectoryMeta`), a set
-of points stored in a ``pandas.DataFrame``, and naming tables for tools
-and wobjs.
+This module defines the local ``.trajcenter`` archive format used by
+TrajCenter v2. A trajectory archive is independent from a target ABB
+cell: tools, work-objects, speeds and zones may be stored point by point,
+but they are resolved against the connected robot only during the RWS
+transfer phase.
 
 ``.trajcenter`` file format
-----------------------------
-ZIP archive containing four entries:
+---------------------------
+ZIP archive containing at minimum:
 
-- ``meta.json``      : serialised metadata (Pydantic → JSON)
-- ``points.parquet`` : trajectory points (PyArrow, zstd compression)
-- ``tools.json``     : ordered list of tool names (index → name)
-- ``wobjs.json``     : ordered list of wobj names (index → name)
+- ``meta.json``: serialised metadata.
+- ``points.parquet``: trajectory points.
 
-The ``tool_index`` and ``wobj_index`` columns of the ``DataFrame``
-reference entries in these lists by their position (``int16`` integer).
-These lists are **always present** in the archive (empty array ``[]``
-when not applicable).
+Optional entry:
+
+- ``process_params.parquet``: process parameter table, present only when
+  ``meta.process.process_type > 0``.
 
 ABB RAPID conventions
-----------------------
-- Quaternions: ``[q1, q2, q3, q4]`` = ``[w, x, y, z]`` (scalar-first)
-- External axes: ``eax_a`` … ``eax_f`` (presence in the DataFrame =
-  active axis)
-- The sentinel value ``9E9`` for inactive axes is injected only at RWS
-  serialisation time, never stored in the Parquet file.
-- Units: positions in mm, rotations in degrees (linear axes in mm)
+---------------------
+- Quaternions: ``[q1, q2, q3, q4] = [w, x, y, z]``.
+- External axes: ``eax_a`` … ``eax_f``. Absent column means inactive axis.
+- The RWS inactive-axis sentinel ``9E+9`` is never stored in
+  ``.trajcenter``. It is injected only by the RWS serialisation layer.
+- RAPID arrays are 1-based, but DataFrame rows keep their natural order.
 
-Autocompletion
----------------
-At the output of any converter, the ``.trajcenter`` file is **always
-complete**: any column absent from the source is filled with values
-from :class:`~trajcenter.converter.defaults.ConversionDefaults`.
-Autocompleted columns are listed in
-:attr:`TrajectoryMeta.autocompleted`. This module does not know about
-``ConversionDefaults`` — the autocompletion logic belongs to the
-``converter`` package.
+Process convention
+------------------
+When ``process_type == 0``:
+
+- ``process_param_index`` is not required in ``points.parquet``.
+- ``process_params.parquet`` is absent.
+- ``process_param_names`` is empty.
+
+When ``process_type > 0``:
+
+- ``points.parquet`` must contain ``process_param_index``.
+- ``process_params.parquet`` must exist.
+- ``process_params.parquet`` is a human-readable wide table:
+
+  ``process_param_index | force | speed | pressure | ...``
+
+- parameter columns must match ``meta.process.process_param_names``.
+- ``process_param_index = 0`` on a point means no process parameter set.
+- ``process_param_index = 1..256`` references a row in
+  ``process_params.parquet``.
 
 Example:
-    Create and save a minimal trajectory::
+    Create and save an exportable trajectory::
 
         import pandas as pd
         from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
 
-        df = pd.DataFrame({
-            "x": [100.0], "y": [200.0], "z": [300.0],
-            "q1": [1.0], "q2": [0.0], "q3": [0.0], "q4": [0.0],
-            "move_type":  ["MoveL"],
-            "speed":      ["v500"],
-            "zone":       ["z10"],
-            "cf1": [0], "cf4": [0], "cf6": [0], "cfx": [0],
-            "tool_index": [0],
-            "wobj_index": [0],
+        points = pd.DataFrame({
+            "x": [100.0],
+            "y": [200.0],
+            "z": [300.0],
+            "q1": [1.0],
+            "q2": [0.0],
+            "q3": [0.0],
+            "q4": [0.0],
+            "move_type": ["MoveL"],
+            "tool_name": ["Tool_A"],
+            "wobj_name": ["Wobj_A"],
         })
-        meta = TrajectoryMeta(
-            name="my_trajectory",
-            robot_model="IRB6700",
-            autocompleted=["move_type", "speed", "zone", "cf1", "cf4", "cf6", "cfx"],
-        )
-        traj = Trajectory(
-            meta=meta,
-            points=df,
-            tools=["Tool_formage"],
-            wobjs=["Wobj_SerreFlan"],
-        )
-        traj.save("trajectory_store/my_trajectory.trajcenter")
+
+        traj = Trajectory(meta=TrajectoryMeta(name="demo"), points=points)
+        traj.save("trajectory_store/demo.trajcenter")
 """
 
 from __future__ import annotations
 
 import io
-import json
 import zipfile
 from datetime import datetime, timezone
 from enum import StrEnum
@@ -98,16 +99,7 @@ from trajcenter.core.messages import msg
 
 
 class SourceFormat(StrEnum):
-    """Origin format of the source file that produced the trajectory.
-
-    Attributes:
-        EXCEL: Microsoft Excel file (``.xlsx`` / ``.xls``).
-        APT: CATIA APT source file (``.aptsource``).
-        CSV: Delimited text file (``.csv`` / ``.txt``).
-        RAPID: ABB RAPID module (``.mod``).
-        MANUAL: Created programmatically, without a source file.
-        TRAJCENTER: Loaded from an existing ``.trajcenter`` archive.
-    """
+    """Origin format of the source file that produced the trajectory."""
 
     EXCEL = "excel"
     APT = "apt"
@@ -118,13 +110,7 @@ class SourceFormat(StrEnum):
 
 
 class MoveType(StrEnum):
-    """RAPID movement type associated with a trajectory point.
-
-    Attributes:
-        MOVE_J: Joint movement (``MoveJ``).
-        MOVE_L: Linear Cartesian movement (``MoveL``).
-        MOVE_C: Circular movement (``MoveC``).
-    """
+    """Canonical movement type stored in ``points.parquet``."""
 
     MOVE_J = "MoveJ"
     MOVE_L = "MoveL"
@@ -132,33 +118,30 @@ class MoveType(StrEnum):
 
 
 # ---------------------------------------------------------------------------
-# Parquet schema
+# Schema constants
 # ---------------------------------------------------------------------------
 
-#: Geometric columns always present in ``points.parquet``.
-#: These are the only columns that ``Trajectory`` requires at instantiation.
-#: All other columns are guaranteed complete **by the converters**.
 REQUIRED_COLUMNS: list[str] = ["x", "y", "z", "q1", "q2", "q3", "q4"]
 
-#: Columns completed by converters via ``ConversionDefaults``.
-#: Always present in a ``.trajcenter`` produced by a converter.
-#: Absent only when the trajectory is created manually
-#: (``SourceFormat.MANUAL``).
+CONFDATA_COLUMNS: frozenset[str] = frozenset({"cf1", "cf4", "cf6", "cfx"})
+
 CONVERTER_COLUMNS: list[str] = [
     "cf1",
     "cf4",
     "cf6",
     "cfx",
-    "speed",
-    "zone",
     "move_type",
-    "tool_index",
-    "wobj_index",
 ]
 
-#: Pure optional columns — presence = active external axis on this robot.
-#: Never autocompleted. Absent = axis does not exist (9E9 injected on the
-#: RWS side).
+SEND_OPTIONAL_COLUMNS: list[str] = [
+    "tcp_speed",
+    "zone_type",
+    "tool_name",
+    "wobj_name",
+    "readconfs",
+    "process_param_index",
+]
+
 EXTERNAL_AXIS_COLUMNS: list[str] = [
     "eax_a",
     "eax_b",
@@ -168,10 +151,13 @@ EXTERNAL_AXIS_COLUMNS: list[str] = [
     "eax_f",
 ]
 
-#: Union of all recognised columns (excluding REQUIRED).
-OPTIONAL_COLUMNS: list[str] = CONVERTER_COLUMNS + EXTERNAL_AXIS_COLUMNS
+OPTIONAL_COLUMNS: list[str] = (
+    CONVERTER_COLUMNS + SEND_OPTIONAL_COLUMNS + EXTERNAL_AXIS_COLUMNS
+)
 
-#: Mapping column → numpy dtype for type casting at validation time.
+MAX_PROCESS_PARAM_SET_COUNT: int = 256
+MAX_PROCESS_PARAM_PER_SET: int = 10
+
 COLUMN_DTYPES: dict[str, np.dtype[np.generic]] = {
     "x": np.dtype("float64"),
     "y": np.dtype("float64"),
@@ -186,17 +172,9 @@ COLUMN_DTYPES: dict[str, np.dtype[np.generic]] = {
     "eax_d": np.dtype("float64"),
     "eax_e": np.dtype("float64"),
     "eax_f": np.dtype("float64"),
-    "tool_index": np.dtype("int16"),
-    "wobj_index": np.dtype("int16"),
-    # cf* → nullable pandas Int8  (handled separately via CONFDATA_COLUMNS)
-    # speed, zone, move_type → str (no numpy cast)
+    "tcp_speed": np.dtype("float64"),
 }
 
-#: Confdata columns — nullable pandas Int8 (supports NaN, unlike np.int8).
-CONFDATA_COLUMNS: frozenset[str] = frozenset({"cf1", "cf4", "cf6", "cfx"})
-
-#: Mapping column → PyArrow type for Parquet schema construction.
-#: Columns absent from this dict default to ``pa.string()``.
 _PA_TYPE_MAP: dict[str, pa.DataType] = {
     "x": pa.float64(),
     "y": pa.float64(),
@@ -215,133 +193,115 @@ _PA_TYPE_MAP: dict[str, pa.DataType] = {
     "eax_d": pa.float64(),
     "eax_e": pa.float64(),
     "eax_f": pa.float64(),
-    "speed": pa.string(),
-    "zone": pa.string(),
+    "tcp_speed": pa.float64(),
+    "zone_type": pa.int16(),
     "move_type": pa.string(),
-    "tool_index": pa.int16(),
-    "wobj_index": pa.int16(),
+    "tool_name": pa.string(),
+    "wobj_name": pa.string(),
+    "readconfs": pa.bool_(),
+    "process_param_index": pa.int16(),
 }
 
-#: Mandatory ZIP entries for a file to be a valid ``.trajcenter`` archive.
+_PROCESS_PARAM_INDEX_COLUMN = "process_param_index"
 _REQUIRED_ZIP_ENTRIES: frozenset[str] = frozenset({"meta.json", "points.parquet"})
+_PROCESS_PARAMS_ENTRY = "process_params.parquet"
 
 
 # ---------------------------------------------------------------------------
-# Pydantic models — metadata
+# Pydantic models
 # ---------------------------------------------------------------------------
 
 
 class ExternalAxisConfig(BaseModel):
-    """Description of an active external axis in the trajectory.
-
-    This configuration is independent of the target cell.
-    The mapping to a physical actuator is resolved at RWS transfer time.
-
-    Attributes:
-        axis_type: Kinematic type of the axis.
-            Values: ``"rotational"`` or ``"linear"``.
-        unit: Unit of the stored value.
-            ``"deg"`` for rotational, ``"mm"`` for linear.
-        label: Optional human-readable name
-            (e.g. ``"Positionneur A"``).
-
-    Example:
-        ::
-
-            ExternalAxisConfig(
-                axis_type="rotational", unit="deg", label="Positionneur A"
-            )
-    """
+    """Description of an active external axis in the trajectory."""
 
     axis_type: str = Field(..., description="'rotational' or 'linear'")
     unit: str = Field(..., description="'deg' or 'mm'")
-    label: str | None = Field(
-        None, description="Human-readable name, e.g. 'Positionneur A'"
-    )
+    label: str | None = Field(None, description="Human-readable axis label")
 
 
-class TrajectoryMeta(BaseModel):
-    """Metadata for an ABB trajectory — stored in ``meta.json``.
-
-    These metadata are **independent of the target cell**. They describe
-    the origin, external axis configuration, and autocompletion
-    traceability performed during conversion.
-
-    The autocompletion logic (default values applied to columns absent
-    from the source) belongs to the ``converter`` package via
-    :class:`~trajcenter.converter.defaults.ConversionDefaults`.
-    This model only **stores the result** in ``autocompleted``.
+class TrajectoryProcess(BaseModel):
+    """Process configuration stored in ``meta.json``.
 
     Attributes:
-        name: Trajectory name (human identifier).
-        version: ``.trajcenter`` format version.
-        created_at: Creation timestamp (UTC).
-        source_file: Path or name of the original source file.
-        source_format: Source file format (:class:`SourceFormat`).
-        robot_model: Target ABB robot model
-            (e.g. ``"IRB6700-205/2.80"``).
-        point_count: Number of points. Updated automatically at
-            :meth:`Trajectory.save`.
-        external_axes: Dict of active external axes.
-            Keys: ``"eax_a"`` … ``"eax_f"``.
-        autocompleted: List of columns whose values were inferred from
-            ``ConversionDefaults`` (not present in the source). Empty
-            when all columns come from the source.
-        extra: Free field for project-specific metadata.
+        process_type: Numeric process identifier. ``0`` means no process.
+        process_param_names: Ordered parameter names. Position in this
+            list maps to the RAPID slot index ``1..10``.
 
     Example:
         ::
 
-            meta = TrajectoryMeta(
-                name="Pointage_Flan_A",
-                robot_model="IRB6700",
-                autocompleted=["speed", "move_type"],
-                external_axes={
-                    "eax_a": ExternalAxisConfig(
-                        axis_type="rotational",
-                        unit="deg",
-                        label="Positionneur A",
-                    )
-                },
+            TrajectoryProcess(
+                process_type=1,
+                process_param_names=["force", "speed"],
             )
     """
 
-    name: str = Field(..., description="Trajectory name")
-    version: str = Field("1.0", description=".trajcenter format version")
-    created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
-        description="Creation timestamp (UTC)",
-    )
-    source_file: str | None = Field(None, description="Original source file")
-    source_format: SourceFormat = Field(SourceFormat.MANUAL)
-    robot_model: str | None = Field(None, description="E.g. 'IRB6700-205/2.80'")
-    point_count: int = Field(0, description="Updated automatically at save time")
-    external_axes: dict[str, ExternalAxisConfig] = Field(
-        default_factory=dict,
-        description="Active external axes. Keys: 'eax_a'…'eax_f'. Absent = inactive.",
-    )
-    autocompleted: list[str] = Field(
+    process_type: int = Field(0, ge=0, description="0 = NONE")
+    process_param_names: list[str] = Field(
         default_factory=list,
-        description=(
-            "Columns whose values were autocompleted from ConversionDefaults. "
-            "E.g.: ['speed', 'move_type', 'cf1']. "
-            "Empty when all columns come from the source."
-        ),
-    )
-    extra: dict[str, str | int | float | bool | None] = Field(
-        default_factory=dict,
-        description="Free field for project-specific metadata.",
+        description="Ordered process parameter names, max 10 entries.",
     )
 
     @model_validator(mode="after")
-    def _validate_eax_keys(self) -> TrajectoryMeta:
-        """Verify that external axis keys belong to the valid set.
+    def _validate_process(self) -> TrajectoryProcess:
+        """Validate process parameter metadata.
 
         Returns:
-            The validated instance.
+            The validated process metadata.
 
         Raises:
-            ValueError: If a key does not match ``eax_a``…``eax_f``.
+            ValueError: If the process metadata is inconsistent.
+        """
+        if self.process_type == 0 and self.process_param_names:
+            raise ValueError("process_param_names must be empty when process_type is 0")
+
+        if len(self.process_param_names) > MAX_PROCESS_PARAM_PER_SET:
+            raise ValueError(
+                f"process_param_names has more than {MAX_PROCESS_PARAM_PER_SET} entries"
+            )
+
+        cleaned = [name.strip() for name in self.process_param_names]
+        if any(name == "" for name in cleaned):
+            raise ValueError("process_param_names must not contain empty names")
+
+        if len(set(cleaned)) != len(cleaned):
+            raise ValueError("process_param_names must be unique")
+
+        self.process_param_names = cleaned
+        return self
+
+
+class TrajectoryMeta(BaseModel):
+    """Metadata stored in ``meta.json``."""
+
+    name: str = Field(..., description="Trajectory name")
+    version: str = Field("2.0", description=".trajcenter format version")
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="Creation timestamp UTC",
+    )
+    source_file: str | None = Field(None, description="Original source file")
+    source_format: SourceFormat = Field(SourceFormat.MANUAL)
+    robot_model: str | None = Field(None, description="ABB robot model")
+    point_count: int = Field(0, description="Updated automatically at save time")
+    external_axes: dict[str, ExternalAxisConfig] = Field(default_factory=dict)
+    autocompleted: list[str] = Field(default_factory=list)
+    process: TrajectoryProcess = Field(
+        default_factory=lambda: TrajectoryProcess(),
+    )
+
+    extra: dict[str, str | int | float | bool | None] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _validate_eax_keys(self) -> TrajectoryMeta:
+        """Verify that external axis keys belong to ``eax_a``…``eax_f``.
+
+        Returns:
+            The validated metadata.
+
+        Raises:
+            ValueError: If an external axis key is invalid.
         """
         valid = {f"eax_{c}" for c in "abcdef"}
         for key in self.external_axes:
@@ -362,132 +322,74 @@ class TrajectoryMeta(BaseModel):
 
 
 class Trajectory:
-    """ABB robot trajectory.
+    """TrajCenter v2 trajectory.
 
-    Encapsulates metadata (:class:`TrajectoryMeta`), trajectory points
-    (``pandas.DataFrame``), and tool/wobj naming tables in a coherent
-    object.
-
-    The ``.trajcenter`` file format is a ZIP archive containing:
-
-    - ``meta.json``      : JSON metadata
-    - ``points.parquet`` : points (PyArrow, zstd compression)
-    - ``tools.json``     : ordered list of tool names (index → name)
-    - ``wobjs.json``     : ordered list of wobj names (index → name)
-
-    The ``tool_index`` and ``wobj_index`` columns of the ``DataFrame``
-    are ``int16`` integers referencing the ``tools`` and ``wobjs`` lists.
-
-    A ``.trajcenter`` produced by a converter is **always complete**:
-    the columns ``cf1/cf4/cf6/cfx``, ``move_type``, ``speed``, ``zone``,
-    ``tool_index``, ``wobj_index`` are always present. The ``eax_*``
-    columns remain optional (presence = active axis).
-
-    Attributes:
+    Args:
         meta: Trajectory metadata.
-        points: Points ``DataFrame``. Mandatory columns:
+        points: Point table. Must contain at least
             ``x, y, z, q1, q2, q3, q4``.
-        tools: Ordered list of tool names. ``tools[i]`` = name of tool
-            at index ``i``.
-        wobjs: Ordered list of wobj names. ``wobjs[i]`` = name of wobj
-            at index ``i``.
+        process_params: Optional process parameter table. Required when
+            ``meta.process.process_type > 0``.
 
-    Example:
-        Create, save and reload::
-
-            import pandas as pd
-            from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
-
-            df = pd.DataFrame({
-                "x": [100.0, 200.0], "y": [150.0, 250.0], "z": [50.0, 60.0],
-                "q1": [1.0, 1.0], "q2": [0.0, 0.0],
-                "q3": [0.0, 0.0], "q4": [0.0, 0.0],
-                "move_type":  ["MoveL", "MoveL"],
-                "speed":      ["v500", "v500"],
-                "zone":       ["z0", "z0"],
-                "cf1": [0, 0], "cf4": [0, 0], "cf6": [0, 0], "cfx": [0, 0],
-                "tool_index": [0, 0],
-                "wobj_index": [0, 0],
-            })
-            meta = TrajectoryMeta(name="test", autocompleted=["speed"])
-            traj = Trajectory(
-                meta=meta,
-                points=df,
-                tools=["Tool_formage"],
-                wobjs=["Wobj_SerreFlan"],
-            )
-            traj.save("trajectory_store/test.trajcenter")
-
-            traj2 = Trajectory.load("trajectory_store/test.trajcenter")
-            print(traj2)
-            # Trajectory(name='test', points=2, tools=1, wobjs=1, eax=none, complete=True)
+    Raises:
+        ValueError: If point columns or process data are inconsistent.
     """
 
     meta: TrajectoryMeta
     points: pd.DataFrame
-    tools: list[str]
-    wobjs: list[str]
+    process_params: pd.DataFrame | None
 
     def __init__(
         self,
         meta: TrajectoryMeta,
         points: pd.DataFrame,
-        tools: list[str] | None = None,
-        wobjs: list[str] | None = None,
+        process_params: pd.DataFrame | None = None,
     ) -> None:
-        """Initialise the trajectory with validation and type casting.
+        """Initialise a trajectory with schema validation.
 
         Args:
             meta: Trajectory metadata.
-            points: Points ``DataFrame``. Must contain at minimum the
-                columns ``x, y, z, q1, q2, q3, q4``.
-            tools: Ordered list of tool names (index → name).
-                Initialised to an empty list when ``None``.
-            wobjs: Ordered list of wobj names (index → name).
-                Initialised to an empty list when ``None``.
+            points: Point DataFrame.
+            process_params: Optional process parameter DataFrame.
 
         Raises:
-            ValueError: If mandatory columns are missing, if a type
-                cast fails, or if a ``tool_index`` / ``wobj_index``
-                value is out of bounds.
+            ValueError: If the trajectory is not valid.
         """
         self.meta = meta
-        self.points = self._validate_and_cast(points)
-        self.tools = tools or []
-        self.wobjs = wobjs or []
-        self._validate_index_bounds()
+        self.points = self._validate_and_cast_points(points)
+        self.process_params = self._validate_and_cast_process_params(process_params)
+        self._validate_process_consistency()
 
     # ------------------------------------------------------------------
-    # Internal validation
+    # Validation
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _validate_and_cast(df: pd.DataFrame) -> pd.DataFrame:
-        """Verify mandatory columns and normalise pandas types.
+    def _validate_and_cast_points(df: pd.DataFrame) -> pd.DataFrame:
+        """Validate mandatory point columns and cast known dtypes.
 
         Args:
-            df: Raw ``DataFrame`` to validate.
+            df: Raw point DataFrame.
 
         Returns:
-            ``DataFrame`` with normalised types.
+            Validated and cast copy of the input DataFrame.
 
         Raises:
-            ValueError: If mandatory columns are absent or if a type
-                cast is impossible.
+            ValueError: If mandatory columns are missing or casting fails.
         """
         missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
         if missing:
             raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
 
-        df = df.copy()
+        out = df.copy()
 
-        for col in df.columns:
+        for col in out.columns:
             col_str = str(col)
 
             if col_str in COLUMN_DTYPES:
                 target = COLUMN_DTYPES[col_str]
                 try:
-                    df[col] = df[col].astype(target)
+                    out[col] = out[col].astype(target)
                 except (ValueError, TypeError) as exc:
                     raise ValueError(
                         msg("CANNOT_CAST_COLUMN", col=col_str, dtype=target, exc=exc)
@@ -495,195 +397,274 @@ class Trajectory:
 
             elif col_str in CONFDATA_COLUMNS:
                 try:
-                    df[col] = df[col].astype(pd.Int8Dtype())
+                    out[col] = out[col].astype(pd.Int8Dtype())
                 except (ValueError, TypeError) as exc:
                     raise ValueError(
                         msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int8", exc=exc)
                     ) from exc
 
-        return df
+            elif col_str in {"zone_type", "process_param_index"}:
+                try:
+                    out[col] = out[col].astype(pd.Int16Dtype())
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="Int16", exc=exc)
+                    ) from exc
 
-    def _validate_index_bounds(self) -> None:
-        """Verify that tool/wobj indices do not exceed the table sizes.
+            elif col_str == "readconfs":
+                try:
+                    out[col] = out[col].astype("boolean")
+                except (ValueError, TypeError) as exc:
+                    raise ValueError(
+                        msg("CANNOT_CAST_COLUMN", col=col_str, dtype="boolean", exc=exc)
+                    ) from exc
 
-        No-op if the ``DataFrame`` has no rows (empty trajectory under
-        construction).
+        return out
+
+    def _validate_and_cast_process_params(
+        self,
+        df: pd.DataFrame | None,
+    ) -> pd.DataFrame | None:
+        """Validate and cast process parameter table.
+
+        Args:
+            df: Optional raw process parameter table.
+
+        Returns:
+            A validated DataFrame or ``None``.
 
         Raises:
-            ValueError: If a ``tool_index`` or ``wobj_index`` value is
-                out of bounds.
+            ValueError: If the process parameter table is invalid.
         """
-        if len(self.points) == 0:
+        if df is None:
+            return None
+
+        out = df.copy()
+
+        if _PROCESS_PARAM_INDEX_COLUMN not in out.columns:
+            raise ValueError(
+                "process_params must contain a 'process_param_index' column"
+            )
+
+        if len(out) > MAX_PROCESS_PARAM_SET_COUNT:
+            raise ValueError(
+                f"process_params has {len(out)} rows, "
+                f"max is {MAX_PROCESS_PARAM_SET_COUNT}"
+            )
+
+        try:
+            out[_PROCESS_PARAM_INDEX_COLUMN] = out[_PROCESS_PARAM_INDEX_COLUMN].astype(
+                pd.Int16Dtype()
+            )
+        except (ValueError, TypeError) as exc:
+            raise ValueError("Cannot cast process_param_index to Int16") from exc
+
+        indexes = out[_PROCESS_PARAM_INDEX_COLUMN].dropna().astype(int)
+        if ((indexes < 1) | (indexes > MAX_PROCESS_PARAM_SET_COUNT)).any():
+            raise ValueError(
+                "process_param_index values in process_params must be in 1..256"
+            )
+
+        if indexes.duplicated().any():
+            raise ValueError(
+                "process_param_index values in process_params must be unique"
+            )
+
+        param_cols = [
+            str(col) for col in out.columns if str(col) != _PROCESS_PARAM_INDEX_COLUMN
+        ]
+        if len(param_cols) > MAX_PROCESS_PARAM_PER_SET:
+            raise ValueError(
+                f"process_params has more than {MAX_PROCESS_PARAM_PER_SET} "
+                "parameter columns"
+            )
+
+        for col in param_cols:
+            try:
+                out[col] = out[col].astype("float64")
+            except (ValueError, TypeError) as exc:
+                raise ValueError(
+                    f"Cannot cast process parameter column {col!r} to float64"
+                ) from exc
+
+        return out
+
+    def _validate_process_consistency(self) -> None:
+        """Validate consistency between metadata, points and process params.
+
+        Raises:
+            ValueError: If process metadata and data are inconsistent.
+        """
+        process = self.meta.process
+
+        if process.process_type == 0:
+            if self.process_params is not None:
+                raise ValueError("process_params must be None when process_type is 0")
             return
 
-        if "tool_index" in self.points.columns and self.tools:
-            max_idx = int(self.points["tool_index"].max())
-            if max_idx >= len(self.tools):
-                raise ValueError(
-                    msg("TOOL_INDEX_OUT_OF_BOUNDS", max=max_idx, n=len(self.tools))
-                )
-        if "wobj_index" in self.points.columns and self.wobjs:
-            max_idx = int(self.points["wobj_index"].max())
-            if max_idx >= len(self.wobjs):
-                raise ValueError(
-                    msg("WOBJ_INDEX_OUT_OF_BOUNDS", max=max_idx, n=len(self.wobjs))
-                )
+        if not process.process_param_names:
+            raise ValueError("process_param_names is required when process_type > 0")
+
+        if _PROCESS_PARAM_INDEX_COLUMN not in self.points.columns:
+            raise ValueError(
+                "points must contain process_param_index when process_type > 0"
+            )
+
+        if self.process_params is None:
+            raise ValueError("process_params is required when process_type > 0")
+
+        expected_cols = set(process.process_param_names)
+        actual_cols = {
+            str(col)
+            for col in self.process_params.columns
+            if str(col) != _PROCESS_PARAM_INDEX_COLUMN
+        }
+        if actual_cols != expected_cols:
+            raise ValueError(
+                "process_params parameter columns must match "
+                "meta.process.process_param_names"
+            )
+
+        point_indexes = self.points[_PROCESS_PARAM_INDEX_COLUMN].fillna(0).astype(int)
+        if ((point_indexes < 0) | (point_indexes > MAX_PROCESS_PARAM_SET_COUNT)).any():
+            raise ValueError("process_param_index values in points must be in 0..256")
+
+        available_indexes = set(
+            self.process_params[_PROCESS_PARAM_INDEX_COLUMN].dropna().astype(int)
+        )
+        used_indexes = set(int(v) for v in point_indexes if int(v) != 0)
+        missing = sorted(used_indexes - available_indexes)
+        if missing:
+            raise ValueError(
+                f"points reference missing process_param_index values: {missing}"
+            )
 
     # ------------------------------------------------------------------
-    # Utility properties
+    # Properties
     # ------------------------------------------------------------------
 
     @property
     def point_count(self) -> int:
-        """Number of points in the trajectory."""
+        """Number of trajectory points.
+
+        Returns:
+            Number of rows in ``points``.
+        """
         return len(self.points)
 
     @property
     def active_external_axes(self) -> list[str]:
-        """List of external axes actually present in the ``DataFrame``.
+        """Active external axis columns present in the point table.
 
         Returns:
-            Sorted list of ``eax_*`` column names that are present.
-
-        Example:
-            ::
-
-                >>> traj.active_external_axes
-                ['eax_a', 'eax_b']
+            Sorted list of ``eax_*`` columns.
         """
         eax_cols = set(EXTERNAL_AXIS_COLUMNS)
-        return sorted(c for c in self.points.columns if str(c) in eax_cols)
+        return sorted(str(c) for c in self.points.columns if str(c) in eax_cols)
 
     @property
     def has_confdata(self) -> bool:
-        """Whether robot configuration data (confdata) columns are present."""
-        return "cf1" in self.points.columns
+        """Whether all confdata columns are present.
+
+        Returns:
+            ``True`` when ``cf1/cf4/cf6/cfx`` are all present.
+        """
+        return all(col in self.points.columns for col in CONFDATA_COLUMNS)
 
     @property
     def has_move_type(self) -> bool:
-        """Whether the ``move_type`` column (MoveJ/MoveL/MoveC) is present."""
+        """Whether the ``move_type`` column is present.
+
+        Returns:
+            ``True`` if ``move_type`` exists.
+        """
         return "move_type" in self.points.columns
 
     @property
-    def has_tool_table(self) -> bool:
-        """Whether a tool naming table is defined.
+    def has_process(self) -> bool:
+        """Whether this trajectory carries process data.
 
         Returns:
-            ``True`` if ``tools`` is non-empty and the ``tool_index``
-            column is present in the ``DataFrame``.
+            ``True`` when ``process_type > 0``.
         """
-        return bool(self.tools) and "tool_index" in self.points.columns
+        return self.meta.process.process_type > 0
 
     @property
-    def has_wobj_table(self) -> bool:
-        """Whether a wobj naming table is defined.
+    def has_process_params(self) -> bool:
+        """Whether a process parameter table is attached.
 
         Returns:
-            ``True`` if ``wobjs`` is non-empty and the ``wobj_index``
-            column is present in the ``DataFrame``.
+            ``True`` when ``process_params`` is not ``None``.
         """
-        return bool(self.wobjs) and "wobj_index" in self.points.columns
+        return self.process_params is not None
 
     @property
-    def is_complete(self) -> bool:
-        """Whether all converter columns are present.
-
-        A complete ``.trajcenter`` contains ``cf1/cf4/cf6/cfx``,
-        ``move_type``, ``speed``, ``zone``, ``tool_index``,
-        ``wobj_index`` in addition to the mandatory geometric columns.
+    def is_exportable(self) -> bool:
+        """Whether the trajectory contains the required geometry columns.
 
         Returns:
-            ``True`` if all :data:`CONVERTER_COLUMNS` are present.
+            Always ``True`` for a constructed instance, because required
+            geometry is validated at initialisation.
         """
-        return all(c in self.points.columns for c in CONVERTER_COLUMNS)
+        return all(col in self.points.columns for col in REQUIRED_COLUMNS)
+
+    @property
+    def has_converter_columns(self) -> bool:
+        """Whether converter-safe columns are present.
+
+        Returns:
+            ``True`` when all ``CONVERTER_COLUMNS`` are present.
+        """
+        return all(col in self.points.columns for col in CONVERTER_COLUMNS)
 
     # ------------------------------------------------------------------
-    # Serialisation → .trajcenter
+    # Serialisation
     # ------------------------------------------------------------------
 
     def save(self, path: str | Path) -> Path:
-        """Save the trajectory to a ``.trajcenter`` file.
-
-        The produced file is a ZIP archive containing:
-
-        - ``meta.json``      : metadata (JSON, UTF-8)
-        - ``points.parquet`` : points (PyArrow, zstd compression)
-        - ``tools.json``     : ordered list of tool names
-        - ``wobjs.json``     : ordered list of wobj names
-
-        The parent directory is created automatically when necessary.
-        The :attr:`TrajectoryMeta.point_count` counter is updated
-        before writing.
+        """Save the trajectory to a ``.trajcenter`` archive.
 
         Args:
-            path: Destination path (str or Path).
-                The ``.trajcenter`` extension is recommended.
+            path: Destination path.
 
         Returns:
-            Absolute path of the created file.
-
-        Example:
-            ::
-
-                saved_path = traj.save("trajectory_store/pointage.trajcenter")
+            Absolute path of the created archive.
         """
         dest = Path(path)
         dest.parent.mkdir(parents=True, exist_ok=True)
 
         self.meta.point_count = self.point_count
 
-        pa_fields: list[pa.Field] = [
-            pa.field(str(col), _PA_TYPE_MAP.get(str(col), pa.string()))
-            for col in self.points.columns
-        ]
-        schema = pa.schema(pa_fields)
-        table = pa.Table.from_pandas(self.points, schema=schema, preserve_index=False)
+        point_table = self._dataframe_to_table(self.points)
 
         with zipfile.ZipFile(dest, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             zf.writestr("meta.json", self.meta.model_dump_json(indent=2))
-            zf.writestr(
-                "tools.json",
-                json.dumps(self.tools, ensure_ascii=False, indent=2),
-            )
-            zf.writestr(
-                "wobjs.json",
-                json.dumps(self.wobjs, ensure_ascii=False, indent=2),
-            )
-            buf = io.BytesIO()
-            pq.write_table(table, buf, compression="zstd")
-            zf.writestr("points.parquet", buf.getvalue())
+
+            point_buf = io.BytesIO()
+            pq.write_table(point_table, point_buf, compression="zstd")
+            zf.writestr("points.parquet", point_buf.getvalue())
+
+            if self.process_params is not None:
+                process_table = self._dataframe_to_table(self.process_params)
+                process_buf = io.BytesIO()
+                pq.write_table(process_table, process_buf, compression="zstd")
+                zf.writestr(_PROCESS_PARAMS_ENTRY, process_buf.getvalue())
 
         return dest.resolve()
 
-    # ------------------------------------------------------------------
-    # Deserialisation ← .trajcenter
-    # ------------------------------------------------------------------
-
     @classmethod
     def load(cls, path: str | Path) -> Trajectory:
-        """Load a trajectory from a ``.trajcenter`` file.
-
-        The ``tools.json`` and ``wobjs.json`` entries are optional to
-        ensure compatibility with potential legacy files.
+        """Load a trajectory from a ``.trajcenter`` archive.
 
         Args:
-            path: Path to the ``.trajcenter`` file to load.
+            path: Path to the archive.
 
         Returns:
-            Reconstructed :class:`Trajectory` instance.
+            Loaded trajectory.
 
         Raises:
-            FileNotFoundError: If the file does not exist.
-            ValueError: If the archive does not contain the mandatory
-                entries (``meta.json``, ``points.parquet``).
-
-        Example:
-            ::
-
-                traj = Trajectory.load("trajectory_store/pointage.trajcenter")
-                print(traj.point_count)
-                print(traj.tools)               # ['Tool_formage']
-                print(traj.meta.autocompleted)  # ['speed']
+            FileNotFoundError: If the archive does not exist.
+            ValueError: If mandatory archive entries are missing.
         """
         src = Path(path)
         if not src.exists():
@@ -694,21 +675,82 @@ class Trajectory:
             missing_entries = _REQUIRED_ZIP_ENTRIES - names
             if missing_entries:
                 raise ValueError(
-                    f"Invalid .trajcenter archive — missing entries "
+                    "Invalid .trajcenter archive — missing entries "
                     f"{sorted(missing_entries)}: {src}"
                 )
 
             meta = TrajectoryMeta.model_validate_json(zf.read("meta.json"))
-            tools: list[str] = (
-                json.loads(zf.read("tools.json")) if "tools.json" in names else []
-            )
-            wobjs: list[str] = (
-                json.loads(zf.read("wobjs.json")) if "wobjs.json" in names else []
-            )
-            buf = io.BytesIO(zf.read("points.parquet"))
-            points = pq.read_table(buf).to_pandas()
 
-        return cls(meta=meta, points=points, tools=tools, wobjs=wobjs)
+            point_buf = io.BytesIO(zf.read("points.parquet"))
+            points = pq.read_table(point_buf).to_pandas()
+
+            process_params: pd.DataFrame | None = None
+            if _PROCESS_PARAMS_ENTRY in names:
+                process_buf = io.BytesIO(zf.read(_PROCESS_PARAMS_ENTRY))
+                process_params = pq.read_table(process_buf).to_pandas()
+
+        return cls(meta=meta, points=points, process_params=process_params)
+
+    @staticmethod
+    def _dataframe_to_table(df: pd.DataFrame) -> pa.Table:
+        """Convert a DataFrame to a typed PyArrow table.
+
+        Known TrajCenter columns use explicit schema types. Unknown
+        columns are inferred from pandas dtypes, which is required for
+        process parameter columns such as ``force`` or ``travel_speed``.
+
+        ABB Route:
+            Local ``.trajcenter`` archive serialisation. No RWS route is
+            called by this function.
+
+        ABB Constraints:
+            The inactive external-axis sentinel ``9E+9`` must not be
+            injected here. It belongs only to the RWS serialisation layer.
+
+        Args:
+            df: DataFrame to convert.
+
+        Returns:
+            PyArrow table with explicit or inferred column types.
+
+        Raises:
+            ValueError: If a column dtype cannot be mapped to a PyArrow
+                type.
+
+        Example:
+            ::
+
+                table = Trajectory._dataframe_to_table(points)
+        """
+        fields: list[pa.Field] = []
+
+        for col in df.columns:
+            col_name = str(col)
+
+            if col_name in _PA_TYPE_MAP:
+                fields.append(pa.field(col_name, _PA_TYPE_MAP[col_name]))
+                continue
+
+            dtype = df[col].dtype
+
+            if pd.api.types.is_float_dtype(dtype):
+                fields.append(pa.field(col_name, pa.float64()))
+            elif pd.api.types.is_integer_dtype(dtype):
+                fields.append(pa.field(col_name, pa.int64()))
+            elif pd.api.types.is_bool_dtype(dtype):
+                fields.append(pa.field(col_name, pa.bool_()))
+            elif pd.api.types.is_string_dtype(dtype) or pd.api.types.is_object_dtype(
+                dtype
+            ):
+                fields.append(pa.field(col_name, pa.string()))
+            else:
+                raise ValueError(
+                    f"Cannot infer PyArrow type for column {col_name!r} "
+                    f"with pandas dtype {dtype!r}"
+                )
+
+        schema = pa.schema(fields)
+        return pa.Table.from_pandas(df, schema=schema, preserve_index=False)
 
     # ------------------------------------------------------------------
     # Representation
@@ -716,21 +758,19 @@ class Trajectory:
 
     @override
     def __repr__(self) -> str:
-        """Concise representation for debugging.
+        """Return a concise debug representation.
 
         Returns:
-            String of the form
-            ``Trajectory(name='...', points=N, tools=T, wobjs=W,
-            eax=[...], complete=bool)``.
+            Human-readable trajectory summary.
         """
         eax = self.active_external_axes
         return (
-            f"Trajectory("
+            "Trajectory("
             f"name={self.meta.name!r}, "
             f"points={self.point_count:,}, "
-            f"tools={len(self.tools)}, "
-            f"wobjs={len(self.wobjs)}, "
             f"eax={eax if eax else 'none'}, "
-            f"complete={self.is_complete}"
-            f")"
+            f"process_type={self.meta.process.process_type}, "
+            f"process_params={self.has_process_params}, "
+            f"exportable={self.is_exportable}"
+            ")"
         )

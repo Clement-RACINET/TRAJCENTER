@@ -83,9 +83,12 @@ class TestExcelConverter:
         assert traj.points["q1"].iloc[0] == pytest.approx(1.0)
         assert traj.points["q2"].iloc[0] == pytest.approx(0.0)
 
-    def test_is_complete(self, xlsx_simple: Path) -> None:
-        """The produced trajectory is complete."""
-        assert ExcelConverter().convert(xlsx_simple).is_complete is True
+    def test_required_geometry_columns_present(self, xlsx_simple: Path) -> None:
+        """The produced trajectory contains required geometry columns."""
+        traj = ExcelConverter().convert(xlsx_simple)
+
+        for col in ["x", "y", "z", "q1", "q2", "q3", "q4"]:
+            assert col in traj.points.columns
 
     # --- XYZ-only → identity quaternion ---
 
@@ -107,7 +110,10 @@ class TestExcelConverter:
         """Column aliases (including accented names) are correctly resolved."""
         traj = ExcelConverter().convert(xlsx_aliases)
         assert traj.points["x"].iloc[0] == pytest.approx(1.0)
-        assert traj.points["speed"].iloc[0] == "v500"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(500.0)
+        assert traj.points["zone_type"].iloc[0] == 10
+        assert traj.points["tool_name"].iloc[0] == "Tool_A"
+        assert traj.points["wobj_name"].iloc[0] == "Wobj_A"
 
     def test_aliases_no_spurious_warning(self, xlsx_aliases: Path) -> None:
         """Resolving aliases does not emit spurious 'unrecognised columns' warnings."""
@@ -140,21 +146,19 @@ class TestExcelConverter:
 
     # --- tools / wobjs sheets ---
 
-    def test_tools_sheet_loaded(self, xlsx_with_tools_sheet: Path) -> None:
-        """Tool names from the ``tools`` sheet are loaded into ``traj.tools``."""
+    def test_legacy_tools_sheet_ignored(self, xlsx_with_tools_sheet: Path) -> None:
+        """Legacy tools sheet is ignored; inline tool names are kept."""
         traj = ExcelConverter().convert(xlsx_with_tools_sheet)
-        assert "Tool_A" in traj.tools
-        assert "Tool_B" in traj.tools
+        assert "tool_name" in traj.points.columns
+        assert "tool_index" not in traj.points.columns
+        assert traj.points["tool_name"].tolist() == ["Tool_A", "Tool_B"]
 
-    def test_wobjs_sheet_loaded(self, xlsx_with_tools_sheet: Path) -> None:
-        """Wobj names from the ``wobjs`` sheet are loaded into ``traj.wobjs``."""
-        assert "Wobj_A" in ExcelConverter().convert(xlsx_with_tools_sheet).wobjs
-
-    def test_tool_index_consistency(self, xlsx_with_tools_sheet: Path) -> None:
-        """``tool_index`` consistently points to the correct entry in ``tools[]``."""
+    def test_legacy_wobjs_sheet_ignored(self, xlsx_with_tools_sheet: Path) -> None:
+        """Legacy wobjs sheet is ignored; inline wobj names are kept."""
         traj = ExcelConverter().convert(xlsx_with_tools_sheet)
-        for _, row in traj.points.iterrows():
-            assert traj.tools[int(row["tool_index"])] in ("Tool_A", "Tool_B")
+        assert "wobj_name" in traj.points.columns
+        assert "wobj_index" not in traj.points.columns
+        assert traj.points["wobj_name"].tolist() == ["Wobj_A", "Wobj_A"]
 
     # --- meta sheet ---
 
@@ -194,23 +198,22 @@ class TestExcelConverter:
 
     def test_custom_default_speed(self, xlsx_xyz_only: Path) -> None:
         """The custom default speed is applied."""
-        traj = ExcelConverter(defaults=ConversionDefaults(speed="v250")).convert(
+        traj = ExcelConverter(defaults=ConversionDefaults(tcp_speed=250.0)).convert(
             xlsx_xyz_only
         )
-        assert traj.points["speed"].iloc[0] == "v250"
+        assert traj.points["tcp_speed"].iloc[0] == pytest.approx(250.0)
 
     # --- Roundtrip ---
 
     def test_full_roundtrip(self, tmp_path: Path, xlsx_simple: Path) -> None:
-        """``convert → save → load`` produces an identical trajectory."""
+        """convert → save → load produces an equivalent trajectory."""
         traj = ExcelConverter().convert(xlsx_simple)
         dest = tmp_path / "simple.trajcenter"
         traj.save(dest)
         loaded = Trajectory.load(dest)
+
         assert loaded.point_count == traj.point_count
-        assert loaded.tools == traj.tools
-        assert loaded.wobjs == traj.wobjs
-        assert loaded.is_complete is True
+        assert list(loaded.points.columns) == list(traj.points.columns)
         pd.testing.assert_series_equal(
             loaded.points["x"].reset_index(drop=True),
             traj.points["x"].reset_index(drop=True),

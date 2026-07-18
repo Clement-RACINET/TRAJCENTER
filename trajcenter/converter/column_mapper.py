@@ -5,14 +5,30 @@
 Author: Clement RACINET
 
 Resolution is case-insensitive and diacritic-insensitive via
-:func:`_normalize`. Aliases in :data:`COLUMN_ALIASES` must be written
-in their *normalised* form (lowercase, no accent, underscores
-preserved) — i.e. as they come out of ``_normalize()``.
+:func:`_normalize`.
 
-Note:
-    If a user can write both ``"PosX"`` and ``"pos_x"``, both
-    normalised forms must appear in the alias set: ``"posx"`` and
-    ``"pos_x"``.
+TrajCenter v2 canonical names
+-----------------------------
+Legacy user aliases are still accepted, but they now resolve to the v2
+canonical names:
+
+- ``speed`` / ``vitesse`` -> ``tcp_speed``
+- ``zone`` / ``precision`` -> ``zone_type``
+- ``tool`` / ``outil`` -> ``tool_name``
+- ``wobj`` / ``repere`` -> ``wobj_name``
+
+ABB Route:
+    N/A — local column mapping, no RWS route.
+
+ABB Constraints:
+    This module does not read or write RAPID data. It only normalises
+    tabular source headers.
+
+Example:
+    ::
+
+        canonical_name("Vitesse")  # "tcp_speed"
+        canonical_name("Répère")   # "wobj_name"
 """
 
 from __future__ import annotations
@@ -25,43 +41,35 @@ import pandas as pd
 from trajcenter.core.messages import msg
 
 
-# ---------------------------------------------------------------------------
-# Normalisation
-# ---------------------------------------------------------------------------
-
-
 def _normalize(s: str) -> str:
-    """Casefold and strip diacritics (NFD → ASCII).
+    """Casefold and strip diacritics.
 
     Underscores and digits are preserved.
+
+    ABB Route:
+        N/A.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
         s: Raw string to normalise.
 
     Returns:
-        Normalised string: lowercase, no accent.
+        Normalised string: lowercase and accent-free.
+
+    Raises:
+        UnicodeError: If Python unicode normalisation fails.
 
     Example:
         ::
 
-            _normalize("Répère")  # → "repere"
-            _normalize("VITESSE") # → "vitesse"
-            _normalize("PosX")    # → "posx"
-            _normalize("pos_x")   # → "pos_x"
+            _normalize("Répère") == "repere"
     """
     return unicodedata.normalize("NFD", s.casefold()).encode("ascii", "ignore").decode()
 
 
-# ---------------------------------------------------------------------------
-# Alias table
-# ---------------------------------------------------------------------------
-
-#: Each alias must be written as it comes out of ``_normalize()``:
-#: lowercase, no accent, underscores preserved.
-#: If a user can write "PosX" or "pos_x", both normalised forms must
-#: appear: "posx" and "pos_x".
 COLUMN_ALIASES: dict[str, frozenset[str]] = {
-    # ── Position ────────────────────────────────────────────────────────
     "x": frozenset(
         {
             "x",
@@ -98,30 +106,73 @@ COLUMN_ALIASES: dict[str, frozenset[str]] = {
             "trans_z",
         }
     ),
-    # ── Orientation (scalar-first quaternion: q1=qw, q2=qi, q3=qj, q4=qk)
     "q1": frozenset({"q1", "qw", "quaternionw", "quaternion_w", "rotw", "rot_w"}),
     "q2": frozenset({"q2", "qi", "qx", "quaternionx", "quaternion_x", "rotx", "rot_x"}),
     "q3": frozenset({"q3", "qj", "qy", "quaterniony", "quaternion_y", "roty", "rot_y"}),
     "q4": frozenset({"q4", "qk", "qz", "quaternionz", "quaternion_z", "rotz", "rot_z"}),
-    # ── Movement ────────────────────────────────────────────────────────
     "move_type": frozenset({"move_type", "movetype", "type", "mouvement", "motion"}),
-    "speed": frozenset({"speed", "vitesse", "feedrate", "feed"}),
-    "zone": frozenset({"zone", "precision", "accuracy", "blend"}),
-    # ── Tool / wobj references ───────────────────────────────────────────
-    "tool": frozenset({"tool", "outil", "toolname", "tool_name"}),
-    "wobj": frozenset(
+    "tcp_speed": frozenset(
         {
+            "tcp_speed",
+            "tcpspeed",
+            "speed",
+            "vitesse",
+            "feedrate",
+            "feed",
+        }
+    ),
+    "zone_type": frozenset(
+        {
+            "zone_type",
+            "zonetype",
+            "zone",
+            "precision",
+            "accuracy",
+            "blend",
+        }
+    ),
+    "tool_name": frozenset(
+        {
+            "tool_name",
+            "toolname",
+            "tool",
+            "outil",
+        }
+    ),
+    "wobj_name": frozenset(
+        {
+            "wobj_name",
+            "wobjname",
+            "wobjectname",
             "wobj",
             "wobjs",
             "workobject",
             "workobjects",
             "repere",
             "frame",
-            "wobj_name",
-            "wobjectname",
         }
     ),
-    # ── Confdata (ABB joint configuration) ──────────────────────────────
+    "readconfs": frozenset(
+        {
+            "readconfs",
+            "readconf",
+            "confread",
+            "conf_read",
+            "read_confs",
+            "read_conf",
+        }
+    ),
+    "process_param_index": frozenset(
+        {
+            "process_param_index",
+            "processparamindex",
+            "process_index",
+            "processindex",
+            "param_index",
+            "paramindex",
+            "process",
+        }
+    ),
     "cf1": frozenset(
         {
             "cf1",
@@ -158,7 +209,6 @@ COLUMN_ALIASES: dict[str, frozenset[str]] = {
             "configdatax",
         }
     ),
-    # ── External axes ────────────────────────────────────────────────────
     "eax_a": frozenset(
         {
             "eax_a",
@@ -227,9 +277,6 @@ COLUMN_ALIASES: dict[str, frozenset[str]] = {
     ),
 }
 
-#: Reverse index: normalised alias → canonical name.
-#: ``_normalize()`` is applied to aliases **at construction time** to
-#: guarantee that the lookup (also normalised) always finds its entries.
 _ALIAS_INDEX: dict[str, str] = {
     _normalize(alias): canonical
     for canonical, aliases in COLUMN_ALIASES.items()
@@ -237,51 +284,60 @@ _ALIAS_INDEX: dict[str, str] = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
-
-
 def canonical_name(col: str) -> str | None:
-    """Return the canonical column name, or ``None`` if unrecognised.
+    """Return the canonical column name.
+
+    ABB Route:
+        N/A.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
         col: Column name as it appears in the source file.
 
     Returns:
-        Canonical TrajCenter name, or ``None``.
+        Canonical TrajCenter name, or ``None`` if unrecognised.
+
+    Raises:
+        UnicodeError: If unicode normalisation fails.
 
     Example:
         ::
 
-            canonical_name("PosX")    # → "x"
-            canonical_name("pos_x")   # → "x"
-            canonical_name("REPÈRE")  # → "wobj"
-            canonical_name("cf1")     # → "cf1"
-            canonical_name("foobar")  # → None
+            canonical_name("Vitesse") == "tcp_speed"
+            canonical_name("REPÈRE") == "wobj_name"
     """
     return _ALIAS_INDEX.get(_normalize(col))
 
 
 def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
-    """Rename ``DataFrame`` columns to their canonical names.
+    """Rename DataFrame columns to their canonical names.
 
     Unrecognised columns are left intact and returned in ``unresolved``.
-    When two columns resolve to the same canonical name, the first one
-    is kept and a :class:`UserWarning` is emitted.
+    When two columns resolve to the same canonical name, the first one is
+    kept and a :class:`UserWarning` is emitted.
+
+    ABB Route:
+        N/A — local DataFrame header mapping.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
-        df: Source ``DataFrame``.
+        df: Source DataFrame.
 
     Returns:
         Tuple ``(renamed_df, unresolved_columns)``.
+
+    Raises:
+        UserWarning: Emitted when duplicate aliases resolve to the same
+            canonical column.
 
     Example:
         ::
 
             df_out, unknown = resolve_columns(df)
-            if unknown:
-                warnings.warn(f"Unknown columns: {unknown}")
     """
     rename_map: dict[str, str] = {}
     seen_canonical: dict[str, str] = {}

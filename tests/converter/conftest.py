@@ -200,7 +200,7 @@ def xlsx_xyz_only(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def xlsx_aliases(tmp_path: Path) -> Path:
-    """Workbook with non-canonical column names (aliases, accents, mixed case)."""
+    """Workbook with non-canonical column names mapped to v2 canonical columns."""
     return _make_xlsx(
         tmp_path / "aliases.xlsx",
         {
@@ -210,6 +210,7 @@ def xlsx_aliases(tmp_path: Path) -> Path:
                     "PosY": 2.0,
                     "PosZ": 3.0,
                     "Vitesse": "v500",
+                    "Zone": "z10",
                     "Répère": "Wobj_A",
                     "Outil": "Tool_A",
                 },
@@ -237,7 +238,11 @@ def xlsx_multi_traj(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def xlsx_with_tools_sheet(tmp_path: Path) -> Path:
-    """Workbook with a trajectory sheet, a tools sheet and a wobjs sheet."""
+    """Workbook with legacy tools/wobjs sheets and inline tool/wobj columns.
+
+    The legacy sheets are ignored by v2. Inline columns are imported as
+    ``tool_name`` and ``wobj_name``.
+    """
     return _make_xlsx(
         tmp_path / "with_refs.xlsx",
         {
@@ -263,7 +268,7 @@ def xlsx_missing_xyz(tmp_path: Path) -> Path:
         tmp_path / "missing_xyz.xlsx",
         {
             "traj": [
-                {"speed": "v500", "zone": "z0"},
+                {"tcp_speed": 500.0, "zone_type": 0},
             ],
         },
     )
@@ -358,16 +363,16 @@ def csv_xyz_only(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def csv_aliases(tmp_path: Path) -> Path:
-    """CSV with non-canonical column names (aliases, mixed case)."""
+    """CSV with non-canonical column names mapped to v2 canonical columns."""
     return _write_csv(
         tmp_path / "aliases.csv",
-        "PosX,PosY,PosZ,VITESSE\n1.0,2.0,3.0,v500\n",
+        "PosX,PosY,PosZ,VITESSE,Zone\n1.0,2.0,3.0,v500,z10\n",
     )
 
 
 @pytest.fixture
 def csv_with_tools(tmp_path: Path) -> Path:
-    """CSV with tool and wobj columns."""
+    """CSV with legacy tool and wobj aliases imported as v2 inline names."""
     return _write_csv(
         tmp_path / "with_tools.csv",
         "x,y,z,tool,wobj\n1.0,2.0,3.0,Tool_A,Wobj_A\n4.0,5.0,6.0,Tool_B,Wobj_A\n",
@@ -379,7 +384,7 @@ def csv_missing_xyz(tmp_path: Path) -> Path:
     """CSV without XYZ columns — must raise ``ValueError``."""
     return _write_csv(
         tmp_path / "missing_xyz.csv",
-        "speed,zone\nv500,z0\n",
+        "tcp_speed,zone_type\n500.0,0\n",
     )
 
 
@@ -404,7 +409,7 @@ def csv_with_bom(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def csv_full(tmp_path: Path) -> Path:
-    """CSV with all canonical columns present."""
+    """CSV with full v2-compatible content using human RAPID literals."""
     return _write_csv(
         tmp_path / "full.csv",
         "x,y,z,q1,q2,q3,q4,move_type,speed,zone,tool,wobj\n"

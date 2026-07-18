@@ -1,40 +1,38 @@
 #!/usr/bin/env python3
 # trajcenter/converter/apt_converter.py
-"""Converter for CATIA APT source files (``.aptsource``) to ``.trajcenter``.
+"""Converter for CATIA APT source files to the TrajCenter v2 format.
 
 Author: Clement RACINET
 
-A CATIA APT file contains ``GOTO`` instructions with position and tool
-vector, preceded by ``RAPID`` or ``FEDRAT`` modifiers.
+This module converts CATIA APT ``.aptsource`` files containing ``GOTO``
+instructions into :class:`trajcenter.core.trajectory.Trajectory`.
 
-Expected GOTO line format
---------------------------
-::
+APT movement logic
+------------------
+The movement logic intentionally keeps the legacy behaviour:
 
-    GOTO  /   x,  y,  z,  i,  j,  k
+- ``RAPID`` is non-modal and applies only to the next ``GOTO``.
+- A ``GOTO`` following ``RAPID`` is converted to ``MoveJ``.
+- Every other ``GOTO`` is converted to ``MoveL``.
+- ``FEDRAT`` resets the movement mode to ``MoveL``.
 
-Where ``(x, y, z)`` is the position in mm and ``(i, j, k)`` is the
-(normalised) tool direction vector.
+TrajCenter v2 mapping
+---------------------
+The converter stores canonical v2 columns only:
 
-Parsing rules
---------------
-- ``RAPID`` is **non-modal**: applies only to the next ``GOTO``
-  (→ ``MoveJ``). Every other ``GOTO`` is ``MoveL``.
-- ``FEDRAT`` resets the mode to ``MoveL`` (machining).
-- ``TPRINT`` provides the human-readable tool name
-  (e.g. ``T1 PointeurD10``). This name is used as ``tools[0]``.
-  If absent, ``defaults.tool`` is used.
-- The tool vector ``(i, j, k)`` is converted to an ABB quaternion
-  ``[q1, q2, q3, q4] = [w, x, y, z]`` via the minimal rotation
-  from ``(0, 0, 1)``.
-- The CATIA transformation matrix (3 ``$$`` comment lines at the top
-  of the file) can be applied optionally via
-  ``apply_catia_transform=True``.
-- Wobjs are not present in the APT format: ``wobjs[0]`` is initialised
-  from ``defaults.wobj``.
-- Lines ``$$``, ``PARTNO``, ``COOLNT``, ``CUTCOM``, ``MULTAX``,
-  ``SPINDL``, ``CYCLE``, ``CUTTER``, ``TOOLNO``,
-  ``LOADTL``, ``REWIND``, ``END`` → ignored.
+- APT position ``x, y, z`` -> ``x, y, z``
+- APT tool vector ``i, j, k`` -> ABB quaternion ``q1, q2, q3, q4``
+- APT ``TPRINT`` -> inline ``tool_name``
+- Optional defaults may add ``tcp_speed``, ``zone_type`` or ``wobj_name``
+
+No legacy ``tools`` / ``wobjs`` tables are produced, and no
+``tool_index`` / ``wobj_index`` columns are written.
+
+ABB Route:
+    N/A — local file conversion, no RWS route.
+
+ABB Constraints:
+    No mastership is acquired. No RAPID variable is read or written.
 
 Example:
     ::
@@ -43,13 +41,7 @@ Example:
         from trajcenter.converter.apt_converter import AptConverter
 
         traj = AptConverter().convert(Path("PrepaFlans_Pointage.aptsource"))
-        print(traj)
-        # Trajectory(name='PrepaFlans_Pointage', points=N, tools=1, wobjs=1, ...)
-
-        # With CATIA transformation
-        traj = AptConverter(apply_catia_transform=True).convert(
-            Path("PrepaFlans_Pointage.aptsource")
-        )
+        traj.save(Path("PrepaFlans_Pointage.trajcenter"))
 """
 
 from __future__ import annotations
@@ -73,13 +65,8 @@ from trajcenter.core.trajectory import (
 )
 
 
-# ---------------------------------------------------------------------------
-# Internal TypedDicts
-# ---------------------------------------------------------------------------
-
-
 class _RawPoint(TypedDict):
-    """Raw point extracted from the APT file, before quaternion conversion."""
+    """Raw APT point extracted before quaternion conversion."""
 
     x: float
     y: float
@@ -90,32 +77,21 @@ class _RawPoint(TypedDict):
     is_rapid: bool
 
 
-# ---------------------------------------------------------------------------
-# Regex
-# ---------------------------------------------------------------------------
-
-#: GOTO line: captures x, y, z, i, j, k (spaces and signs allowed)
 _RE_GOTO: re.Pattern[str] = re.compile(
     r"^\s*GOTO\s*/\s*"
-    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"  # x
-    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"  # y
-    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"  # z
-    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"  # i
-    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"  # j
-    r"([+-]?\d+(?:\.\d+)?)",  # k
+    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d+(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d+(?:\.\d+)?)",
     re.IGNORECASE,
 )
 
-#: RAPID line (alone on its line)
 _RE_RAPID: re.Pattern[str] = re.compile(r"^\s*RAPID\s*$", re.IGNORECASE)
-
-#: FEDRAT line: resets rapid mode
 _RE_FEDRAT: re.Pattern[str] = re.compile(r"^\s*FEDRAT\s*/", re.IGNORECASE)
-
-#: TPRINT line: captures the tool name (e.g. "T1 PointeurD10")
 _RE_TPRINT: re.Pattern[str] = re.compile(r"^\s*TPRINT\s*/\s*(.+)", re.IGNORECASE)
 
-#: CATIA matrix: ``$$`` comment line with exactly 4 floats
 _RE_CATIA_MATRIX_ROW: re.Pattern[str] = re.compile(
     r"^\s*\$\$\s+"
     r"([+-]?\d+\.\d+)\s+"
@@ -125,29 +101,36 @@ _RE_CATIA_MATRIX_ROW: re.Pattern[str] = re.compile(
 )
 
 
-# ---------------------------------------------------------------------------
-# Geometric utilities
-# ---------------------------------------------------------------------------
-
-
 def _tool_vector_to_quaternion(
-    i: float, j: float, k: float
+    i: float,
+    j: float,
+    k: float,
 ) -> tuple[float, float, float, float]:
-    """Convert an APT tool vector to an ABB quaternion ``[w, x, y, z]``.
+    """Convert an APT tool vector to an ABB scalar-first quaternion.
 
-    Computes the minimal rotation (smallest angle) that brings the
-    reference vector ``(0, 0, 1)`` onto the tool vector ``(i, j, k)``.
+    ABB Route:
+        N/A — local geometric conversion.
 
-    ABB RAPID convention: ``[q1, q2, q3, q4] = [w, x, y, z]``
-    (scalar-first).
+    ABB Constraints:
+        The returned quaternion follows ABB RAPID convention
+        ``[q1, q2, q3, q4] = [w, x, y, z]``.
 
     Args:
-        i: X component of the tool vector.
-        j: Y component of the tool vector.
-        k: Z component of the tool vector.
+        i: X component of the APT tool vector.
+        j: Y component of the APT tool vector.
+        k: Z component of the APT tool vector.
 
     Returns:
-        Tuple ``(q1, q2, q3, q4)`` = ``(w, x, y, z)``.
+        Tuple ``(q1, q2, q3, q4)`` representing the minimal rotation
+        from ``(0, 0, 1)`` to ``(i, j, k)``.
+
+    Raises:
+        ValueError: Never intentionally raised.
+
+    Example:
+        ::
+
+            q1, q2, q3, q4 = _tool_vector_to_quaternion(0.0, 0.0, 1.0)
     """
     tool = np.array([i, j, k], dtype=np.float64)
     norm = float(np.linalg.norm(tool))
@@ -157,11 +140,9 @@ def _tool_vector_to_quaternion(
     z_ref = np.array([0.0, 0.0, 1.0])
     dot = float(np.clip(np.dot(z_ref, tool), -1.0, 1.0))
 
-    # Degenerate case: vector identical to z_ref → identity quaternion
     if dot >= 1.0 - 1e-10:
         return (1.0, 0.0, 0.0, 0.0)
 
-    # Degenerate case: vector opposite to z_ref → 180° rotation around X
     if dot <= -1.0 + 1e-10:
         return (0.0, 1.0, 0.0, 0.0)
 
@@ -179,18 +160,28 @@ def _tool_vector_to_quaternion(
 
 
 def _parse_catia_matrix(lines: Sequence[str]) -> np.ndarray | None:
-    """Extract the CATIA transformation matrix from the file lines.
+    """Extract a CATIA 3x4 transformation matrix from APT comments.
 
-    Searches for 3 consecutive ``$$`` comment lines each containing
-    4 floats (3×4 matrix: 3×3 rotation + 3×1 translation).
-    The search stops as soon as a non-comment line is encountered
-    after accumulation has started.
+    ABB Route:
+        N/A — local file parsing.
+
+    ABB Constraints:
+        No ABB controller access.
 
     Args:
-        lines: All lines of the APT file.
+        lines: Raw APT file lines.
 
     Returns:
-        A ``(4, 4)`` homogeneous numpy matrix if found, ``None`` otherwise.
+        Homogeneous ``(4, 4)`` matrix when three CATIA matrix rows are
+        found, otherwise ``None``.
+
+    Raises:
+        ValueError: Never intentionally raised.
+
+    Example:
+        ::
+
+            matrix = _parse_catia_matrix(lines)
     """
     matrix_rows: list[list[float]] = []
 
@@ -202,9 +193,9 @@ def _parse_catia_matrix(lines: Sequence[str]) -> np.ndarray | None:
                 break
             continue
 
-        m = _RE_CATIA_MATRIX_ROW.match(stripped)
-        if m:
-            matrix_rows.append([float(m.group(g)) for g in range(1, 5)])
+        match = _RE_CATIA_MATRIX_ROW.match(stripped)
+        if match:
+            matrix_rows.append([float(match.group(group)) for group in range(1, 5)])
             if len(matrix_rows) == 3:
                 break
         elif matrix_rows:
@@ -213,38 +204,52 @@ def _parse_catia_matrix(lines: Sequence[str]) -> np.ndarray | None:
     if len(matrix_rows) != 3:
         return None
 
-    mat = np.eye(4, dtype=np.float64)
+    matrix = np.eye(4, dtype=np.float64)
     for row_idx, row in enumerate(matrix_rows):
-        mat[row_idx, :3] = row[:3]  # rotation
-        mat[row_idx, 3] = row[3]  # translation
-    return mat
+        matrix[row_idx, :3] = row[:3]
+        matrix[row_idx, 3] = row[3]
+
+    return matrix
 
 
 def _apply_transform(
     points: list[_RawPoint],
     matrix: np.ndarray,
 ) -> list[_RawPoint]:
-    """Apply a 4×4 homogeneous matrix to positions and tool vectors.
+    """Apply a homogeneous CATIA transform to APT points.
 
-    The translation is applied to positions ``(x, y, z)``.
-    Only the rotation (3×3 sub-matrix) is applied to tool vectors
-    ``(i, j, k)``.
+    ABB Route:
+        N/A — local geometric conversion.
+
+    ABB Constraints:
+        Translation is applied only to positions. Tool vectors receive
+        only the rotation part of the matrix.
 
     Args:
-        points: List of :class:`_RawPoint` instances.
-        matrix: ``(4, 4)`` homogeneous transformation matrix.
+        points: Raw APT points.
+        matrix: Homogeneous ``(4, 4)`` transformation matrix.
 
     Returns:
-        New list of :class:`_RawPoint` with transformed positions and vectors.
+        Transformed raw APT points.
+
+    Raises:
+        ValueError: Never intentionally raised.
+
+    Example:
+        ::
+
+            transformed = _apply_transform(points, matrix)
     """
-    R = matrix[:3, :3]
+    rotation = matrix[:3, :3]
     transformed: list[_RawPoint] = []
 
-    for pt in points:
-        pos = np.array([pt["x"], pt["y"], pt["z"], 1.0])
+    for point in points:
+        pos = np.array([point["x"], point["y"], point["z"], 1.0])
         new_pos = matrix @ pos
-        vec = np.array([pt["i"], pt["j"], pt["k"]])
-        new_vec = R @ vec
+
+        vec = np.array([point["i"], point["j"], point["k"]])
+        new_vec = rotation @ vec
+
         transformed.append(
             _RawPoint(
                 x=float(new_pos[0]),
@@ -253,42 +258,32 @@ def _apply_transform(
                 i=float(new_vec[0]),
                 j=float(new_vec[1]),
                 k=float(new_vec[2]),
-                is_rapid=pt["is_rapid"],
+                is_rapid=point["is_rapid"],
             )
         )
 
     return transformed
 
 
-# ---------------------------------------------------------------------------
-# Converter
-# ---------------------------------------------------------------------------
-
-
 class AptConverter(BaseConverter):
-    """Converter for CATIA APT source files to :class:`~trajcenter.core.trajectory.Trajectory`.
+    """Converter for CATIA APT source files.
 
-    Parses all ``GOTO`` instructions in a ``.aptsource`` file, taking
-    into account ``RAPID`` (→ ``MoveJ``) and ``FEDRAT`` (→ ``MoveL``)
-    modifiers.
+    ABB Route:
+        N/A — local file parsing.
 
-    The tool name is extracted from the ``TPRINT`` directive when present,
-    otherwise ``defaults.tool`` is used.
+    ABB Constraints:
+        No ABB controller access.
 
     Attributes:
-        defaults: Default values used for autocompletion.
-        apply_catia_transform: When ``True``, applies the CATIA
-            transformation matrix if present at the top of the file.
-            Defaults to ``False``.
+        defaults: Optional conversion defaults inherited from
+            :class:`trajcenter.converter.base.BaseConverter`.
+        apply_catia_transform: Whether to apply the CATIA matrix when
+            present.
 
     Example:
         ::
 
-            from pathlib import Path
-            from trajcenter.converter.apt_converter import AptConverter
-
-            traj = AptConverter().convert(Path("Pointage.aptsource"))
-            traj.save("trajectory_store/Pointage.trajcenter")
+            traj = AptConverter(apply_catia_transform=True).convert(path)
     """
 
     def __init__(
@@ -298,87 +293,112 @@ class AptConverter(BaseConverter):
     ) -> None:
         """Initialise the APT converter.
 
-        Args:
-            defaults: Default values used for autocompletion.
-            apply_catia_transform: Apply the CATIA matrix if present.
-                Defaults to ``False``.
-        """
-        super().__init__(defaults)
-        self.apply_catia_transform: bool = apply_catia_transform
+        ABB Route:
+            N/A.
 
-    def convert(self, source: Path) -> Trajectory:
-        """Convert a ``.aptsource`` file to a :class:`~trajcenter.core.trajectory.Trajectory`.
+        ABB Constraints:
+            No ABB controller access.
 
         Args:
-            source: Path to the ``.aptsource`` file to convert.
+            defaults: Optional conversion defaults.
+            apply_catia_transform: Apply CATIA transformation matrix
+                when present.
 
         Returns:
-            A valid, complete, unsaved
-            :class:`~trajcenter.core.trajectory.Trajectory` object.
+            None.
+
+        Raises:
+            pydantic.ValidationError: If defaults are invalid.
+
+        Example:
+            ::
+
+                converter = AptConverter(apply_catia_transform=True)
+        """
+        super().__init__(defaults)
+        self.apply_catia_transform = apply_catia_transform
+
+    def convert(self, source: Path) -> Trajectory:
+        """Convert an APT source file to a TrajCenter trajectory.
+
+        ABB Route:
+            N/A — local file conversion.
+
+        ABB Constraints:
+            No mastership, no RAPID read/write.
+
+        Args:
+            source: Path to the ``.aptsource`` file.
+
+        Returns:
+            Converted trajectory.
 
         Raises:
             FileNotFoundError: If the source file does not exist.
-            ValueError: If no ``GOTO`` instruction is found in the file.
+            ValueError: If no ``GOTO`` instruction is found.
+
+        Example:
+            ::
+
+                traj = AptConverter().convert(Path("file.aptsource"))
         """
         source = Path(source)
         if not source.exists():
             raise FileNotFoundError(f"File not found: {source}")
 
         lines: Sequence[str] = source.read_text(
-            encoding="utf-8", errors="replace"
+            encoding="utf-8",
+            errors="replace",
         ).splitlines()
 
-        # --- Optional CATIA matrix ---
         catia_matrix: np.ndarray | None = None
         if self.apply_catia_transform:
             catia_matrix = _parse_catia_matrix(lines)
             if catia_matrix is None:
                 warnings.warn(
                     f"{source.name}: apply_catia_transform=True but no CATIA "
-                    f"matrix found — raw coordinates preserved.",
+                    "matrix found — raw coordinates preserved.",
                     UserWarning,
                     stacklevel=2,
                 )
 
-        # --- Parsing: GOTO + tool name ---
         raw_points, tool_name = self._parse_lines(lines)
 
         if not raw_points:
             raise ValueError(f"No GOTO instruction found in: {source}")
 
-        # --- Optional transformation ---
         if catia_matrix is not None:
             raw_points = _apply_transform(raw_points, catia_matrix)
 
-        # --- Vector → quaternion conversion + DataFrame construction ---
         rows: list[dict[str, float | str]] = []
-        for pt in raw_points:
-            q1, q2, q3, q4 = _tool_vector_to_quaternion(pt["i"], pt["j"], pt["k"])
+        for point in raw_points:
+            q1, q2, q3, q4 = _tool_vector_to_quaternion(
+                point["i"],
+                point["j"],
+                point["k"],
+            )
             move_type = (
-                MoveType.MOVE_J.value if pt["is_rapid"] else MoveType.MOVE_L.value
-            )
-            rows.append(
-                {
-                    "x": pt["x"],
-                    "y": pt["y"],
-                    "z": pt["z"],
-                    "q1": q1,
-                    "q2": q2,
-                    "q3": q3,
-                    "q4": q4,
-                    "move_type": move_type,
-                }
+                MoveType.MOVE_J.value if point["is_rapid"] else MoveType.MOVE_L.value
             )
 
-        df = pd.DataFrame(rows)
+            row: dict[str, float | str] = {
+                "x": point["x"],
+                "y": point["y"],
+                "z": point["z"],
+                "q1": q1,
+                "q2": q2,
+                "q3": q3,
+                "q4": q4,
+                "move_type": move_type,
+            }
 
-        # --- tools / wobjs tables ---
-        # The APT tool (TPRINT) is registered as tools[0].
-        # No wobj in APT format → defaults.wobj.
-        tools: list[str] = [tool_name or self.defaults.tool]
-        wobjs: list[str] = [self.defaults.wobj]
+            if tool_name is not None:
+                row["tool_name"] = tool_name
 
-        df, autocompleted = self._autocomplete(df, tools, wobjs)
+            rows.append(row)
+
+        points = pd.DataFrame(rows)
+        points, autocompleted = self._autocomplete(points)
 
         meta = TrajectoryMeta(
             name=source.stem,
@@ -387,68 +407,67 @@ class AptConverter(BaseConverter):
             autocompleted=autocompleted,
         )
 
-        return Trajectory(meta=meta, points=df, tools=tools, wobjs=wobjs)
-
-    # ------------------------------------------------------------------
-    # Internal parsing
-    # ------------------------------------------------------------------
+        return Trajectory(meta=meta, points=points)
 
     @staticmethod
     def _parse_lines(
         lines: Sequence[str],
     ) -> tuple[list[_RawPoint], str | None]:
-        """Iterate over lines and extract GOTO points and the tool name.
+        """Extract raw GOTO points and the optional TPRINT tool name.
 
-        State machine for ``move_type``:
+        ABB Route:
+            N/A — local APT parsing.
 
-        - ``RAPID``  → next GOTO will be ``MoveJ`` (non-modal)
-        - ``FEDRAT`` → resets mode to ``MoveL``
-        - ``GOTO``   → creates a point, resets ``is_rapid`` to ``False``
-        - ``TPRINT`` → captures the tool name (first occurrence only)
+        ABB Constraints:
+            No ABB controller access.
 
         Args:
-            lines: Raw lines from the APT file.
+            lines: Raw APT file lines.
 
         Returns:
-            Tuple ``(raw_points, tool_name)`` where ``tool_name`` is the
-            name extracted from ``TPRINT``, or ``None`` if absent.
+            Tuple ``(points, tool_name)``. ``tool_name`` is ``None`` when
+            no ``TPRINT`` directive exists.
+
+        Raises:
+            ValueError: Never intentionally raised.
+
+        Example:
+            ::
+
+                points, tool_name = AptConverter._parse_lines(lines)
         """
         points: list[_RawPoint] = []
-        is_rapid: bool = False
+        is_rapid = False
         tool_name: str | None = None
 
         for line in lines:
-            # --- TPRINT: tool name (first occurrence only) ---
             if tool_name is None:
-                m_tprint = _RE_TPRINT.match(line)
-                if m_tprint:
-                    tool_name = m_tprint.group(1).strip()
+                tprint_match = _RE_TPRINT.match(line)
+                if tprint_match:
+                    tool_name = tprint_match.group(1).strip()
                     continue
 
-            # --- RAPID: non-modal ---
             if _RE_RAPID.match(line):
                 is_rapid = True
                 continue
 
-            # --- FEDRAT: reset rapid mode ---
             if _RE_FEDRAT.match(line):
                 is_rapid = False
                 continue
 
-            # --- GOTO: trajectory point ---
-            m = _RE_GOTO.match(line)
-            if m:
+            goto_match = _RE_GOTO.match(line)
+            if goto_match:
                 points.append(
                     _RawPoint(
-                        x=float(m.group(1)),
-                        y=float(m.group(2)),
-                        z=float(m.group(3)),
-                        i=float(m.group(4)),
-                        j=float(m.group(5)),
-                        k=float(m.group(6)),
+                        x=float(goto_match.group(1)),
+                        y=float(goto_match.group(2)),
+                        z=float(goto_match.group(3)),
+                        i=float(goto_match.group(4)),
+                        j=float(goto_match.group(5)),
+                        k=float(goto_match.group(6)),
                         is_rapid=is_rapid,
                     )
                 )
-                is_rapid = False  # non-modal: reset after consumption
+                is_rapid = False
 
         return points, tool_name

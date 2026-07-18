@@ -4,38 +4,49 @@
 
 Author: Clement RACINET
 
-A converter transforms a source file (RAPID ``.mod``, Excel, APT …)
-into a :class:`~trajcenter.core.trajectory.Trajectory` that is
-**always complete** and ready to be saved as ``.trajcenter``.
+A converter transforms a local source file, such as RAPID ``.mod``,
+CSV, Excel or APT, into a
+:class:`~trajcenter.core.trajectory.Trajectory`.
 
-Autocompletion principle
--------------------------
-:meth:`BaseConverter._autocomplete` guarantees that all columns in
-:data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` are present in
-the ``DataFrame`` before the trajectory is constructed.  Missing
-columns are filled with values from
-:class:`~trajcenter.converter.defaults.ConversionDefaults` and their
-names are returned for storage in
-:attr:`~trajcenter.core.trajectory.TrajectoryMeta.autocompleted`.
+TrajCenter v2 autocompletion principle
+--------------------------------------
+:meth:`BaseConverter._autocomplete` adds only converter-safe columns:
 
-The ``eax_*`` columns are **never** autocompleted — their absence
-means the axis does not exist on this robot.
+- ``cf1``, ``cf4``, ``cf6``, ``cfx``
+- ``move_type`` when configured
+
+Optional send metadata columns are added only when explicitly configured
+in :class:`~trajcenter.converter.defaults.ConversionDefaults`:
+
+- ``readconfs``
+- ``tcp_speed``
+- ``zone_type``
+- ``tool_name``
+- ``wobj_name``
+
+The ``eax_*`` columns and ``process_param_index`` are never
+autocompleted here.
+
+ABB Route:
+    N/A — local file conversion, no RWS route.
+
+ABB Constraints:
+    No mastership is acquired here. No RAPID variable is read or written.
+    The RWS inactive-axis sentinel ``9E+9`` must not be injected by
+    converters.
 
 Example:
     ::
 
         from pathlib import Path
-        from trajcenter.converter.mod_converter import ModConverter
         from trajcenter.converter.defaults import ConversionDefaults
+        from trajcenter.converter.mod_converter import ModConverter
 
-        converter = ModConverter()
+        converter = ModConverter(
+            defaults=ConversionDefaults(tcp_speed=500.0, zone_type=10)
+        )
         traj = converter.convert(Path("trajectory_files/soudure.mod"))
         traj.save("trajectory_store/soudure.trajcenter")
-
-        # With custom defaults
-        converter_slow = ModConverter(
-            defaults=ConversionDefaults(speed="v100", zone="fine")
-        )
 """
 
 from __future__ import annotations
@@ -46,28 +57,25 @@ from pathlib import Path
 import pandas as pd
 
 from trajcenter.converter.defaults import ConversionDefaults
-from trajcenter.core.trajectory import CONFDATA_COLUMNS, CONVERTER_COLUMNS, Trajectory
+from trajcenter.core.trajectory import CONFDATA_COLUMNS, Trajectory
 
 
 class BaseConverter(ABC):
     """Abstract base for all source-file converters.
 
-    All subclasses must implement :meth:`convert`.  The utility methods
-    :meth:`_autocomplete` and :meth:`convert_and_save` are provided by
-    this base class.
-
     Attributes:
-        defaults: Default values used for autocompletion.
+        defaults: Default values used for explicit autocompletion.
+
+    ABB Route:
+        N/A — local conversion helper.
+
+    ABB Constraints:
+        This class does not communicate with ABB RWS.
 
     Example:
         ::
 
-            from trajcenter.converter.mod_converter import ModConverter
-            from trajcenter.converter.defaults import ConversionDefaults
-
-            traj = ModConverter(
-                defaults=ConversionDefaults(speed="v200", zone="fine")
-            ).convert(Path("trajectory_files/soudure.mod"))
+            converter = SomeConverter(defaults=ConversionDefaults())
     """
 
     def __init__(self, defaults: ConversionDefaults | None = None) -> None:
@@ -76,30 +84,42 @@ class BaseConverter(ABC):
         Args:
             defaults: Autocompletion defaults. When ``None``,
                 :class:`~trajcenter.converter.defaults.ConversionDefaults`
-                is instantiated with its own built-in values.
+                is instantiated with its built-in values.
+
+        ABB Route:
+            N/A.
+
+        ABB Constraints:
+            No ABB controller access is performed.
+
+        Returns:
+            None.
+
+        Raises:
+            pydantic.ValidationError: If defaults are invalid.
+
+        Example:
+            ::
+
+                converter = SomeConverter(defaults=ConversionDefaults())
         """
         self.defaults: ConversionDefaults = defaults or ConversionDefaults()
 
     @abstractmethod
     def convert(self, source: Path) -> Trajectory:
-        """Convert a source file into a :class:`~trajcenter.core.trajectory.Trajectory`.
-
-        The returned trajectory must be **complete**: all columns in
-        :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS` must be
-        present (guaranteed by a call to :meth:`_autocomplete`).
+        """Convert a source file into a trajectory.
 
         ABB Route:
-            N/A — local file conversion, no RWS call.
+            N/A — local file conversion, no RWS route.
 
         ABB Constraints:
-            None.
+            No RAPID write and no mastership acquisition.
 
         Args:
             source: Path to the source file to convert.
 
         Returns:
-            Valid, complete, unsaved
-            :class:`~trajcenter.core.trajectory.Trajectory`.
+            Valid unsaved :class:`~trajcenter.core.trajectory.Trajectory`.
 
         Raises:
             FileNotFoundError: If the source file does not exist.
@@ -108,99 +128,97 @@ class BaseConverter(ABC):
         Example:
             ::
 
-                traj = ModConverter().convert(Path("soudure.mod"))
+                traj = converter.convert(Path("trajectory.mod"))
         """
         ...
 
-    # ------------------------------------------------------------------
-    # Autocompletion
-    # ------------------------------------------------------------------
+    def _autocomplete(self, df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
+        """Fill missing converter-safe columns with default values.
 
-    def _autocomplete(
-        self,
-        df: pd.DataFrame,
-        tools: list[str],
-        wobjs: list[str],
-    ) -> tuple[pd.DataFrame, list[str]]:
-        """Fill missing converter columns with default values.
+        The method never overwrites existing columns.
 
-        Iterates over :data:`~trajcenter.core.trajectory.CONVERTER_COLUMNS`
-        and adds each absent column with the corresponding value from
-        :attr:`defaults`.  Columns already present are **never**
-        overwritten.  ``eax_*`` columns are never added.
+        Always autocompleted when absent:
 
-        If *tools* is empty, ``defaults.tool`` is appended in-place and
-        ``tool_index`` is autocompleted to ``0``.  Same logic applies
-        to *wobjs* / ``wobj_index``.
+        - ``cf1``
+        - ``cf4``
+        - ``cf6``
+        - ``cfx``
 
-        Confdata columns (``cf1``, ``cf4``, ``cf6``, ``cfx``) are
-        created as nullable ``pd.Int8Dtype()`` series to support
-        ``NaN`` values, unlike ``np.int8``.
+        Autocompleted only if configured and absent:
+
+        - ``move_type`` if ``defaults.move_type is not None``
+        - ``readconfs`` if ``defaults.readconfs is not None``
+        - ``tcp_speed`` if ``defaults.tcp_speed is not None``
+        - ``zone_type`` if ``defaults.zone_type is not None``
+        - ``tool_name`` if ``defaults.tool_name is not None``
+        - ``wobj_name`` if ``defaults.wobj_name is not None``
+
+        ``process_param_index`` is never added here because it is valid
+        only when ``TrajectoryMeta.process.process_type > 0``.
+
+        ABB Route:
+            N/A — local DataFrame transformation.
+
+        ABB Constraints:
+            The method must not infer cell-specific values unless they
+            are explicitly provided in ``defaults``.
 
         Args:
-            df: Partially filled ``DataFrame`` (after source parsing).
-                Modified columns are **never** overwritten.
-            tools: Tool name list built by the converter.
-                Modified **in-place** when empty.
-            wobjs: Wobj name list built by the converter.
-                Modified **in-place** when empty.
+            df: Partially filled point DataFrame.
 
         Returns:
-            A tuple ``(completed_df, autocompleted_columns)`` where:
+            Tuple ``(completed_df, autocompleted_columns)``.
 
-            - ``completed_df`` has all converter columns present.
-            - ``autocompleted_columns`` is the sorted list of column
-              names that were inferred (not present in the source).
+        Raises:
+            ValueError: If pandas cannot create one of the typed columns.
 
         Example:
             ::
 
-                df_out, autocompleted = converter._autocomplete(df, tools, wobjs)
-                # autocompleted → ["cf1", "cf4", "cf6", "cfx", "speed", "zone"]
+                df_out, autocompleted = converter._autocomplete(df)
         """
-        df = df.copy()
+        out = df.copy()
         autocompleted: list[str] = []
-        n = len(df)
+        row_count = len(out)
 
-        # Populate default tool/wobj tables when empty
-        if not tools:
-            tools.append(self.defaults.tool)
-        if not wobjs:
-            wobjs.append(self.defaults.wobj)
-
-        # Typed fill maps — kept separate to satisfy basedpyright
-        _fill_str: dict[str, str] = {
-            "move_type": self.defaults.move_type,
-            "speed": self.defaults.speed,
-            "zone": self.defaults.zone,
-        }
-        _fill_int: dict[str, int] = {
-            "tool_index": 0,
-            "wobj_index": 0,
-        }
-
-        for col in CONVERTER_COLUMNS:
-            if col in df.columns:
+        for col in sorted(CONFDATA_COLUMNS):
+            if col in out.columns:
                 continue
-            if col in CONFDATA_COLUMNS:
-                # Nullable Int8 — pd.Series is the only clean path
-                df[col] = pd.Series(
-                    [self.defaults.cf_value] * n,
-                    dtype=pd.Int8Dtype(),
-                )
-                autocompleted.append(col)
-            elif col in _fill_str:
-                df[col] = _fill_str[col]
-                autocompleted.append(col)
-            elif col in _fill_int:
-                df[col] = _fill_int[col]
-                autocompleted.append(col)
+            out[col] = pd.Series(
+                [self.defaults.cf_value] * row_count,
+                dtype=pd.Int8Dtype(),
+            )
+            autocompleted.append(col)
 
-        return df, autocompleted
+        optional_values: dict[str, str | int | float | bool] = {}
 
-    # ------------------------------------------------------------------
-    # Convert and save
-    # ------------------------------------------------------------------
+        if self.defaults.move_type is not None:
+            optional_values["move_type"] = self.defaults.move_type
+        if self.defaults.readconfs is not None:
+            optional_values["readconfs"] = self.defaults.readconfs
+        if self.defaults.tcp_speed is not None:
+            optional_values["tcp_speed"] = self.defaults.tcp_speed
+        if self.defaults.zone_type is not None:
+            optional_values["zone_type"] = self.defaults.zone_type
+        if self.defaults.tool_name is not None:
+            optional_values["tool_name"] = self.defaults.tool_name
+        if self.defaults.wobj_name is not None:
+            optional_values["wobj_name"] = self.defaults.wobj_name
+
+        for col, value in optional_values.items():
+            if col in out.columns:
+                continue
+            out[col] = value
+            autocompleted.append(col)
+
+        if "readconfs" in autocompleted:
+            out["readconfs"] = out["readconfs"].astype("boolean")
+        if "tcp_speed" in autocompleted:
+            out["tcp_speed"] = out["tcp_speed"].astype("float64")
+        if "zone_type" in autocompleted:
+            out["zone_type"] = out["zone_type"].astype(pd.Int16Dtype())
+
+        return out, autocompleted
 
     def convert_and_save(
         self,
@@ -208,20 +226,17 @@ class BaseConverter(ABC):
         dest_dir: Path,
         stem: str | None = None,
     ) -> Path:
-        """Convert a source file and save the result as ``.trajcenter``.
-
-        Convenience wrapper around :meth:`convert` and
-        :meth:`~trajcenter.core.trajectory.Trajectory.save`.
+        """Convert a source file and save it as ``.trajcenter``.
 
         ABB Route:
-            N/A — local file conversion, no RWS call.
+            N/A — local conversion and archive serialisation.
 
         ABB Constraints:
-            None.
+            No RAPID write and no mastership acquisition.
 
         Args:
             source: Path to the source file.
-            dest_dir: Destination directory (created if absent).
+            dest_dir: Destination directory, created if absent.
             stem: Output filename without extension. Defaults to the
                 source file stem.
 
@@ -229,17 +244,16 @@ class BaseConverter(ABC):
             Absolute path of the created ``.trajcenter`` file.
 
         Raises:
-            FileNotFoundError: If *source* does not exist.
-            ValueError: If the source file is invalid.
+            FileNotFoundError: If ``source`` does not exist.
+            ValueError: If conversion fails.
 
         Example:
             ::
 
-                path = ModConverter().convert_and_save(
-                    source=Path("trajectory_files/soudure.mod"),
+                path = converter.convert_and_save(
+                    source=Path("trajectory.mod"),
                     dest_dir=Path("trajectory_store"),
                 )
-                # → trajectory_store/soudure.trajcenter
         """
         traj = self.convert(Path(source))
         name = stem or Path(source).stem
