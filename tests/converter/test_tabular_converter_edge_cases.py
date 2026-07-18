@@ -113,7 +113,7 @@ class _ReservedOnlyConverter(_TabularConverter):
 
 class TestTabularConvertErrors:
     """Tests for converter high-level error branches."""
-    
+
     def test_convert_no_trajectory_sheet_raises(self, tmp_path: Path) -> None:
         """A source containing only reserved sheets has no trajectory sheet."""
         source = tmp_path / "dummy.csv"

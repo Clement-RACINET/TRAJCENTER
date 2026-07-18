@@ -26,7 +26,6 @@ from .reader import (
     read_transfer_progress,
 )
 from .writer import (
-
     MAX_PROCESS_PARAM_PER_SET,
     MAX_PROCESS_PARAM_SET_COUNT,
     MAX_TRAJ_POINTS,
