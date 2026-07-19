@@ -187,7 +187,7 @@ def _fmt_traj_meta_record(
 
 
 def _row_to_robtarget(
-    row: pd.Series,  # type: ignore[type-arg]
+    row: pd.Series,
     eax_present: tuple[bool, ...],
 ) -> RobTarget:
     """Convert a trajectory point row to a RWS ``RobTarget``.
@@ -265,7 +265,7 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
                 False, False, False, False, False, False
             )
     """
-    return tuple(col in df.columns for col in _EAX_COLUMNS)  # type: ignore[return-value]
+    return tuple(col in df.columns for col in _EAX_COLUMNS)
 
 
 async def write_store_metadata(
