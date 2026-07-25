@@ -5,7 +5,6 @@ trajcenter
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
-│   ├── JS_TRAJCENTER_Webservices.modx
 │   ├── TRAJCENTER_CellConfig.mod
 │   ├── TRAJCENTER_ProcessConfig.mod
 │   ├── TRAJCENTER_Types.mod
