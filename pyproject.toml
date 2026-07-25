@@ -32,12 +32,7 @@ abb_rws_client_python_rw6 = { git = "https://github.com/Clement-RACINET/abb-rws-
 default = { features = [], solve-group = "default" }
 dev     = { features = ["dev"], solve-group = "default" }
 docs    = { features = ["docs"], solve-group = "default" }
-all     = { features = ["dev", "docs"], solve-group = "default" }
 
-# ── Tâches disponibles dans TOUS les environnements ──────────────────────────
-[tool.pixi.tasks]
-server  = "python -m trajcenter.server.app"
-convert = "python -m trajcenter.converter"
 
 # ── Tâches disponibles UNIQUEMENT dans l'environnement dev ───────────────────
 [tool.pixi.feature.dev.tasks]
