@@ -2,7 +2,7 @@
 # tests/converter/conftest.py
 """Shared fixtures for all TrajCenter test modules.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Provides low-level fixtures (DataFrames, metadata) reusable by
 ``test_trajectory.py``, ``test_mod_converter.py``,

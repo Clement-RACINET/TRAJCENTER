@@ -2,7 +2,7 @@
 # tests/converter/test_base_converter.py
 """Unit tests for converter defaults and explicit base autocompletion.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 # trajcenter/rws/_utils.py
 """Shared low-level utilities for the RWS integration layer.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations
@@ -29,9 +29,6 @@ def symbol(task: str, module: str, var: str) -> str:
     Returns:
         Symbol URL path, e.g.
         ``"RAPID/T_ROB1/TRAJCENTER_WebServices/selectedTrajIndex"``.
-
-    Raises:
-        None.
 
     Example:
         ::

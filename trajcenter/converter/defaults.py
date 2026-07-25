@@ -2,7 +2,7 @@
 # trajcenter/converter/defaults.py
 """Optional conversion defaults for TrajCenter v2 converters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module defines :class:`ConversionDefaults`, the configuration model
 used by converters when the caller explicitly requests column

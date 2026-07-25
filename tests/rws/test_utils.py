@@ -2,7 +2,7 @@
 # tests/rws/test_utils.py
 """Tests for :mod:`trajcenter.rws._utils`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 # tests/exporter/test_process_tabular_exporter.py
 """Process export tests for tabular exporters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 These tests validate process-aware exports to Excel and CSV:
 
@@ -91,7 +91,7 @@ def _make_process_trajectory() -> Trajectory:
             process_type=1,
             process_param_names=["force", "travel_speed"],
         ),
-        extra={"author": "Clement RACINET"},
+        extra={"author": "Clément RACINET"},
     )
     return Trajectory(meta=meta, points=points, process_params=process_params)
 
@@ -151,7 +151,7 @@ class TestTabularProcessDataFrames:
         meta_df = _TabularExporter._build_meta_df(traj)
         meta = _meta_as_dict(meta_df)
 
-        assert meta["author"] == "Clement RACINET"
+        assert meta["author"] == "Clément RACINET"
 
 
 class TestExcelProcessExport:

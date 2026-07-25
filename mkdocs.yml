@@ -1,6 +1,6 @@
 site_name: TrajCenter
 theme:
-  name: material
+  name: readthedocs
   logo: assets/logo.png
   favicon: assets/favicon.png
 

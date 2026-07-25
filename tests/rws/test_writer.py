@@ -2,7 +2,7 @@
 # tests/rws/test_writer.py
 """Unit tests for :mod:`trajcenter.rws.writer`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 All RWS calls are mocked via ``unittest.mock.AsyncMock``.
 No HTTP traffic is made.
@@ -46,9 +46,6 @@ def client() -> MagicMock:
     Returns:
         Mock client.
 
-    Raises:
-        None.
-
     Example:
         ::
 
@@ -72,9 +69,6 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
 
     Returns:
         Points DataFrame.
-
-    Raises:
-        None.
 
     Example:
         ::

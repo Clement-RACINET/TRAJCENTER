@@ -2,7 +2,7 @@
 # trajcenter/exporter/tabular_exporter.py
 """Abstract tabular exporter shared by Excel and CSV exporters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module factors out the construction of tabular outputs used by CSV
 and Excel exporters:

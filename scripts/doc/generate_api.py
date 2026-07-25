@@ -3,7 +3,7 @@
 """
 Automatic MkDocs API page generator for abb_rws_client_python_rw6.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Scans ``abb_rws_client/``, generates one ``.md`` file per module using
 the ``:::`` mkdocstrings directive, then injects the ``nav`` block into

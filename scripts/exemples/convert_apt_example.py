@@ -2,7 +2,7 @@
 # scripts/exemples/convert_apt_example.py
 """APT source to TrajCenter v2.4 conversion demonstration.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This script demonstrates three APT conversion scenarios:
 
@@ -54,9 +54,6 @@ def print_summary(title: str, traj: Trajectory) -> None:
         traj: Trajectory to display.
 
     Returns:
-        None.
-
-    Raises:
         None.
 
     Example:

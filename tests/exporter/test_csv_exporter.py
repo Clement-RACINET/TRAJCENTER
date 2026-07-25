@@ -2,7 +2,7 @@
 # tests/exporter/test_csv_exporter.py
 """Integration tests for :class:`trajcenter.exporter.csv_exporter.CsvExporter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

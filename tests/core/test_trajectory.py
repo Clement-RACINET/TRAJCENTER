@@ -2,7 +2,7 @@
 # tests/core/test_trajectory.py
 """Unit tests for :mod:`trajcenter.core.trajectory`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

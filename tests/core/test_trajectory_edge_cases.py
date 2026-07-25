@@ -2,7 +2,7 @@
 # tests/core/test_trajectory_edge_cases.py
 """Edge-case tests for :mod:`trajcenter.core.trajectory`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 These tests target validation and serialization branches not covered by
 the nominal trajectory test suite.
@@ -40,9 +40,6 @@ def _minimal_points() -> pd.DataFrame:
 
     Returns:
         Minimal valid point table.
-
-    Raises:
-        None.
 
     Example:
         ::
@@ -111,9 +108,6 @@ def _process_points() -> pd.DataFrame:
     Returns:
         Point table with ``process_param_index``.
 
-    Raises:
-        None.
-
     Example:
         ::
 
@@ -138,9 +132,6 @@ def _process_params() -> pd.DataFrame:
 
     Returns:
         Process parameter DataFrame.
-
-    Raises:
-        None.
 
     Example:
         ::

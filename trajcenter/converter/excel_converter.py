@@ -2,7 +2,7 @@
 # trajcenter/converter/excel_converter.py
 """Converter for Excel files (``.xlsx``, ``.xls``) to ``.trajcenter``.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.
@@ -150,9 +150,6 @@ class ExcelConverter(_TabularConverter):
 
         Returns:
             :attr:`trajcenter.core.trajectory.SourceFormat.EXCEL`.
-
-        Raises:
-            None.
 
         Example:
             ::

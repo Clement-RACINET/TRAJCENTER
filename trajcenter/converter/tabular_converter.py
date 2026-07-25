@@ -2,7 +2,7 @@
 # trajcenter/converter/tabular_converter.py
 """Abstract tabular converter shared by Excel and CSV converters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module factors all tabular data conversion logic into the abstract
 class :class:`_TabularConverter`.

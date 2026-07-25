@@ -2,7 +2,7 @@
 # tests/rws/test_reader.py
 """Tests for :mod:`trajcenter.rws.reader`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 All RWS calls are mocked — no HTTP traffic.
 Mock target: ``trajcenter.rws.reader.get_variable``.
@@ -46,9 +46,6 @@ def client() -> MagicMock:
 
     Returns:
         Mock client.
-
-    Raises:
-        None.
 
     Example:
         ::

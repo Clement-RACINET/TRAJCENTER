@@ -2,7 +2,7 @@
 # trajcenter/exporter/base.py
 """Abstract base class for all TrajCenter exporters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Architecture
 ------------
@@ -56,9 +56,6 @@ class BaseExporter(ABC):
                 is instantiated with its own default values.
 
         Returns:
-            None.
-
-        Raises:
             None.
 
         Example:

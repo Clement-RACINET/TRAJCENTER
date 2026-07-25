@@ -2,7 +2,7 @@
 # scripts/exemples/convert_excel.py
 """Excel to TrajCenter v2.4 conversion demonstration.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This script demonstrates:
 
@@ -41,9 +41,6 @@ def print_trajectory_summary(traj: Trajectory) -> None:
         traj: Trajectory to display.
 
     Returns:
-        None.
-
-    Raises:
         None.
 
     Example:

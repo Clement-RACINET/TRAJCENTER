@@ -2,7 +2,7 @@
 # tests/test_excel_converter.py
 """Unit tests specific to :mod:`trajcenter.converter.excel_converter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Covers only Excel-specific behaviour:
 

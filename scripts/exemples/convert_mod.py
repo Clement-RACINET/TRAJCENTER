@@ -2,7 +2,7 @@
 # scripts/exemples/convert_mod.py
 """RAPID MOD to TrajCenter v2.4 conversion demonstration.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This script converts a RAPID ``.mod`` file containing ABB MoveL/MoveJ/MoveC
 instructions into a TrajCenter v2.4 ``.trajcenter`` archive and validates

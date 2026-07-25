@@ -2,7 +2,7 @@
 # trajcenter/converter/column_mapper.py
 """Column name normalisation for TrajCenter converters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Resolution is case-insensitive and diacritic-insensitive via
 :func:`_normalize`.

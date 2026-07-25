@@ -2,7 +2,7 @@
 # trajcenter/exporter/options.py
 """Configuration options for tabular exporters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

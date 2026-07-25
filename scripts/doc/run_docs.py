@@ -2,7 +2,7 @@
 # scripts/doc/run_docs.py
 """Orchestrator: generates the API documentation, the coverage report, and starts mkdocs serve.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

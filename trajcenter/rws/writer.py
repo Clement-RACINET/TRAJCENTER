@@ -2,7 +2,7 @@
 # trajcenter/rws/writer.py
 """RWS writer — writes TrajCenter v2 data to ABB RAPID variables.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module writes variables declared in ``TRAJCENTER_WebServices``.
 
@@ -86,9 +86,6 @@ def _fmt_num(value: int | float) -> str:
         String representation with no trailing ``.0`` for integral
         floats.
 
-    Raises:
-        None.
-
     Example:
         ::
 
@@ -114,9 +111,6 @@ def _fmt_bool(value: bool) -> str:  # noqa: FBT001
     Returns:
         ``"TRUE"`` or ``"FALSE"``.
 
-    Raises:
-        None.
-
     Example:
         ::
 
@@ -139,9 +133,6 @@ def _fmt_string(value: str) -> str:
 
     Returns:
         RAPID string literal.
-
-    Raises:
-        None.
 
     Example:
         ::
@@ -174,9 +165,6 @@ def _fmt_traj_meta_record(
 
     Returns:
         RAPID record literal, e.g. ``'["TrajA",100,0]'``.
-
-    Raises:
-        None.
 
     Example:
         ::
@@ -254,9 +242,6 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
 
     Returns:
         Tuple of 6 booleans, one per external axis column.
-
-    Raises:
-        None.
 
     Example:
         ::

@@ -2,7 +2,7 @@
 # trajcenter/core/messages.py
 """Central registry of all user-facing error and warning messages.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Messages are loaded **once** at import time from ``messages.json``
 (located in the same directory as this module).

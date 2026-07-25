@@ -2,7 +2,7 @@
 # trajcenter/converter/csv_converter.py
 """Converter for CSV and delimited text files to ``.trajcenter``.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Delegates all conversion logic to
 :class:`~trajcenter.converter.tabular_converter._TabularConverter`.

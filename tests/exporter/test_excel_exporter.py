@@ -2,7 +2,7 @@
 # tests/exporter/test_excel_exporter.py
 """Integration tests for :class:`trajcenter.exporter.excel_exporter.ExcelExporter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

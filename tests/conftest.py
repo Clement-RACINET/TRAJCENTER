@@ -2,7 +2,7 @@
 # tests/conftest.py
 """Global fixtures shared across ``converter/``, ``core/`` and ``exporter/``.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

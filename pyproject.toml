@@ -26,7 +26,7 @@ platforms = ["win-64"]
 
 [tool.pixi.pypi-dependencies]
 trajcenter = { path = ".", editable = true }
-abb_rws_client_python_rw6 = { git = "https://gitlab.ensam.eu/lcfc/abb-rws-client-python-rw6.git", branch = "main" }
+abb_rws_client_python_rw6 = { git = "https://github.com/Clement-RACINET/abb-rws-client-python-rw6.git", branch = "main" }
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }

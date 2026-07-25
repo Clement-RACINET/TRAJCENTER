@@ -2,7 +2,7 @@
 # trajcenter/converter/apt_converter.py
 """Converter for CATIA APT source files to the TrajCenter v2 format.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module converts CATIA APT ``.aptsource`` files containing ``GOTO``
 instructions into :class:`trajcenter.core.trajectory.Trajectory`.

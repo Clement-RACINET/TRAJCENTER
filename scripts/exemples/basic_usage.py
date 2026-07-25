@@ -2,7 +2,7 @@
 # scripts/exemples/basic_usage.py
 """Basic TrajCenter v2.4 save/load roundtrip example.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This script creates a minimal ABB geometry trajectory with one active external
 axis, saves it as a ``.trajcenter`` archive, reloads it, and validates data

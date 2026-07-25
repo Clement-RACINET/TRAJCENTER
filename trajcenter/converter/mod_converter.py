@@ -2,7 +2,7 @@
 # trajcenter/converter/mod_converter.py
 """Converter for ABB RAPID modules to the TrajCenter v2 format.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module converts ABB RAPID ``.mod`` files containing inline
 ``MoveL``, ``MoveJ`` or ``MoveC`` instructions into

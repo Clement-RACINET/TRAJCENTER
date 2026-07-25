@@ -3,7 +3,7 @@
 """Unit tests for :mod:`trajcenter.converter.column_mapper` and the shared
 logic of :mod:`trajcenter.converter.tabular_converter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Covers:
 

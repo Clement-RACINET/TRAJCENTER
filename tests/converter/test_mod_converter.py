@@ -2,7 +2,7 @@
 # tests/converter/test_mod_converter.py
 """Unit tests for :mod:`trajcenter.converter.mod_converter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 # trajcenter/rws/reader.py
 """RWS reader — reads TrajCenter v2 RAPID variables from the ABB controller.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module is the TrajCenter read access layer for the
 ``TRAJCENTER_WebServices`` RAPID module.
@@ -233,9 +233,6 @@ def _parse_rapid_string(raw: str) -> str:
 
     Returns:
         Unquoted string value.
-
-    Raises:
-        None.
 
     Example:
         ::

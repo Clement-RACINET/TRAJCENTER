@@ -2,7 +2,7 @@
 # trajcenter/core/trajectory.py
 """Central data model for TrajCenter v2 trajectory archives.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This module defines the local ``.trajcenter`` archive format used by
 TrajCenter v2. A trajectory archive is independent from a target ABB

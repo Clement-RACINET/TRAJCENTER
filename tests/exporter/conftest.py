@@ -2,7 +2,7 @@
 # tests/exporter/conftest.py
 """Shared fixtures for exporter tests.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Provides ready-to-use v2 ``Trajectory`` objects built directly without
 going through a converter.

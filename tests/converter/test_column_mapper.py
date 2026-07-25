@@ -2,7 +2,7 @@
 # tests/converter/test_column_mapper.py
 """Unit tests for :mod:`trajcenter.converter.column_mapper`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

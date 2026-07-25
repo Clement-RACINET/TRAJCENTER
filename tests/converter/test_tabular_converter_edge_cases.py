@@ -2,7 +2,7 @@
 # tests/converter/test_tabular_converter_edge_cases.py
 """Edge-case tests for :mod:`trajcenter.converter.tabular_converter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 These tests target branch coverage for shared tabular conversion logic:
 metadata parsing, literal parsing, boolean parsing, process sheet

@@ -2,7 +2,7 @@
 # trajcenter/exporter/excel_exporter.py
 """Excel exporter for TrajCenter v2 trajectories.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 The exporter writes a single ``.xlsx`` workbook containing:
 
@@ -78,9 +78,6 @@ class ExcelExporter(_TabularExporter):
                 is instantiated with its own default values.
 
         Returns:
-            None.
-
-        Raises:
             None.
 
         Example:

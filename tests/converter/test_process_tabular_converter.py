@@ -2,7 +2,7 @@
 # tests/converter/test_process_tabular_converter.py
 """Process import tests for tabular converters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 These tests validate process-aware imports from Excel workbooks and CSV
 sidecars:

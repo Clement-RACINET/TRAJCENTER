@@ -2,7 +2,7 @@
 # scripts/exemples/export_excel.py
 """TrajCenter v2.4 Excel export demonstration.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 This script demonstrates:
 
@@ -83,9 +83,6 @@ def print_summary(title: str, traj: Trajectory) -> None:
         traj: Trajectory to display.
 
     Returns:
-        None.
-
-    Raises:
         None.
 
     Example:

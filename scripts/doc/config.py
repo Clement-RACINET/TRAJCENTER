@@ -1,7 +1,7 @@
 # scripts/doc/config.py
 """TrajCenter documentation pipeline configuration.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations

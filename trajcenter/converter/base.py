@@ -2,7 +2,7 @@
 # trajcenter/converter/base.py
 """Abstract base class for all TrajCenter converters.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 A converter transforms a local source file, such as RAPID ``.mod``,
 CSV, Excel or APT, into a

@@ -2,7 +2,7 @@
 # tests/test_csv_converter.py
 """Unit tests for :mod:`trajcenter.converter.csv_converter`.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 Covers:
 

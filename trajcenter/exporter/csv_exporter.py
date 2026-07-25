@@ -2,7 +2,7 @@
 # trajcenter/exporter/csv_exporter.py
 """CSV exporter for TrajCenter v2 trajectories.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 
 The exporter writes one mandatory trajectory CSV file and optional
 sidecar CSV files:
@@ -79,9 +79,6 @@ class CsvExporter(_TabularExporter):
                 is instantiated with its own default values.
 
         Returns:
-            None.
-
-        Raises:
             None.
 
         Example:

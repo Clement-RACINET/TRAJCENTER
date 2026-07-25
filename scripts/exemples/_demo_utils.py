@@ -2,7 +2,7 @@
 # scripts/exemples/_demo_utils.py
 """Shared helpers for TrajCenter v2.4 demonstration scripts.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations
@@ -90,9 +90,6 @@ def preview_columns(traj: Trajectory, columns: list[str]) -> list[str]:
 
     Returns:
         Existing columns only.
-
-    Raises:
-        None.
 
     Example:
         ::

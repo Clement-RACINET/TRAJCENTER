@@ -2,7 +2,7 @@
 # tests/exporter/test_tabular_exporter.py
 """Unit tests for tabular exporter DataFrame construction.
 
-Author: Clement RACINET
+> **Author**: Clément RACINET
 """
 
 from __future__ import annotations
@@ -29,9 +29,6 @@ def _exporter(options: ExportOptions | None = None) -> ExcelExporter:
 
     Returns:
         Configured Excel exporter.
-
-    Raises:
-        None.
 
     Example:
         ::
