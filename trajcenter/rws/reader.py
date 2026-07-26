@@ -65,7 +65,7 @@ from dataclasses import dataclass
 from typing import Final
 
 from abb_rws_client_python_rw6 import RWSClient
-from abb_rws_client_python_rw6.highlevel.rapid import get_variable
+from abb_rws_client_python_rw6.highlevel.variables import get_variable
 
 from trajcenter.core.logger import get_logger
 from trajcenter.rws._utils import symbol, symbol_array_element

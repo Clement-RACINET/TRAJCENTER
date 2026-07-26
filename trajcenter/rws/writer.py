@@ -37,7 +37,7 @@ from abb_rws_client_python_rw6 import (
     RWSClient,
     RobTarget,
 )
-from abb_rws_client_python_rw6.highlevel.rapid import set_variables_with_mastership
+from abb_rws_client_python_rw6.highlevel.variables import set_variables_with_mastership
 
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
