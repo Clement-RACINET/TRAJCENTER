@@ -54,6 +54,13 @@ PC subscribe:
 - TRAJCENTER_WebServices/sendTrajRequest
 - TRAJCENTER_WebServices/refreshMetaRequest
 
+
+PC subscribe (via abb_rws_client_python_rw6.highlevel.subscription):
+- resource: symbol("T_ROB1", "TRAJCENTER_WebServices", "sendTrajRequest")
+  priority: "1" (Medium) — PERS bool, latence 200ms
+- resource: symbol("T_ROB1", "TRAJCENTER_WebServices", "refreshMetaRequest")
+  priority: "1" (Medium) — PERS bool, latence 200ms
+
 Seuls les events TRUE déclenchent une action.
 Les events FALSE sont ignorés.
 Le PC remet la requête traitée à FALSE, succès comme erreur.
