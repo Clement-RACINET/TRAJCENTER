@@ -50,6 +50,10 @@ trajcenter
 │   │   ├── test_process_tabular_exporter.py
 │   │   └── test_tabular_exporter.py
 │   ├── rws
+│   │   ├── errors
+│   │   │   ├── __init__.py
+│   │   │   ├── test_base.py
+│   │   │   └── test_translate.py
 │   │   ├── __init__.py
 │   │   ├── test_reader.py
 │   │   ├── test_utils.py
@@ -80,6 +84,11 @@ trajcenter
 │   │   ├── options.py
 │   │   └── tabular_exporter.py
 │   ├── rws
+│   │   ├── errors
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── codes.py
+│   │   │   └── translate.py
 │   │   ├── __init__.py
 │   │   ├── _utils.py
 │   │   ├── reader.py
