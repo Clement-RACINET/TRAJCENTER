@@ -15,21 +15,29 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from trajcenter.rws.constants import MAX_TRAJ
-from trajcenter.rws.models import RobotDefaults
+from trajcenter.rws.models import ProcessTypeEntry, RobotContext, RobotDefaults
 from trajcenter.rws.reader import (
     read_last_error,
     read_last_error_code,
     read_nb_robtargets,
     read_nb_traj_dispo,
+    read_process_type_count,
+    read_process_types,
     read_refresh_meta_request,
+    read_robot_context,
     read_robot_defaults,
     read_selected_traj_index,
     read_send_traj_request,
     read_traj_names,
     read_traj_ready,
+    read_traj_tool_names,
+    read_traj_tools_count,
+    read_traj_wobj_names,
+    read_traj_wobjs_count,
     read_transfer_error,
     read_transfer_progress,
 )
+
 
 _MODULE = "trajcenter.rws.reader"
 
@@ -434,3 +442,294 @@ class TestReadRobotDefaults:
         with patch(f"{_MODULE}.get_variable", mock_get):
             with pytest.raises(ValueError, match="hasDefaultTcpSpeed"):
                 await read_robot_defaults(client)
+
+
+class TestCellConfigReaders:
+    """Tests for cell configuration readers."""
+
+    @pytest.mark.asyncio
+    async def test_read_traj_tools_count(self, client: MagicMock) -> None:
+        """Tool array length is read through symbol properties."""
+        mock_get_len = AsyncMock(return_value=2)
+
+        with patch(f"{_MODULE}.get_array_length", mock_get_len):
+            count = await read_traj_tools_count(client)
+
+        assert count == 2
+        assert (
+            mock_get_len.call_args.kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_traj_wobjs_count(self, client: MagicMock) -> None:
+        """Workobject array length is read through symbol properties."""
+        mock_get_len = AsyncMock(return_value=3)
+
+        with patch(f"{_MODULE}.get_array_length", mock_get_len):
+            count = await read_traj_wobjs_count(client)
+
+        assert count == 3
+        assert (
+            mock_get_len.call_args.kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_traj_tool_names_with_count(self, client: MagicMock) -> None:
+        """Tool names are parsed from name-first records."""
+        mock_get = AsyncMock(
+            side_effect=[
+                '["Tool_A",[TRUE,[[0,0,0],[1,0,0,0]],[0,[0,0,0],[1,0,0,0],0,0,0]]]',
+                '["Tool_B",[TRUE,[[0,0,0],[1,0,0,0]],[0,[0,0,0],[1,0,0,0],0,0,0]]]',
+            ]
+        )
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            names = await read_traj_tool_names(client, count=2)
+
+        assert names == ["Tool_A", "Tool_B"]
+        assert (
+            mock_get.call_args_list[0].kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools%7B1%7D"
+        )
+        assert (
+            mock_get.call_args_list[1].kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools%7B2%7D"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_traj_tool_names_reads_count_when_none(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Tool count is read first when no explicit count is supplied."""
+        mock_len = AsyncMock(return_value=1)
+        mock_get = AsyncMock(return_value='["Tool_A",[TRUE]]')
+
+        with (
+            patch(f"{_MODULE}.get_array_length", mock_len),
+            patch(f"{_MODULE}.get_variable", mock_get),
+        ):
+            names = await read_traj_tool_names(client)
+
+        assert names == ["Tool_A"]
+        mock_len.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_read_traj_tool_names_invalid_record_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Malformed tool records raise ``ValueError``."""
+        mock_get = AsyncMock(return_value="[INVALID]")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            with pytest.raises(ValueError, match="trajTools"):
+                await read_traj_tool_names(client, count=1)
+
+    @pytest.mark.asyncio
+    async def test_read_traj_wobj_names_with_count(self, client: MagicMock) -> None:
+        """Workobject names are parsed from name-first records."""
+        mock_get = AsyncMock(
+            side_effect=[
+                '["Wobj_A",[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]]]',
+                '["Wobj_B",[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]]]',
+            ]
+        )
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            names = await read_traj_wobj_names(client, count=2)
+
+        assert names == ["Wobj_A", "Wobj_B"]
+        assert (
+            mock_get.call_args_list[0].kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs%7B1%7D"
+        )
+        assert (
+            mock_get.call_args_list[1].kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs%7B2%7D"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_traj_wobj_names_reads_count_when_none(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Workobject count is read first when no explicit count is supplied."""
+        mock_len = AsyncMock(return_value=1)
+        mock_get = AsyncMock(return_value='["Wobj_A",[FALSE,TRUE,""]]')
+
+        with (
+            patch(f"{_MODULE}.get_array_length", mock_len),
+            patch(f"{_MODULE}.get_variable", mock_get),
+        ):
+            names = await read_traj_wobj_names(client)
+
+        assert names == ["Wobj_A"]
+        mock_len.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_read_traj_wobj_names_invalid_record_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Malformed workobject records raise ``ValueError``."""
+        mock_get = AsyncMock(return_value="[INVALID]")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            with pytest.raises(ValueError, match="trajWobjs"):
+                await read_traj_wobj_names(client, count=1)
+
+
+class TestProcessCatalogReaders:
+    """Tests for process catalog readers."""
+
+    @pytest.mark.asyncio
+    async def test_read_process_type_count(self, client: MagicMock) -> None:
+        """``processTypeCount`` is parsed as integer."""
+        mock_get = AsyncMock(return_value="4")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            count = await read_process_type_count(client)
+
+        assert count == 4
+        assert (
+            mock_get.call_args.kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_ProcessConfig/processTypeCount"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_process_type_count_float_string(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """A RAPID num returned as ``'4.0'`` is accepted."""
+        mock_get = AsyncMock(return_value="4.0")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            assert await read_process_type_count(client) == 4
+
+    @pytest.mark.asyncio
+    async def test_read_process_type_count_invalid_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Invalid process count raises ``ValueError``."""
+        mock_get = AsyncMock(return_value="abc")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            with pytest.raises(ValueError, match="processTypeCount"):
+                await read_process_type_count(client)
+
+    @pytest.mark.asyncio
+    async def test_read_process_types_with_count(self, client: MagicMock) -> None:
+        """Process type records are parsed as ``ProcessTypeEntry`` objects."""
+        mock_get = AsyncMock(
+            side_effect=[
+                '[0,"NONE"]',
+                '[1,"ACF"]',
+                '[2,"AAK"]',
+                '[3,"PUSHCORP"]',
+            ]
+        )
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            entries = await read_process_types(client, count=4)
+
+        assert entries == [
+            ProcessTypeEntry(id=0, name="NONE"),
+            ProcessTypeEntry(id=1, name="ACF"),
+            ProcessTypeEntry(id=2, name="AAK"),
+            ProcessTypeEntry(id=3, name="PUSHCORP"),
+        ]
+        assert (
+            mock_get.call_args_list[0].kwargs["symbolurl"]
+            == "RAPID/T_ROB1/TRAJCENTER_ProcessConfig/processTypes%7B1%7D"
+        )
+
+    @pytest.mark.asyncio
+    async def test_read_process_types_reads_count_when_none(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Process type count is read when no explicit count is supplied."""
+        mock_get = AsyncMock(
+            side_effect=[
+                "2",
+                '[0,"NONE"]',
+                '[1,"ACF"]',
+            ]
+        )
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            entries = await read_process_types(client)
+
+        assert entries == [
+            ProcessTypeEntry(id=0, name="NONE"),
+            ProcessTypeEntry(id=1, name="ACF"),
+        ]
+        assert mock_get.call_count == 3
+
+    @pytest.mark.asyncio
+    async def test_read_process_types_invalid_record_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Malformed process type records raise ``ValueError``."""
+        mock_get = AsyncMock(return_value="[INVALID]")
+
+        with patch(f"{_MODULE}.get_variable", mock_get):
+            with pytest.raises(ValueError, match="trajCenterProcessType"):
+                await read_process_types(client, count=1)
+
+
+class TestReadRobotContext:
+    """Tests for :func:`trajcenter.rws.reader.read_robot_context`."""
+
+    @pytest.mark.asyncio
+    async def test_read_robot_context(self, client: MagicMock) -> None:
+        """Robot context aggregates defaults, tools, wobjs and process types."""
+        defaults = RobotDefaults(
+            has_tcp_speed=True,
+            tcp_speed=500.0,
+            has_zone_type=True,
+            zone_type=10,
+            has_tool_name=True,
+            tool_name="Tool_A",
+            has_wobj_name=True,
+            wobj_name="Wobj_A",
+            move_type=0,
+            read_confs=True,
+        )
+
+        with (
+            patch(f"{_MODULE}.read_robot_defaults", AsyncMock(return_value=defaults)),
+            patch(
+                f"{_MODULE}.read_traj_tool_names",
+                AsyncMock(return_value=["Tool_A", "Tool_B"]),
+            ),
+            patch(
+                f"{_MODULE}.read_traj_wobj_names",
+                AsyncMock(return_value=["Wobj_A"]),
+            ),
+            patch(
+                f"{_MODULE}.read_process_types",
+                AsyncMock(
+                    return_value=[
+                        ProcessTypeEntry(id=0, name="NONE"),
+                        ProcessTypeEntry(id=1, name="ACF"),
+                    ]
+                ),
+            ),
+        ):
+            result = await read_robot_context(client)
+
+        assert isinstance(result, RobotContext)
+        assert result.defaults == defaults
+        assert result.tool_names == ("Tool_A", "Tool_B")
+        assert result.wobj_names == ("Wobj_A",)
+        assert result.process_types == (
+            ProcessTypeEntry(id=0, name="NONE"),
+            ProcessTypeEntry(id=1, name="ACF"),
+        )

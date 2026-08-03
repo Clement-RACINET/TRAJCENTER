@@ -52,7 +52,7 @@ from trajcenter.rws.constants import (
     PROCESS_MODULE,
     WEB_MODULE,
 )
-from trajcenter.rws.models import ProcessTypeEntry, RobotDefaults
+from trajcenter.rws.models import ProcessTypeEntry, RobotContext, RobotDefaults
 
 logger = get_logger(__name__)
 
@@ -1137,7 +1137,7 @@ async def read_robot_context(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-) -> tuple[RobotDefaults, list[str], list[str], list[ProcessTypeEntry]]:
+) -> RobotContext:
     """Read all robot-side context required by the resolver.
 
     ABB Route:
@@ -1148,13 +1148,15 @@ async def read_robot_context(
 
     ABB Constraints:
         This function performs reads only. No Mastership is required.
+        Tool and workobject arrays are converted to immutable tuples so their
+        base-1 mapping stays stable during resolution.
 
     Args:
         client: Open RWS client.
         task: RAPID task name.
 
     Returns:
-        Tuple ``(defaults, tool_names, wobj_names, process_types)``.
+        Robot context model.
 
     Raises:
         RWSHTTPError: On controller HTTP errors.
@@ -1162,11 +1164,17 @@ async def read_robot_context(
 
     Example:
         ```python
-        defaults, tools, wobjs, process_types = await read_robot_context(client)
+        context = await read_robot_context(client)
         ```
     """
     defaults = await read_robot_defaults(client, task=task)
     tool_names = await read_traj_tool_names(client, task=task)
     wobj_names = await read_traj_wobj_names(client, task=task)
     process_types = await read_process_types(client, task=task)
-    return defaults, tool_names, wobj_names, process_types
+
+    return RobotContext(
+        defaults=defaults,
+        tool_names=tuple(tool_names),
+        wobj_names=tuple(wobj_names),
+        process_types=tuple(process_types),
+    )
