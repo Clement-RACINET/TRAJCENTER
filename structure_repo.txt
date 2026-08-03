@@ -18,13 +18,14 @@ trajcenter
 │   │   ├── config.py
 │   │   ├── generate_api.py
 │   │   └── run_docs.py
-│   └── exemples
-│       ├── _demo_utils.py
-│       ├── basic_usage.py
-│       ├── convert_apt_example.py
-│       ├── convert_excel.py
-│       ├── convert_mod.py
-│       └── export_excel.py
+│   ├── exemples
+│   │   ├── _demo_utils.py
+│   │   ├── basic_usage.py
+│   │   ├── convert_apt_example.py
+│   │   ├── convert_excel.py
+│   │   ├── convert_mod.py
+│   │   └── export_excel.py
+│   └── run_rws_supervisor.py
 ├── tests
 │   ├── converter
 │   │   ├── __init__.py
