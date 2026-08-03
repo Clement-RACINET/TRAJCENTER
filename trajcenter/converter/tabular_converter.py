@@ -213,8 +213,6 @@ class _TabularConverter(BaseConverter):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             Source format value stamped in trajectory metadata.

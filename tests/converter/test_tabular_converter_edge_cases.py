@@ -62,14 +62,10 @@ class _ReservedOnlyConverter(_TabularConverter):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             CSV source format.
 
-        Raises:
-            None.
 
         Example:
             ::
@@ -93,8 +89,6 @@ class _ReservedOnlyConverter(_TabularConverter):
         Returns:
             Mapping containing only a reserved meta sheet.
 
-        Raises:
-            None.
 
         Example:
             ::

@@ -323,8 +323,6 @@ class TrajectoryProcess(BaseModel):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             The validated process metadata.
@@ -386,8 +384,6 @@ class TrajectoryMeta(BaseModel):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             The validated metadata.
@@ -632,8 +628,6 @@ class Trajectory:
             A non-zero process type means the process is active and must
             provide parameter names, point references and a parameter table.
 
-        Args:
-            None.
 
         Returns:
             None.

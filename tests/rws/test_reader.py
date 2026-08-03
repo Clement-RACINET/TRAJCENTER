@@ -38,7 +38,6 @@ from trajcenter.rws.reader import (
     read_transfer_progress,
 )
 
-
 _MODULE = "trajcenter.rws.reader"
 
 
@@ -58,8 +57,6 @@ def client() -> MagicMock:
     Returns:
         Mock client.
 
-    Raises:
-        None.
 
     Example:
         ```python

@@ -168,8 +168,6 @@ def _unique_process_param_sets(
     Returns:
         Unique process parameter sets ordered by base-1 RAPID index.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -987,8 +985,6 @@ def _is_missing(value: object) -> bool:
     Returns:
         ``True`` when value is missing.
 
-    Raises:
-        None.
 
     Example:
         ```python

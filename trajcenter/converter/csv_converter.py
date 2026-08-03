@@ -225,14 +225,10 @@ class CsvConverter(_TabularConverter):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             :attr:`trajcenter.core.trajectory.SourceFormat.CSV`.
 
-        Raises:
-            None.
 
         Example:
             ::

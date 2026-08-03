@@ -136,10 +136,6 @@ def from_rws_exception(
         converted to a ``(code, message)`` pair via
         :meth:`~trajcenter.rws.errors.base.TrajCenterError.to_rapid`.
 
-    Raises:
-        Nothing. This function never raises; it only builds and returns
-        an exception instance for the caller to raise.
-
     Example:
         ::
 

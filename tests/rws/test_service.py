@@ -52,8 +52,6 @@ def client() -> MagicMock:
     Returns:
         Mock RWS client.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -78,8 +76,6 @@ def _make_points() -> pd.DataFrame:
     Returns:
         Points DataFrame.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -185,8 +181,6 @@ def _make_entry(
     Returns:
         Store entry.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -217,8 +211,6 @@ def _make_context() -> RobotContext:
     Returns:
         Robot context.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -260,8 +252,6 @@ def _make_resolved(name: str = "demo") -> ResolvedTrajectory:
     Returns:
         Resolved trajectory.
 
-    Raises:
-        None.
 
     Example:
         ::

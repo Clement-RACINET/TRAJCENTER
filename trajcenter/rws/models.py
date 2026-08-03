@@ -79,11 +79,6 @@ class RobotDefaults:
         move_type: Default movement type code.
         read_confs: Default ``readConfs`` value.
 
-    Returns:
-        Dataclass instance.
-
-    Raises:
-        None.
 
     Example:
         ```python
@@ -128,11 +123,7 @@ class ProcessTypeEntry:
         id: Numeric process type identifier.
         name: Human-readable process name.
 
-    Returns:
-        Dataclass instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -165,11 +156,6 @@ class RobotContext:
         wobj_names: Ordered workobject names from ``trajWobjs``.
         process_types: Robot process catalog.
 
-    Returns:
-        Dataclass instance.
-
-    Raises:
-        None.
 
     Example:
         ```python
@@ -197,14 +183,10 @@ class RobotContext:
         ABB Constraints:
             RAPID array indexes are one-based.
 
-        Args:
-            None.
 
         Returns:
             Mapping of tool name to RAPID index.
 
-        Raises:
-            None.
 
         Example:
             ```python
@@ -223,14 +205,10 @@ class RobotContext:
         ABB Constraints:
             RAPID array indexes are one-based.
 
-        Args:
-            None.
 
         Returns:
             Mapping of workobject name to RAPID index.
 
-        Raises:
-            None.
 
         Example:
             ```python
@@ -249,14 +227,10 @@ class RobotContext:
         ABB Constraints:
             The robot catalog is authoritative.
 
-        Args:
-            None.
 
         Returns:
             Set of process ids.
 
-        Raises:
-            None.
 
         Example:
             ```python
@@ -291,11 +265,7 @@ class ResolvedRobTarget:
         cfx: ABB confdata cfx.
         eax: Six optional external axis values. ``None`` means inactive.
 
-    Returns:
-        Dataclass instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -352,11 +322,7 @@ class ResolvedProcessParam:
         name: Parameter name, or ``""`` for unused slot.
         value: Numeric parameter value.
 
-    Returns:
-        Dataclass instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -384,8 +350,6 @@ class ResolvedProcessParamSet:
         index: RAPID base-1 process parameter set index.
         params: Ten ordered parameter slots.
 
-    Returns:
-        Dataclass instance.
 
     Raises:
         ValueError: If ``params`` does not contain exactly 10 entries.
@@ -420,8 +384,6 @@ class ResolvedProcessParamSet:
         ABB Constraints:
             RAPID second dimension is fixed to 10.
 
-        Args:
-            None.
 
         Returns:
             None.
@@ -463,11 +425,7 @@ class ResolvedPoint:
         wobj_index: Base-1 index in ``trajWobjs``.
         process_param_index: Base-1 index in ``processParams`` or ``0``.
 
-    Returns:
-        Dataclass instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -515,11 +473,7 @@ class ResolvedTrajectory:
         points: Resolved point sequence.
         process_param_sets: Resolved process parameter sets.
 
-    Returns:
-        Dataclass instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -547,14 +501,10 @@ class ResolvedTrajectory:
         ABB Constraints:
             This value is written to ``nbLoadedTrajPoints``.
 
-        Args:
-            None.
 
         Returns:
             Number of points.
 
-        Raises:
-            None.
 
         Example:
             ```python
@@ -581,11 +531,6 @@ class TrajectoryStoreEntry:
         point_count: Number of points written into ``trajectories{i}.pointCount``.
         process_type: Process type written into ``trajectories{i}.processType``.
 
-    Returns:
-        Dataclass instance.
-
-    Raises:
-        None.
 
     Example:
         ```python

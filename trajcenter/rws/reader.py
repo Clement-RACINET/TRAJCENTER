@@ -169,8 +169,6 @@ def _parse_rapid_string(raw: str) -> str:
     Returns:
         Unquoted string value.
 
-    Raises:
-        None.
 
     Example:
         ```python

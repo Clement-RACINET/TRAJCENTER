@@ -45,8 +45,18 @@ nav:
         - Tabular Exporter: api/trajcenter/exporter/tabular_exporter.md
       - Rws:
         - Utils: api/trajcenter/rws/_utils.md
+        - Constants: api/trajcenter/rws/constants.md
+        - Models: api/trajcenter/rws/models.md
         - Reader: api/trajcenter/rws/reader.md
+        - Resolver: api/trajcenter/rws/resolver.md
+        - Service: api/trajcenter/rws/service.md
+        - Store: api/trajcenter/rws/store.md
+        - Supervisor: api/trajcenter/rws/supervisor.md
         - Writer: api/trajcenter/rws/writer.md
+        - Errors:
+          - Base: api/trajcenter/rws/errors/base.md
+          - Codes: api/trajcenter/rws/errors/codes.md
+          - Translate: api/trajcenter/rws/errors/translate.md
 # --- AUTOGEN_API_END ---
   - Coverage: coverage.md 
 

@@ -178,8 +178,6 @@ class _TabularExporter(BaseExporter):
         Returns:
             None.
 
-        Raises:
-            None.
 
         Example:
             ::
@@ -435,8 +433,6 @@ class _TabularExporter(BaseExporter):
         Returns:
             Two-column DataFrame with ``key`` and ``value`` columns.
 
-        Raises:
-            None.
 
         Example:
             ::

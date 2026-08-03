@@ -69,11 +69,6 @@ class RWSSupervisorConfig:
         refresh_priority: ABB subscription priority for metadata refresh flag.
         transfer_priority: ABB subscription priority for transfer request flag.
 
-    Returns:
-        Configuration object.
-
-    Raises:
-        None.
 
     Example:
         ::
@@ -105,11 +100,6 @@ class RWSSupervisorState:
         refresh_count: Number of metadata refresh operations completed.
         transfer_count: Number of trajectory transfer operations completed.
 
-    Returns:
-        Runtime state object.
-
-    Raises:
-        None.
 
     Example:
         ::
@@ -142,8 +132,6 @@ def build_trajcenter_subscription_resources(
     Returns:
         Tuple containing refresh and transfer subscription resources.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -341,8 +329,6 @@ def _is_true_event(value: str) -> bool:
     Returns:
         ``True`` if the value is ``TRUE``.
 
-    Raises:
-        None.
 
     Example:
         ::

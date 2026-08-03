@@ -134,8 +134,6 @@ async def async_main() -> int:
     Returns:
         Process exit code.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -165,8 +163,6 @@ async def async_main() -> int:
         Returns:
             None.
 
-        Raises:
-            None.
 
         Example:
             ::

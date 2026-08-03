@@ -56,8 +56,6 @@ def _empty_process_params() -> ProcessParamTuple:
     Returns:
         Tuple of exactly ten empty process parameter slots.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -94,8 +92,6 @@ def _defaults() -> RobotDefaults:
     Returns:
         Robot defaults instance.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -131,8 +127,6 @@ def _robtarget() -> ResolvedRobTarget:
     Returns:
         Resolved robtarget.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -170,8 +164,6 @@ def _point() -> ResolvedPoint:
     Returns:
         Resolved point.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -325,7 +317,6 @@ class TestResolvedProcessParamSet:
         """A parameter set must contain exactly ten slots."""
         param_set = ResolvedProcessParamSet(index=1, params=_empty_process_params())
 
-
         assert param_set.index == 1
         assert len(param_set.params) == 10
         assert param_set.params[0].name == ""
@@ -340,7 +331,6 @@ class TestResolvedProcessParamSet:
                 index=1,
                 params=(empty,),  # pyright: ignore[reportArgumentType]
             )
-
 
     def test_named_process_params(self) -> None:
         """Named process params store names and numeric values."""

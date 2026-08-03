@@ -65,8 +65,6 @@ def client() -> MagicMock:
     Returns:
         Mock client.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -92,8 +90,6 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
     Returns:
         Points DataFrame.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -139,8 +135,6 @@ def _make_resolved_robtarget() -> ResolvedRobTarget:
     Returns:
         Resolved robtarget.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -178,8 +172,6 @@ def _make_resolved_point(process_param_index: int = 0) -> ResolvedPoint:
     Returns:
         Resolved point.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -224,8 +216,6 @@ def _make_empty_process_params() -> tuple[
     Returns:
         Fixed-length tuple containing ten empty process parameter slots.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -262,8 +252,6 @@ def _make_resolved_trajectory() -> ResolvedTrajectory:
     Returns:
         Resolved trajectory.
 
-    Raises:
-        None.
 
     Example:
         ::

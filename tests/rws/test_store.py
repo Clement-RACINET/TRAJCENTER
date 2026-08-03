@@ -45,8 +45,6 @@ def _make_points(
     Returns:
         Points DataFrame.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -94,8 +92,6 @@ def _make_process_params() -> pd.DataFrame:
     Returns:
         Process parameter DataFrame.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -379,8 +375,6 @@ def _entry(
     Returns:
         Store entry.
 
-    Raises:
-        None.
 
     Example:
         ::

@@ -79,8 +79,6 @@ def _defaults(
     Returns:
         Robot defaults.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -116,8 +114,6 @@ def _context(defaults: RobotDefaults | None = None) -> RobotContext:
     Returns:
         Robot context.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -152,8 +148,6 @@ def _base_points(**extra: object) -> pd.DataFrame:
     Returns:
         Point DataFrame.
 
-    Raises:
-        None.
 
     Example:
         ```python
@@ -188,8 +182,6 @@ def _resolved_process_set(index: int) -> ResolvedProcessParamSet:
     Returns:
         Resolved process parameter set.
 
-    Raises:
-        None.
 
     Example:
         ```python

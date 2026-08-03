@@ -145,8 +145,6 @@ class ExcelConverter(_TabularConverter):
         ABB Constraints:
             No ABB controller access.
 
-        Args:
-            None.
 
         Returns:
             :attr:`trajcenter.core.trajectory.SourceFormat.EXCEL`.

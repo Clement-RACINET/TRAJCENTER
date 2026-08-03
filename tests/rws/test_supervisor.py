@@ -44,8 +44,6 @@ def client() -> MagicMock:
     Returns:
         Mock RWS client.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -71,8 +69,6 @@ def config(tmp_path: Path) -> RWSSupervisorConfig:
     Returns:
         Supervisor configuration.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -97,8 +93,6 @@ def _entry(tmp_path: Path) -> TrajectoryStoreEntry:
     Returns:
         Store entry.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -132,8 +126,6 @@ class _FakeEventStream:
         Returns:
             None.
 
-        Raises:
-            None.
 
         Example:
             ::
@@ -152,14 +144,10 @@ class _FakeEventStream:
         ABB Constraints:
             None.
 
-        Args:
-            None.
 
         Returns:
             Async iterator.
 
-        Raises:
-            None.
 
         Example:
             ::
@@ -179,8 +167,6 @@ class _FakeEventStream:
         ABB Constraints:
             None.
 
-        Args:
-            None.
 
         Returns:
             Next event tuple.
@@ -209,14 +195,10 @@ class _FakeEventStream:
         ABB Constraints:
             Mimics async generator cleanup used by ``contextlib.aclosing``.
 
-        Args:
-            None.
 
         Returns:
             None.
 
-        Raises:
-            None.
 
         Example:
             ::

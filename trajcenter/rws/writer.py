@@ -94,8 +94,6 @@ def _fmt_num(value: float) -> str:
     Returns:
         String representation with no trailing ``.0`` for integral floats.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -122,8 +120,6 @@ def _fmt_bool(value: bool) -> str:
     Returns:
         ``"TRUE"`` or ``"FALSE"``.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -148,8 +144,6 @@ def _fmt_string(value: str) -> str:
     Returns:
         RAPID string literal.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -182,8 +176,6 @@ def _fmt_traj_meta_record(
     Returns:
         RAPID record literal, e.g. ``'["TrajA",100,0]'``.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -211,8 +203,6 @@ def _fmt_robtarget(robtarget: ResolvedRobTarget) -> str:
     Returns:
         RAPID ``robtarget`` literal.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -252,8 +242,6 @@ def _fmt_process_param_record(param: ResolvedProcessParam) -> str:
     Returns:
         RAPID record literal.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -281,8 +269,6 @@ def _fmt_point_record(point: ResolvedPoint) -> str:
     Returns:
         RAPID ``trajCenterPointData`` record literal.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -414,8 +400,6 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
     Returns:
         Tuple of 6 booleans, one per external axis column.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -731,8 +715,6 @@ def _build_resolved_trajectory_values(
     Returns:
         Ordered symbol/value mapping.
 
-    Raises:
-        None.
 
     Example:
         ::
@@ -846,8 +828,6 @@ def _notify_progress(
     Returns:
         Updated next progress threshold.
 
-    Raises:
-        None.
 
     Example:
         ::
