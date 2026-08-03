@@ -15,9 +15,9 @@ from .excel_converter import ExcelConverter
 from .mod_converter import ModConverter
 
 __all__ = [
+    "COLUMN_ALIASES",
     "AptConverter",
     "BaseConverter",
-    "COLUMN_ALIASES",
     "ConversionDefaults",
     "CsvConverter",
     "ExcelConverter",
