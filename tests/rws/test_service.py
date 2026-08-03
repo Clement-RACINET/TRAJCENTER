@@ -16,10 +16,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pandas as pd
 import pytest
 from abb_rws_client_python_rw6 import MastershipDenied
-from trajcenter.rws.service import (
-    get_store_entry_by_selected_index,
-    transfer_selected_trajectory,
-)
 
 from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
 from trajcenter.rws.models import (
@@ -30,6 +26,11 @@ from trajcenter.rws.models import (
     RobotContext,
     RobotDefaults,
     TrajectoryStoreEntry,
+)
+from trajcenter.rws.service import (
+    get_store_entry_by_selected_index,
+    refresh_store_metadata,
+    transfer_selected_trajectory,
 )
 
 _MODULE = "trajcenter.rws.service"
@@ -525,3 +526,159 @@ class TestTransferSelectedTrajectory:
             task="T_ROB2",
             module="MY_WEB",
         )
+
+
+class TestRefreshStoreMetadata:
+    """Tests for store metadata refresh orchestration."""
+
+    @pytest.mark.asyncio
+    async def test_nominal_refresh(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """The service scans local store and writes robot metadata."""
+        path = _save_trajectory(tmp_path, name="demo")
+        entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_scan = MagicMock(return_value=(entry,))
+        mock_to_metadata = MagicMock(return_value=(["demo"], [1], [0]))
+        mock_write = AsyncMock()
+
+        with patch(f"{_MODULE}.scan_trajectory_store", mock_scan):
+            with patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata):
+                with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                    entries = await refresh_store_metadata(client, tmp_path)
+
+        assert entries == (entry,)
+        mock_scan.assert_called_once_with(tmp_path)
+        mock_to_metadata.assert_called_once_with((entry,))
+        mock_write.assert_awaited_once_with(
+            client,
+            ["demo"],
+            [1],
+            task="T_ROB1",
+            module="TRAJCENTER_WebServices",
+            process_types=[0],
+            mastership_retries=3,
+        )
+
+    @pytest.mark.asyncio
+    async def test_custom_task_module_and_retries_forwarded(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """Custom RWS write options are forwarded to metadata writer."""
+        path = _save_trajectory(tmp_path, name="demo")
+        entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_write = AsyncMock()
+
+        with patch(
+            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
+        ):
+            with patch(
+                f"{_MODULE}.store_entries_to_metadata",
+                MagicMock(return_value=(["demo"], [1], [0])),
+            ):
+                with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                    await refresh_store_metadata(
+                        client,
+                        tmp_path,
+                        task="T_ROB2",
+                        module="MY_WEB",
+                        mastership_retries=5,
+                    )
+
+        mock_write.assert_awaited_once_with(
+            client,
+            ["demo"],
+            [1],
+            task="T_ROB2",
+            module="MY_WEB",
+            process_types=[0],
+            mastership_retries=5,
+        )
+
+    @pytest.mark.asyncio
+    async def test_empty_store_is_written(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """An empty local store writes empty robot metadata."""
+        mock_write = AsyncMock()
+
+        with patch(f"{_MODULE}.write_store_metadata", mock_write):
+            entries = await refresh_store_metadata(client, tmp_path)
+
+        assert entries == ()
+        mock_write.assert_awaited_once_with(
+            client,
+            [],
+            [],
+            task="T_ROB1",
+            module="TRAJCENTER_WebServices",
+            process_types=[],
+            mastership_retries=3,
+        )
+
+    @pytest.mark.asyncio
+    async def test_scan_error_is_propagated(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """Store scanner errors are propagated before any RWS write."""
+        mock_scan = MagicMock(side_effect=FileNotFoundError("missing store"))
+        mock_write = AsyncMock()
+
+        with patch(f"{_MODULE}.scan_trajectory_store", mock_scan):
+            with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                with pytest.raises(FileNotFoundError, match="missing store"):
+                    await refresh_store_metadata(client, tmp_path)
+
+        mock_write.assert_not_awaited()
+
+    @pytest.mark.asyncio
+    async def test_metadata_conversion_error_is_propagated(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """Metadata conversion errors are propagated before RWS write."""
+        path = _save_trajectory(tmp_path, name="demo")
+        entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_to_metadata = MagicMock(side_effect=ValueError("bad metadata"))
+        mock_write = AsyncMock()
+
+        with patch(
+            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
+        ):
+            with patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata):
+                with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                    with pytest.raises(ValueError, match="bad metadata"):
+                        await refresh_store_metadata(client, tmp_path)
+
+        mock_write.assert_not_awaited()
+
+    @pytest.mark.asyncio
+    async def test_writer_error_is_propagated(
+        self,
+        client: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """Metadata writer errors are propagated."""
+        path = _save_trajectory(tmp_path, name="demo")
+        entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_write = AsyncMock(side_effect=ValueError("write failed"))
+
+        with patch(
+            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
+        ):
+            with patch(
+                f"{_MODULE}.store_entries_to_metadata",
+                MagicMock(return_value=(["demo"], [1], [0])),
+            ):
+                with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                    with pytest.raises(ValueError, match="write failed"):
+                        await refresh_store_metadata(client, tmp_path)

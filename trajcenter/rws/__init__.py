@@ -125,7 +125,11 @@ from .reader import (
     read_transfer_progress,
 )
 from .resolver import ProcessParamTuple, move_type_code_to_name, resolve_trajectory
-from .service import get_store_entry_by_selected_index, transfer_selected_trajectory
+from .service import (
+    get_store_entry_by_selected_index,
+    refresh_store_metadata,
+    transfer_selected_trajectory,
+)
 from .store import scan_trajectory_store, store_entries_to_metadata
 from .writer import write_resolved_trajectory, write_store_metadata, write_trajectory
 
@@ -242,6 +246,7 @@ __all__ = [
     "read_traj_wobjs_count",
     "read_transfer_error",
     "read_transfer_progress",
+    "refresh_store_metadata",
     "resolve_trajectory",
     "scan_trajectory_store",
     "store_entries_to_metadata",

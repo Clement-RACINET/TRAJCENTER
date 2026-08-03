@@ -53,9 +53,81 @@ from trajcenter.rws.constants import (
 from trajcenter.rws.models import ResolvedTrajectory, TrajectoryStoreEntry
 from trajcenter.rws.reader import read_robot_context, read_selected_traj_index
 from trajcenter.rws.resolver import resolve_trajectory
-from trajcenter.rws.writer import write_resolved_trajectory
+from trajcenter.rws.store import scan_trajectory_store, store_entries_to_metadata
+from trajcenter.rws.writer import write_resolved_trajectory, write_store_metadata
 
 logger = get_logger(__name__)
+
+async def refresh_store_metadata(
+    client: RWSClient,
+    store_root: str | Path,
+    *,
+    task: str = DEFAULT_TASK,
+    module: str = WEB_MODULE,
+    mastership_retries: int = 3,
+) -> tuple[TrajectoryStoreEntry, ...]:
+    """Refresh robot-side trajectory store metadata from a local directory.
+
+    ABB Route:
+        Writes through ``write_store_metadata``:
+
+        - ``POST /rw/mastership/rapid`` with ``action=request``;
+        - ``POST /rw/rapid/symbol/data/{symbolurl}`` with ``action=set``;
+        - ``POST /rw/mastership/rapid`` with ``action=release``.
+
+    ABB Constraints:
+        - Local archives are sorted by file name/path through
+          ``scan_trajectory_store``.
+        - Returned ``TrajectoryStoreEntry.index`` values are RAPID base-1.
+        - Metadata order must remain stable because ``selectedTrajIndex`` maps
+          directly to this order.
+        - ``9E+9`` is not read from or written to ``.trajcenter`` archives.
+        - RAPID writes are delegated to ``write_store_metadata``, which acquires
+          Mastership and releases it through the ABB RWS client helper.
+
+    Args:
+        client: Open RWS client.
+        store_root: Directory containing local ``.trajcenter`` archives.
+        task: RAPID task name.
+        module: RAPID module name containing TrajCenter web-service variables.
+        mastership_retries: Number of retries if RAPID Mastership is denied.
+
+    Returns:
+        Store entries that were written to robot metadata.
+
+    Raises:
+        FileNotFoundError: If ``store_root`` does not exist.
+        NotADirectoryError: If ``store_root`` is not a directory.
+        ValueError: If the store is invalid or exceeds RAPID limits.
+        MastershipDenied: If Mastership cannot be acquired after all retries.
+        RWSHTTPError: On unexpected controller HTTP errors.
+
+    Example:
+        ::
+
+            entries = await refresh_store_metadata(client, "trajectory_store")
+    """
+    entries = scan_trajectory_store(store_root)
+    names, point_counts, process_types = store_entries_to_metadata(entries)
+
+    logger.info(
+        "Refreshing store metadata from %s: %d trajectories",
+        Path(store_root),
+        len(entries),
+    )
+
+    await write_store_metadata(
+        client,
+        names,
+        point_counts,
+        task=task,
+        module=module,
+        process_types=process_types,
+        mastership_retries=mastership_retries,
+    )
+
+    logger.info("Store metadata refresh completed: %d trajectories", len(entries))
+    return entries
 
 
 def get_store_entry_by_selected_index(
