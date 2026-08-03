@@ -77,6 +77,7 @@ from .rws import (
     RobotContext,
     RobotDefaults,
     TrajectoryStoreEntry,
+    get_store_entry_by_selected_index,
     move_type_code_to_name,
     read_last_error,
     read_last_error_code,
@@ -101,6 +102,8 @@ from .rws import (
     symbol,
     symbol_array_element,
     symbol_record_array_field,
+    transfer_selected_trajectory,
+    write_resolved_trajectory,
     write_store_metadata,
     write_trajectory,
 )
@@ -172,6 +175,7 @@ __all__ = [
     "TrajectoryStoreEntry",
     "canonical_name",
     "get_logger",
+    "get_store_entry_by_selected_index",
     "move_type_code_to_name",
     "msg",
     "raw",
@@ -199,6 +203,8 @@ __all__ = [
     "symbol",
     "symbol_array_element",
     "symbol_record_array_field",
+    "transfer_selected_trajectory",
+    "write_resolved_trajectory",
     "write_store_metadata",
     "write_trajectory",
 ]

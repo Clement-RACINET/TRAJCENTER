@@ -2,7 +2,7 @@
 # tests/rws/test_writer.py
 """Unit tests for :mod:`trajcenter.rws.writer`.
 
-> **Author**: Clément RACINET
+Author: Clement RACINET
 
 All RWS calls are mocked via ``unittest.mock.AsyncMock``.
 No HTTP traffic is made.
@@ -14,18 +14,34 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pandas as pd
 import pytest
-
 from abb_rws_client_python_rw6 import MastershipDenied, RobTarget
+
+from trajcenter.rws.models import (
+    ResolvedPoint,
+    ResolvedProcessParam,
+    ResolvedProcessParamSet,
+    ResolvedRobTarget,
+    ResolvedTrajectory,
+)
 from trajcenter.rws.writer import (
+    MAX_PROCESS_PARAM_PER_SET,
+    MAX_PROCESS_PARAM_SET_COUNT,
     MAX_TRAJ,
+    MAX_TRAJ_POINTS,
     STATUS_METADATA_REFRESHED,
+    STATUS_TRAJECTORY_TRANSFERRED,
     _eax_presence,
     _fmt_bool,
     _fmt_num,
+    _fmt_point_record,
+    _fmt_process_param_record,
+    _fmt_robtarget,
     _fmt_string,
     _fmt_traj_meta_record,
     _retry_mastership,
     _row_to_robtarget,
+    _symbol_2d_array_element,
+    write_resolved_trajectory,
     write_store_metadata,
     write_trajectory,
 )
@@ -43,8 +59,14 @@ def client() -> MagicMock:
     ABB Constraints:
         No controller access is performed.
 
+    Args:
+        None.
+
     Returns:
         Mock client.
+
+    Raises:
+        None.
 
     Example:
         ::
@@ -69,6 +91,9 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
 
     Returns:
         Points DataFrame.
+
+    Raises:
+        None.
 
     Example:
         ::
@@ -97,6 +122,170 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
     if with_eax_a:
         data["eax_a"] = [100.0] * n
     return pd.DataFrame(data)
+
+
+def _make_resolved_robtarget() -> ResolvedRobTarget:
+    """Build one resolved robtarget for writer tests.
+
+    ABB Route:
+        N/A — local test helper.
+
+    ABB Constraints:
+        ``None`` external axes are serialized as ``9E+9`` by the writer.
+
+    Args:
+        None.
+
+    Returns:
+        Resolved robtarget.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            robtarget = _make_resolved_robtarget()
+    """
+    return ResolvedRobTarget(
+        x=100.0,
+        y=200.0,
+        z=300.0,
+        q1=1.0,
+        q2=0.0,
+        q3=0.0,
+        q4=0.0,
+        cf1=0,
+        cf4=1,
+        cf6=2,
+        cfx=0,
+        eax=(None, 12.5, None, None, None, None),
+    )
+
+
+def _make_resolved_point(process_param_index: int = 0) -> ResolvedPoint:
+    """Build one resolved point for writer tests.
+
+    ABB Route:
+        N/A — local test helper.
+
+    ABB Constraints:
+        ``process_param_index`` follows RAPID base-1 convention or ``0``.
+
+    Args:
+        process_param_index: Process parameter set index.
+
+    Returns:
+        Resolved point.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            point = _make_resolved_point(process_param_index=1)
+    """
+    return ResolvedPoint(
+        move_type=0,
+        robtarget=_make_resolved_robtarget(),
+        tcp_speed=500.0,
+        zone_type=10,
+        read_confs=True,
+        tool_index=1,
+        wobj_index=2,
+        process_param_index=process_param_index,
+    )
+
+
+def _make_empty_process_params() -> tuple[
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+    ResolvedProcessParam,
+]:
+    """Build exactly ten empty process parameter slots.
+
+    ABB Route:
+        N/A — local test helper.
+
+    ABB Constraints:
+        ``trajCenterProcessParameter`` second RAPID dimension is fixed to 10.
+
+    Args:
+        None.
+
+    Returns:
+        Fixed-length tuple containing ten empty process parameter slots.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            params = _make_empty_process_params()
+    """
+    empty = ResolvedProcessParam(name="", value=0.0)
+    return (
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+        empty,
+    )
+
+
+def _make_resolved_trajectory() -> ResolvedTrajectory:
+    """Build one minimal resolved trajectory for writer tests.
+
+    ABB Route:
+        N/A — local test helper.
+
+    ABB Constraints:
+        Process parameter sets contain exactly 10 slots.
+
+    Args:
+        None.
+
+    Returns:
+        Resolved trajectory.
+
+    Raises:
+        None.
+
+    Example:
+        ::
+
+            resolved = _make_resolved_trajectory()
+    """
+    empty_params = _make_empty_process_params()
+    params = (
+        ResolvedProcessParam(name="force", value=120.0),
+        ResolvedProcessParam(name="speed", value=42.5),
+        *empty_params[2:],
+    )
+
+    return ResolvedTrajectory(
+        name="demo",
+        process_type=1,
+        points=(
+            _make_resolved_point(process_param_index=1),
+            _make_resolved_point(process_param_index=0),
+        ),
+        process_param_sets=(ResolvedProcessParamSet(index=1, params=params),),
+    )
 
 
 class TestFormatHelpers:
@@ -141,6 +330,47 @@ class TestFormatHelpers:
     def test_fmt_traj_meta_record_custom_process(self) -> None:
         """A metadata record accepts a custom process type."""
         assert _fmt_traj_meta_record("TrajA", 100, 2) == '["TrajA",100,2]'
+
+    def test_fmt_robtarget_injects_inactive_eax(self) -> None:
+        """Inactive external axes are serialized as ``9E+9`` sentinel values."""
+        assert _fmt_robtarget(_make_resolved_robtarget()) == (
+            "[[100,200,300],[1,0,0,0],[0,1,2,0],"
+            "[9000000000,12.5,9000000000,9000000000,9000000000,9000000000]]"
+        )
+
+    def test_fmt_process_param_record(self) -> None:
+        """A process parameter is serialized as ``[name,value]``."""
+        param = ResolvedProcessParam(name="force", value=120.0)
+        assert _fmt_process_param_record(param) == '["force",120]'
+
+    def test_fmt_point_record(self) -> None:
+        """A resolved point is serialized in ``trajCenterPointData`` order."""
+        point = _make_resolved_point(process_param_index=1)
+        assert _fmt_point_record(point).startswith(
+            "[0,[[100,200,300],[1,0,0,0],[0,1,2,0],"
+        )
+        assert _fmt_point_record(point).endswith(",500,10,TRUE,1,2,1]")
+
+    def test_symbol_2d_array_element(self) -> None:
+        """Two-dimensional RAPID array indexes are percent-encoded."""
+        assert (
+            _symbol_2d_array_element(
+                task="T_ROB1",
+                module="TRAJCENTER_WebServices",
+                variable="processParams",
+                first_index=1,
+                second_index=2,
+            )
+            == "RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C2%7D"
+        )
+
+    def test_symbol_2d_array_element_rejects_invalid_indexes(self) -> None:
+        """Two-dimensional RAPID array indexes are one-based."""
+        with pytest.raises(ValueError, match="first array index"):
+            _symbol_2d_array_element("T_ROB1", "M", "a", 0, 1)
+
+        with pytest.raises(ValueError, match="second array index"):
+            _symbol_2d_array_element("T_ROB1", "M", "a", 1, 0)
 
 
 class TestEaxPresence:
@@ -409,6 +639,220 @@ class TestWriteStoreMetadata:
         assert first_key == "RAPID/T_ROB2/MY_MOD/nbTrajAvailable"
 
 
+class TestWriteResolvedTrajectory:
+    """Tests for :func:`trajcenter.rws.writer.write_resolved_trajectory`."""
+
+    @pytest.mark.asyncio
+    async def test_nominal_single_mastership_call(self, client: MagicMock) -> None:
+        """A resolved trajectory is written through one batched Mastership call."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        mock_set.assert_awaited_once()
+        assert mock_set.call_args.kwargs["domain"] == "rapid"
+
+    @pytest.mark.asyncio
+    async def test_status_and_flags_written(self, client: MagicMock) -> None:
+        """The writer finalizes transfer status and request flags."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        values = mock_set.call_args.kwargs["values"]
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajReady"] == "TRUE"
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferError"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/sendTrajRequest"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferProgress"] == "100"
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastErrorCode"] == str(
+            STATUS_TRAJECTORY_TRANSFERRED
+        )
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastError"] == '""'
+
+    @pytest.mark.asyncio
+    async def test_nb_loaded_points_written(self, client: MagicMock) -> None:
+        """``nbLoadedTrajPoints`` receives the resolved point count."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        values = mock_set.call_args.kwargs["values"]
+        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/nbLoadedTrajPoints"] == "2"
+
+    @pytest.mark.asyncio
+    async def test_traj_data_records_written(self, client: MagicMock) -> None:
+        """Resolved points are written into one-based ``trajData`` entries."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        values = mock_set.call_args.kwargs["values"]
+        first = values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D"]
+        second = values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B2%7D"]
+
+        assert first.endswith(",500,10,TRUE,1,2,1]")
+        assert second.endswith(",500,10,TRUE,1,2,0]")
+
+    @pytest.mark.asyncio
+    async def test_process_params_are_written_and_cleared(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Used process sets are written and unused sets are cleared."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        values = mock_set.call_args.kwargs["values"]
+
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C1%7D"]
+            == '["force",120]'
+        )
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C2%7D"]
+            == '["speed",42.5]'
+        )
+        assert (
+            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B2%2C1%7D"]
+            == '["",0]'
+        )
+
+    @pytest.mark.asyncio
+    async def test_process_param_table_size(self, client: MagicMock) -> None:
+        """The process parameter table is fully normalized to ``256 x 10``."""
+        mock_set = AsyncMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(client, resolved)
+
+        values = mock_set.call_args.kwargs["values"]
+        process_keys = [key for key in values if "processParams%7B" in key]
+        assert len(process_keys) == (
+            MAX_PROCESS_PARAM_SET_COUNT * MAX_PROCESS_PARAM_PER_SET
+        )
+
+    @pytest.mark.asyncio
+    async def test_too_many_points_raises(self, client: MagicMock) -> None:
+        """More points than RAPID capacity raises ``ValueError``."""
+        point = _make_resolved_point()
+        resolved = ResolvedTrajectory(
+            name="too_many",
+            process_type=0,
+            points=(point,) * (MAX_TRAJ_POINTS + 1),
+            process_param_sets=(),
+        )
+
+        with pytest.raises(ValueError, match="MAX_TRAJ_POINTS"):
+            await write_resolved_trajectory(client, resolved)
+
+    @pytest.mark.asyncio
+    async def test_unknown_process_param_index_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """A point cannot reference a missing process parameter set."""
+        resolved = ResolvedTrajectory(
+            name="bad",
+            process_type=0,
+            points=(_make_resolved_point(process_param_index=2),),
+            process_param_sets=(),
+        )
+
+        with pytest.raises(ValueError, match="unknown process parameter set"):
+            await write_resolved_trajectory(client, resolved)
+
+    @pytest.mark.asyncio
+    async def test_invalid_process_param_set_index_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Process parameter set indexes must fit RAPID bounds."""
+        resolved = ResolvedTrajectory(
+            name="bad",
+            process_type=0,
+            points=(_make_resolved_point(process_param_index=0),),
+            process_param_sets=(
+                ResolvedProcessParamSet(
+                    index=257,
+                    params=_make_empty_process_params(),
+                ),
+            ),
+        )
+
+        with pytest.raises(ValueError, match="Process parameter set index"):
+            await write_resolved_trajectory(client, resolved)
+
+    @pytest.mark.asyncio
+    async def test_duplicate_process_param_set_index_raises(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Duplicate process parameter set indexes are rejected."""
+        resolved = ResolvedTrajectory(
+            name="bad",
+            process_type=0,
+            points=(_make_resolved_point(process_param_index=1),),
+            process_param_sets=(
+                ResolvedProcessParamSet(
+                    index=1,
+                    params=_make_empty_process_params(),
+                ),
+                ResolvedProcessParamSet(
+                    index=1,
+                    params=_make_empty_process_params(),
+                ),
+            ),
+        )
+
+        with pytest.raises(ValueError, match="Duplicate process parameter"):
+            await write_resolved_trajectory(client, resolved)
+
+    @pytest.mark.asyncio
+    async def test_mastership_denied_retries(self, client: MagicMock) -> None:
+        """``MastershipDenied`` triggers retries for trajectory writes."""
+        mock_set = AsyncMock(side_effect=MastershipDenied("denied"))
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
+                with pytest.raises(MastershipDenied):
+                    await write_resolved_trajectory(
+                        client,
+                        resolved,
+                        mastership_retries=3,
+                    )
+
+        assert mock_set.call_count == 3
+
+    @pytest.mark.asyncio
+    async def test_progress_callback_is_called(self, client: MagicMock) -> None:
+        """The optional local progress callback receives build progress."""
+        mock_set = AsyncMock()
+        progress = MagicMock()
+        resolved = _make_resolved_trajectory()
+
+        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
+            await write_resolved_trajectory(
+                client,
+                resolved,
+                on_progress=progress,
+            )
+
+        assert progress.call_count > 0
+
+
 class TestRetryMastership:
     """Tests for :func:`trajcenter.rws.writer._retry_mastership`."""
 
@@ -444,7 +888,7 @@ class TestRetryMastership:
 
 
 class TestWriteTrajectoryPlaceholder:
-    """Temporary tests for trajectory writer during RWS-3."""
+    """Temporary tests for trajectory writer orchestration."""
 
     @pytest.mark.asyncio
     async def test_write_trajectory_not_implemented_yet(
@@ -452,5 +896,5 @@ class TestWriteTrajectoryPlaceholder:
         client: MagicMock,
     ) -> None:
         """The obsolete v1 writer must not silently run."""
-        with pytest.raises(NotImplementedError, match="RWS-4"):
+        with pytest.raises(NotImplementedError, match="write_resolved_trajectory"):
             await write_trajectory(client, MagicMock())

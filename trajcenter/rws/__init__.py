@@ -125,7 +125,8 @@ from .reader import (
     read_transfer_progress,
 )
 from .resolver import ProcessParamTuple, move_type_code_to_name, resolve_trajectory
-from .writer import write_store_metadata, write_trajectory
+from .service import get_store_entry_by_selected_index, transfer_selected_trajectory
+from .writer import write_resolved_trajectory, write_store_metadata, write_trajectory
 
 __all__ = [
     "ALLOWED_ZONE_TYPES",
@@ -219,6 +220,7 @@ __all__ = [
     "UnknownProcessType",
     "WobjNameNotFoundOnRobot",
     "from_rws_exception",
+    "get_store_entry_by_selected_index",
     "move_type_code_to_name",
     "read_last_error",
     "read_last_error_code",
@@ -243,6 +245,8 @@ __all__ = [
     "symbol",
     "symbol_array_element",
     "symbol_record_array_field",
+    "transfer_selected_trajectory",
+    "write_resolved_trajectory",
     "write_store_metadata",
     "write_trajectory",
 ]
