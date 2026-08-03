@@ -435,7 +435,7 @@ class _TabularConverter(BaseConverter):
         stem = source.stem
         sheet_lower = sheet_name.lower()
         name = stem if sheet_lower in _SHEET_DEFAULT_NAMES else f"{stem}_{sheet_name}"
-        if "name" in meta_overrides and meta_overrides["name"]:
+        if meta_overrides.get("name"):
             name = meta_overrides["name"]
 
         extra: dict[str, str | int | float | bool | None] = {

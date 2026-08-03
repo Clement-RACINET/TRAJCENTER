@@ -37,9 +37,10 @@ docs    = { features = ["docs"], solve-group = "default" }
 # ── Tâches disponibles UNIQUEMENT dans l'environnement dev ───────────────────
 [tool.pixi.feature.dev.tasks]
 tests      = "pytest tests/"
-lint      = "ruff check trajcenter/"
-fmt       = "ruff format trajcenter/"
-typecheck = "mypy trajcenter/"
+lint       = "ruff check trajcenter/"
+fmt        = "ruff format trajcenter/"
+typecheck  = "mypy trajcenter/"
+fix_init   = "python utils/fix_init.py"
 
 # ── Tâches disponibles UNIQUEMENT dans l'environnement docs ──────────────────
 [tool.pixi.feature.docs.tasks]

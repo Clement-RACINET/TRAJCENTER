@@ -79,21 +79,19 @@ from __future__ import annotations
 
 import io
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import cast
-
-from typing_extensions import override
 
 import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 from pydantic import BaseModel, Field, model_validator
+from typing_extensions import override
 
 from trajcenter.core.messages import msg
-
 
 # ---------------------------------------------------------------------------
 # Enums
@@ -364,7 +362,7 @@ class TrajectoryMeta(BaseModel):
     name: str = Field(..., description="Trajectory name")
     version: str = Field("2.0", description=".trajcenter format version")
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         description="Creation timestamp UTC",
     )
     source_file: str | None = Field(None, description="Original source file")

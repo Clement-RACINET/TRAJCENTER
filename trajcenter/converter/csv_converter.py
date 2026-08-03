@@ -86,7 +86,6 @@ from trajcenter.converter.defaults import ConversionDefaults
 from trajcenter.converter.tabular_converter import _TabularConverter
 from trajcenter.core.trajectory import SourceFormat
 
-
 # ---------------------------------------------------------------------------
 # Separator detection
 # ---------------------------------------------------------------------------

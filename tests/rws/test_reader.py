@@ -2,7 +2,7 @@
 # tests/rws/test_reader.py
 """Tests for :mod:`trajcenter.rws.reader`.
 
-> **Author**: Clément RACINET
+Author: Clement RACINET
 
 All RWS calls are mocked — no HTTP traffic.
 Mock target: ``trajcenter.rws.reader.get_variable``.
@@ -14,9 +14,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from trajcenter.rws.constants import MAX_TRAJ
+from trajcenter.rws.models import RobotDefaults
 from trajcenter.rws.reader import (
-    MAX_TRAJ,
-    RobotDefaults,
     read_last_error,
     read_last_error_code,
     read_nb_robtargets,
@@ -44,13 +44,19 @@ def client() -> MagicMock:
     ABB Constraints:
         No controller access is performed.
 
+    Args:
+        None.
+
     Returns:
         Mock client.
 
-    Example:
-        ::
+    Raises:
+        None.
 
-            client = MagicMock()
+    Example:
+        ```python
+        client = MagicMock()
+        ```
     """
     return MagicMock()
 

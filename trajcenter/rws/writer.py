@@ -68,7 +68,7 @@ _EAX_COLUMNS: Final[tuple[str, ...]] = (
 _INACTIVE_EAX: Final[float] = 9e9
 
 
-def _fmt_num(value: int | float) -> str:
+def _fmt_num(value: float) -> str:
     """Format a number for a RAPID ``num`` variable.
 
     ABB Route:
@@ -95,7 +95,7 @@ def _fmt_num(value: int | float) -> str:
     return str(value)
 
 
-def _fmt_bool(value: bool) -> str:  # noqa: FBT001
+def _fmt_bool(value: bool) -> str:
     """Format a Python bool as a RAPID boolean literal.
 
     ABB Route:
