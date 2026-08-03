@@ -11,8 +11,7 @@ trajcenter
 │   └── TRAJCENTER_WebServices.mod
 ├── routes
 │   ├── route3.md
-│   ├── route3.pdf
-│   └── TRAJCENTER.md
+│   └── route3.pdf
 ├── scripts
 │   ├── doc
 │   │   ├── config.py
