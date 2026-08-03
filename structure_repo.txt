@@ -59,6 +59,7 @@ trajcenter
 │   │   ├── test_reader.py
 │   │   ├── test_resolver.py
 │   │   ├── test_service.py
+│   │   ├── test_store.py
 │   │   ├── test_utils.py
 │   │   └── test_writer.py
 │   └── conftest.py
@@ -99,6 +100,7 @@ trajcenter
 │   │   ├── reader.py
 │   │   ├── resolver.py
 │   │   ├── service.py
+│   │   ├── store.py
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports

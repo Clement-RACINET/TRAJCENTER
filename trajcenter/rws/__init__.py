@@ -126,6 +126,7 @@ from .reader import (
 )
 from .resolver import ProcessParamTuple, move_type_code_to_name, resolve_trajectory
 from .service import get_store_entry_by_selected_index, transfer_selected_trajectory
+from .store import scan_trajectory_store, store_entries_to_metadata
 from .writer import write_resolved_trajectory, write_store_metadata, write_trajectory
 
 __all__ = [
@@ -242,6 +243,8 @@ __all__ = [
     "read_transfer_error",
     "read_transfer_progress",
     "resolve_trajectory",
+    "scan_trajectory_store",
+    "store_entries_to_metadata",
     "symbol",
     "symbol_array_element",
     "symbol_record_array_field",
