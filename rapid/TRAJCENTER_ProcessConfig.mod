@@ -1,5 +1,17 @@
 MODULE TRAJCENTER_ProcessConfig
 
+!------------------------------------------------------------------------------
+!DATE:          03/08/2026
+!AUTHORS:       J. SCHUMACKER, C. RACINET
+!DESCRIPTION:   This module declares the robot-side process catalog used by
+!               TrajCenter v2.0.
+!               The PC reads this catalog through ABB Robot Web Services before
+!               transferring a trajectory, then validates that the trajectory
+!               process type exists on the controller.
+!               Runtime process parameter values are not stored here; they are
+!               written by the PC into TRAJCENTER_WebServices/processParams.
+!------------------------------------------------------------------------------
+
 ! ==============================================================================
 ! Module: TRAJCENTER_ProcessConfig
 ! Purpose:
@@ -19,6 +31,7 @@ MODULE TRAJCENTER_ProcessConfig
 !   This module contains the robot-side process catalog.
 !   Runtime process parameter values are stored in TRAJCENTER_WebServices.
 ! ==============================================================================
+
 
 
 ! ==============================================================================

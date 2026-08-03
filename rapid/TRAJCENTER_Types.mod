@@ -1,5 +1,18 @@
 MODULE TRAJCENTER_Types
 
+!------------------------------------------------------------------------------
+!DATE:          03/08/2026
+!AUTHORS:       J. SCHUMACKER, C. RACINET
+!DESCRIPTION:   This module defines the shared protocol constants and RECORD
+!               types used by TrajCenter v2.0.
+!               It contains global transfer limits, process identifiers,
+!               movement type codes, status codes, trajectory metadata records,
+!               point transfer records, tool/workobject records and process
+!               parameter records.
+!               This module must be loaded before all other TrajCenter RAPID
+!               modules.
+!------------------------------------------------------------------------------
+
 ! ==============================================================================
 ! Module: TRAJCENTER_Types
 ! Purpose:

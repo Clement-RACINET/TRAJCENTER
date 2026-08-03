@@ -1,5 +1,17 @@
 MODULE TRAJCENTER_CellConfig
 
+!------------------------------------------------------------------------------
+!DATE:          03/08/2026
+!AUTHORS:       J. SCHUMACKER, C. RACINET
+!DESCRIPTION:   This module declares the cell-level tools and workobjects
+!               exposed to TrajCenter v2.0.
+!               The PC reads trajTools and trajWobjs through ABB Robot Web
+!               Services, maps .trajcenter tool_name and wobj_name values to
+!               RAPID base-1 indexes, and writes those indexes into trajData.
+!               The arrays are cell-dependent and must be maintained by the
+!               robot programmer.
+!------------------------------------------------------------------------------
+
 ! ==============================================================================
 ! Module: TRAJCENTER_CellConfig
 ! Purpose:
@@ -12,6 +24,7 @@ MODULE TRAJCENTER_CellConfig
 !   trajTools and trajWobjs are PERS because they are cell-level shared data.
 !   Maintenance temporary variables are also PERS.
 ! ==============================================================================
+
 
 
 ! ==============================================================================

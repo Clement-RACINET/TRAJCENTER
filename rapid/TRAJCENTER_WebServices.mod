@@ -1,5 +1,19 @@
 MODULE TRAJCENTER_WebServices
 
+!------------------------------------------------------------------------------
+!DATE:          03/08/2026
+!AUTHORS:       J. SCHUMACKER, C. RACINET
+!DESCRIPTION:   This module declares the ABB Robot Web Services exchange
+!               variables used by TrajCenter v2.0.
+!               The robot raises persistent request flags for metadata refresh
+!               and trajectory transfer. The PC subscribes to these flags,
+!               reads the robot context, resolves local .trajcenter archives,
+!               and writes metadata, trajectory data, process parameters,
+!               progress and status variables under Mastership.
+!               This module replaces the obsolete TCP/IP communication used in
+!               TrajCenter v1.
+!------------------------------------------------------------------------------
+
 ! ==============================================================================
 ! Module: TRAJCENTER_WebServices
 ! Purpose:
