@@ -124,6 +124,7 @@ from .reader import (
     read_transfer_error,
     read_transfer_progress,
 )
+from .resolver import ProcessParamTuple, move_type_code_to_name, resolve_trajectory
 from .writer import write_store_metadata, write_trajectory
 
 __all__ = [
@@ -170,6 +171,7 @@ __all__ = [
     "PROCESS_NONE",
     "PROCESS_PUSHCORP",
     "PROCESS_TYPE_ALIASES",
+    "ProcessParamTuple",
     "ProcessTypeEntry",
     "ProcessTypesNotFound",
     "RAPID_STRING_MAX_LENGTH",
@@ -217,6 +219,7 @@ __all__ = [
     "WEB_MODULE",
     "WobjNameNotFoundOnRobot",
     "from_rws_exception",
+    "move_type_code_to_name",
     "read_last_error",
     "read_last_error_code",
     "read_nb_robtargets",
@@ -236,6 +239,7 @@ __all__ = [
     "read_traj_wobjs_count",
     "read_transfer_error",
     "read_transfer_progress",
+    "resolve_trajectory",
     "symbol",
     "symbol_array_element",
     "symbol_record_array_field",
