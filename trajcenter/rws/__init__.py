@@ -131,6 +131,13 @@ from .service import (
     transfer_selected_trajectory,
 )
 from .store import scan_trajectory_store, store_entries_to_metadata
+from .supervisor import (
+    RWSSupervisorConfig,
+    RWSSupervisorState,
+    build_trajcenter_subscription_resources,
+    handle_supervisor_event,
+    run_rws_subscription_supervisor,
+)
 from .writer import write_resolved_trajectory, write_store_metadata, write_trajectory
 
 __all__ = [
@@ -190,6 +197,8 @@ __all__ = [
     "ProcessTypesNotFound",
     "RWSAuthenticationRefused",
     "RWSRequestTimeout",
+    "RWSSupervisorConfig",
+    "RWSSupervisorState",
     "RWSWriteForbidden",
     "RapidSymbolNotFound",
     "ResolvedPoint",
@@ -224,8 +233,10 @@ __all__ = [
     "TransferTimeout",
     "UnknownProcessType",
     "WobjNameNotFoundOnRobot",
+    "build_trajcenter_subscription_resources",
     "from_rws_exception",
     "get_store_entry_by_selected_index",
+    "handle_supervisor_event",
     "move_type_code_to_name",
     "read_last_error",
     "read_last_error_code",
@@ -248,6 +259,7 @@ __all__ = [
     "read_transfer_progress",
     "refresh_store_metadata",
     "resolve_trajectory",
+    "run_rws_subscription_supervisor",
     "scan_trajectory_store",
     "store_entries_to_metadata",
     "symbol",

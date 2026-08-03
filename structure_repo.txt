@@ -60,6 +60,7 @@ trajcenter
 │   │   ├── test_resolver.py
 │   │   ├── test_service.py
 │   │   ├── test_store.py
+│   │   ├── test_supervisor.py
 │   │   ├── test_utils.py
 │   │   └── test_writer.py
 │   └── conftest.py
@@ -101,6 +102,7 @@ trajcenter
 │   │   ├── resolver.py
 │   │   ├── service.py
 │   │   ├── store.py
+│   │   ├── supervisor.py
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports
