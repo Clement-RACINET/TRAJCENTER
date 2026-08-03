@@ -536,9 +536,7 @@ class _TabularConverter(BaseConverter):
             return True
         if pd.isna(value):
             return True
-        if isinstance(value, str) and not value.strip():
-            return True
-        return False
+        return bool(isinstance(value, str) and not value.strip())
 
     @classmethod
     def _parse_tcp_speed(cls, value: Any) -> float | None:
@@ -811,17 +809,16 @@ class _TabularConverter(BaseConverter):
                 meta = _TabularConverter._extract_meta(sheets)
         """
         for sheet_name, df in sheets.items():
-            if sheet_name.lower() in _SHEET_META:
-                if "key" in df.columns and "value" in df.columns:
-                    return {
-                        str(key).strip(): _TabularConverter._clean_meta_value(value)
-                        for key, value in zip(
-                            df["key"],
-                            df["value"],
-                            strict=False,
-                        )
-                        if not _TabularConverter._is_empty_value(key)
-                    }
+            if (
+                sheet_name.lower() in _SHEET_META
+                and "key" in df.columns
+                and "value" in df.columns
+            ):
+                return {
+                    str(key).strip(): _TabularConverter._clean_meta_value(value)
+                    for key, value in zip(df["key"], df["value"], strict=False)
+                    if not _TabularConverter._is_empty_value(key)
+                }
         return {}
 
     @staticmethod

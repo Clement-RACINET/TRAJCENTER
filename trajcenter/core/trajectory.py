@@ -499,7 +499,7 @@ class Trajectory:
 
                 points = Trajectory._validate_and_cast_points(points)
         """
-        missing = set(REQUIRED_COLUMNS) - set(str(c) for c in df.columns)
+        missing = set(REQUIRED_COLUMNS) - {str(c) for c in df.columns}
         if missing:
             raise ValueError(msg("MANDATORY_COLUMNS_MISSING", cols=sorted(missing)))
 
@@ -683,7 +683,7 @@ class Trajectory:
         available_indexes = set(
             self.process_params[_PROCESS_PARAM_INDEX_COLUMN].dropna().astype(int)
         )
-        used_indexes = set(int(v) for v in point_indexes if int(v) != 0)
+        used_indexes = {int(v) for v in point_indexes if int(v) != 0}
         missing = sorted(used_indexes - available_indexes)
         if missing:
             raise ValueError(
