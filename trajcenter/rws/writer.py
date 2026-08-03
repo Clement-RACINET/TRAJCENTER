@@ -31,11 +31,10 @@ from collections.abc import Callable
 from typing import Final
 
 import pandas as pd
-
 from abb_rws_client_python_rw6 import (
     MastershipDenied,
-    RWSClient,
     RobTarget,
+    RWSClient,
 )
 from abb_rws_client_python_rw6.highlevel.variables import set_variables_with_mastership
 
