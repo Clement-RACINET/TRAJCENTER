@@ -64,7 +64,7 @@ MAX_TRAJ_POINTS: Final[int] = 100000
 MAX_PROCESS_PARAM_SET_COUNT: Final[int] = 256
 MAX_PROCESS_PARAM_PER_SET: Final[int] = 10
 
-DEFAULT_MASTERship_RETRY_DELAY_S: Final[float] = 1.0
+DEFAULT_MASTERSHIP_RETRY_DELAY_S: Final[float] = 1.0
 DEFAULT_PROGRESS_UPDATE_STEP_PERCENT: Final[int] = 5
 
 _EAX_COLUMNS: Final[tuple[str, ...]] = (
@@ -605,7 +605,7 @@ async def write_resolved_trajectory(
     module: str = WEB_MODULE,
     on_progress: Callable[[int, int], None] | None = None,
     mastership_retries: int = 3,
-    retry_delay_s: float = DEFAULT_MASTERship_RETRY_DELAY_S,
+    retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     progress_step_percent: int = DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
 ) -> None:
     """Transfer a resolved trajectory to ``TRAJCENTER_WebServices``.
@@ -904,7 +904,7 @@ async def _retry_mastership(
     coro_fn: Callable[[], Awaitable[None]],
     retries: int,
     *,
-    retry_delay_s: float = DEFAULT_MASTERship_RETRY_DELAY_S,
+    retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,
 ) -> None:
     """Execute an async write callable retrying on ``MastershipDenied``.
 

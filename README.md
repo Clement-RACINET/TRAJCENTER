@@ -4,9 +4,9 @@ TrajCenter est une chaîne Python/RAPID permettant de convertir, stocker,
 résoudre et transférer des trajectoires industrielles vers un robot ABB
 RobotWare 6.x via **Robot Web Services**.
 
-> Projet développé au LCFC — ENSAM  
-> Auteurs principaux: Josselin SCHUMAKER & Clément RACINET  
-> Robots cible : ABB RobotWare 6.x  
+> Projet développé au LCFC — ENSAM
+> Auteurs principaux: Josselin SCHUMAKER & Clément RACINET
+> Robots cible : ABB RobotWare 6.x
 > Transport : ABB Robot Web Services uniquement
 > Version : 2.0
 
@@ -113,7 +113,7 @@ Ordre de chargement obligatoire :
 
 | Module                     | Rôle                                 |
 | -------------------------- | ------------------------------------ |
-| `TRAJCENTER_Types`         | Constantes, codes, `RECORD` communs  |
+| `TRAJCENTER_Types`         | Constantes, codes,`RECORD` communs   |
 | `TRAJCENTER_ProcessConfig` | Catalogue process robot              |
 | `TRAJCENTER_CellConfig`    | Configuration cellule : tools, wobjs |
 | `TRAJCENTER_WebServices`   | Variables RWS PC ↔ robot             |
@@ -165,7 +165,7 @@ VAR num transferProgress := 0;
 | `transferError`    | dernier refresh/transfert en erreur           |
 | `lastErrorCode`    | code état ou erreur                           |
 | `lastError`        | message court                                 |
-| `transferProgress` | progression `0..100`                          |
+| `transferProgress` | progression`0..100`                           |
 
 ### Metadata store
 
@@ -248,13 +248,13 @@ Pour être exportable et résoluble, une trajectoire doit contenir :
 
 | Colonne                    | Rôle                                               |
 | -------------------------- | -------------------------------------------------- |
-| `cf1`, `cf4`, `cf6`, `cfx` | confdata ABB, valeur `0` si absente                |
+| `cf1`, `cf4`, `cf6`, `cfx` | confdata ABB, valeur`0` si absente                 |
 | `eax_a..eax_f`             | axes externes optionnels                           |
 | `tcp_speed`                | vitesse TCP en mm/s                                |
 | `zone_type`                | zone ABB                                           |
-| `move_type`                | mouvement `MoveL`, `MoveJ`, `MoveC`                |
-| `tool_name`                | nom outil à résoudre dans `trajTools`              |
-| `wobj_name`                | nom workobject à résoudre dans `trajWobjs`         |
+| `move_type`                | mouvement`MoveL`, `MoveJ`, `MoveC`                 |
+| `tool_name`                | nom outil à résoudre dans`trajTools`               |
+| `wobj_name`                | nom workobject à résoudre dans`trajWobjs`          |
 | `readconfs`                | prise en compte confdata                           |
 | `process_param_index`      | index process local pour trajectoires avec process |
 
@@ -475,7 +475,7 @@ pixi run tests
 Correction automatique si configurée :
 
 ```powershell
-pixi run fix_init
+pixi run pyinit-write
 ```
 
 ---
@@ -678,27 +678,27 @@ Résultat attendu :
 
 Cas à provoquer :
 
-| Cas                                   | Code attendu |
-| ------------------------------------- | -----------: |
-| `selectedTrajIndex` hors bornes       |     `400001` |
-| archive absente                       |     `400002` |
-| archive invalide                      |     `400003` |
-| trop de points                        |     `400004` |
-| zone invalide                         |     `400005` |
-| mouvement invalide                    |     `400006` |
-| paire `MoveC` invalide si implémentée |     `400007` |
-| vitesse absente sans default          |     `400008` |
-| zone absente sans default             |     `400009` |
-| outil absent sans default             |     `400010` |
-| wobj absent sans default              |     `400011` |
-| outil inconnu robot                   |     `400012` |
-| wobj inconnu robot                    |     `400013` |
-| vitesse invalide                      |     `400014` |
-| readConfs invalide                    |     `400015` |
-| robtarget invalide                    |     `400016` |
-| process inconnu                       |     `400017` |
-| trop de sets process                  |     `400018` |
-| paramètres process invalides          |     `400019` |
+| Cas                                  | Code attendu |
+| ------------------------------------ | -----------: |
+| `selectedTrajIndex` hors bornes      |     `400001` |
+| archive absente                      |     `400002` |
+| archive invalide                     |     `400003` |
+| trop de points                       |     `400004` |
+| zone invalide                        |     `400005` |
+| mouvement invalide                   |     `400006` |
+| paire`MoveC` invalide si implémentée |     `400007` |
+| vitesse absente sans default         |     `400008` |
+| zone absente sans default            |     `400009` |
+| outil absent sans default            |     `400010` |
+| wobj absent sans default             |     `400011` |
+| outil inconnu robot                  |     `400012` |
+| wobj inconnu robot                   |     `400013` |
+| vitesse invalide                     |     `400014` |
+| readConfs invalide                   |     `400015` |
+| robtarget invalide                   |     `400016` |
+| process inconnu                      |     `400017` |
+| trop de sets process                 |     `400018` |
+| paramètres process invalides         |     `400019` |
 
 À vérifier pour chaque erreur :
 
@@ -792,7 +792,7 @@ Règles principales :
 Commandes avant commit :
 
 ```powershell
-pixi run fix_init
+pixi run pyinit-write
 pixi run ruff check .
 pixi run tests
 ```
@@ -808,11 +808,11 @@ pixi run tests
 | `200002` | Trajectory transferred             |
 | `400001` | `selectedTrajIndex` hors bornes    |
 | `400002` | Fichier trajectoire introuvable    |
-| `400003` | Format `.trajcenter` invalide      |
+| `400003` | Format`.trajcenter` invalide       |
 | `400004` | Trop de points                     |
 | `400005` | `zone_type` invalide               |
 | `400006` | `move_type` invalide               |
-| `400007` | Paire `MoveC` invalide             |
+| `400007` | Paire`MoveC` invalide              |
 | `400008` | `tcp_speed` manquant sans default  |
 | `400009` | `zone_type` manquant sans default  |
 | `400010` | `tool_name` manquant sans default  |

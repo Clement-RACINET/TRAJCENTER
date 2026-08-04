@@ -63,6 +63,7 @@ trajcenter
 │   │   ├── test_supervisor.py
 │   │   ├── test_utils.py
 │   │   └── test_writer.py
+│   ├── __init__.py
 │   └── conftest.py
 ├── trajcenter
 │   ├── converter
