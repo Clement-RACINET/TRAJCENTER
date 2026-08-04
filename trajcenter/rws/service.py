@@ -44,11 +44,11 @@ from abb_rws_client_python_rw6 import RWSClient
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.rws.constants import (
+    DEFAULT_MASTERSHIP_RETRIES,
+    DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
     DEFAULT_TASK,
     WEB_MODULE,
-    DEFAULT_MASTERship_RETRIES,
-    DEFAULT_MASTERship_RETRY_DELAY_S,
 )
 from trajcenter.rws.models import ResolvedTrajectory, TrajectoryStoreEntry
 from trajcenter.rws.reader import read_robot_context, read_selected_traj_index
@@ -57,6 +57,7 @@ from trajcenter.rws.store import scan_trajectory_store, store_entries_to_metadat
 from trajcenter.rws.writer import write_resolved_trajectory, write_store_metadata
 
 logger = get_logger(__name__)
+
 
 async def refresh_store_metadata(
     client: RWSClient,
@@ -182,8 +183,8 @@ async def transfer_selected_trajectory(
     task: str = DEFAULT_TASK,
     module: str = WEB_MODULE,
     on_progress: Callable[[int, int], None] | None = None,
-    mastership_retries: int = DEFAULT_MASTERship_RETRIES,
-    retry_delay_s: float = DEFAULT_MASTERship_RETRY_DELAY_S,
+    mastership_retries: int = DEFAULT_MASTERSHIP_RETRIES,
+    retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     progress_step_percent: int = DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
 ) -> ResolvedTrajectory:
     """Transfer the trajectory selected by the robot HMI to RAPID variables.
