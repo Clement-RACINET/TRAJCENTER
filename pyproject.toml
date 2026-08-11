@@ -45,6 +45,9 @@ pyinit       = "pyinit"
 pyinit-check = "pyinit --check"
 pyinit-write = "pyinit --write"
 
+clean-check = "pyclean --check"
+clean-write = "pyclean --write"
+
 export-structure = "python utils/export_structure.py"
 precommit-generate = { depends-on = ["pyinit-write", "export-structure"] }
 
@@ -71,6 +74,7 @@ ruff           = "*"
 mypy           = "*"
 pre-commit     = "*"
 py-init-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-init-tools.git", branch = "main"}
+py-clean-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-clean-tools.git", branch = "main" }
 
 [tool.pixi.feature.docs.pypi-dependencies]
 mkdocs = ">=1.6.1,<2"
