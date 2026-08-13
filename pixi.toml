@@ -29,6 +29,7 @@ pyinit       = "pyinit"
 pyinit-check = "pyinit --check"
 pyinit-write = "pyinit --write"
 
+pyclean = "pyclean"
 clean-check = "pyclean --check"
 clean-write = "pyclean --write"
 
