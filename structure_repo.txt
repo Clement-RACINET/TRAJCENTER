@@ -135,5 +135,6 @@ trajcenter
 ├── coverage.xml
 ├── mkdocs.yml
 ├── pixi.lock
+├── pixi.toml
 ├── pyproject.toml
 └── README.md
