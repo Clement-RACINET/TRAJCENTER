@@ -27,44 +27,6 @@ MODULE TRAJCENTER_Types
 
 
 ! ==============================================================================
-! GLOBAL LIMITS
-! ==============================================================================
-
-    CONST num maxTrajCount := 256;
-    CONST num maxTrajPointCount := 100000;
-    CONST num maxProcessParamSetCount := 256;
-    CONST num maxProcessParamPerSet := 10;
-
-
-! ==============================================================================
-! PROCESS TYPE CONSTANTS
-! ==============================================================================
-
-    CONST num processNone := 0;
-    CONST num processAcf := 1;
-    CONST num processAak := 2;
-    CONST num processPushcorp := 3;
-
-
-! ==============================================================================
-! MOVE TYPE CONSTANTS
-! ==============================================================================
-
-    CONST num moveTypeL := 0;
-    CONST num moveTypeJ := 1;
-    CONST num moveTypeC := 2;
-
-
-! ==============================================================================
-! STATUS CODES
-! ==============================================================================
-
-    CONST num statusOk := 200000;
-    CONST num statusMetadataRefreshed := 200001;
-    CONST num statusTrajectoryTransferred := 200002;
-
-
-! ==============================================================================
 ! RECORD DEFINITIONS
 ! ==============================================================================
 
@@ -116,7 +78,7 @@ MODULE TRAJCENTER_Types
     !   1 = ACF
     !   2 = AAK
     !   3 = PUSHCORP
-    !   4..255 = reserved
+    !   4..255 = reserved.
     RECORD trajCenterTrajMeta
         string name;
         num pointCount;
@@ -160,6 +122,44 @@ MODULE TRAJCENTER_Types
         num id;
         string name;
     ENDRECORD
+
+
+! ==============================================================================
+! GLOBAL LIMITS
+! ==============================================================================
+
+    CONST num maxTrajCount := 256;
+    CONST num maxTrajPointCount := 100000;
+    CONST num maxProcessParamSetCount := 256;
+    CONST num maxProcessParamPerSet := 10;
+
+
+! ==============================================================================
+! PROCESS TYPE CONSTANTS
+! ==============================================================================
+
+    CONST num processNone := 0;
+    CONST num processAcf := 1;
+    CONST num processAak := 2;
+    CONST num processPushcorp := 3;
+
+
+! ==============================================================================
+! MOVE TYPE CONSTANTS
+! ==============================================================================
+
+    CONST num moveTypeL := 0;
+    CONST num moveTypeJ := 1;
+    CONST num moveTypeC := 2;
+
+
+! ==============================================================================
+! STATUS CODES
+! ==============================================================================
+
+    CONST num statusOk := 200000;
+    CONST num statusMetadataRefreshed := 200001;
+    CONST num statusTrajectoryTransferred := 200002;
 
 
 ENDMODULE
