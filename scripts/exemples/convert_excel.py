@@ -19,9 +19,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from _demo_utils import assert_same_geometry, point_count
+
 from trajcenter.converter.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
-
 
 SOURCE_SINGLE = Path("trajectory_files/trajectoires_mono.xlsx")
 SOURCE_MULTI = Path("trajectory_files/trajectoires_multi.xlsx")

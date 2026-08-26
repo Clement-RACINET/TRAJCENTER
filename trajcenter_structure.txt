@@ -5,7 +5,9 @@ trajcenter
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
+│   ├── TRAJCENTER.pgf
 │   ├── TRAJCENTER_CellConfig.mod
+│   ├── TRAJCENTER_DefaultValues.mod
 │   ├── TRAJCENTER_ProcessConfig.mod
 │   ├── TRAJCENTER_Types.mod
 │   └── TRAJCENTER_WebServices.mod
@@ -132,9 +134,9 @@ trajcenter
 │   ├── trajectoires_mono.trajcenter
 │   ├── trajectoires_multi.trajcenter
 │   └── trajectoires_multi_Traj2.trajcenter
-├── coverage.xml
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pixi.toml
 ├── pyproject.toml
-└── README.md
+├── README.md
+└── structure_repo.txt

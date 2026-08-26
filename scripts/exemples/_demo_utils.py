@@ -35,7 +35,7 @@ def point_count(traj: Trajectory) -> int:
     """
     value = getattr(traj, "point_count", None)
     if value is None:
-        return int(len(traj.points))
+        return len(traj.points)
     if not isinstance(value, int):
         raise TypeError(f"Invalid point_count attribute type: {type(value)!r}")
     return value

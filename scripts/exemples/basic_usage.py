@@ -17,10 +17,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pandas as pd
-
 from _demo_utils import active_external_axes, point_count
-from trajcenter.core.trajectory import ExternalAxisConfig, Trajectory, TrajectoryMeta
 
+from trajcenter.core.trajectory import ExternalAxisConfig, Trajectory, TrajectoryMeta
 
 OUTPUT_DIR = Path("trajectory_store")
 OUTPUT_FILE = OUTPUT_DIR / "demo_basic_usage.trajcenter"

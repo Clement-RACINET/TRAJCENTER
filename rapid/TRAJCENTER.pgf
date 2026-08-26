@@ -4,5 +4,4 @@
     <Module>TRAJCENTER_ProcessConfig.mod</Module>
     <Module>TRAJCENTER_CellConfig.mod</Module>
     <Module>TRAJCENTER_WebServices.mod</Module>
-    <Module>TRAJCENTER_DefaultValues.mod</Module>
 </Program>
