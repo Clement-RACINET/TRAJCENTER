@@ -104,10 +104,7 @@ class TestReadSelectedTrajIndex:
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_selected_traj_index(client)
         _, kwargs = mock_get.call_args
-        assert (
-            kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/selectedTrajIndex"
-        )
+        assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/selectedTrajIndex"
 
 
 class TestBoolReaders:
@@ -146,7 +143,7 @@ class TestBoolReaders:
             assert await read_send_traj_request(client) is True
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/sendTrajRequest"
+            == "RAPID/T_ROB1/TRAJCENTER/sendTrajRequest"
         )
 
     @pytest.mark.asyncio
@@ -157,7 +154,7 @@ class TestBoolReaders:
             assert await read_refresh_meta_request(client) is False
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/refreshMetaRequest"
+            == "RAPID/T_ROB1/TRAJCENTER/refreshMetaRequest"
         )
 
     @pytest.mark.asyncio
@@ -168,7 +165,7 @@ class TestBoolReaders:
             assert await read_transfer_error(client) is True
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/transferError"
+            == "RAPID/T_ROB1/TRAJCENTER/transferError"
         )
 
 
@@ -234,7 +231,7 @@ class TestReadNbRobtargets:
             await read_nb_robtargets(client)
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/nbLoadedTrajPoints"
+            == "RAPID/T_ROB1/TRAJCENTER/nbLoadedTrajPoints"
         )
 
 
@@ -261,7 +258,7 @@ class TestReadNbTrajDispo:
             await read_nb_traj_dispo(client)
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/nbTrajAvailable"
+            == "RAPID/T_ROB1/TRAJCENTER/nbTrajAvailable"
         )
 
 
@@ -319,10 +316,7 @@ class TestReadTrajNames:
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_traj_names(client, count=1)
         _, kwargs = mock_get.call_args
-        assert (
-            kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B1%7D"
-        )
+        assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/trajectories%7B1%7D"
 
     @pytest.mark.asyncio
     async def test_invalid_record_raises(self, client: MagicMock) -> None:
@@ -420,16 +414,16 @@ class TestReadRobotDefaults:
 
         symbols = [call.kwargs["symbolurl"] for call in mock_get.call_args_list]
         assert symbols == [
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/hasDefaultTcpSpeed",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultTcpSpeed",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/hasDefaultZoneType",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultZoneType",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/hasDefaultToolName",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultToolName",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/hasDefaultWobjName",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultWobjName",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultMoveType",
-            "RAPID/T_ROB1/TRAJCENTER_WebServices/defaultReadConfs",
+            "RAPID/T_ROB1/TRAJCENTER/hasDefaultTcpSpeed",
+            "RAPID/T_ROB1/TRAJCENTER/defaultTcpSpeed",
+            "RAPID/T_ROB1/TRAJCENTER/hasDefaultZoneType",
+            "RAPID/T_ROB1/TRAJCENTER/defaultZoneType",
+            "RAPID/T_ROB1/TRAJCENTER/hasDefaultToolName",
+            "RAPID/T_ROB1/TRAJCENTER/defaultToolName",
+            "RAPID/T_ROB1/TRAJCENTER/hasDefaultWobjName",
+            "RAPID/T_ROB1/TRAJCENTER/defaultWobjName",
+            "RAPID/T_ROB1/TRAJCENTER/defaultMoveType",
+            "RAPID/T_ROB1/TRAJCENTER/defaultReadConfs",
         ]
 
     @pytest.mark.asyncio
@@ -455,7 +449,7 @@ class TestCellConfigReaders:
         assert count == 2
         assert (
             mock_get_len.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools"
+            == "RAPID/T_ROB1/TRAJCENTER/trajTools"
         )
 
     @pytest.mark.asyncio
@@ -469,7 +463,7 @@ class TestCellConfigReaders:
         assert count == 3
         assert (
             mock_get_len.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs"
+            == "RAPID/T_ROB1/TRAJCENTER/trajWobjs"
         )
 
     @pytest.mark.asyncio
@@ -488,11 +482,11 @@ class TestCellConfigReaders:
         assert names == ["Tool_A", "Tool_B"]
         assert (
             mock_get.call_args_list[0].kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools%7B1%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajTools%7B1%7D"
         )
         assert (
             mock_get.call_args_list[1].kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools%7B2%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajTools%7B2%7D"
         )
 
     @pytest.mark.asyncio
@@ -541,11 +535,11 @@ class TestCellConfigReaders:
         assert names == ["Wobj_A", "Wobj_B"]
         assert (
             mock_get.call_args_list[0].kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs%7B1%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajWobjs%7B1%7D"
         )
         assert (
             mock_get.call_args_list[1].kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs%7B2%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajWobjs%7B2%7D"
         )
 
     @pytest.mark.asyncio
@@ -593,7 +587,7 @@ class TestProcessCatalogReaders:
         assert count == 4
         assert (
             mock_get.call_args.kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_ProcessConfig/processTypeCount"
+            == "RAPID/T_ROB1/TRAJCENTER/processTypeCount"
         )
 
     @pytest.mark.asyncio
@@ -642,7 +636,7 @@ class TestProcessCatalogReaders:
         ]
         assert (
             mock_get.call_args_list[0].kwargs["symbolurl"]
-            == "RAPID/T_ROB1/TRAJCENTER_ProcessConfig/processTypes%7B1%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/processTypes%7B1%7D"
         )
 
     @pytest.mark.asyncio

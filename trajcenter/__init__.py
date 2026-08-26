@@ -40,7 +40,6 @@ from .core import (
 from .exporter import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
 from .rws import (
     ALLOWED_ZONE_TYPES,
-    CELL_MODULE,
     DEFAULT_MASTERSHIP_RETRIES,
     DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     DEFAULT_MAX_RWS_PAYLOAD_BYTES,
@@ -56,7 +55,6 @@ from .rws import (
     MOVE_TYPE_L,
     PROCESS_AAK,
     PROCESS_ACF,
-    PROCESS_MODULE,
     PROCESS_NONE,
     PROCESS_PUSHCORP,
     PROCESS_TYPE_ALIASES,
@@ -65,8 +63,7 @@ from .rws import (
     STATUS_METADATA_REFRESHED,
     STATUS_OK,
     STATUS_TRAJECTORY_TRANSFERRED,
-    TYPES_MODULE,
-    WEB_MODULE,
+    TRAJCENTER_MODULE,
     ProcessParamTuple,
     ProcessTypeEntry,
     ResolvedPoint,
@@ -118,7 +115,6 @@ from .rws import (
 
 __all__ = [
     "ALLOWED_ZONE_TYPES",
-    "CELL_MODULE",
     "COLUMN_ALIASES",
     "COLUMN_DTYPES",
     "CONFDATA_COLUMNS",
@@ -142,7 +138,6 @@ __all__ = [
     "OPTIONAL_COLUMNS",
     "PROCESS_AAK",
     "PROCESS_ACF",
-    "PROCESS_MODULE",
     "PROCESS_NONE",
     "PROCESS_PUSHCORP",
     "PROCESS_TYPE_ALIASES",
@@ -153,8 +148,7 @@ __all__ = [
     "STATUS_METADATA_REFRESHED",
     "STATUS_OK",
     "STATUS_TRAJECTORY_TRANSFERRED",
-    "TYPES_MODULE",
-    "WEB_MODULE",
+    "TRAJCENTER_MODULE",
     "AptConverter",
     "BaseConverter",
     "BaseExporter",

@@ -38,8 +38,8 @@ Known ``context`` values:
     - ``"trajTools"`` -- reading the cell tool configuration array.
     - ``"trajWobjs"`` -- reading the cell workobject configuration array.
     - ``"trajectory_store"`` -- scanning the local trajectory store.
-    - ``"robot_default"`` -- reading a ``TRAJCENTER_WebServices`` default.
-    - ``"process_types"`` -- reading the ``TRAJCENTER_ProcessConfig`` catalog.
+    - ``"robot_default"`` -- reading a ``TRAJCENTER`` default.
+    - ``"process_types"`` -- reading the ``TRAJCENTER`` catalog.
     - ``"transfer"`` -- the overall trajectory transfer operation.
     - ``"request"`` (default) -- a single RWS request with no more
       specific context.

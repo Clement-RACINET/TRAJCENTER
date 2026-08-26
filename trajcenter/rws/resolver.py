@@ -14,7 +14,7 @@ objects ready for the future RWS writer.
 
 ABB Route:
     N/A — local resolution only. The resolved payload is later written through:
-    ``POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER_WebServices/...``.
+    ``POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/...``.
 
 ABB Constraints:
     - RAPID arrays are one-based.

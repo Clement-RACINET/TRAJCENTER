@@ -40,7 +40,7 @@ from typing import ClassVar, Final
 
 #: Maximum length of a RAPID ``string`` value (ABB RAPID language
 #: reference). Messages longer than this are truncated before being
-#: written to ``TRAJCENTER_WebServices/lastError``.
+#: written to ``TRAJCENTER/lastError``.
 RAPID_STRMAX: Final[int] = 80
 
 
@@ -59,7 +59,7 @@ class TrajCenterError(Exception):
         Instances are converted to a ``(code, message)`` pair via
         :meth:`to_rapid` before being written to the RAPID
         ``lastErrorCode`` (``num``) and ``lastError`` (``string``)
-        variables declared in ``TRAJCENTER_WebServices``.
+        variables declared in ``TRAJCENTER``.
 
     Attributes:
         code: Numeric protocol status code, one of the values documented
@@ -116,7 +116,7 @@ class TrajCenterError(Exception):
 
         ABB Route:
             Result is written via
-            ``POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER_WebServices/lastErrorCode``
+            ``POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/lastErrorCode``
             and the equivalent ``.../lastError`` call.
 
         ABB Constraints:

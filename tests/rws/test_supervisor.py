@@ -284,7 +284,7 @@ class TestHandleSupervisorEvent:
             client,
             config.store_root,
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
             mastership_retries=3,
         )
         assert state.entries == (entry,)
@@ -315,7 +315,7 @@ class TestHandleSupervisorEvent:
             client,
             (entry,),
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
             mastership_retries=3,
         )
         assert state.transfer_count == 1

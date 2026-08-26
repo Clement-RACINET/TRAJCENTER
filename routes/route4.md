@@ -1,29 +1,58 @@
 # TRAJCENTER v2.0 — Protocole RWS PC ↔ Robot
 
-> **Version :** 2.4 draft  
-> **Date :** 2026-07-18  
+> **Version :** 2.5 draft  
+> **Date :** 2026-08-26  
 > **RobotWare :** 6.x  
 > **Transport :** ABB Robot Web Services uniquement  
-> **TCP custom / watchdog / polling nominal :** supprimés
+> **TCP custom / watchdog / polling nominal :** supprimés  
+> **Module RAPID :** module système unique `TRAJCENTER`
 
 ---
 
-## 1. Modules RAPID
+## 1. Module RAPID système
 
-| Module       | Rôle                                      |
-| ------------ | ----------------------------------------- |
-| `TRAJCENTER` | Constantes, codes, `RECORD` communs       |
-| `TRAJCENTER` | Catalogue process robot                   |
-| `TRAJCENTER` | Config cellule persistante : tools, wobjs |
-| `TRAJCENTER` | Variables RWS PC ↔ robot                  |
+TrajCenter v2.0 utilise un **module système RAPID unique** :
 
-Ordre de chargement :
+```rapid
+MODULE TRAJCENTER(SYSMODULE)
+```
+
+Fichier attendu :
 
 ```text
-1. TRAJCENTER
-2. TRAJCENTER
-3. TRAJCENTER
-4. TRAJCENTER
+rapid/TRAJCENTER.mod
+```
+
+Ce module regroupe tout le protocole robot côté ABB :
+
+| Section interne | Rôle                                 |
+| --------------- | ------------------------------------ |
+| Section 1       | Types `RECORD`                       |
+| Section 2       | Limites globales                     |
+| Section 3       | Codes d’état et d’erreur             |
+| Section 4       | Types de mouvement                   |
+| Section 5       | Process : constantes + catalogue     |
+| Section 6       | Configuration cellule : tools, wobjs |
+| Section 7       | Variables RWS PC ↔ robot             |
+| Section 8       | Defaults robot                       |
+
+Il n’y a plus d’ordre de chargement entre plusieurs modules TrajCenter.
+
+Le PC doit cibler le module RAPID unique :
+
+```text
+TRAJCENTER
+```
+
+Exemples de symboles RWS :
+
+```text
+TRAJCENTER/sendTrajRequest
+TRAJCENTER/refreshMetaRequest
+TRAJCENTER/trajTools
+TRAJCENTER/trajWobjs
+TRAJCENTER/processTypes
+TRAJCENTER/trajData{1}
 ```
 
 Politique :
@@ -35,6 +64,19 @@ Politique :
 | Maintenance tools / wobjs                | `PERS`      |
 | Runtime, metadata, trajectoire, defaults | `VAR`       |
 | Tailles fixes, codes                     | `CONST`     |
+
+Politique de modification :
+
+| Section               | Politique                                                        |
+| --------------------- | ---------------------------------------------------------------- |
+| Types `RECORD`        | Ne pas modifier sauf évolution coordonnée PC/RAPID               |
+| Limites globales      | Ne pas modifier sauf changement volontaire de capacité           |
+| Codes d’état/erreur   | Ne pas modifier sans mise à jour PC + documentation              |
+| Types de mouvement    | Ne pas modifier sauf ajout officiel supporté                     |
+| Process               | Modifier uniquement ici pour ajouter/retirer/renommer un process |
+| Configuration cellule | Modifiable par le programmeur robot                              |
+| Variables RWS         | Ne pas modifier noms/types/dimensions sans mise à jour PC        |
+| Defaults robot        | Réglables à la mise en service                                   |
 
 ---
 
@@ -54,7 +96,6 @@ PC subscribe:
 - TRAJCENTER/sendTrajRequest
 - TRAJCENTER/refreshMetaRequest
 
-
 PC subscribe (via abb_rws_client_python_rw6.highlevel.subscription):
 - resource: symbol("T_ROB1", "TRAJCENTER", "sendTrajRequest")
   priority: "1" (Medium) — PERS bool, latence 200ms
@@ -70,29 +111,45 @@ Toute écriture RWS est faite sous Mastership avec release garanti.
 
 ---
 
-## 3. Constantes
+## 3. Constantes et limites
 
 Module : `TRAJCENTER`
+
+### 3.1 Limites globales
 
 ```rapid
 CONST num maxTrajCount := 256;
 CONST num maxTrajPointCount := 100000;
 CONST num maxProcessParamSetCount := 256;
 CONST num maxProcessParamPerSet := 10;
+```
 
+### 3.2 Types de mouvement
+
+```rapid
+CONST num moveTypeL := 0;
+CONST num moveTypeJ := 1;
+CONST num moveTypeC := 2;
+```
+
+### 3.3 Process
+
+```rapid
 CONST num processNone := 0;
 CONST num processAcf := 1;
 CONST num processAak := 2;
 CONST num processPushcorp := 3;
+```
 
-CONST num moveTypeL := 0;
-CONST num moveTypeJ := 1;
-CONST num moveTypeC := 2;
+### 3.4 Codes de succès
 
+```rapid
 CONST num statusOk := 200000;
 CONST num statusMetadataRefreshed := 200001;
 CONST num statusTrajectoryTransferred := 200002;
 ```
+
+Les codes d’erreur complets sont listés en section 12.
 
 ---
 
@@ -195,13 +252,18 @@ processParams{i,j}.value     => numérique uniquement
 Module : `TRAJCENTER`
 
 ```rapid
+CONST num processNone := 0;
+CONST num processAcf := 1;
+CONST num processAak := 2;
+CONST num processPushcorp := 3;
+
 CONST num processTypeCount := 4;
 
 VAR trajCenterProcessType processTypes{processTypeCount}:=[
-    [0, "NONE"],
-    [1, "ACF"],
-    [2, "AAK"],
-    [3, "PUSHCORP"]
+    [processNone, "NONE"],
+    [processAcf, "ACF"],
+    [processAak, "AAK"],
+    [processPushcorp, "PUSHCORP"]
 ];
 ```
 
@@ -212,6 +274,15 @@ VAR trajCenterProcessType processTypes{processTypeCount}:=[
 |      `2` | `AAK`      |
 |      `3` | `PUSHCORP` |
 | `4..255` | `RESERVED` |
+
+Pour ajouter un process :
+
+```text
+1. Ajouter une constante process dans la section PROCESS.
+2. Incrémenter processTypeCount.
+3. Ajouter l’entrée correspondante à processTypes.
+4. Mettre à jour la documentation et le client PC si nécessaire.
+```
 
 ---
 
@@ -235,6 +306,16 @@ Le PC lit .name.
 Index RAPID envoyés en base 1.
 0 = non défini.
 ```
+
+Les fichiers `.trajcenter` ne contiennent pas les `tooldata` ou `wobjdata`
+complets. Ils utilisent des noms logiques :
+
+```text
+tool_name
+wobj_name
+```
+
+Le PC résout ces noms en index via `trajTools` et `trajWobjs`.
 
 ---
 
@@ -262,7 +343,7 @@ selectedTrajIndex = 1..nbTrajAvailable: trajectoire valide
 ```rapid
 VAR bool trajReady := FALSE;
 VAR bool transferError := FALSE;
-VAR num lastErrorCode := 200000;
+VAR num lastErrorCode := statusOk;
 VAR string lastError := "";
 VAR num transferProgress := 0;
 ```
@@ -337,7 +418,7 @@ VAR string defaultToolName := "";
 VAR bool hasDefaultWobjName := FALSE;
 VAR string defaultWobjName := "";
 
-VAR num defaultMoveType := 0;
+VAR num defaultMoveType := moveTypeL;
 VAR bool defaultReadConfs := TRUE;
 ```
 
@@ -346,6 +427,13 @@ Règle :
 ```text
 Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
 Fallback uniquement si hasDefault* = TRUE.
+```
+
+Pour tool et wobj :
+
+```text
+defaultToolName -> résolution dans trajTools -> toolIndex
+defaultWobjName -> résolution dans trajWobjs -> wobjIndex
 ```
 
 ---
@@ -458,32 +546,6 @@ noms non vides
 valeurs numériques uniquement
 sets identiques dédupliqués
 ordre paramètres = tri alphabétique par nom
-```
-
-Exemple :
-
-```text
-P1 {"force":100,"feed":5}
-P2 {"force":100,"feed":5}
-P3 {"force":150,"feed":5}
-P4 {}
-```
-
-Produit :
-
-```text
-processParams{1,1} = ["feed",5]
-processParams{1,2} = ["force",100]
-processParams{1,3..10} = ["",0]
-
-processParams{2,1} = ["feed",5]
-processParams{2,2} = ["force",150]
-processParams{2,3..10} = ["",0]
-
-trajData{1}.processParamIndex = 1
-trajData{2}.processParamIndex = 1
-trajData{3}.processParamIndex = 2
-trajData{4}.processParamIndex = 0
 ```
 
 ---

@@ -349,7 +349,7 @@ class TestTransferSelectedTrajectory:
         mock_read_index.assert_awaited_once_with(
             client,
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
         )
         mock_read_context.assert_awaited_once_with(client, task="T_ROB1")
         mock_write.assert_awaited_once()
@@ -547,7 +547,7 @@ class TestRefreshStoreMetadata:
             ["demo"],
             [1],
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
             process_types=[0],
             mastership_retries=3,
         )
@@ -563,21 +563,21 @@ class TestRefreshStoreMetadata:
         entry = _make_entry(path.resolve(), index=1, name="demo")
         mock_write = AsyncMock()
 
-        with patch(
-            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
-        ):
-            with patch(
+        with (
+            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
+            patch(
                 f"{_MODULE}.store_entries_to_metadata",
                 MagicMock(return_value=(["demo"], [1], [0])),
-            ):
-                with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                    await refresh_store_metadata(
-                        client,
-                        tmp_path,
-                        task="T_ROB2",
-                        module="MY_WEB",
-                        mastership_retries=5,
-                    )
+            ),
+            patch(f"{_MODULE}.write_store_metadata", mock_write),
+        ):
+            await refresh_store_metadata(
+                client,
+                tmp_path,
+                task="T_ROB2",
+                module="MY_WEB",
+                mastership_retries=5,
+            )
 
         mock_write.assert_awaited_once_with(
             client,
@@ -607,7 +607,7 @@ class TestRefreshStoreMetadata:
             [],
             [],
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
             process_types=[],
             mastership_retries=3,
         )
@@ -641,13 +641,13 @@ class TestRefreshStoreMetadata:
         mock_to_metadata = MagicMock(side_effect=ValueError("bad metadata"))
         mock_write = AsyncMock()
 
-        with patch(
-            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
+        with (
+            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
+            patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata),
         ):
-            with patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata):
-                with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                    with pytest.raises(ValueError, match="bad metadata"):
-                        await refresh_store_metadata(client, tmp_path)
+            with patch(f"{_MODULE}.write_store_metadata", mock_write):
+                with pytest.raises(ValueError, match="bad metadata"):
+                    await refresh_store_metadata(client, tmp_path)
 
         mock_write.assert_not_awaited()
 
@@ -662,13 +662,13 @@ class TestRefreshStoreMetadata:
         entry = _make_entry(path.resolve(), index=1, name="demo")
         mock_write = AsyncMock(side_effect=ValueError("write failed"))
 
-        with patch(
-            f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))
-        ):
-            with patch(
+        with (
+            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
+            patch(
                 f"{_MODULE}.store_entries_to_metadata",
                 MagicMock(return_value=(["demo"], [1], [0])),
-            ):
-                with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                    with pytest.raises(ValueError, match="write failed"):
-                        await refresh_store_metadata(client, tmp_path)
+            ),
+            patch(f"{_MODULE}.write_store_metadata", mock_write),
+        ):
+            with pytest.raises(ValueError, match="write failed"):
+                await refresh_store_metadata(client, tmp_path)

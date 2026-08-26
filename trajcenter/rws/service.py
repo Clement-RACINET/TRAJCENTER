@@ -6,7 +6,7 @@ Author: Clement RACINET
 
 This module coordinates the full PC-side RWS transfer workflow:
 
-1. read the selected trajectory index from ``TRAJCENTER_WebServices``;
+1. read the selected trajectory index from ``TRAJCENTER``;
 2. map this RAPID base-1 index to a local ``TrajectoryStoreEntry``;
 3. load the selected ``.trajcenter`` archive;
 4. read the robot-side context;
@@ -15,7 +15,7 @@ This module coordinates the full PC-side RWS transfer workflow:
 
 ABB Route:
     Reads:
-        ``GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER_WebServices/selectedTrajIndex``
+        ``GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/selectedTrajIndex``
 
     Context reads:
         Multiple ``GET /rw/rapid/symbol/data/{symbolurl}`` and symbol property
@@ -48,7 +48,7 @@ from trajcenter.rws.constants import (
     DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
     DEFAULT_TASK,
-    WEB_MODULE,
+    TRAJCENTER_MODULE,
 )
 from trajcenter.rws.models import ResolvedTrajectory, TrajectoryStoreEntry
 from trajcenter.rws.reader import read_robot_context, read_selected_traj_index
@@ -64,7 +64,7 @@ async def refresh_store_metadata(
     store_root: str | Path,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     mastership_retries: int = 3,
 ) -> tuple[TrajectoryStoreEntry, ...]:
     """Refresh robot-side trajectory store metadata from a local directory.
@@ -181,7 +181,7 @@ async def transfer_selected_trajectory(
     entries: Sequence[TrajectoryStoreEntry],
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     on_progress: Callable[[int, int], None] | None = None,
     mastership_retries: int = DEFAULT_MASTERSHIP_RETRIES,
     retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,

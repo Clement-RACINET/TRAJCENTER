@@ -12,11 +12,7 @@ ABB Route:
     N/A — local constants only.
 
 ABB Constraints:
-    Values mirror the RAPID declarations in:
-    - TRAJCENTER_Types
-    - TRAJCENTER_WebServices
-    - TRAJCENTER_CellConfig
-    - TRAJCENTER_ProcessConfig
+    Values mirror the RAPID declarations in TRAJCENTER sys module
 
 Example:
     ```python
@@ -32,10 +28,7 @@ from typing import Final
 
 DEFAULT_TASK: Final[str] = "T_ROB1"
 
-TYPES_MODULE: Final[str] = "TRAJCENTER_Types"
-WEB_MODULE: Final[str] = "TRAJCENTER_WebServices"
-CELL_MODULE: Final[str] = "TRAJCENTER_CellConfig"
-PROCESS_MODULE: Final[str] = "TRAJCENTER_ProcessConfig"
+TRAJCENTER_MODULE: Final[str] = "TRAJCENTER"
 
 MAX_TRAJ: Final[int] = 256
 MAX_TRAJ_POINTS: Final[int] = 100000

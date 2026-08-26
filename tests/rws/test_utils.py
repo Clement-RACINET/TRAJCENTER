@@ -22,15 +22,15 @@ class TestSymbol:
     def test_simple_variable(self) -> None:
         """A simple variable name produces the correct ``RAPID/`` URL."""
         assert (
-            symbol("T_ROB1", "TRAJCENTER_WebServices", "trajReady")
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajReady"
+            symbol("T_ROB1", "TRAJCENTER", "trajReady")
+            == "RAPID/T_ROB1/TRAJCENTER/trajReady"
         )
 
     def test_custom_task(self) -> None:
         """A custom task name is forwarded correctly into the URL."""
         assert (
-            symbol("T_ROB2", "TRAJCENTER_WebServices", "nbTrajAvailable")
-            == "RAPID/T_ROB2/TRAJCENTER_WebServices/nbTrajAvailable"
+            symbol("T_ROB2", "TRAJCENTER", "nbTrajAvailable")
+            == "RAPID/T_ROB2/TRAJCENTER/nbTrajAvailable"
         )
 
     def test_custom_module(self) -> None:
@@ -46,11 +46,11 @@ class TestSymbolArrayElement:
         assert (
             symbol_array_element(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 1,
             )
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D"
         )
 
     def test_trajectory_metadata_element(self) -> None:
@@ -58,11 +58,11 @@ class TestSymbolArrayElement:
         assert (
             symbol_array_element(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajectories",
                 42,
             )
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B42%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/trajectories%7B42%7D"
         )
 
     def test_invalid_zero_index_raises(self) -> None:
@@ -70,7 +70,7 @@ class TestSymbolArrayElement:
         with pytest.raises(ValueError, match=">= 1"):
             symbol_array_element(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 0,
             )
@@ -84,12 +84,12 @@ class TestSymbolRecordArrayField:
         assert (
             symbol_record_array_field(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 1,
                 "moveType",
             )
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D.moveType"
+            == "RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D.moveType"
         )
 
     def test_traj_data_point_field(self) -> None:
@@ -97,12 +97,12 @@ class TestSymbolRecordArrayField:
         assert (
             symbol_record_array_field(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 12,
                 "point",
             )
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B12%7D.point"
+            == "RAPID/T_ROB1/TRAJCENTER/trajData%7B12%7D.point"
         )
 
     def test_empty_field_raises(self) -> None:
@@ -110,7 +110,7 @@ class TestSymbolRecordArrayField:
         with pytest.raises(ValueError, match="field"):
             symbol_record_array_field(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 1,
                 "",
@@ -121,7 +121,7 @@ class TestSymbolRecordArrayField:
         with pytest.raises(ValueError, match=">= 1"):
             symbol_record_array_field(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 0,
                 "moveType",

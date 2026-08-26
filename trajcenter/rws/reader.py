@@ -5,8 +5,8 @@
 Author: Clement RACINET
 
 This module is the TrajCenter read access layer for the
-``TRAJCENTER_WebServices``, ``TRAJCENTER_CellConfig`` and
-``TRAJCENTER_ProcessConfig`` RAPID modules.
+``TRAJCENTER``, ``TRAJCENTER`` and
+``TRAJCENTER`` RAPID modules.
 
 All simple-variable reads use ``GET /rw/rapid/symbol/data/{symbolurl}`` via
 ``get_variable`` from ``abb_rws_client_python_rw6.highlevel.variables``.
@@ -46,11 +46,9 @@ from abb_rws_client_python_rw6.highlevel.variables import get_variable
 from trajcenter.core.logger import get_logger
 from trajcenter.rws._utils import symbol, symbol_array_element
 from trajcenter.rws.constants import (
-    CELL_MODULE,
     DEFAULT_TASK,
     MAX_TRAJ,
-    PROCESS_MODULE,
-    WEB_MODULE,
+    TRAJCENTER_MODULE,
 )
 from trajcenter.rws.models import ProcessTypeEntry, RobotContext, RobotDefaults
 
@@ -303,7 +301,7 @@ async def _read_raw(
         raw = await _read_raw(
             client,
             task="T_ROB1",
-            module="TRAJCENTER_WebServices",
+            module="TRAJCENTER",
             variable="trajReady",
         )
         ```
@@ -318,7 +316,7 @@ async def read_selected_traj_index(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``selectedTrajIndex``.
 
@@ -358,7 +356,7 @@ async def read_send_traj_request(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> bool:
     """Read ``sendTrajRequest``.
 
@@ -393,7 +391,7 @@ async def read_refresh_meta_request(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> bool:
     """Read ``refreshMetaRequest``.
 
@@ -433,7 +431,7 @@ async def read_traj_ready(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> bool:
     """Read ``trajReady``.
 
@@ -468,7 +466,7 @@ async def read_transfer_error(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> bool:
     """Read ``transferError``.
 
@@ -503,7 +501,7 @@ async def read_last_error_code(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``lastErrorCode``.
 
@@ -538,7 +536,7 @@ async def read_last_error(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> str:
     """Read ``lastError``.
 
@@ -572,7 +570,7 @@ async def read_transfer_progress(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``transferProgress``.
 
@@ -607,7 +605,7 @@ async def read_nb_robtargets(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``nbLoadedTrajPoints``.
 
@@ -647,7 +645,7 @@ async def read_nb_traj_dispo(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``nbTrajAvailable``.
 
@@ -682,7 +680,7 @@ async def read_traj_names(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     count: int | None = None,
 ) -> list[str]:
     """Read trajectory display names from ``trajectories``.
@@ -740,13 +738,13 @@ async def read_robot_defaults(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> RobotDefaults:
     """Read robot-side defaults used by the resolver.
 
     ABB Route:
         Multiple ``GET /rw/rapid/symbol/data/{symbolurl}`` calls in
-        ``TRAJCENTER_WebServices``.
+        ``TRAJCENTER``.
 
     ABB Constraints:
         Speed, zone, tool and wobj defaults may only be applied when their
@@ -876,7 +874,7 @@ async def read_traj_tools_count(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = CELL_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read declared size of ``trajTools``.
 
@@ -910,7 +908,7 @@ async def read_traj_wobjs_count(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = CELL_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read declared size of ``trajWobjs``.
 
@@ -944,7 +942,7 @@ async def read_traj_tool_names(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = CELL_MODULE,
+    module: str = TRAJCENTER_MODULE,
     count: int | None = None,
 ) -> list[str]:
     """Read tool names from ``trajTools``.
@@ -995,7 +993,7 @@ async def read_traj_wobj_names(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = CELL_MODULE,
+    module: str = TRAJCENTER_MODULE,
     count: int | None = None,
 ) -> list[str]:
     """Read workobject names from ``trajWobjs``.
@@ -1046,7 +1044,7 @@ async def read_process_type_count(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = PROCESS_MODULE,
+    module: str = TRAJCENTER_MODULE,
 ) -> int:
     """Read ``processTypeCount``.
 
@@ -1082,7 +1080,7 @@ async def read_process_types(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
-    module: str = PROCESS_MODULE,
+    module: str = TRAJCENTER_MODULE,
     count: int | None = None,
 ) -> list[ProcessTypeEntry]:
     """Read robot-side process catalog.
@@ -1140,9 +1138,9 @@ async def read_robot_context(
 
     ABB Route:
         Multiple RWS reads from:
-        - ``TRAJCENTER_WebServices``;
-        - ``TRAJCENTER_CellConfig``;
-        - ``TRAJCENTER_ProcessConfig``.
+        - ``TRAJCENTER``;
+        - ``TRAJCENTER``;
+        - ``TRAJCENTER``.
 
     ABB Constraints:
         This function performs reads only. No Mastership is required.

@@ -4,10 +4,10 @@ TrajCenter est une chaîne Python/RAPID permettant de convertir, stocker,
 résoudre et transférer des trajectoires industrielles vers un robot ABB
 RobotWare 6.x via **Robot Web Services**.
 
-> Projet développé au LCFC — ENSAM
-> Auteurs principaux: Josselin SCHUMAKER & Clément RACINET
-> Robots cible : ABB RobotWare 6.x
-> Transport : ABB Robot Web Services uniquement
+> Projet développé au LCFC — ENSAM  
+> Auteurs principaux : Josselin SCHUMAKER & Clément RACINET  
+> Robot cible : ABB RobotWare 6.x  
+> Transport : ABB Robot Web Services uniquement  
 > Version : 2.0
 
 ---
@@ -19,7 +19,7 @@ TrajCenter v2 remplace l’ancien protocole TCP de la v1.
 Le flux v2 actuel repose sur :
 
 - des archives locales `.trajcenter` ;
-- des modules RAPID dédiés ;
+- un **module système RAPID unique** ;
 - des lectures/écritures RWS ;
 - des subscriptions RWS sur flags RAPID ;
 - des écritures protégées par Mastership.
@@ -49,7 +49,7 @@ trajectory_store/*.trajcenter
     |
     | RWS writes under Mastership
     v
-TRAJCENTER_WebServices RAPID variables
+TRAJCENTER RAPID system module
 ```
 
 Flux principaux :
@@ -68,10 +68,7 @@ Flux principaux :
 ```text
 trajcenter/
 ├── rapid/
-│   ├── TRAJCENTER_Types.mod
-│   ├── TRAJCENTER_ProcessConfig.mod
-│   ├── TRAJCENTER_CellConfig.mod
-│   └── TRAJCENTER_WebServices.mod
+│   └── TRAJCENTER.mod
 ├── scripts/
 │   └── run_rws_supervisor.py
 ├── tests/
@@ -98,27 +95,38 @@ trajcenter/
 
 ---
 
-## Modules RAPID v2
+## Module RAPID v2
 
-Les modules RAPID sont dans `rapid/`.
+Le protocole robot est défini dans un **module système unique** :
 
-Ordre de chargement obligatoire :
-
-```text
-1. TRAJCENTER_Types
-2. TRAJCENTER_ProcessConfig
-3. TRAJCENTER_CellConfig
-4. TRAJCENTER_WebServices
+```rapid
+MODULE TRAJCENTER(SYSMODULE)
 ```
 
-| Module                     | Rôle                                 |
-| -------------------------- | ------------------------------------ |
-| `TRAJCENTER_Types`         | Constantes, codes,`RECORD` communs   |
-| `TRAJCENTER_ProcessConfig` | Catalogue process robot              |
-| `TRAJCENTER_CellConfig`    | Configuration cellule : tools, wobjs |
-| `TRAJCENTER_WebServices`   | Variables RWS PC ↔ robot             |
+Fichier :
 
-Politique de déclaration :
+```text
+rapid/TRAJCENTER.mod
+```
+
+Il n’y a plus plusieurs modules RAPID à charger dans un ordre particulier.
+
+### Sections internes du module
+
+Le module est organisé en sections de maintenance :
+
+| Section   | Rôle                     | Politique                                                        |
+| --------- | ------------------------ | ---------------------------------------------------------------- |
+| Section 1 | Types `RECORD`           | Ne pas modifier sauf évolution protocole PC/RAPID                |
+| Section 2 | Limites globales         | Ne pas modifier sauf changement volontaire des capacités         |
+| Section 3 | Codes d’état et d’erreur | Ne pas modifier sans mettre à jour le PC et la documentation     |
+| Section 4 | Types de mouvement       | Ne pas modifier sauf ajout officiel d’un type de mouvement       |
+| Section 5 | Process                  | Modifier uniquement ici pour ajouter/retirer/renommer un process |
+| Section 6 | Configuration cellule    | Section modifiable pour déclarer tools et wobjs                  |
+| Section 7 | Variables RWS            | Ne pas modifier noms/types/dimensions sans mettre à jour le PC   |
+| Section 8 | Defaults robot           | Section réglable à la mise en service                            |
+
+### Politique de déclaration RAPID
 
 | Élément                                  | Déclaration RAPID |
 | ---------------------------------------- | ----------------- |
@@ -132,7 +140,11 @@ Politique de déclaration :
 
 ## Variables RAPID principales
 
-Module : `TRAJCENTER_WebServices`
+Module RWS cible :
+
+```text
+TRAJCENTER
+```
 
 ### Requêtes
 
@@ -154,7 +166,7 @@ selectedTrajIndex = 1..nbTrajAvailable trajectoire valide
 ```rapid
 VAR bool trajReady := FALSE;
 VAR bool transferError := FALSE;
-VAR num lastErrorCode := 200000;
+VAR num lastErrorCode := statusOk;
 VAR string lastError := "";
 VAR num transferProgress := 0;
 ```
@@ -165,7 +177,7 @@ VAR num transferProgress := 0;
 | `transferError`    | dernier refresh/transfert en erreur           |
 | `lastErrorCode`    | code état ou erreur                           |
 | `lastError`        | message court                                 |
-| `transferProgress` | progression`0..100`                           |
+| `transferProgress` | progression `0..100`                          |
 
 ### Metadata store
 
@@ -199,22 +211,132 @@ processParams{1..256,1..10}
 
 ## Constantes principales
 
-Les constantes protocole sont définies côté RAPID dans `TRAJCENTER_Types`
+Les constantes protocole sont définies côté RAPID dans `TRAJCENTER`
 et côté Python dans `trajcenter/rws/constants.py`.
 
-| Constante                 |   Valeur | Rôle                               |
-| ------------------------- | -------: | ---------------------------------- |
-| `maxTrajCount`            |    `256` | nombre max de trajectoires listées |
-| `maxTrajPointCount`       | `100000` | nombre max de points transférables |
-| `maxProcessParamSetCount` |    `256` | nombre max de sets process         |
-| `maxProcessParamPerSet`   |     `10` | nombre max de paramètres par set   |
-| `processNone`             |      `0` | aucun process                      |
-| `processAcf`              |      `1` | process ACF                        |
-| `processAak`              |      `2` | process AAK                        |
-| `processPushcorp`         |      `3` | process PUSHCORP                   |
-| `moveTypeL`               |      `0` | MoveL                              |
-| `moveTypeJ`               |      `1` | MoveJ                              |
-| `moveTypeC`               |      `2` | MoveC                              |
+| Constante                     |   Valeur | Rôle                               |
+| ----------------------------- | -------: | ---------------------------------- |
+| `maxTrajCount`                |    `256` | nombre max de trajectoires listées |
+| `maxTrajPointCount`           | `100000` | nombre max de points transférables |
+| `maxProcessParamSetCount`     |    `256` | nombre max de sets process         |
+| `maxProcessParamPerSet`       |     `10` | nombre max de paramètres par set   |
+| `processNone`                 |      `0` | aucun process                      |
+| `processAcf`                  |      `1` | process ACF                        |
+| `processAak`                  |      `2` | process AAK                        |
+| `processPushcorp`             |      `3` | process PUSHCORP                   |
+| `moveTypeL`                   |      `0` | MoveL                              |
+| `moveTypeJ`                   |      `1` | MoveJ                              |
+| `moveTypeC`                   |      `2` | MoveC                              |
+| `statusOk`                    | `200000` | OK                                 |
+| `statusMetadataRefreshed`     | `200001` | métadonnées rafraîchies            |
+| `statusTrajectoryTransferred` | `200002` | trajectoire transférée             |
+
+---
+
+## Catalogue process
+
+Le catalogue process est déclaré dans le module RAPID `TRAJCENTER`.
+
+Exemple actuel :
+
+```rapid
+CONST num processNone := 0;
+CONST num processAcf := 1;
+CONST num processAak := 2;
+CONST num processPushcorp := 3;
+
+CONST num processTypeCount := 4;
+
+VAR trajCenterProcessType processTypes{processTypeCount}:=[
+    [processNone, "NONE"],
+    [processAcf, "ACF"],
+    [processAak, "AAK"],
+    [processPushcorp, "PUSHCORP"]
+];
+```
+
+Pour ajouter un process, modifier uniquement la section `PROCESS` du module RAPID :
+
+1. ajouter une constante process ;
+2. incrémenter `processTypeCount` ;
+3. ajouter l’entrée dans `processTypes`.
+
+---
+
+## Configuration cellule tools / wobjs
+
+Le module RAPID expose les outils et workobjects disponibles à TrajCenter :
+
+```rapid
+PERS trajCenterTool trajTools{N};
+PERS trajCenterWobj trajWobjs{M};
+
+PERS tooldata tempTool;
+PERS wobjdata tempWobj;
+```
+
+Règles :
+
+```text
+trajTools/trajWobjs sont cellule-dépendants.
+Le PC lit uniquement les champs .name pour résoudre tool_name et wobj_name.
+Les index RAPID envoyés sont en base 1.
+0 = non défini.
+```
+
+Les fichiers `.trajcenter` ne stockent pas de `tooldata` ou `wobjdata` complets.
+Ils référencent seulement des noms logiques :
+
+```text
+tool_name
+wobj_name
+```
+
+Le PC résout ensuite ces noms dans :
+
+```text
+trajTools
+trajWobjs
+```
+
+---
+
+## Defaults robot
+
+Les valeurs par défaut sont lues par le PC avant transfert :
+
+```rapid
+VAR bool hasDefaultTcpSpeed := FALSE;
+VAR num defaultTcpSpeed := 0;
+
+VAR bool hasDefaultZoneType := FALSE;
+VAR num defaultZoneType := 255;
+
+VAR bool hasDefaultToolName := FALSE;
+VAR string defaultToolName := "";
+
+VAR bool hasDefaultWobjName := FALSE;
+VAR string defaultWobjName := "";
+
+VAR num defaultMoveType := moveTypeL;
+VAR bool defaultReadConfs := TRUE;
+```
+
+Règle importante :
+
+```text
+Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
+Fallback uniquement si le hasDefault* correspondant vaut TRUE.
+```
+
+Pour `tool_name` et `wobj_name`, le fallback est un **nom** :
+
+```text
+defaultToolName -> résolution dans trajTools -> toolIndex
+defaultWobjName -> résolution dans trajWobjs -> wobjIndex
+```
+
+Ce n’est pas un `tooldata` ou un `wobjdata` directement transféré depuis le fichier `.trajcenter`.
 
 ---
 
@@ -226,9 +348,6 @@ Une archive `.trajcenter` est un fichier ZIP contenant au minimum :
 meta.json
 points.parquet
 ```
-
-Selon le type de trajectoire, elle peut aussi contenir les informations process
-sous forme de table dédiée.
 
 ### Colonnes géométriques obligatoires
 
@@ -246,17 +365,19 @@ Pour être exportable et résoluble, une trajectoire doit contenir :
 
 ### Colonnes envoyables vers le robot
 
-| Colonne                    | Rôle                                               |
-| -------------------------- | -------------------------------------------------- |
-| `cf1`, `cf4`, `cf6`, `cfx` | confdata ABB, valeur`0` si absente                 |
-| `eax_a..eax_f`             | axes externes optionnels                           |
-| `tcp_speed`                | vitesse TCP en mm/s                                |
-| `zone_type`                | zone ABB                                           |
-| `move_type`                | mouvement`MoveL`, `MoveJ`, `MoveC`                 |
-| `tool_name`                | nom outil à résoudre dans`trajTools`               |
-| `wobj_name`                | nom workobject à résoudre dans`trajWobjs`          |
-| `readconfs`                | prise en compte confdata                           |
-| `process_param_index`      | index process local pour trajectoires avec process |
+| Colonne                    | Rôle                                       |
+| -------------------------- | ------------------------------------------ |
+| `cf1`, `cf4`, `cf6`, `cfx` | confdata ABB, valeur `0` si absente        |
+| `eax_a..eax_f`             | axes externes optionnels                   |
+| `tcp_speed`                | vitesse TCP en mm/s                        |
+| `zone_type`                | zone ABB                                   |
+| `move_type`                | mouvement `MoveL`, `MoveJ`, `MoveC`        |
+| `tool_name`                | nom outil à résoudre dans `trajTools`      |
+| `wobj_name`                | nom workobject à résoudre dans `trajWobjs` |
+| `readconfs`                | prise en compte confdata                   |
+| `process_type`             | process optionnel                          |
+| `process_params`           | paramètres process optionnels              |
+| `process_param_index`      | ignoré à l’envoi, recalculé côté PC        |
 
 Important :
 
@@ -324,6 +445,27 @@ Convention :
 |  `1` | `MoveJ`   | `J`, `MoveJ`, `1` |
 |  `2` | `MoveC`   | `C`, `MoveC`, `2` |
 
+### MoveC
+
+Encodage :
+
+```text
+MoveC = deux points consécutifs C,C
+C,C,C,C valide
+C,C,C invalide
+```
+
+Pour chaque paire `C,C`, doivent être identiques :
+
+```text
+tcpSpeed
+toolIndex
+wobjIndex
+zoneType
+readConfs
+processParamIndex
+```
+
 ---
 
 ## Pipeline refresh metadata
@@ -377,7 +519,7 @@ Traitement PC :
 10. Écriture processParams si nécessaire.
 11. Écriture trajData{1..nbLoadedTrajPoints}.
 12. Mise à jour transferProgress.
-13. Écriture état final : progress 100, trajReady TRUE.
+13. Écriture état final : progress 100, lastErrorCode 200002, trajReady TRUE.
 14. Remise de sendTrajRequest à FALSE.
 15. Release Mastership.
 ```
@@ -414,8 +556,8 @@ scripts/run_rws_supervisor.py
 Il s’abonne aux flags RAPID :
 
 ```text
-TRAJCENTER_WebServices/refreshMetaRequest
-TRAJCENTER_WebServices/sendTrajRequest
+TRAJCENTER/refreshMetaRequest
+TRAJCENTER/sendTrajRequest
 ```
 
 Seuls les events `TRUE` déclenchent une action.
@@ -435,13 +577,13 @@ Depuis la racine du dépôt :
 python scripts/run_rws_supervisor.py --store trajectory_store
 ```
 
-Options principales visibles :
+Options principales :
 
 ```powershell
 python scripts/run_rws_supervisor.py `
   --store trajectory_store `
   --task T_ROB1 `
-  --module TRAJCENTER_WebServices `
+  --module TRAJCENTER `
   --mastership-retries 3 `
   --log-level INFO
 ```
@@ -456,7 +598,8 @@ Vérifier notamment :
 - mot de passe ;
 - configuration réseau ;
 - droits Mastership ;
-- modules RAPID chargés.
+- module système RAPID chargé ;
+- module cible `TRAJCENTER`.
 
 ---
 
@@ -511,12 +654,19 @@ RobotWare 6.x ou RobotStudio contrôleur virtuel sera disponible.
 
 ### 1. Préparation contrôleur
 
-- Charger les modules RAPID dans l’ordre :
-  1. `TRAJCENTER_Types`
-  2. `TRAJCENTER_ProcessConfig`
-  3. `TRAJCENTER_CellConfig`
-  4. `TRAJCENTER_WebServices`
-- Compiler les modules.
+- Installer/charger le module système RAPID :
+
+```rapid
+MODULE TRAJCENTER(SYSMODULE)
+```
+
+- Compiler le module.
+- Vérifier que le module cible RWS est bien :
+
+```text
+TRAJCENTER
+```
+
 - Vérifier que les symboles RWS existent :
   - `sendTrajRequest`
   - `refreshMetaRequest`
@@ -531,7 +681,16 @@ RobotWare 6.x ou RobotStudio contrôleur virtuel sera disponible.
   - `nbLoadedTrajPoints`
   - `trajData`
   - `processParams`
-  - defaults robot
+  - `hasDefaultTcpSpeed`
+  - `defaultTcpSpeed`
+  - `hasDefaultZoneType`
+  - `defaultZoneType`
+  - `hasDefaultToolName`
+  - `defaultToolName`
+  - `hasDefaultWobjName`
+  - `defaultWobjName`
+  - `defaultMoveType`
+  - `defaultReadConfs`
   - `trajTools`
   - `trajWobjs`
   - `processTypes`
@@ -568,8 +727,8 @@ Objectif : valider le fonctionnement événementiel.
 À vérifier :
 
 - création subscription sur `refreshMetaRequest` ;
-- création subscription sur `sendTrajRequest`;
-- réception event `TRUE`;
+- création subscription sur `sendTrajRequest` ;
+- réception event `TRUE` ;
 - event `FALSE` ignoré ;
 - suppression propre du groupe subscription à l’arrêt ;
 - reconnexion ou relance supervisor après interruption.
@@ -631,14 +790,14 @@ trajData{i}.processParamIndex = 0
 
 À contrôler :
 
-- `moveType`;
+- `moveType` ;
 - robtarget ;
 - confdata ;
 - axes externes absents écrits en `9E+9` côté RWS ;
-- `tcpSpeed`;
-- `zoneType`;
-- `readConfs`;
-- `toolIndex`;
+- `tcpSpeed` ;
+- `zoneType` ;
+- `readConfs` ;
+- `toolIndex` ;
 - `wobjIndex`.
 
 ### 7. Test transfert trajectoire avec process
@@ -649,9 +808,9 @@ Objectif : valider `processParams` et `processParamIndex`.
 
 - `processType` transféré ;
 - sets process écrits en base 1 ;
-- slots inutilisés écrits avec `name=""`, `value=0`;
+- slots inutilisés écrits avec `name=""`, `value=0` ;
 - déduplication des sets identiques ;
-- points sans process avec `processParamIndex = 0`;
+- points sans process avec `processParamIndex = 0` ;
 - cohérence entre `trajData{i}.processParamIndex` et `processParams{p,*}`.
 
 ### 8. Test defaults robot
@@ -678,27 +837,27 @@ Résultat attendu :
 
 Cas à provoquer :
 
-| Cas                                  | Code attendu |
-| ------------------------------------ | -----------: |
-| `selectedTrajIndex` hors bornes      |     `400001` |
-| archive absente                      |     `400002` |
-| archive invalide                     |     `400003` |
-| trop de points                       |     `400004` |
-| zone invalide                        |     `400005` |
-| mouvement invalide                   |     `400006` |
-| paire`MoveC` invalide si implémentée |     `400007` |
-| vitesse absente sans default         |     `400008` |
-| zone absente sans default            |     `400009` |
-| outil absent sans default            |     `400010` |
-| wobj absent sans default             |     `400011` |
-| outil inconnu robot                  |     `400012` |
-| wobj inconnu robot                   |     `400013` |
-| vitesse invalide                     |     `400014` |
-| readConfs invalide                   |     `400015` |
-| robtarget invalide                   |     `400016` |
-| process inconnu                      |     `400017` |
-| trop de sets process                 |     `400018` |
-| paramètres process invalides         |     `400019` |
+| Cas                             | Code attendu |
+| ------------------------------- | -----------: |
+| `selectedTrajIndex` hors bornes |     `400001` |
+| archive absente                 |     `400002` |
+| archive invalide                |     `400003` |
+| trop de points                  |     `400004` |
+| zone invalide                   |     `400005` |
+| mouvement invalide              |     `400006` |
+| paire `MoveC` invalide          |     `400007` |
+| vitesse absente sans default    |     `400008` |
+| zone absente sans default       |     `400009` |
+| outil absent sans default       |     `400010` |
+| wobj absent sans default        |     `400011` |
+| outil inconnu robot             |     `400012` |
+| wobj inconnu robot              |     `400013` |
+| vitesse invalide                |     `400014` |
+| readConfs invalide              |     `400015` |
+| robtarget invalide              |     `400016` |
+| process inconnu                 |     `400017` |
+| trop de sets process            |     `400018` |
+| paramètres process invalides    |     `400019` |
 
 À vérifier pour chaque erreur :
 
@@ -760,9 +919,9 @@ Objectif : vérifier que les données transférées sont réellement consommable
 
 - parcourir `trajData{1..nbLoadedTrajPoints}` ;
 - construire les instructions `MoveL`, `MoveJ`, `MoveC` correspondantes ;
-- utiliser `trajTools{toolIndex}.value`;
-- utiliser `trajWobjs{wobjIndex}.value`;
-- appliquer ou ignorer confdata selon `readConfs`;
+- utiliser `trajTools{toolIndex}.value` ;
+- utiliser `trajWobjs{wobjIndex}.value` ;
+- appliquer ou ignorer confdata selon `readConfs` ;
 - appliquer le process selon `processParamIndex`.
 
 À vérifier :
@@ -808,11 +967,11 @@ pixi run tests
 | `200002` | Trajectory transferred             |
 | `400001` | `selectedTrajIndex` hors bornes    |
 | `400002` | Fichier trajectoire introuvable    |
-| `400003` | Format`.trajcenter` invalide       |
+| `400003` | Format `.trajcenter` invalide      |
 | `400004` | Trop de points                     |
 | `400005` | `zone_type` invalide               |
 | `400006` | `move_type` invalide               |
-| `400007` | Paire`MoveC` invalide              |
+| `400007` | Paire `MoveC` invalide             |
 | `400008` | `tcp_speed` manquant sans default  |
 | `400009` | `zone_type` manquant sans default  |
 | `400010` | `tool_name` manquant sans default  |
@@ -858,6 +1017,7 @@ Cette version est obsolète.
 
 Version actuelle basée exclusivement sur ABB Robot Web Services :
 
+- module système RAPID unique `TRAJCENTER` ;
 - RWS subscriptions ;
 - RWS reads ;
 - RWS writes ;

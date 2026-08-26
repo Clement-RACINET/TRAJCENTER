@@ -4,7 +4,7 @@
 
 Author: Clement RACINET
 
-This module writes variables declared in ``TRAJCENTER_WebServices``.
+This module writes variables declared in ``TRAJCENTER``.
 
 The writer uses ``set_variables_with_mastership`` from
 ``abb_rws_client_python_rw6.highlevel.variables`` so each public write operation
@@ -53,7 +53,7 @@ from trajcenter.rws.models import (
 logger = get_logger(__name__)
 
 DEFAULT_TASK: Final[str] = "T_ROB1"
-WEB_MODULE: Final[str] = "TRAJCENTER_WebServices"
+TRAJCENTER_MODULE: Final[str] = "TRAJCENTER"
 
 STATUS_OK: Final[int] = 200000
 STATUS_METADATA_REFRESHED: Final[int] = 200001
@@ -189,7 +189,7 @@ def _fmt_robtarget(robtarget: ResolvedRobTarget) -> str:
     """Format a resolved robtarget as an ABB RAPID ``robtarget`` literal.
 
     ABB Route:
-        Used as nested value inside ``TRAJCENTER_WebServices/trajData{i}``.
+        Used as nested value inside ``TRAJCENTER/trajData{i}``.
 
     ABB Constraints:
         RAPID ``robtarget`` layout is:
@@ -479,11 +479,11 @@ async def write_store_metadata(
     point_counts: list[int],
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     process_types: list[int] | None = None,
     mastership_retries: int = 3,
 ) -> None:
-    """Write trajectory store metadata to ``TRAJCENTER_WebServices``.
+    """Write trajectory store metadata to ``TRAJCENTER``.
 
     ABB Route:
         One batched call to ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
@@ -508,7 +508,7 @@ async def write_store_metadata(
         names: Ordered trajectory display names.
         point_counts: Ordered point counts matching ``names``.
         task: RAPID task name.
-        module: RAPID module name. Defaults to ``TRAJCENTER_WebServices``.
+        module: RAPID module name. Defaults to ``TRAJCENTER``.
         process_types: Optional process type codes matching ``names``.
             If ``None``, all entries use ``0`` (NONE).
         mastership_retries: Number of retries if Mastership is denied.
@@ -602,13 +602,13 @@ async def write_resolved_trajectory(
     resolved: ResolvedTrajectory,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     on_progress: Callable[[int, int], None] | None = None,
     mastership_retries: int = 3,
     retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     progress_step_percent: int = DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
 ) -> None:
-    """Transfer a resolved trajectory to ``TRAJCENTER_WebServices``.
+    """Transfer a resolved trajectory to ``TRAJCENTER``.
 
     ABB Route:
         One batched call to ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
@@ -637,7 +637,7 @@ async def write_resolved_trajectory(
         client: Open RWS client.
         resolved: Already validated trajectory payload produced by the resolver.
         task: RAPID task name.
-        module: RAPID module name. Defaults to ``TRAJCENTER_WebServices``.
+        module: RAPID module name. Defaults to ``TRAJCENTER``.
         on_progress: Optional callback receiving ``done`` and ``total`` local
             serialization units while the batch is built.
         mastership_retries: Number of retries if Mastership is denied.
@@ -722,7 +722,7 @@ def _build_resolved_trajectory_values(
             values = _build_resolved_trajectory_values(
                 resolved=resolved,
                 task="T_ROB1",
-                module="TRAJCENTER_WebServices",
+                module="TRAJCENTER",
                 on_progress=None,
                 progress_step_percent=5,
             )
@@ -858,11 +858,11 @@ async def write_trajectory(
     traj: Trajectory,
     *,
     task: str = DEFAULT_TASK,
-    module: str = WEB_MODULE,
+    module: str = TRAJCENTER_MODULE,
     on_progress: Callable[[int, int], None] | None = None,
     mastership_retries: int = 3,
 ) -> None:
-    """Transfer a full trajectory to ``TRAJCENTER_WebServices``.
+    """Transfer a full trajectory to ``TRAJCENTER``.
 
     ABB Route:
         Planned v2 route:

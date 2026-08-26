@@ -50,7 +50,7 @@ from abb_rws_client_python_rw6.core.client import RWSClient
 from abb_rws_client_python_rw6.core.exceptions import RWSError
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws.constants import DEFAULT_TASK, WEB_MODULE
+from trajcenter.rws.constants import DEFAULT_TASK, TRAJCENTER_MODULE
 from trajcenter.rws.supervisor import (
     RWSSupervisorConfig,
     run_rws_subscription_supervisor,
@@ -99,8 +99,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--module",
-        default=WEB_MODULE,
-        help=f"RAPID module name. Default: {WEB_MODULE}.",
+        default=TRAJCENTER_MODULE,
+        help=f"RAPID module name. Default: {TRAJCENTER_MODULE}.",
     )
     parser.add_argument(
         "--mastership-retries",

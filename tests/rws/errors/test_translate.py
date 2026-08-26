@@ -106,14 +106,14 @@ class TestNotFoundTranslation:
 
     def test_context_traj_tools_maps_to_404002(self) -> None:
         """``context="trajTools"`` maps to :class:`TrajToolsNotFound`."""
-        original = RWSNotFoundError("RAPID/T_ROB1/TRAJCENTER_CellConfig/trajTools")
+        original = RWSNotFoundError("RAPID/T_ROB1/TRAJCENTER/trajTools")
         result = from_rws_exception(original, context="trajTools")
         assert isinstance(result, TrajToolsNotFound)
         assert result.code == 404002
 
     def test_context_traj_wobjs_maps_to_404003(self) -> None:
         """``context="trajWobjs"`` maps to :class:`TrajWobjsNotFound`."""
-        original = RWSNotFoundError("RAPID/T_ROB1/TRAJCENTER_CellConfig/trajWobjs")
+        original = RWSNotFoundError("RAPID/T_ROB1/TRAJCENTER/trajWobjs")
         result = from_rws_exception(original, context="trajWobjs")
         assert isinstance(result, TrajWobjsNotFound)
         assert result.code == 404003

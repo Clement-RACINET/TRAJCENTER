@@ -344,12 +344,12 @@ class TestFormatHelpers:
         assert (
             _symbol_2d_array_element(
                 task="T_ROB1",
-                module="TRAJCENTER_WebServices",
+                module="TRAJCENTER",
                 variable="processParams",
                 first_index=1,
                 second_index=2,
             )
-            == "RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C2%7D"
+            == "RAPID/T_ROB1/TRAJCENTER/processParams%7B1%2C2%7D"
         )
 
     def test_symbol_2d_array_element_rejects_invalid_indexes(self) -> None:
@@ -505,7 +505,7 @@ class TestWriteStoreMetadata:
             )
 
         values = mock_set.call_args.kwargs["values"]
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/nbTrajAvailable"] == "3"
+        assert values["RAPID/T_ROB1/TRAJCENTER/nbTrajAvailable"] == "3"
 
     @pytest.mark.asyncio
     async def test_trajectories_records_padded(self, client: MagicMock) -> None:
@@ -516,15 +516,11 @@ class TestWriteStoreMetadata:
 
         values = mock_set.call_args.kwargs["values"]
         assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B1%7D"]
-            == '["OnlyOne",100,0]'
+            values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B1%7D"] == '["OnlyOne",100,0]'
         )
+        assert values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B2%7D"] == '["",0,0]'
         assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B2%7D"]
-            == '["",0,0]'
-        )
-        assert (
-            values[f"RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B{MAX_TRAJ}%7D"]
+            values[f"RAPID/T_ROB1/TRAJCENTER/trajectories%7B{MAX_TRAJ}%7D"]
             == '["",0,0]'
         )
 
@@ -541,14 +537,8 @@ class TestWriteStoreMetadata:
             )
 
         values = mock_set.call_args.kwargs["values"]
-        assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B1%7D"]
-            == '["A",10,1]'
-        )
-        assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajectories%7B2%7D"]
-            == '["B",20,2]'
-        )
+        assert values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B1%7D"] == '["A",10,1]'
+        assert values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B2%7D"] == '["B",20,2]'
 
     @pytest.mark.asyncio
     async def test_status_values_written(self, client: MagicMock) -> None:
@@ -558,15 +548,13 @@ class TestWriteStoreMetadata:
             await write_store_metadata(client, names=["A"], point_counts=[10])
 
         values = mock_set.call_args.kwargs["values"]
-        assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/refreshMetaRequest"] == "FALSE"
-        )
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferError"] == "FALSE"
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastErrorCode"] == str(
+        assert values["RAPID/T_ROB1/TRAJCENTER/refreshMetaRequest"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER/transferError"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER/lastErrorCode"] == str(
             STATUS_METADATA_REFRESHED
         )
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastError"] == '""'
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferProgress"] == "100"
+        assert values["RAPID/T_ROB1/TRAJCENTER/lastError"] == '""'
+        assert values["RAPID/T_ROB1/TRAJCENTER/transferProgress"] == "100"
 
     @pytest.mark.asyncio
     async def test_mismatched_lengths_raises(self, client: MagicMock) -> None:
@@ -652,14 +640,14 @@ class TestWriteResolvedTrajectory:
             await write_resolved_trajectory(client, resolved)
 
         values = mock_set.call_args.kwargs["values"]
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajReady"] == "TRUE"
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferError"] == "FALSE"
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/sendTrajRequest"] == "FALSE"
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/transferProgress"] == "100"
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastErrorCode"] == str(
+        assert values["RAPID/T_ROB1/TRAJCENTER/trajReady"] == "TRUE"
+        assert values["RAPID/T_ROB1/TRAJCENTER/transferError"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER/sendTrajRequest"] == "FALSE"
+        assert values["RAPID/T_ROB1/TRAJCENTER/transferProgress"] == "100"
+        assert values["RAPID/T_ROB1/TRAJCENTER/lastErrorCode"] == str(
             STATUS_TRAJECTORY_TRANSFERRED
         )
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/lastError"] == '""'
+        assert values["RAPID/T_ROB1/TRAJCENTER/lastError"] == '""'
 
     @pytest.mark.asyncio
     async def test_nb_loaded_points_written(self, client: MagicMock) -> None:
@@ -671,7 +659,7 @@ class TestWriteResolvedTrajectory:
             await write_resolved_trajectory(client, resolved)
 
         values = mock_set.call_args.kwargs["values"]
-        assert values["RAPID/T_ROB1/TRAJCENTER_WebServices/nbLoadedTrajPoints"] == "2"
+        assert values["RAPID/T_ROB1/TRAJCENTER/nbLoadedTrajPoints"] == "2"
 
     @pytest.mark.asyncio
     async def test_traj_data_records_written(self, client: MagicMock) -> None:
@@ -683,8 +671,8 @@ class TestWriteResolvedTrajectory:
             await write_resolved_trajectory(client, resolved)
 
         values = mock_set.call_args.kwargs["values"]
-        first = values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D"]
-        second = values["RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B2%7D"]
+        first = values["RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D"]
+        second = values["RAPID/T_ROB1/TRAJCENTER/trajData%7B2%7D"]
 
         assert first.endswith(",500,10,TRUE,1,2,1]")
         assert second.endswith(",500,10,TRUE,1,2,0]")
@@ -704,17 +692,14 @@ class TestWriteResolvedTrajectory:
         values = mock_set.call_args.kwargs["values"]
 
         assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C1%7D"]
+            values["RAPID/T_ROB1/TRAJCENTER/processParams%7B1%2C1%7D"]
             == '["force",120]'
         )
         assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B1%2C2%7D"]
+            values["RAPID/T_ROB1/TRAJCENTER/processParams%7B1%2C2%7D"]
             == '["speed",42.5]'
         )
-        assert (
-            values["RAPID/T_ROB1/TRAJCENTER_WebServices/processParams%7B2%2C1%7D"]
-            == '["",0]'
-        )
+        assert values["RAPID/T_ROB1/TRAJCENTER/processParams%7B2%2C1%7D"] == '["",0]'
 
     @pytest.mark.asyncio
     async def test_process_param_table_size(self, client: MagicMock) -> None:

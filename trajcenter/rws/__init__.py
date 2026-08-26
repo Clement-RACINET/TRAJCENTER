@@ -9,7 +9,6 @@ from __future__ import annotations
 from ._utils import symbol, symbol_array_element, symbol_record_array_field
 from .constants import (
     ALLOWED_ZONE_TYPES,
-    CELL_MODULE,
     CONFDATA_COLUMNS,
     DEFAULT_MASTERSHIP_RETRIES,
     DEFAULT_MASTERSHIP_RETRY_DELAY_S,
@@ -28,7 +27,6 @@ from .constants import (
     MOVE_TYPE_L,
     PROCESS_AAK,
     PROCESS_ACF,
-    PROCESS_MODULE,
     PROCESS_NONE,
     PROCESS_PUSHCORP,
     PROCESS_TYPE_ALIASES,
@@ -37,8 +35,7 @@ from .constants import (
     STATUS_METADATA_REFRESHED,
     STATUS_OK,
     STATUS_TRAJECTORY_TRANSFERRED,
-    TYPES_MODULE,
-    WEB_MODULE,
+    TRAJCENTER_MODULE,
 )
 from .errors import (
     ERROR_CODE_REGISTRY,
@@ -142,7 +139,6 @@ from .writer import write_resolved_trajectory, write_store_metadata, write_traje
 
 __all__ = [
     "ALLOWED_ZONE_TYPES",
-    "CELL_MODULE",
     "CONFDATA_COLUMNS",
     "DEFAULT_MASTERSHIP_RETRIES",
     "DEFAULT_MASTERSHIP_RETRY_DELAY_S",
@@ -162,7 +158,6 @@ __all__ = [
     "MOVE_TYPE_L",
     "PROCESS_AAK",
     "PROCESS_ACF",
-    "PROCESS_MODULE",
     "PROCESS_NONE",
     "PROCESS_PUSHCORP",
     "PROCESS_TYPE_ALIASES",
@@ -172,8 +167,7 @@ __all__ = [
     "STATUS_METADATA_REFRESHED",
     "STATUS_OK",
     "STATUS_TRAJECTORY_TRANSFERRED",
-    "TYPES_MODULE",
-    "WEB_MODULE",
+    "TRAJCENTER_MODULE",
     "ControllerTimeout",
     "ControllerUnavailable",
     "IncompatibleRobotState",

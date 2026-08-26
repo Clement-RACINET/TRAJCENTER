@@ -23,22 +23,22 @@ def symbol(task: str, module: str, var: str) -> str:
 
     Args:
         task: RAPID task name, e.g. ``"T_ROB1"``.
-        module: RAPID module name, e.g. ``"TRAJCENTER_WebServices"``.
+        module: RAPID module name, e.g. ``"TRAJCENTER"``.
         var: Variable name, e.g. ``"selectedTrajIndex"``.
 
     Returns:
         Symbol URL path, e.g.
-        ``"RAPID/T_ROB1/TRAJCENTER_WebServices/selectedTrajIndex"``.
+        ``"RAPID/T_ROB1/TRAJCENTER/selectedTrajIndex"``.
 
     Example:
         ::
 
             url = symbol(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajReady",
             )
-            assert url == "RAPID/T_ROB1/TRAJCENTER_WebServices/trajReady"
+            assert url == "RAPID/T_ROB1/TRAJCENTER/trajReady"
     """
     return f"RAPID/{task}/{module}/{var}"
 
@@ -61,13 +61,13 @@ def symbol_array_element(
 
     Args:
         task: RAPID task name, e.g. ``"T_ROB1"``.
-        module: RAPID module name, e.g. ``"TRAJCENTER_WebServices"``.
+        module: RAPID module name, e.g. ``"TRAJCENTER"``.
         variable: RAPID array variable name, e.g. ``"trajData"``.
         index: One-based RAPID array index.
 
     Returns:
         URL-safe RWS symbol path, e.g.
-        ``"RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D"``.
+        ``"RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D"``.
 
     Raises:
         ValueError: If ``index`` is lower than ``1``.
@@ -77,12 +77,12 @@ def symbol_array_element(
 
             url = symbol_array_element(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 1,
             )
             assert url == (
-                "RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D"
+                "RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D"
             )
     """
     if index < 1:
@@ -113,14 +113,14 @@ def symbol_record_array_field(
 
     Args:
         task: RAPID task name, e.g. ``"T_ROB1"``.
-        module: RAPID module name, e.g. ``"TRAJCENTER_WebServices"``.
+        module: RAPID module name, e.g. ``"TRAJCENTER"``.
         variable: RAPID array variable name, e.g. ``"trajData"``.
         index: One-based RAPID array index.
         field: RAPID record field name, e.g. ``"moveType"``.
 
     Returns:
         URL-safe RWS symbol path, e.g.
-        ``"RAPID/T_ROB1/TRAJCENTER_WebServices/trajData%7B1%7D.moveType"``.
+        ``"RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D.moveType"``.
 
     Raises:
         ValueError: If ``index`` is lower than ``1`` or if ``field`` is
@@ -131,13 +131,13 @@ def symbol_record_array_field(
 
             url = symbol_record_array_field(
                 "T_ROB1",
-                "TRAJCENTER_WebServices",
+                "TRAJCENTER",
                 "trajData",
                 1,
                 "moveType",
             )
             assert url == (
-                "RAPID/T_ROB1/TRAJCENTER_WebServices/"
+                "RAPID/T_ROB1/TRAJCENTER/"
                 "trajData%7B1%7D.moveType"
             )
     """

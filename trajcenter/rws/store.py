@@ -51,7 +51,7 @@ def scan_trajectory_store(root: str | Path) -> tuple[TrajectoryStoreEntry, ...]:
 
     ABB Constraints:
         The returned indexes are RAPID base-1 and must match the order exposed
-        to ``TRAJCENTER_WebServices/trajectories``. Archives are sorted by file
+        to ``TRAJCENTER/trajectories``. Archives are sorted by file
         name/path for deterministic selection.
 
     Args:

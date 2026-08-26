@@ -58,10 +58,10 @@ from trajcenter.rws.constants import MAX_PROCESS_PARAM_PER_SET
 
 @dataclass(frozen=True, slots=True)
 class RobotDefaults:
-    """Robot-side default values read from ``TRAJCENTER_WebServices``.
+    """Robot-side default values read from ``TRAJCENTER``.
 
     ABB Route:
-        ``GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER_WebServices/{var}``.
+        ``GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/{var}``.
 
     ABB Constraints:
         Defaults may only be applied when the corresponding ``hasDefault*``
@@ -114,7 +114,7 @@ class ProcessTypeEntry:
     """One robot-side process catalog entry.
 
     ABB Route:
-        Parsed from ``TRAJCENTER_ProcessConfig/processTypes{i}``.
+        Parsed from ``TRAJCENTER/processTypes{i}``.
 
     ABB Constraints:
         RAPID record layout is ``[num id, string name]``.
@@ -141,10 +141,10 @@ class RobotContext:
 
     ABB Route:
         Built from multiple RWS reads:
-        - defaults in ``TRAJCENTER_WebServices``;
-        - tools in ``TRAJCENTER_CellConfig/trajTools``;
-        - wobjs in ``TRAJCENTER_CellConfig/trajWobjs``;
-        - process catalog in ``TRAJCENTER_ProcessConfig/processTypes``.
+        - defaults in ``TRAJCENTER``;
+        - tools in ``TRAJCENTER/trajTools``;
+        - wobjs in ``TRAJCENTER/trajWobjs``;
+        - process catalog in ``TRAJCENTER/processTypes``.
 
     ABB Constraints:
         ``tool_names`` and ``wobj_names`` are ordered lists. Python index
@@ -312,7 +312,7 @@ class ResolvedProcessParam:
     """One resolved process parameter slot.
 
     ABB Route:
-        Written to ``TRAJCENTER_WebServices/processParams{i,j}``.
+        Written to ``TRAJCENTER/processParams{i,j}``.
 
     ABB Constraints:
         RAPID record layout is ``[string name, num value]``.
@@ -408,7 +408,7 @@ class ResolvedPoint:
     """One trajectory point resolved for RAPID transfer.
 
     ABB Route:
-        Written to ``TRAJCENTER_WebServices/trajData{i}``.
+        Written to ``TRAJCENTER/trajData{i}``.
 
     ABB Constraints:
         RAPID record layout:

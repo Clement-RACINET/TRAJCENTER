@@ -20,7 +20,7 @@ ABB Route:
 
 ABB Constraints:
     - The supervisor watches RAPID PERS variables from
-      ``TRAJCENTER_WebServices``.
+      ``TRAJCENTER``.
     - ``refreshMetaRequest == TRUE`` refreshes robot-side trajectory metadata.
     - ``sendTrajRequest == TRUE`` transfers the selected trajectory.
     - RAPID writes are delegated to service/writer layers only.
@@ -43,7 +43,7 @@ from abb_rws_client_python_rw6.highlevel.subscription import (
 )
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws.constants import DEFAULT_TASK, WEB_MODULE
+from trajcenter.rws.constants import DEFAULT_TASK, TRAJCENTER_MODULE
 from trajcenter.rws.models import TrajectoryStoreEntry
 from trajcenter.rws.service import refresh_store_metadata, transfer_selected_trajectory
 
@@ -78,7 +78,7 @@ class RWSSupervisorConfig:
 
     store_root: Path
     task: str = DEFAULT_TASK
-    module: str = WEB_MODULE
+    module: str = TRAJCENTER_MODULE
     mastership_retries: int = 3
     refresh_priority: SubscriptionPriority = "1"
     transfer_priority: SubscriptionPriority = "1"
