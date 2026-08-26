@@ -5,15 +5,12 @@ trajcenter
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
-│   ├── TRAJCENTER.pgf
-│   ├── TRAJCENTER.mod
-│   ├── TRAJCENTER_DefaultValues.mod
-│   ├── TRAJCENTER.mod
-│   ├── TRAJCENTER.mod
-│   └── TRAJCENTER.mod
+│   └── TRAJCENTER.sys
 ├── routes
 │   ├── route3.md
-│   └── route3.pdf
+│   ├── route3.pdf
+│   ├── route4.md
+│   └── route4.pdf
 ├── scripts
 │   ├── doc
 │   │   ├── config.py
@@ -109,6 +106,7 @@ trajcenter
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports
+│   ├── mod_exemple.xlsx
 │   └── test_basic.xlsx
 ├── trajectory_files
 │   ├── 0.2.xlsx
@@ -139,4 +137,4 @@ trajcenter
 ├── pixi.toml
 ├── pyproject.toml
 ├── README.md
-└── structure_repo.txt
+└── trajcenter_structure.txt

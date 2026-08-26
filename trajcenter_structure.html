@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Repository structure - trajcenter</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-soft: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: #334155;
+      --accent: #38bdf8;
+      --hover: rgba(56, 189, 248, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 16px 24px;
+      background: rgba(15, 23, 42, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      color: var(--text);
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    main { padding: 24px; }
+
+    .tree-panel {
+      max-width: 1200px;
+      padding: 18px;
+      background: rgba(17, 24, 39, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+    }
+
+    .tree-panel > ul {
+      border-left: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin: 2px 0;
+      position: relative;
+    }
+
+    summary {
+      cursor: pointer;
+      user-select: none;
+      padding: 3px 6px;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    summary:hover,
+    .file span:hover {
+      background: var(--hover);
+    }
+
+    .directory > details > summary .name::before {
+      content: "📁 ";
+    }
+
+    .directory > details[open] > summary .name::before {
+      content: "📂 ";
+    }
+
+    .file span::before {
+      content: "📄 ";
+    }
+
+    .file span,
+    .empty span {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 6px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .count {
+      margin-left: 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Repository structure: trajcenter</h1>
+
+    <div class="meta">
+      <span class="badge">22 directories</span>
+      <span class="badge">118 files</span>
+      <span class="badge">Open depth: 1</span>
+    </div>
+
+    <div class="toolbar">
+      <button type="button" onclick="setAllDetails(true)">Open all</button>
+      <button type="button" onclick="setAllDetails(false)">Close all</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="tree-panel">
+      <ul>
+        <li class="directory">
+  <details open>
+    <summary>
+      <span class="name">trajcenter</span>
+      <span class="count">15</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details open>
+    <summary>
+      <span class="name">icons</span>
+      <span class="count">4</span>
+    </summary>
+    <ul>
+      <li class="file"><span>Image0.png</span></li>
+<li class="file"><span>Image1.png</span></li>
+<li class="file"><span>Image2.png</span></li>
+<li class="file"><span>Image3.png</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">rapid</span>
+      <span class="count">1</span>
+    </summary>
+    <ul>
+      <li class="file"><span>TRAJCENTER.sys</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">routes</span>
+      <span class="count">4</span>
+    </summary>
+    <ul>
+      <li class="file"><span>route3.md</span></li>
+<li class="file"><span>route3.pdf</span></li>
+<li class="file"><span>route4.md</span></li>
+<li class="file"><span>route4.pdf</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">scripts</span>
+      <span class="count">3</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details>
+    <summary>
+      <span class="name">doc</span>
+      <span class="count">3</span>
+    </summary>
+    <ul>
+      <li class="file"><span>config.py</span></li>
+<li class="file"><span>generate_api.py</span></li>
+<li class="file"><span>run_docs.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">exemples</span>
+      <span class="count">6</span>
+    </summary>
+    <ul>
+      <li class="file"><span>_demo_utils.py</span></li>
+<li class="file"><span>basic_usage.py</span></li>
+<li class="file"><span>convert_apt_example.py</span></li>
+<li class="file"><span>convert_excel.py</span></li>
+<li class="file"><span>convert_mod.py</span></li>
+<li class="file"><span>export_excel.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>run_rws_supervisor.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">tests</span>
+      <span class="count">6</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details>
+    <summary>
+      <span class="name">converter</span>
+      <span class="count">11</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>conftest.py</span></li>
+<li class="file"><span>test_apt_converter.py</span></li>
+<li class="file"><span>test_base_converter.py</span></li>
+<li class="file"><span>test_column_mapper.py</span></li>
+<li class="file"><span>test_csv_converter.py</span></li>
+<li class="file"><span>test_excel_converter.py</span></li>
+<li class="file"><span>test_mod_converter.py</span></li>
+<li class="file"><span>test_process_tabular_converter.py</span></li>
+<li class="file"><span>test_tabular_converter.py</span></li>
+<li class="file"><span>test_tabular_converter_edge_cases.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">core</span>
+      <span class="count">3</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>test_trajectory.py</span></li>
+<li class="file"><span>test_trajectory_edge_cases.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">exporter</span>
+      <span class="count">6</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>conftest.py</span></li>
+<li class="file"><span>test_csv_exporter.py</span></li>
+<li class="file"><span>test_excel_exporter.py</span></li>
+<li class="file"><span>test_process_tabular_exporter.py</span></li>
+<li class="file"><span>test_tabular_exporter.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">rws</span>
+      <span class="count">10</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details>
+    <summary>
+      <span class="name">errors</span>
+      <span class="count">3</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>test_base.py</span></li>
+<li class="file"><span>test_translate.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>__init__.py</span></li>
+<li class="file"><span>test_models.py</span></li>
+<li class="file"><span>test_reader.py</span></li>
+<li class="file"><span>test_resolver.py</span></li>
+<li class="file"><span>test_service.py</span></li>
+<li class="file"><span>test_store.py</span></li>
+<li class="file"><span>test_supervisor.py</span></li>
+<li class="file"><span>test_utils.py</span></li>
+<li class="file"><span>test_writer.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>__init__.py</span></li>
+<li class="file"><span>conftest.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">trajcenter</span>
+      <span class="count">5</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details>
+    <summary>
+      <span class="name">converter</span>
+      <span class="count">9</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>apt_converter.py</span></li>
+<li class="file"><span>base.py</span></li>
+<li class="file"><span>column_mapper.py</span></li>
+<li class="file"><span>csv_converter.py</span></li>
+<li class="file"><span>defaults.py</span></li>
+<li class="file"><span>excel_converter.py</span></li>
+<li class="file"><span>mod_converter.py</span></li>
+<li class="file"><span>tabular_converter.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">core</span>
+      <span class="count">5</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>logger.py</span></li>
+<li class="file"><span>messages.json</span></li>
+<li class="file"><span>messages.py</span></li>
+<li class="file"><span>trajectory.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">exporter</span>
+      <span class="count">6</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>base.py</span></li>
+<li class="file"><span>csv_exporter.py</span></li>
+<li class="file"><span>excel_exporter.py</span></li>
+<li class="file"><span>options.py</span></li>
+<li class="file"><span>tabular_exporter.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details>
+    <summary>
+      <span class="name">rws</span>
+      <span class="count">11</span>
+    </summary>
+    <ul>
+      <li class="directory">
+  <details>
+    <summary>
+      <span class="name">errors</span>
+      <span class="count">4</span>
+    </summary>
+    <ul>
+      <li class="file"><span>__init__.py</span></li>
+<li class="file"><span>base.py</span></li>
+<li class="file"><span>codes.py</span></li>
+<li class="file"><span>translate.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>__init__.py</span></li>
+<li class="file"><span>_utils.py</span></li>
+<li class="file"><span>constants.py</span></li>
+<li class="file"><span>models.py</span></li>
+<li class="file"><span>reader.py</span></li>
+<li class="file"><span>resolver.py</span></li>
+<li class="file"><span>service.py</span></li>
+<li class="file"><span>store.py</span></li>
+<li class="file"><span>supervisor.py</span></li>
+<li class="file"><span>writer.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>__init__.py</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">trajectory_exports</span>
+      <span class="count">2</span>
+    </summary>
+    <ul>
+      <li class="file"><span>mod_exemple.xlsx</span></li>
+<li class="file"><span>test_basic.xlsx</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">trajectory_files</span>
+      <span class="count">12</span>
+    </summary>
+    <ul>
+      <li class="file"><span>0.2.xlsx</span></li>
+<li class="file"><span>0.5.xlsx</span></li>
+<li class="file"><span>1.xlsx</span></li>
+<li class="file"><span>mod_exemple.mod</span></li>
+<li class="file"><span>Mod_Traj_sphere05mm.mod</span></li>
+<li class="file"><span>Mod_Traj_sphere10x05mm.mod</span></li>
+<li class="file"><span>PrepaFlans_Pointage.aptsource</span></li>
+<li class="file"><span>test_basic.xlsx</span></li>
+<li class="file"><span>trajectoires_mono.xlsx</span></li>
+<li class="file"><span>trajectoires_mono_traj.xlsx</span></li>
+<li class="file"><span>trajectoires_multi.xlsx</span></li>
+<li class="file"><span>TrajGeo1Reel.txt</span></li>
+    </ul>
+  </details>
+</li>
+<li class="directory">
+  <details open>
+    <summary>
+      <span class="name">trajectory_store</span>
+      <span class="count">10</span>
+    </summary>
+    <ul>
+      <li class="file"><span>demo_basic_usage.trajcenter</span></li>
+<li class="file"><span>mod_exemple.trajcenter</span></li>
+<li class="file"><span>PrepaFlans_Pointage.trajcenter</span></li>
+<li class="file"><span>PrepaFlans_Pointage_custom_defaults.trajcenter</span></li>
+<li class="file"><span>PrepaFlans_Pointage_editable.trajcenter</span></li>
+<li class="file"><span>PrepaFlans_Pointage_transformed.trajcenter</span></li>
+<li class="file"><span>test_basic.trajcenter</span></li>
+<li class="file"><span>trajectoires_mono.trajcenter</span></li>
+<li class="file"><span>trajectoires_multi.trajcenter</span></li>
+<li class="file"><span>trajectoires_multi_Traj2.trajcenter</span></li>
+    </ul>
+  </details>
+</li>
+<li class="file"><span>mkdocs.yml</span></li>
+<li class="file"><span>pixi.lock</span></li>
+<li class="file"><span>pixi.toml</span></li>
+<li class="file"><span>pyproject.toml</span></li>
+<li class="file"><span>README.md</span></li>
+<li class="file"><span>trajcenter_structure.txt</span></li>
+    </ul>
+  </details>
+</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    function setAllDetails(open) {
+      document.querySelectorAll("details").forEach((details) => {
+        details.open = open;
+      });
+    }
+  </script>
+</body>
+</html>

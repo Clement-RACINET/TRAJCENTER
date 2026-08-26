@@ -1,7 +1,6 @@
 MODULE TRAJCENTER(SYSMODULE)
 
 !------------------------------------------------------------------------------
-! DATE:          03/08/2026
 ! AUTHORS:       J. SCHUMACKER, C. RACINET
 ! VERSION:       TrajCenter v2.0
 ! ROBOTWARE:     6.x
@@ -64,9 +63,16 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 !   SECTION 2 - LIMITES GLOBALES
 !       Ne pas modifier sauf changement volontaire des capacités du protocole.
+!       Cette section inclut les tailles maximales des trajectoires, paramètres
+!       process, tools et workobjects exposés à TrajCenter.
 !
 !   SECTION 3 - CODES D’ETAT ET D’ERREUR
-!       Ne pas modifier sans mettre à jour le client PC et la documentation.
+!       Ne pas modifier sans mettre à jour le client PC, la documentation et les
+!       programmes RAPID utilisateurs si nécessaire.
+!
+!       Cette section contient deux familles distinctes :
+!           3.1 Codes PC/RWS écrits dans lastErrorCode.
+!           3.2 Erreurs locales RAPID levées par l’API TRAJCENTER_*.
 !
 !   SECTION 4 - TYPES DE MOUVEMENT
 !       Ne pas modifier sauf ajout officiel d’un type de mouvement supporté.
@@ -74,10 +80,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !   SECTION 5 - PROCESS
 !       Modifier uniquement cette section pour ajouter, retirer ou renommer un
 !       process supporté par la cellule.
+!       Les routines d’application process ne sont pas encore implémentées.
 !
 !   SECTION 6 - CONFIGURATION CELLULE
 !       Section modifiable par le programmeur robot pour déclarer les tools et
 !       workobjects disponibles.
+!       Les tools/wobjs peuvent aussi être ajoutés ou mis à jour depuis un
+!       programme RAPID classique via l’API TRAJCENTER_Upsert*.
 !
 !   SECTION 7 - VARIABLES RWS
 !       Ne pas modifier les noms, types ou dimensions sans mettre à jour le
@@ -87,6 +96,14 @@ MODULE TRAJCENTER(SYSMODULE)
 !       Section réglable à la mise en service.
 !       Ces variables font partie du protocole RWS mais sont isolées pour
 !       faciliter la configuration cellule.
+!
+!   SECTION 9 - API RAPID TRAJCENTER
+!       Section destinée aux programmes RAPID utilisateurs.
+!       Elle fournit les routines de configuration, de requête, d’attente,
+!       d’accès aux données chargées et d’exécution sans process.
+!
+!       Les sous-sections process sont volontairement présentes mais non
+!       implémentées pour documenter l’intention de conception future.
 !
 ! EN:
 !   This module is intentionally split into maintenance sections.
@@ -99,9 +116,16 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 !   SECTION 2 - GLOBAL LIMITS
 !       Do not modify unless protocol capacities are intentionally changed.
+!       This section includes maximum sizes for trajectories, process
+!       parameters, tools and workobjects exposed to TrajCenter.
 !
 !   SECTION 3 - STATUS AND ERROR CODES
-!       Do not modify without updating the PC client and documentation.
+!       Do not modify without updating the PC client, documentation and RAPID
+!       user programs if necessary.
+!
+!       This section contains two distinct families:
+!           3.1 PC/RWS codes written into lastErrorCode.
+!           3.2 Local RAPID errors raised by the TRAJCENTER_* API.
 !
 !   SECTION 4 - MOTION TYPES
 !       Do not modify unless a new supported motion type is officially added.
@@ -109,10 +133,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !   SECTION 5 - PROCESS
 !       Modify this section only to add, remove or rename a process supported
 !       by the cell.
+!       Process application routines are not implemented yet.
 !
 !   SECTION 6 - CELL CONFIGURATION
 !       Editable by the robot programmer to declare available tools and
 !       workobjects.
+!       Tools/wobjs may also be added or updated from a regular RAPID program
+!       through the TRAJCENTER_Upsert* API.
 !
 !   SECTION 7 - RWS VARIABLES
 !       Do not modify names, types or dimensions without updating the
@@ -122,6 +149,14 @@ MODULE TRAJCENTER(SYSMODULE)
 !       Adjustable during commissioning.
 !       These variables are part of the RWS protocol but are isolated to make
 !       cell configuration easier.
+!
+!   SECTION 9 - TRAJCENTER RAPID API
+!       Section intended for RAPID user programs.
+!       It provides configuration, request, wait, loaded data access and
+!       motion-only execution routines.
+!
+!       Process subsections are intentionally present but not implemented to
+!       document the intended future design.
 !==============================================================================
 
 
@@ -366,14 +401,50 @@ MODULE TRAJCENTER(SYSMODULE)
     ! EN: Maximum number of parameters per process parameter set.
     CONST num maxProcessParamPerSet := 10;
 
+    ! FR: Nombre maximal de tools exposés à TrajCenter.
+    ! EN: Maximum number of tools exposed to TrajCenter.
+    CONST num maxTrajToolCount := 256;
+
+    ! FR: Nombre maximal de workobjects exposés à TrajCenter.
+    ! EN: Maximum number of workobjects exposed to TrajCenter.
+    CONST num maxTrajWobjCount := 256;
 
 !==============================================================================
 ! SECTION 3 - CODES D’ETAT ET D’ERREUR / STATUS AND ERROR CODES
 !==============================================================================
 !
 ! FR:
-!   Codes écrits par le PC dans lastErrorCode.
+!   Cette section regroupe deux familles d’erreurs distinctes :
 !
+!   3.1 Codes PC/RWS :
+!       Codes numériques écrits par le PC dans lastErrorCode.
+!       Ils décrivent l’état du protocole PC <-> robot.
+!
+!   3.2 Erreurs locales RAPID :
+!       Erreurs errnum levées par les routines RAPID TrajCenter avec RAISE.
+!       Elles décrivent une mauvaise utilisation locale de l’API RAPID ou un
+!       état incohérent détecté côté robot.
+!
+! EN:
+!   This section groups two distinct error families:
+!
+!   3.1 PC/RWS codes:
+!       Numeric codes written by the PC into lastErrorCode.
+!       They describe the PC <-> robot protocol state.
+!
+!   3.2 Local RAPID errors:
+!       errnum errors raised by TrajCenter RAPID routines through RAISE.
+!       They describe local RAPID API misuse or an inconsistent state detected
+!       on the robot side.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 3.1 - CODES PC/RWS ECRITS DANS lastErrorCode
+!               PC/RWS CODES WRITTEN INTO lastErrorCode
+!------------------------------------------------------------------------------
+!
+! FR:
 !   Les codes 200xxx indiquent des états de succès.
 !   Les codes 400xxx indiquent des erreurs de validation trajectoire.
 !   Les codes 401/403/404/408/409 indiquent des erreurs d’accès, de ressource,
@@ -381,21 +452,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !   Les codes 500xxx et plus indiquent des erreurs client, contrôleur ou
 !   infrastructure.
 !
-!   Cette section est séparée pour éviter de chercher les codes dans plusieurs
-!   zones du fichier.
-!
 ! EN:
-!   Codes written by the PC into lastErrorCode.
-!
 !   200xxx codes indicate successful states.
 !   400xxx codes indicate trajectory validation errors.
 !   401/403/404/408/409 codes indicate access, resource, timeout or state
 !   errors.
 !   500xxx and above indicate client, controller or infrastructure errors.
-!
-!   This section is kept separate to avoid searching for codes in multiple
-!   locations.
-!==============================================================================
+!------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
     ! Success / Succès
@@ -462,6 +525,42 @@ MODULE TRAJCENTER(SYSMODULE)
     CONST num errorInvalidRwsResponse := 502001;
     CONST num errorControllerUnavailable := 503001;
     CONST num errorControllerTimeout := 504001;
+
+
+!------------------------------------------------------------------------------
+! SECTION 3.2 - ERREURS LOCALES API RAPID / LOCAL RAPID API ERRORS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Ces erreurs sont levées côté RAPID par les routines TRAJCENTER_*.
+!   Elles ne sont pas écrites par le PC dans lastErrorCode.
+!
+!   Elles doivent être initialisées une fois par TRAJCENTER_InitErrors avant
+!   utilisation des routines susceptibles de faire RAISE.
+!
+! EN:
+!   These errors are raised on the RAPID side by TRAJCENTER_* routines.
+!   They are not written by the PC into lastErrorCode.
+!
+!   They must be initialized once by TRAJCENTER_InitErrors before using routines
+!   that may execute RAISE.
+!------------------------------------------------------------------------------
+
+    VAR errnum ERR_TRAJCENTER_NOT_READY;
+    VAR errnum ERR_TRAJCENTER_TIMEOUT;
+    VAR errnum ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+    VAR errnum ERR_TRAJCENTER_BAD_POINT_INDEX;
+    VAR errnum ERR_TRAJCENTER_BAD_TOOL_INDEX;
+    VAR errnum ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+    VAR errnum ERR_TRAJCENTER_BAD_MOVE_TYPE;
+    VAR errnum ERR_TRAJCENTER_BAD_ZONE_TYPE;
+    VAR errnum ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+    VAR errnum ERR_TRAJCENTER_TOOL_TABLE_FULL;
+    VAR errnum ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+    VAR errnum ERR_TRAJCENTER_TOOL_NOT_FOUND;
+    VAR errnum ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+    VAR errnum ERR_TRAJCENTER_EMPTY_NAME;
+    VAR bool trajCenterErrorsInitialized := FALSE;
 
 
 !==============================================================================
@@ -581,6 +680,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !   Le PC lit trajTools et trajWobjs via RWS, résout ces noms en index RAPID
 !   base 1, puis écrit ces index dans trajData.
 !
+!   Convention slot libre :
+!       trajTools{i}.name = ""  => slot tool libre
+!       trajWobjs{i}.name = ""  => slot wobj libre
+!
+!   Les routines TRAJCENTER_UpsertTool et TRAJCENTER_UpsertWobj permettent de
+!   mettre à jour cette configuration depuis un programme RAPID classique.
+!
 ! EN:
 !   Cell section editable by the robot programmer.
 !
@@ -594,6 +700,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 !   The PC reads trajTools and trajWobjs through RWS, resolves these names to
 !   RAPID 1-based indexes, then writes those indexes into trajData.
+!
+!   Free slot convention:
+!       trajTools{i}.name = ""  => free tool slot
+!       trajWobjs{i}.name = ""  => free wobj slot
+!
+!   TRAJCENTER_UpsertTool and TRAJCENTER_UpsertWobj allow this configuration to
+!   be updated from a regular RAPID program.
 !==============================================================================
 
 
@@ -605,37 +718,24 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Workobjects disponibles pour TrajCenter.
     !
-    !   Taille modifiable selon la cellule.
-    !   Si la taille est modifiée, adapter l’initialisation du tableau.
+    !   Taille fixe protocole : maxTrajWobjCount.
+    !   Les slots dont name = "" sont considérés libres.
     !
-    !   Convention d’index :
-    !       trajWobjs{1} -> wobjIndex = 1
-    !       trajWobjs{2} -> wobjIndex = 2
-    !
-    !   wobjIndex = 0 signifie non défini.
+    !   Recommandation :
+    !       appeler TRAJCENTER_InitCellConfig au démarrage ou en mise en service
+    !       pour créer au minimum l’entrée "wobj0".
     !
     ! EN:
     !   Workobjects available for TrajCenter.
     !
-    !   Size may be changed depending on the cell.
-    !   If the size is changed, adapt the array initialization.
+    !   Fixed protocol size: maxTrajWobjCount.
+    !   Slots with name = "" are considered free.
     !
-    !   Index convention:
-    !       trajWobjs{1} -> wobjIndex = 1
-    !       trajWobjs{2} -> wobjIndex = 2
-    !
-    !   wobjIndex = 0 means undefined.
+    !   Recommendation:
+    !       call TRAJCENTER_InitCellConfig at startup or during commissioning
+    !       to create at least the "wobj0" entry.
     !--------------------------------------------------------------------------
-    PERS trajCenterWobj trajWobjs{2}:=[
-        [
-            "nom1",
-            [FALSE, TRUE, "", [[0, 0, 0], [1, 0, 0, 0]], [[0, 0, 0], [1, 0, 0, 0]]]
-        ],
-        [
-            "nom2",
-            [FALSE, TRUE, "", [[0, 0, 0], [1, 0, 0, 0]], [[0, 0, 0], [1, 0, 0, 0]]]
-        ]
-    ];
+    PERS trajCenterWobj trajWobjs{maxTrajWobjCount};
 
 
 !------------------------------------------------------------------------------
@@ -646,37 +746,24 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Tools disponibles pour TrajCenter.
     !
-    !   Taille modifiable selon la cellule.
-    !   Si la taille est modifiée, adapter l’initialisation du tableau.
+    !   Taille fixe protocole : maxTrajToolCount.
+    !   Les slots dont name = "" sont considérés libres.
     !
-    !   Convention d’index :
-    !       trajTools{1} -> toolIndex = 1
-    !       trajTools{2} -> toolIndex = 2
-    !
-    !   toolIndex = 0 signifie non défini.
+    !   Recommandation :
+    !       appeler TRAJCENTER_InitCellConfig au démarrage ou en mise en service
+    !       pour créer au minimum l’entrée "tool0".
     !
     ! EN:
     !   Tools available for TrajCenter.
     !
-    !   Size may be changed depending on the cell.
-    !   If the size is changed, adapt the array initialization.
+    !   Fixed protocol size: maxTrajToolCount.
+    !   Slots with name = "" are considered free.
     !
-    !   Index convention:
-    !       trajTools{1} -> toolIndex = 1
-    !       trajTools{2} -> toolIndex = 2
-    !
-    !   toolIndex = 0 means undefined.
+    !   Recommendation:
+    !       call TRAJCENTER_InitCellConfig at startup or during commissioning
+    !       to create at least the "tool0" entry.
     !--------------------------------------------------------------------------
-    PERS trajCenterTool trajTools{2}:=[
-        [
-            "nom3",
-            [TRUE, [[0, 0, 0], [1, 0, 0, 0]], [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]]
-        ],
-        [
-            "nom4",
-            [TRUE, [[0, 0, 0], [1, 0, 0, 0]], [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]]
-        ]
-    ];
+    PERS trajCenterTool trajTools{maxTrajToolCount};
 
 
 !------------------------------------------------------------------------------
@@ -1223,5 +1310,1010 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     VAR bool defaultReadConfs := TRUE;
 
+
+!==============================================================================
+! SECTION 9 - API RAPID TRAJCENTER / TRAJCENTER RAPID API
+!==============================================================================
+!
+! FR:
+!   API RAPID destinée aux programmes utilisateurs classiques.
+!
+!   Elle permet de :
+!       - initialiser les erreurs locales RAPID ;
+!       - initialiser une configuration cellule minimale ;
+!       - ajouter ou mettre à jour des tools/wobjs exposés à TrajCenter ;
+!       - déclencher les requêtes PC via RWS ;
+!       - attendre la fin d’un refresh ou d’un transfert ;
+!       - accéder aux points chargés ;
+!       - exécuter une trajectoire chargée sans process métier.
+!
+!   Les routines d’exécution process sont volontairement laissées en attente.
+!   Les données process sont transférées et stockées, mais leur interprétation
+!   dépend du procédé cellule.
+!
+! EN:
+!   RAPID API intended for regular user programs.
+!
+!   It allows users to:
+!       - initialize local RAPID errors;
+!       - initialize a minimal cell configuration;
+!       - add or update tools/wobjs exposed to TrajCenter;
+!       - trigger PC requests through RWS;
+!       - wait for refresh or transfer completion;
+!       - access loaded points;
+!       - execute a loaded trajectory without business process handling.
+!
+!   Process execution routines are intentionally left pending.
+!   Process data is transferred and stored, but its interpretation depends on
+!   the cell process.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.1 - INITIALISATION ERREURS / ERROR INITIALIZATION
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Initialise les erreurs locales RAPID utilisées par l’API TrajCenter.
+    !
+    !   Cette routine doit être appelée une fois avant d’utiliser les routines
+    !   pouvant lever une erreur par RAISE.
+    !
+    ! EN:
+    !   Initializes local RAPID errors used by the TrajCenter API.
+    !
+    !   This routine must be called once before using routines that may raise
+    !   an error through RAISE.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_InitErrors()
+        IF trajCenterErrorsInitialized THEN
+            RETURN;
+        ENDIF
+
+        BookErrNo ERR_TRAJCENTER_NOT_READY;
+        BookErrNo ERR_TRAJCENTER_TIMEOUT;
+        BookErrNo ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_POINT_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_MOVE_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_ZONE_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+        BookErrNo ERR_TRAJCENTER_TOOL_TABLE_FULL;
+        BookErrNo ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+        BookErrNo ERR_TRAJCENTER_TOOL_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_EMPTY_NAME;
+
+        trajCenterErrorsInitialized := TRUE;
+
+    ENDPROC
+
+
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.2 - INITIALISATION CONFIG CELLULE / CELL CONFIG INITIALIZATION
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Initialise une configuration cellule minimale avec :
+    !       - tool0
+    !       - wobj0
+    !
+    !   Cette routine ne vide pas tous les tableaux.
+    !   Elle ajoute ou met à jour seulement les entrées "tool0" et "wobj0".
+    !
+    ! EN:
+    !   Initializes a minimal cell configuration with:
+    !       - tool0
+    !       - wobj0
+    !
+    !   This routine does not clear all arrays.
+    !   It only adds or updates "tool0" and "wobj0" entries.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_InitCellConfig()
+        VAR tooldata localTool0;
+        VAR wobjdata localWobj0;
+
+        localTool0 := [
+            TRUE,
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+        ];
+
+        localWobj0 := [
+            FALSE,
+            TRUE,
+            "",
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [[0, 0, 0], [1, 0, 0, 0]]
+        ];
+
+        TRAJCENTER_UpsertTool "tool0", localTool0;
+        TRAJCENTER_UpsertWobj "wobj0", localWobj0;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.3 - GESTION TOOLS/WOBJS / TOOL AND WOBJ MANAGEMENT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un tool par nom dans trajTools.
+    !
+    !   Retour :
+    !       0  = non trouvé
+    !       >0 = index base 1 dans trajTools
+    !
+    ! EN:
+    !   Searches a tool by name in trajTools.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajTools
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindToolIndex(string toolName)
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            IF trajTools{i}.name = toolName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un workobject par nom dans trajWobjs.
+    !
+    !   Retour :
+    !       0  = non trouvé
+    !       >0 = index base 1 dans trajWobjs
+    !
+    ! EN:
+    !   Searches a workobject by name in trajWobjs.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajWobjs
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindWobjIndex(string wobjName)
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            IF trajWobjs{i}.name = wobjName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met à jour un tool exposé à TrajCenter.
+    !
+    !   Règle :
+    !       - si le nom existe déjà, sa valeur est remplacée ;
+    !       - sinon, le premier slot libre name="" est utilisé ;
+    !       - si aucun slot n’est libre, une erreur RAPID est levée.
+    !
+    !   Toute modification de tool invalide la trajectoire chargée, car les
+    !   mouvements déjà transférés peuvent référencer une configuration devenue
+    !   obsolète.
+    !
+    ! EN:
+    !   Adds or updates a tool exposed to TrajCenter.
+    !
+    !   Rule:
+    !       - if the name already exists, its value is replaced;
+    !       - otherwise, the first free slot name="" is used;
+    !       - if no slot is free, a RAPID error is raised.
+    !
+    !   Any tool modification invalidates the loaded trajectory because already
+    !   transferred motions may reference an obsolete configuration.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTool(string toolName, tooldata toolValue)
+        VAR num i;
+        VAR num existingIndex;
+
+        IF toolName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        existingIndex := TRAJCENTER_FindToolIndex(toolName);
+
+        IF existingIndex > 0 THEN
+            trajTools{existingIndex}.value := toolValue;
+            trajReady := FALSE;
+            nbLoadedTrajPoints := 0;
+            RETURN;
+        ENDIF
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            IF trajTools{i}.name = "" THEN
+                trajTools{i}.name := toolName;
+                trajTools{i}.value := toolValue;
+                trajReady := FALSE;
+                nbLoadedTrajPoints := 0;
+                RETURN;
+            ENDIF
+        ENDFOR
+
+        RAISE ERR_TRAJCENTER_TOOL_TABLE_FULL;
+    ENDPROC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met à jour un workobject exposé à TrajCenter.
+    !
+    !   Règle :
+    !       - si le nom existe déjà, sa valeur est remplacée ;
+    !       - sinon, le premier slot libre name="" est utilisé ;
+    !       - si aucun slot n’est libre, une erreur RAPID est levée.
+    !
+    !   Toute modification de workobject invalide la trajectoire chargée, car
+    !   les mouvements déjà transférés peuvent référencer une configuration
+    !   devenue obsolète.
+    !
+    ! EN:
+    !   Adds or updates a workobject exposed to TrajCenter.
+    !
+    !   Rule:
+    !       - if the name already exists, its value is replaced;
+    !       - otherwise, the first free slot name="" is used;
+    !       - if no slot is free, a RAPID error is raised.
+    !
+    !   Any workobject modification invalidates the loaded trajectory because
+    !   already transferred motions may reference an obsolete configuration.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertWobj(string wobjName, wobjdata wobjValue)
+        VAR num i;
+        VAR num existingIndex;
+
+        IF wobjName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        existingIndex := TRAJCENTER_FindWobjIndex(wobjName);
+
+        IF existingIndex > 0 THEN
+            trajWobjs{existingIndex}.value := wobjValue;
+            trajReady := FALSE;
+            nbLoadedTrajPoints := 0;
+            RETURN;
+        ENDIF
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            IF trajWobjs{i}.name = "" THEN
+                trajWobjs{i}.name := wobjName;
+                trajWobjs{i}.value := wobjValue;
+                trajReady := FALSE;
+                nbLoadedTrajPoints := 0;
+                RETURN;
+            ENDIF
+        ENDFOR
+
+        RAISE ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+    ENDPROC
+
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Supprime un tool exposé à TrajCenter.
+    !
+    !   La suppression libère le slot en mettant name à "" et remet une valeur
+    !   tooldata neutre.
+    !
+    !   La trajectoire chargée est invalidée, car les index tool déjà présents
+    !   dans trajData peuvent devenir incohérents.
+    !
+    ! EN:
+    !   Deletes a tool exposed to TrajCenter.
+    !
+    !   Deletion frees the slot by setting name to "" and resets a neutral
+    !   tooldata value.
+    !
+    !   The loaded trajectory is invalidated because tool indexes already stored
+    !   in trajData may become inconsistent.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_DeleteTool(string toolName)
+        VAR num idx;
+
+        IF toolName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        idx := TRAJCENTER_FindToolIndex(toolName);
+
+        IF idx = 0 THEN
+            RAISE ERR_TRAJCENTER_TOOL_NOT_FOUND;
+        ENDIF
+
+        trajTools{idx}.name := "";
+        trajTools{idx}.value := [
+            TRUE,
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+        ];
+
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Supprime un workobject exposé à TrajCenter.
+    !
+    !   La suppression libère le slot en mettant name à "" et remet une valeur
+    !   wobjdata neutre.
+    !
+    !   La trajectoire chargée est invalidée, car les index wobj déjà présents
+    !   dans trajData peuvent devenir incohérents.
+    !
+    ! EN:
+    !   Deletes a workobject exposed to TrajCenter.
+    !
+    !   Deletion frees the slot by setting name to "" and resets a neutral
+    !   wobjdata value.
+    !
+    !   The loaded trajectory is invalidated because wobj indexes already stored
+    !   in trajData may become inconsistent.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_DeleteWobj(string wobjName)
+        VAR num idx;
+
+        IF wobjName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        idx := TRAJCENTER_FindWobjIndex(wobjName);
+
+        IF idx = 0 THEN
+            RAISE ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+        ENDIF
+
+        trajWobjs{idx}.name := "";
+        trajWobjs{idx}.value := [
+            FALSE,
+            TRUE,
+            "",
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [[0, 0, 0], [1, 0, 0, 0]]
+        ];
+
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+    ENDPROC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide tous les tools exposés à TrajCenter.
+    !
+    !   Après appel, il est recommandé d’appeler TRAJCENTER_InitCellConfig pour
+    !   recréer au minimum tool0.
+    !
+    !   La trajectoire chargée est invalidée.
+    !
+    ! EN:
+    !   Clears all tools exposed to TrajCenter.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate at least tool0.
+    !
+    !   The loaded trajectory is invalidated.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearTools()
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            trajTools{i}.name := "";
+            trajTools{i}.value := [
+                TRUE,
+                [[0, 0, 0], [1, 0, 0, 0]],
+                [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+            ];
+        ENDFOR
+
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide tous les workobjects exposés à TrajCenter.
+    !
+    !   Après appel, il est recommandé d’appeler TRAJCENTER_InitCellConfig pour
+    !   recréer au minimum wobj0.
+    !
+    !   La trajectoire chargée est invalidée.
+    !
+    ! EN:
+    !   Clears all workobjects exposed to TrajCenter.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate at least wobj0.
+    !
+    !   The loaded trajectory is invalidated.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearWobjs()
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            trajWobjs{i}.name := "";
+            trajWobjs{i}.value := [
+                FALSE,
+                TRUE,
+                "",
+                [[0, 0, 0], [1, 0, 0, 0]],
+                [[0, 0, 0], [1, 0, 0, 0]]
+            ];
+        ENDFOR
+
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide toute la configuration cellule TrajCenter : tools et workobjects.
+    !
+    !   Après appel, il est recommandé d’appeler TRAJCENTER_InitCellConfig pour
+    !   recréer tool0 et wobj0.
+    !
+    ! EN:
+    !   Clears the whole TrajCenter cell configuration: tools and workobjects.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate tool0 and wobj0.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearCellConfig()
+        TRAJCENTER_ClearTools;
+        TRAJCENTER_ClearWobjs;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met à jour un tool depuis tempTool.
+    !
+    ! EN:
+    !   Adds or updates a tool from tempTool.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTempTool(string toolName)
+        TRAJCENTER_UpsertTool toolName, tempTool;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met à jour un workobject depuis tempWobj.
+    !
+    ! EN:
+    !   Adds or updates a workobject from tempWobj.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTempWobj(string wobjName)
+        TRAJCENTER_UpsertWobj wobjName, tempWobj;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.4 - REQUETES PC / PC REQUESTS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de rafraîchir les métadonnées des trajectoires.
+    !
+    ! EN:
+    !   Requests the PC to refresh trajectory metadata.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestMetaRefresh()
+        transferError := FALSE;
+        trajReady := FALSE;
+        lastErrorCode := statusOk;
+        lastError := "";
+        transferProgress := 0;
+
+        refreshMetaRequest := TRUE;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de charger une trajectoire.
+    !
+    !   trajIndex :
+    !       1..nbTrajAvailable
+    !
+    ! EN:
+    !   Requests the PC to load a trajectory.
+    !
+    !   trajIndex:
+    !       1..nbTrajAvailable
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestTrajectory(num trajIndex)
+        IF trajIndex < 1 THEN
+            RAISE ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+        ENDIF
+
+        selectedTrajIndex := trajIndex;
+
+        transferError := FALSE;
+        trajReady := FALSE;
+        lastErrorCode := statusOk;
+        lastError := "";
+        transferProgress := 0;
+
+        sendTrajRequest := TRUE;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.5 - ATTENTES / WAIT HELPERS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Attend que les flags de requête soient remis à FALSE par le PC.
+    !
+    !   Cette routine est utile après un refresh metadata.
+    !
+    ! EN:
+    !   Waits until request flags are reset to FALSE by the PC.
+    !
+    !   This routine is useful after metadata refresh.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_WaitRequestDone(num timeoutSec)
+        VAR num elapsed;
+
+        elapsed := 0;
+
+        WHILE (sendTrajRequest OR refreshMetaRequest) DO
+            IF transferError THEN
+                RETURN;
+            ENDIF
+
+            IF elapsed >= timeoutSec THEN
+                RAISE ERR_TRAJCENTER_TIMEOUT;
+            ENDIF
+
+            WaitTime 0.1;
+            elapsed := elapsed + 0.1;
+        ENDWHILE
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Attend que la trajectoire soit prête ou qu’une erreur soit signalée.
+    !
+    !   Si transferError devient TRUE, la routine lève ERR_TRAJCENTER_NOT_READY.
+    !   Le détail de l’erreur PC est disponible dans lastErrorCode/lastError.
+    !
+    ! EN:
+    !   Waits until the trajectory is ready or an error is reported.
+    !
+    !   If transferError becomes TRUE, the routine raises
+    !   ERR_TRAJCENTER_NOT_READY.
+    !   PC error details are available in lastErrorCode/lastError.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_WaitTrajectoryReady(num timeoutSec)
+        VAR num elapsed;
+
+        elapsed := 0;
+
+        WHILE NOT trajReady DO
+            IF transferError THEN
+                RAISE ERR_TRAJCENTER_NOT_READY;
+            ENDIF
+
+            IF elapsed >= timeoutSec THEN
+                RAISE ERR_TRAJCENTER_TIMEOUT;
+            ENDIF
+
+            WaitTime 0.1;
+            elapsed := elapsed + 0.1;
+        ENDWHILE
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.6 - ACCES DONNEES / DATA ACCESS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Retourne le nombre de points chargés.
+    !
+    ! EN:
+    !   Returns the number of loaded points.
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_GetLoadedPointCount()
+        RETURN nbLoadedTrajPoints;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un point trajectoire chargé dans pointData.
+    !
+    ! EN:
+    !   Copies one loaded trajectory point into pointData.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetPoint(num pointIndex, VAR trajCenterPointData pointData)
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+        ENDIF
+
+        pointData := trajData{pointIndex};
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un tooldata depuis trajTools.
+    !
+    ! EN:
+    !   Copies a tooldata from trajTools.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetTool(num toolIndex, VAR tooldata toolValue)
+        IF toolIndex < 1 OR toolIndex > maxTrajToolCount THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        IF trajTools{toolIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        toolValue := trajTools{toolIndex}.value;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un wobjdata depuis trajWobjs.
+    !
+    ! EN:
+    !   Copies a wobjdata from trajWobjs.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetWobj(num wobjIndex, VAR wobjdata wobjValue)
+        IF wobjIndex < 1 OR wobjIndex > maxTrajWobjCount THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        IF trajWobjs{wobjIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        wobjValue := trajWobjs{wobjIndex}.value;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.7 - HELPERS MOUVEMENT / MOTION HELPERS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Construit un speeddata à partir de la vitesse TCP transférée et des
+    !   vitesses complémentaires fournies par le programme utilisateur.
+    !
+    ! EN:
+    !   Builds a speeddata from the transferred TCP speed and complementary
+    !   speeds provided by the user program.
+    !--------------------------------------------------------------------------
+    FUNC speeddata TRAJCENTER_MakeSpeed(
+        num tcpSpeed,
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        RETURN [tcpSpeed, oriSpeed, leaxSpeed, reaxSpeed];
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Convertit le zoneType numérique TrajCenter en zonedata ABB.
+    !
+    !   255 est interprété comme fine.
+    !
+    ! EN:
+    !   Converts the numeric TrajCenter zoneType into ABB zonedata.
+    !
+    !   255 is interpreted as fine.
+    !--------------------------------------------------------------------------
+    FUNC zonedata TRAJCENTER_MakeZone(num zoneType)
+        TEST zoneType
+        CASE 0:
+            RETURN z0;
+        CASE 1:
+            RETURN z1;
+        CASE 5:
+            RETURN z5;
+        CASE 10:
+            RETURN z10;
+        CASE 15:
+            RETURN z15;
+        CASE 20:
+            RETURN z20;
+        CASE 30:
+            RETURN z30;
+        CASE 40:
+            RETURN z40;
+        CASE 50:
+            RETURN z50;
+        CASE 60:
+            RETURN z60;
+        CASE 80:
+            RETURN z80;
+        CASE 100:
+            RETURN z100;
+        CASE 150:
+            RETURN z150;
+        CASE 200:
+            RETURN z200;
+        CASE 255:
+            RETURN fine;
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_ZONE_TYPE;
+        ENDTEST
+
+        RETURN fine;
+    ENDFUNC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Applique la politique readConfs du point courant.
+    !
+    ! EN:
+    !   Applies the readConfs policy for the current point.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ApplyReadConfs(bool useConfs)
+        IF useConfs THEN
+            ConfL \On;
+            ConfJ \On;
+        ELSE
+            ConfL \Off;
+            ConfJ \Off;
+        ENDIF
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.8 - EXECUTION SANS PROCESS / EXECUTION WITHOUT PROCESS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section exécute uniquement les mouvements.
+!
+!   Limite volontaire :
+!       - processParamIndex est ignoré ;
+!       - processParams est ignoré ;
+!       - aucune logique ACF/AAK/PUSHCORP n’est appliquée.
+!
+!   Les données process sont néanmoins transférées et restent disponibles pour
+!   une future exécution avec process.
+!
+! EN:
+!   This section executes motion only.
+!
+!   Intentional limitation:
+!       - processParamIndex is ignored;
+!       - processParams is ignored;
+!       - no ACF/AAK/PUSHCORP logic is applied.
+!
+!   Process data is still transferred and remains available for future process
+!   execution.
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Exécute la trajectoire chargée sans appliquer les paramètres process.
+    !
+    !   Les vitesses ori/leax/reax sont fournies par le programme utilisateur.
+    !
+    ! EN:
+    !   Executes the loaded trajectory without applying process parameters.
+    !
+    !   ori/leax/reax speeds are provided by the user program.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ExecuteLoadedTrajectoryWithoutProcess(
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        VAR num i;
+        VAR trajCenterPointData p;
+        VAR trajCenterPointData p2;
+        VAR speeddata v;
+        VAR zonedata z;
+        VAR tooldata t;
+        VAR wobjdata w;
+
+        IF NOT trajReady THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
+        IF nbLoadedTrajPoints < 1 THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
+        i := 1;
+
+        WHILE i <= nbLoadedTrajPoints DO
+            p := trajData{i};
+
+            v := TRAJCENTER_MakeSpeed(p.tcpSpeed, oriSpeed, leaxSpeed, reaxSpeed);
+            z := TRAJCENTER_MakeZone(p.zoneType);
+
+            TRAJCENTER_GetTool p.toolIndex, t;
+            TRAJCENTER_GetWobj p.wobjIndex, w;
+            TRAJCENTER_ApplyReadConfs p.readConfs;
+
+            IF p.moveType = moveTypeL THEN
+                MoveL p.point, v, z, t\WObj:=w;
+                i := i + 1;
+
+            ELSEIF p.moveType = moveTypeJ THEN
+                MoveJ p.point, v, z, t\WObj:=w;
+                i := i + 1;
+
+            ELSEIF p.moveType = moveTypeC THEN
+                IF i + 1 > nbLoadedTrajPoints THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                p2 := trajData{i + 1};
+
+                IF p2.moveType <> moveTypeC THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.tcpSpeed <> p.tcpSpeed THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.toolIndex <> p.toolIndex THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.wobjIndex <> p.wobjIndex THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.zoneType <> p.zoneType THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.readConfs <> p.readConfs THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                IF p2.processParamIndex <> p.processParamIndex THEN
+                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+                ENDIF
+
+                MoveC p.point, p2.point, v, z, t\WObj:=w;
+                i := i + 2;
+
+            ELSE
+                RAISE ERR_TRAJCENTER_BAD_MOVE_TYPE;
+            ENDIF
+        ENDWHILE
+
+        ! FR: Retour à une politique confdata sûre par défaut.
+        ! EN: Return to a safe default confdata policy.
+        ConfL \On;
+        ConfJ \On;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.9 - ACCES PARAMETRES PROCESS / PROCESS PARAMETER ACCESS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Section prévue pour l’accès propre aux paramètres process par point.
+!
+!   Etat actuel :
+!       - imaginé ;
+!       - non implémenté dans cette version.
+!
+!   Intention :
+!       - fournir TRAJCENTER_PointHasProcessParams(pointIndex) ;
+!       - fournir TRAJCENTER_GetProcessParam(pointIndex, paramName, found, value);
+!       - permettre à un module métier ACF/AAK/PUSHCORP d’interpréter les
+!         paramètres sans modifier le protocole de transfert.
+!
+! EN:
+!   Section reserved for clean per-point process parameter access.
+!
+!   Current state:
+!       - designed;
+!       - not implemented in this version.
+!
+!   Intent:
+!       - provide TRAJCENTER_PointHasProcessParams(pointIndex);
+!       - provide TRAJCENTER_GetProcessParam(pointIndex, paramName, found, value);
+!       - allow an ACF/AAK/PUSHCORP business module to interpret parameters
+!         without modifying the transfer protocol.
+!------------------------------------------------------------------------------
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10 - EXECUTION AVEC PROCESS / EXECUTION WITH PROCESS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Section réservée à l’exécution avec process.
+!
+!   Etat actuel :
+!       - non implémenté.
+!
+!   Intention :
+!       - conserver TRAJCENTER_ExecuteLoadedTrajectoryWithoutProcess comme
+!         exécution générique pure mouvement ;
+!       - ajouter une routine avec process, ou une routine globale qui
+!         choisira l’exécution adaptée.
+!
+!   Exemple futur possible :
+!       TRAJCENTER_ExecuteLoadedTrajectoryWithProcess
+!       TRAJCENTER_ExecuteLoadedTrajectory
+!
+! EN:
+!   Section reserved for process-aware execution.
+!
+!   Current state:
+!       - not implemented.
+!
+!   Intent:
+!       - keep TRAJCENTER_ExecuteLoadedTrajectoryWithoutProcess as generic
+!         motion-only execution;
+!       - later add a process-aware routine, or a global routine selecting the
+!         appropriate execution mode.
+!
+!   Possible future example:
+!       TRAJCENTER_ExecuteLoadedTrajectoryWithProcess
+!       TRAJCENTER_ExecuteLoadedTrajectory
+!------------------------------------------------------------------------------
+
+    ! TODO FR:
+    !   Définir la stratégie d’application process :
+    !       - avant mouvement ;
+    !       - pendant mouvement ;
+    !       - après mouvement ;
+    !       - par point ;
+    !       - par segment ;
+    !       - par type de process.
+    !
+    ! TODO EN:
+    !   Define the process application strategy:
+    !       - before motion;
+    !       - during motion;
+    !       - after motion;
+    !       - per point;
+    !       - per segment;
+    !       - per process type.
 
 ENDMODULE
