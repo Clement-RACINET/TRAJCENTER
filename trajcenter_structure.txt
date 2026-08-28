@@ -5,7 +5,9 @@ trajcenter
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
-│   └── TRAJCENTER.sys
+│   ├── TRAJCENTER.sys
+│   ├── TRAJCENTER_DEMO.mod
+│   └── TRAJCENTER_DEMO.pgf
 ├── routes
 │   ├── route3.md
 │   ├── route3.pdf
@@ -137,4 +139,5 @@ trajcenter
 ├── pixi.toml
 ├── pyproject.toml
 ├── README.md
+├── trajcenter_structure.html
 └── trajcenter_structure.txt

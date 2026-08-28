@@ -1,4 +1,4 @@
-MODULE TRAJCENTER_Demo
+MODULE TRAJCENTER_DEMO
 
 !------------------------------------------------------------------------------
 ! DATE:          03/08/2026
@@ -6,19 +6,19 @@ MODULE TRAJCENTER_Demo
 ! VERSION:       TrajCenter Demo v2.0
 !
 ! DESCRIPTION FR:
-!   Exemple d?utilisation classique du module système TRAJCENTER.
+!   Exemple d'utilisation classique du module systeme TRAJCENTER.
 !
 !   Ce module montre comment :
-!       - initialiser l?API RAPID TrajCenter ;
-!       - déclarer un tool et un workobject utilisateur ;
-!       - les exposer à TrajCenter avec Upsert ;
+!       - initialiser l'API RAPID TrajCenter ;
+!       - declarer un tool et un workobject utilisateur ;
+!       - les exposer a TrajCenter avec Upsert ;
 !       - configurer les defaults robot ;
 !       - demander un refresh metadata ;
-!       - demander le chargement d?une trajectoire ;
-!       - exécuter la trajectoire chargée sans process.
+!       - demander le chargement d'une trajectoire ;
+!       - executer la trajectoire chargee sans process.
 !
 !   Limite :
-!       L?exécution process n?est pas implémentée dans cet exemple.
+!       L'execution process n'est pas implementee dans cet exemple.
 !
 ! DESCRIPTION EN:
 !   Example of regular usage of the TRAJCENTER system module.
@@ -57,8 +57,9 @@ MODULE TRAJCENTER_Demo
     PERS tooldata demoTool := [
         TRUE,
         [[0, 0, 0], [1, 0, 0, 0]],
-        [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+        [1, [0, 0, 50], [1, 0, 0, 0], 0.01, 0.01, 0.01]
     ];
+
 
     PERS wobjdata demoWobj := [
         FALSE,
@@ -75,60 +76,22 @@ MODULE TRAJCENTER_Demo
 
     PROC main()
 
+        TPWrite "=== TrajCenter Demo START ===";
+
         !----------------------------------------------------------------------
-        ! FR:
-        !   Initialisation des erreurs locales RAPID TrajCenter.
-        !
-        ! EN:
-        !   Initialize TrajCenter local RAPID errors.
+        ! Initialisation API et configuration cellule
         !----------------------------------------------------------------------
+        TPWrite "Step 1: init errors";
         TRAJCENTER_InitErrors;
 
-
-        !----------------------------------------------------------------------
-        ! FR:
-        !   Initialisation minimale de la configuration cellule TrajCenter.
-        !   Ajoute ou met à jour tool0 et wobj0.
-        !
-        ! EN:
-        !   Minimal initialization of TrajCenter cell configuration.
-        !   Adds or updates tool0 and wobj0.
-        !----------------------------------------------------------------------
+        TPWrite "Step 2: init cell config";
         TRAJCENTER_InitCellConfig;
 
-
-        !----------------------------------------------------------------------
-        ! FR:
-        !   Exposition du tool et du wobj de démonstration à TrajCenter.
-        !
-        !   Les fichiers .trajcenter pourront utiliser :
-        !       tool_name = "demoTool"
-        !       wobj_name = "demoWobj"
-        !
-        ! EN:
-        !   Expose the demo tool and wobj to TrajCenter.
-        !
-        !   .trajcenter files may use:
-        !       tool_name = "demoTool"
-        !       wobj_name = "demoWobj"
-        !----------------------------------------------------------------------
+        TPWrite "Step 3: expose demo tool/wobj";
         TRAJCENTER_UpsertTool "demoTool", demoTool;
         TRAJCENTER_UpsertWobj "demoWobj", demoWobj;
 
-
-        !----------------------------------------------------------------------
-        ! FR:
-        !   Configuration des defaults robot.
-        !
-        !   Ces valeurs seront utilisées par le PC uniquement si les champs
-        !   correspondants sont absents dans le fichier .trajcenter.
-        !
-        ! EN:
-        !   Configure robot defaults.
-        !
-        !   These values will be used by the PC only if corresponding fields are
-        !   missing from the .trajcenter file.
-        !----------------------------------------------------------------------
+        TPWrite "Step 4: configure defaults";
         hasDefaultTcpSpeed := TRUE;
         defaultTcpSpeed := 100;
 
@@ -144,82 +107,75 @@ MODULE TRAJCENTER_Demo
         defaultMoveType := moveTypeL;
         defaultReadConfs := TRUE;
 
+        TPWrite "CHECKPOINT 1: config done";
+        TPWrite "Press START to request metadata";
+        Stop;
+
 
         !----------------------------------------------------------------------
-        ! FR:
-        !   Demande de refresh metadata.
-        !
-        !   Le supervisor PC doit être lancé et abonné à refreshMetaRequest.
-        !
-        ! EN:
-        !   Request metadata refresh.
-        !
-        !   The PC supervisor must be running and subscribed to
-        !   refreshMetaRequest.
+        ! Refresh metadata
         !----------------------------------------------------------------------
-        TPWrite "TrajCenter: refresh metadata request";
+        TPWrite "Step 5: refresh metadata request";
         TRAJCENTER_RequestMetaRefresh;
         TRAJCENTER_WaitRequestDone demoRefreshTimeout;
 
-        IF transferError THEN
+        IF transferError = TRUE THEN
             TPWrite "TrajCenter refresh error";
+            TPWrite "Code:" \Num:=lastErrorCode;
             TPWrite lastError;
             Stop;
         ENDIF
 
-        TPWrite "TrajCenter: metadata refreshed";
+        TPWrite "Step 5 OK: metadata refreshed";
         TPWrite "Available trajectories:" \Num:=nbTrajAvailable;
 
+        IF nbTrajAvailable < 1 THEN
+            TPWrite "No trajectory available";
+            Stop;
+        ENDIF
+
+        TPWrite "CHECKPOINT 2: metadata OK";
+        TPWrite "Press START to load trajectory";
+        Stop;
+
 
         !----------------------------------------------------------------------
-        ! FR:
-        !   Demande de chargement de la trajectoire demoTrajectoryIndex.
-        !
-        ! EN:
-        !   Request loading of trajectory demoTrajectoryIndex.
+        ! Chargement trajectoire
         !----------------------------------------------------------------------
-        TPWrite "TrajCenter: trajectory load request";
+        TPWrite "Step 6: trajectory load request";
         TPWrite "Trajectory index:" \Num:=demoTrajectoryIndex;
 
         TRAJCENTER_RequestTrajectory demoTrajectoryIndex;
         TRAJCENTER_WaitTrajectoryReady demoTransferTimeout;
 
-        IF transferError THEN
+        IF transferError = TRUE THEN
             TPWrite "TrajCenter transfer error";
             TPWrite "Code:" \Num:=lastErrorCode;
             TPWrite lastError;
             Stop;
         ENDIF
 
-        TPWrite "TrajCenter: trajectory ready";
+        TPWrite "Step 6 OK: trajectory ready";
         TPWrite "Loaded points:" \Num:=nbLoadedTrajPoints;
+        TPWrite "Last status code:" \Num:=lastErrorCode;
+
+        TPWrite "CHECKPOINT 3: before motion";
+        TPWrite "Verify robot position, then START";
+        Stop;
 
 
         !----------------------------------------------------------------------
-        ! FR:
-        !   Exécution de la trajectoire chargée sans process.
-        !
-        !   Limite :
-        !       Les paramètres process éventuellement présents sont ignorés.
-        !
-        ! EN:
-        !   Execute the loaded trajectory without process.
-        !
-        !   Limitation:
-        !       Process parameters, if any, are ignored.
+        ! Exécution mouvement
         !----------------------------------------------------------------------
-        TPWrite "TrajCenter: execute without process";
+        TPWrite "Step 7: execute without process";
+        TRAJCENTER_ExecLoadedNoProc demoOriSpeed, demoLeaxSpeed, demoReaxSpeed;
 
-        TRAJCENTER_ExecuteLoadedTrajectoryWithoutProcess
-            demoOriSpeed,
-            demoLeaxSpeed,
-            demoReaxSpeed;
-
-        TPWrite "TrajCenter: execution done";
+        TPWrite "=== TrajCenter Demo DONE ===";
 
     ERROR
         TPWrite "TrajCenter Demo: RAPID error";
         TPWrite "ERRNO:" \Num:=ERRNO;
+        TPWrite "Check event log for details";
         Stop;
 
     ENDPROC

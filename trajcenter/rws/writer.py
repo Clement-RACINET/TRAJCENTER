@@ -610,53 +610,20 @@ async def write_resolved_trajectory(
 ) -> None:
     """Transfer a resolved trajectory to ``TRAJCENTER``.
 
-    ABB Route:
-        One batched call to ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
-        per symbol, under one RAPID Mastership session delegated to
-        ``set_variables_with_mastership``.
+    The transfer is intentionally split into three RWS write phases:
 
-    ABB Constraints:
-        Writes:
-            - ``trajReady := FALSE`` before payload update;
-            - ``transferError := FALSE``;
-            - ``lastErrorCode := 200000``;
-            - ``lastError := ""``;
-            - ``transferProgress := 0``;
-            - ``nbLoadedTrajPoints``;
-            - ``processParams{1..256,1..10}``;
-            - ``trajData{1..nbLoadedTrajPoints}``;
-            - ``transferProgress := 100``;
-            - ``lastErrorCode := 200002``;
-            - ``sendTrajRequest := FALSE``;
-            - ``trajReady := TRUE``.
+        1. Start state:
+           ``trajReady := FALSE`` and transfer status reset.
 
-        RAPID arrays are one-based. ``9E+9`` is injected only for inactive
-        external axes during RWS serialization.
+        2. Payload:
+           ``processParams``, ``trajData`` and ``nbLoadedTrajPoints``.
 
-    Args:
-        client: Open RWS client.
-        resolved: Already validated trajectory payload produced by the resolver.
-        task: RAPID task name.
-        module: RAPID module name. Defaults to ``TRAJCENTER``.
-        on_progress: Optional callback receiving ``done`` and ``total`` local
-            serialization units while the batch is built.
-        mastership_retries: Number of retries if Mastership is denied.
-        retry_delay_s: Delay between Mastership retry attempts.
-        progress_step_percent: Minimum percentage step used for local progress
-            computation.
+        3. Final state:
+           ``trajReady := TRUE`` and ``sendTrajRequest := FALSE``.
 
-    Returns:
-        None.
-
-    Raises:
-        ValueError: If the resolved payload exceeds RAPID protocol limits.
-        MastershipDenied: If Mastership cannot be acquired after all retries.
-        RWSHTTPError: On unexpected controller HTTP errors.
-
-    Example:
-        ::
-
-            await write_resolved_trajectory(client, resolved)
+    This avoids the Python dict key overwrite issue where writing
+    ``trajReady`` twice in the same dict could make the final TRUE value be
+    sent too early in the batch.
     """
     _validate_resolved_trajectory(resolved)
 
@@ -670,8 +637,15 @@ async def write_resolved_trajectory(
         module,
     )
 
-    async def _do_write() -> None:
-        values = _build_resolved_trajectory_values(
+    async def _do_write_start() -> None:
+        values = _build_resolved_trajectory_start_values(
+            task=task,
+            module=module,
+        )
+        await set_variables_with_mastership(client, values=values, domain="rapid")
+
+    async def _do_write_payload() -> None:
+        values = _build_resolved_trajectory_payload_values(
             resolved=resolved,
             task=task,
             module=module,
@@ -680,53 +654,40 @@ async def write_resolved_trajectory(
         )
         await set_variables_with_mastership(client, values=values, domain="rapid")
 
+    async def _do_write_finish() -> None:
+        values = _build_resolved_trajectory_finish_values(
+            task=task,
+            module=module,
+        )
+        await set_variables_with_mastership(client, values=values, domain="rapid")
+
     await _retry_mastership(
-        _do_write,
+        _do_write_start,
         mastership_retries,
         retry_delay_s=retry_delay_s,
     )
+
+    await _retry_mastership(
+        _do_write_payload,
+        mastership_retries,
+        retry_delay_s=retry_delay_s,
+    )
+
+    await _retry_mastership(
+        _do_write_finish,
+        mastership_retries,
+        retry_delay_s=retry_delay_s,
+    )
+
     logger.info("Resolved trajectory '%s' written successfully.", resolved.name)
 
 
-def _build_resolved_trajectory_values(
+def _build_resolved_trajectory_start_values(
     *,
-    resolved: ResolvedTrajectory,
     task: str,
     module: str,
-    on_progress: Callable[[int, int], None] | None,
-    progress_step_percent: int,
 ) -> dict[str, str]:
-    """Build the complete RWS symbol/value batch for a resolved trajectory.
-
-    ABB Route:
-        Produces values for ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``.
-
-    ABB Constraints:
-        The returned mapping is intended to be written under a single RAPID
-        Mastership session. RAPID arrays are one-based.
-
-    Args:
-        resolved: Resolved trajectory payload.
-        task: RAPID task name.
-        module: RAPID module name.
-        on_progress: Optional local progress callback.
-        progress_step_percent: Minimum percentage step for progress callbacks.
-
-    Returns:
-        Ordered symbol/value mapping.
-
-
-    Example:
-        ::
-
-            values = _build_resolved_trajectory_values(
-                resolved=resolved,
-                task="T_ROB1",
-                module="TRAJCENTER",
-                on_progress=None,
-                progress_step_percent=5,
-            )
-    """
+    """Build the initial RWS state reset values before trajectory payload write."""
     values: dict[str, str] = {}
 
     values[symbol(task, module, "trajReady")] = _fmt_bool(False)
@@ -734,7 +695,28 @@ def _build_resolved_trajectory_values(
     values[symbol(task, module, "lastErrorCode")] = _fmt_num(STATUS_OK)
     values[symbol(task, module, "lastError")] = _fmt_string("")
     values[symbol(task, module, "transferProgress")] = _fmt_num(0)
-    values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(resolved.point_count)
+    values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(0)
+
+    return values
+
+
+def _build_resolved_trajectory_payload_values(
+    *,
+    resolved: ResolvedTrajectory,
+    task: str,
+    module: str,
+    on_progress: Callable[[int, int], None] | None,
+    progress_step_percent: int,
+) -> dict[str, str]:
+    """Build the RWS symbol/value batch for trajectory payload only.
+
+    This function writes process parameters, trajectory points and finally
+    ``nbLoadedTrajPoints``.
+
+    It does not write ``trajReady``.
+    It does not write ``sendTrajRequest``.
+    """
+    values: dict[str, str] = {}
 
     total_units = resolved.point_count + (
         MAX_PROCESS_PARAM_SET_COUNT * MAX_PROCESS_PARAM_PER_SET
@@ -790,13 +772,27 @@ def _build_resolved_trajectory_values(
             on_progress=on_progress,
         )
 
+    values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(resolved.point_count)
+
+    return values
+
+
+def _build_resolved_trajectory_finish_values(
+    *,
+    task: str,
+    module: str,
+) -> dict[str, str]:
+    """Build the final RWS state values after successful trajectory payload write."""
+    values: dict[str, str] = {}
+
     values[symbol(task, module, "transferProgress")] = _fmt_num(100)
     values[symbol(task, module, "lastErrorCode")] = _fmt_num(
         STATUS_TRAJECTORY_TRANSFERRED
     )
     values[symbol(task, module, "lastError")] = _fmt_string("")
-    values[symbol(task, module, "sendTrajRequest")] = _fmt_bool(False)
+    values[symbol(task, module, "transferError")] = _fmt_bool(False)
     values[symbol(task, module, "trajReady")] = _fmt_bool(True)
+    values[symbol(task, module, "sendTrajRequest")] = _fmt_bool(False)
 
     return values
 
