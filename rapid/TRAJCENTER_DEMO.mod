@@ -6,19 +6,19 @@ MODULE TRAJCENTER_Demo
 ! VERSION:       TrajCenter Demo v2.0
 !
 ! DESCRIPTION FR:
-!   Exemple dâ€™utilisation classique du module systÃ¨me TRAJCENTER.
+!   Exemple d?utilisation classique du module système TRAJCENTER.
 !
 !   Ce module montre comment :
-!       - initialiser lâ€™API RAPID TrajCenter ;
-!       - dÃ©clarer un tool et un workobject utilisateur ;
-!       - les exposer Ã  TrajCenter avec Upsert ;
+!       - initialiser l?API RAPID TrajCenter ;
+!       - déclarer un tool et un workobject utilisateur ;
+!       - les exposer à TrajCenter avec Upsert ;
 !       - configurer les defaults robot ;
 !       - demander un refresh metadata ;
-!       - demander le chargement dâ€™une trajectoire ;
-!       - exÃ©cuter la trajectoire chargÃ©e sans process.
+!       - demander le chargement d?une trajectoire ;
+!       - exécuter la trajectoire chargée sans process.
 !
 !   Limite :
-!       Lâ€™exÃ©cution process nâ€™est pas implÃ©mentÃ©e dans cet exemple.
+!       L?exécution process n?est pas implémentée dans cet exemple.
 !
 ! DESCRIPTION EN:
 !   Example of regular usage of the TRAJCENTER system module.
@@ -88,7 +88,7 @@ MODULE TRAJCENTER_Demo
         !----------------------------------------------------------------------
         ! FR:
         !   Initialisation minimale de la configuration cellule TrajCenter.
-        !   Ajoute ou met Ã  jour tool0 et wobj0.
+        !   Ajoute ou met à jour tool0 et wobj0.
         !
         ! EN:
         !   Minimal initialization of TrajCenter cell configuration.
@@ -99,7 +99,7 @@ MODULE TRAJCENTER_Demo
 
         !----------------------------------------------------------------------
         ! FR:
-        !   Exposition du tool et du wobj de dÃ©monstration Ã  TrajCenter.
+        !   Exposition du tool et du wobj de démonstration à TrajCenter.
         !
         !   Les fichiers .trajcenter pourront utiliser :
         !       tool_name = "demoTool"
@@ -120,7 +120,7 @@ MODULE TRAJCENTER_Demo
         ! FR:
         !   Configuration des defaults robot.
         !
-        !   Ces valeurs seront utilisÃ©es par le PC uniquement si les champs
+        !   Ces valeurs seront utilisées par le PC uniquement si les champs
         !   correspondants sont absents dans le fichier .trajcenter.
         !
         ! EN:
@@ -149,7 +149,7 @@ MODULE TRAJCENTER_Demo
         ! FR:
         !   Demande de refresh metadata.
         !
-        !   Le supervisor PC doit Ãªtre lancÃ© et abonnÃ© Ã  refreshMetaRequest.
+        !   Le supervisor PC doit être lancé et abonné à refreshMetaRequest.
         !
         ! EN:
         !   Request metadata refresh.
@@ -197,10 +197,10 @@ MODULE TRAJCENTER_Demo
 
         !----------------------------------------------------------------------
         ! FR:
-        !   ExÃ©cution de la trajectoire chargÃ©e sans process.
+        !   Exécution de la trajectoire chargée sans process.
         !
         !   Limite :
-        !       Les paramÃ¨tres process Ã©ventuellement prÃ©sents sont ignorÃ©s.
+        !       Les paramètres process éventuellement présents sont ignorés.
         !
         ! EN:
         !   Execute the loaded trajectory without process.
