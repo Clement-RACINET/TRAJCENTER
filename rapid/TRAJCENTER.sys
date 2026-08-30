@@ -559,6 +559,7 @@ MODULE TRAJCENTER(SYSMODULE)
     VAR errnum ERR_TRAJCENTER_WOBJ_TABLE_FULL := -1;
     VAR errnum ERR_TRAJCENTER_TOOL_NOT_FOUND := -1;
     VAR errnum ERR_TRAJCENTER_WOBJ_NOT_FOUND := -1;
+    VAR errnum ERR_TRAJCENTER_TRAJ_NOT_FOUND := -1;
     VAR errnum ERR_TRAJCENTER_EMPTY_NAME := -1;
     VAR bool trajCenterErrorsInitialized := FALSE;
 
@@ -1408,7 +1409,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !   an error through RAISE.
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_InitErrors()
-        IF trajCenterErrorsInitialized THEN
+        IF trajCenterErrorsInitialized = TRUE THEN
             RETURN;
         ENDIF
 
@@ -1425,6 +1426,7 @@ MODULE TRAJCENTER(SYSMODULE)
         BookErrNo ERR_TRAJCENTER_WOBJ_TABLE_FULL;
         BookErrNo ERR_TRAJCENTER_TOOL_NOT_FOUND;
         BookErrNo ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_TRAJ_NOT_FOUND;
         BookErrNo ERR_TRAJCENTER_EMPTY_NAME;
 
         trajCenterErrorsInitialized := TRUE;
@@ -1861,6 +1863,51 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
+    !   Recherche une trajectoire par nom dans les métadonnées chargées.
+    !
+    !   Prérequis :
+    !       Les métadonnées doivent avoir été rafraîchies avec
+    !       TRAJCENTER_RequestMetaRefresh et TRAJCENTER_WaitRequestDone.
+    !
+    !   Retour :
+    !       0  = non trouvée
+    !       >0 = index base 1 dans trajectories
+    !
+    !   La comparaison est exacte et sensible au contenu de la chaîne écrite
+    !   par le PC dans trajectories{i}.name.
+    !
+    ! EN:
+    !   Searches a trajectory by name in the loaded metadata.
+    !
+    !   Prerequisite:
+    !       Metadata must have been refreshed with TRAJCENTER_RequestMetaRefresh
+    !       and TRAJCENTER_WaitRequestDone.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajectories
+    !
+    !   The comparison is exact and depends on the string written by the PC into
+    !   trajectories{i}.name.
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindTrajectoryIndex(string trajName)
+        VAR num i;
+
+        IF trajName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        FOR i FROM 1 TO nbTrajAvailable DO
+            IF trajectories{i}.name = trajName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+    !--------------------------------------------------------------------------
+    ! FR:
     !   Demande au PC de rafraîchir les métadonnées des trajectoires.
     !
     ! EN:
@@ -1906,6 +1953,46 @@ MODULE TRAJCENTER(SYSMODULE)
         sendTrajRequest := TRUE;
     ENDPROC
 
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de charger une trajectoire en utilisant son nom.
+    !
+    !   Cette routine est une surcouche de TRAJCENTER_RequestTrajectory :
+    !       1. cherche trajName dans trajectories ;
+    !       2. récupère l'index correspondant ;
+    !       3. appelle TRAJCENTER_RequestTrajectory avec cet index.
+    !
+    !   Prérequis :
+    !       Les métadonnées doivent avoir été rafraîchies avant l'appel.
+    !
+    !   trajName :
+    !       Nom exact de la trajectoire dans trajectories{i}.name.
+    !
+    ! EN:
+    !   Requests the PC to load a trajectory using its name.
+    !
+    !   This routine is a wrapper around TRAJCENTER_RequestTrajectory:
+    !       1. searches trajName in trajectories;
+    !       2. retrieves the corresponding index;
+    !       3. calls TRAJCENTER_RequestTrajectory with that index.
+    !
+    !   Prerequisite:
+    !       Metadata must have been refreshed before calling this routine.
+    !
+    !   trajName:
+    !       Exact trajectory name in trajectories{i}.name.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestTrajectoryByName(string trajName)
+        VAR num trajIndex;
+
+        trajIndex := TRAJCENTER_FindTrajectoryIndex(trajName);
+
+        IF trajIndex = 0 THEN
+            RAISE ERR_TRAJCENTER_TRAJ_NOT_FOUND;
+        ENDIF
+
+        TRAJCENTER_RequestTrajectory trajIndex;
+    ENDPROC
 
 !------------------------------------------------------------------------------
 ! SECTION 9.5 - ATTENTES / WAIT HELPERS
@@ -1927,8 +2014,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
         elapsed := 0;
 
-        WHILE (sendTrajRequest OR refreshMetaRequest) DO
-            IF transferError THEN
+        WHILE (sendTrajRequest = TRUE) OR (refreshMetaRequest = TRUE) DO
+            IF transferError = TRUE THEN
                 RETURN;
             ENDIF
 

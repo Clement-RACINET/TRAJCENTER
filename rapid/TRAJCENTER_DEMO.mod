@@ -41,7 +41,7 @@ MODULE TRAJCENTER_DEMO
 ! CONFIGURATION DEMO / DEMO CONFIGURATION
 !==============================================================================
 
-    CONST num demoTrajectoryIndex := 1;
+    CONST string demoTrajectoryName := "000_trajectory_demo";
     CONST num demoRefreshTimeout := 30;
     CONST num demoTransferTimeout := 120;
 
@@ -143,9 +143,10 @@ MODULE TRAJCENTER_DEMO
         ! Chargement trajectoire
         !----------------------------------------------------------------------
         TPWrite "Step 6: trajectory load request";
-        TPWrite "Trajectory index:" \Num:=demoTrajectoryIndex;
+        TPWrite "Trajectory name:";
+        TPWrite demoTrajectoryName;
 
-        TRAJCENTER_RequestTrajectory demoTrajectoryIndex;
+        TRAJCENTER_RequestTrajectoryByName demoTrajectoryName;
         TRAJCENTER_WaitTrajectoryReady demoTransferTimeout;
 
         IF transferError = TRUE THEN
