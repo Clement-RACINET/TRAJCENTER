@@ -7,21 +7,21 @@ MODULE TRAJCENTER(SYSMODULE)
 ! TRANSPORT:     ABB Robot Web Services only
 !
 ! DESCRIPTION FR:
-!   Module syst�me unique TrajCenter v2.0.
+!   Module systeme unique TrajCenter v2.0.
 !
-!   Il d�finit l'ensemble du protocole robot c�t� ABB :
-!       - les types RECORD utilis�s pour les �changes ;
+!   Il definit l'ensemble du protocole robot cete ABB :
+!       - les types RECORD utilises pour les echanges ;
 !       - les limites globales du protocole ;
-!       - les codes d'�tat et d'erreur ;
-!       - les types de mouvements support�s ;
+!       - les codes d'etat et d'erreur ;
+!       - les types de mouvements supportes ;
 !       - le catalogue des process disponibles ;
 !       - les tools et workobjects disponibles pour TrajCenter ;
-!       - les variables d'�change RWS ;
-!       - les valeurs par d�faut robot lues par le PC.
+!       - les variables d'echange RWS ;
+!       - les valeurs par defaut robot lues par le PC.
 !
 !   Le PC communique avec le robot uniquement via ABB Robot Web Services.
-!   Les requ�tes robot -> PC sont d�clench�es par des flags PERS.
-!   Les �critures PC -> robot doivent �tre r�alis�es sous Mastership.
+!   Les requetes robot -> PC sont declenchees par des flags PERS.
+!   Les ecritures PC -> robot doivent etre realisees sous Mastership.
 !
 ! DESCRIPTION EN:
 !   Single TrajCenter v2.0 system module.
@@ -41,10 +41,12 @@ MODULE TRAJCENTER(SYSMODULE)
 !   PC -> robot writes must be performed under Mastership.
 !
 ! ENCODING FR:
-!   Ce fichier doit �tre enregistr� en ISO-8859-1, pas en UTF-8.
+!   Ce fichier doit etre enregistre en ISO-8859-1, pas en UTF-8.
+!   Pour simplifier les choses il a ete redige en ASCII pure.
 !
 ! ENCODING EN:
 !   This file must be saved as ISO-8859-1, not UTF-8.
+!   To simplify things, it was written in pure ASCII.
 !------------------------------------------------------------------------------
 
 
@@ -53,57 +55,57 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   Ce module est volontairement d�coup� en sections de maintenance.
-!   L'objectif est d'�viter de modifier plusieurs zones du fichier pour une
-!   m�me �volution fonctionnelle.
+!   Ce module est volontairement decoupe en sections de maintenance.
+!   L'objectif est d'eviter de modifier plusieurs zones du fichier pour une
+!   meme evolution fonctionnelle.
 !
 !   SECTION 1 - TYPES RECORD
-!       Ne pas modifier sauf �volution coordonn�e du protocole PC/RAPID.
-!       Modifier un RECORD peut casser la s�rialisation RWS.
+!       Ne pas modifier sauf evolution coordonnee du protocole PC/RAPID.
+!       Modifier un RECORD peut casser la serialisation RWS.
 !
 !   SECTION 2 - LIMITES GLOBALES
-!       Ne pas modifier sauf changement volontaire des capacit�s du protocole.
-!       Cette section inclut les tailles maximales des trajectoires, param�tres
-!       process, tools et workobjects expos�s � TrajCenter.
+!       Ne pas modifier sauf changement volontaire des capacites du protocole.
+!       Cette section inclut les tailles maximales des trajectoires, parametres
+!       process, tools et workobjects exposes e TrajCenter.
 !
 !   SECTION 3 - CODES D'ETAT ET D'ERREUR
-!       Ne pas modifier sans mettre � jour le client PC, la documentation et les
-!       programmes RAPID utilisateurs si n�cessaire.
+!       Ne pas modifier sans mettre e jour le client PC, la documentation et les
+!       programmes RAPID utilisateurs si necessaire.
 !
 !       Cette section contient deux familles distinctes :
-!           3.1 Codes PC/RWS �crits dans lastErrorCode.
-!           3.2 Erreurs locales RAPID lev�es par l'API TRAJCENTER_*.
+!           3.1 Codes PC/RWS ecrits dans lastErrorCode.
+!           3.2 Erreurs locales RAPID levees par l'API TRAJCENTER_*.
 !
 !   SECTION 4 - TYPES DE MOUVEMENT
-!       Ne pas modifier sauf ajout officiel d'un type de mouvement support�.
+!       Ne pas modifier sauf ajout officiel d'un type de mouvement supporte.
 !
 !   SECTION 5 - PROCESS
 !       Modifier uniquement cette section pour ajouter, retirer ou renommer un
-!       process support� par la cellule.
-!       Les routines d'application process ne sont pas encore impl�ment�es.
+!       process supporte par la cellule.
+!       Les routines d'application process ne sont pas encore implementees.
 !
 !   SECTION 6 - CONFIGURATION CELLULE
-!       Section modifiable par le programmeur robot pour d�clarer les tools et
+!       Section modifiable par le programmeur robot pour declarer les tools et
 !       workobjects disponibles.
-!       Les tools/wobjs peuvent aussi �tre ajout�s ou mis � jour depuis un
+!       Les tools/wobjs peuvent aussi etre ajoutes ou mis e jour depuis un
 !       programme RAPID classique via l'API TRAJCENTER_Upsert*.
 !
 !   SECTION 7 - VARIABLES RWS
-!       Ne pas modifier les noms, types ou dimensions sans mettre � jour le
+!       Ne pas modifier les noms, types ou dimensions sans mettre e jour le
 !       client PC TrajCenter.
 !
 !   SECTION 8 - VARIABLES PAR DEFAUT DU ROBOT
-!       Section r�glable � la mise en service.
-!       Ces variables font partie du protocole RWS mais sont isol�es pour
+!       Section reglable e la mise en service.
+!       Ces variables font partie du protocole RWS mais sont isolees pour
 !       faciliter la configuration cellule.
 !
 !   SECTION 9 - API RAPID TRAJCENTER
-!       Section destin�e aux programmes RAPID utilisateurs.
-!       Elle fournit les routines de configuration, de requ�te, d'attente,
-!       d'acc�s aux donn�es charg�es et d'ex�cution sans process.
+!       Section destinee aux programmes RAPID utilisateurs.
+!       Elle fournit les routines de configuration, de requete, d'attente,
+!       d'acces aux donnees chargees et d'execution sans process.
 !
-!       Les sous-sections process sont volontairement pr�sentes mais non
-!       impl�ment�es pour documenter l'intention de conception future.
+!       Les sous-sections process sont volontairement presentes mais non
+!       implementees pour documenter l'intention de conception future.
 !
 ! EN:
 !   This module is intentionally split into maintenance sections.
@@ -167,8 +169,8 @@ MODULE TRAJCENTER(SYSMODULE)
 ! FR:
 !   Cette section contient uniquement les types RECORD.
 !   L'ordre des champs dans les RECORD doit rester stable.
-!   Le PC �crit certains RECORD complets via RWS : l'ordre des champs est donc
-!   une partie du contrat de s�rialisation.
+!   Le PC ecrit certains RECORD complets via RWS : l'ordre des champs est donc
+!   une partie du contrat de serialisation.
 !
 ! EN:
 !   This section contains RECORD types only.
@@ -180,10 +182,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Donn�es compl�tes d'un point trajectoire.
+    !   Donnees completes d'un point trajectoire.
     !
-    !   Chaque entr�e trajData{i} contient les informations n�cessaires au robot
-    !   pour ex�cuter un point :
+    !   Chaque entree trajData{i} contient les informations necessaires au robot
+    !   pour executer un point :
     !       - type de mouvement ;
     !       - robtarget ABB ;
     !       - vitesse TCP ;
@@ -191,7 +193,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !       - prise en compte de la configuration axe ;
     !       - index tool ;
     !       - index workobject ;
-    !       - index du jeu de param�tres process.
+    !       - index du jeu de parametres process.
     !
     ! EN:
     !   Complete data for one trajectory point.
@@ -218,19 +220,19 @@ MODULE TRAJCENTER(SYSMODULE)
     !       EN: TCP speed in mm/s, strictly positive.
     !
     !   zoneType:
-    !       FR: zone ABB cod�e num�riquement.
+    !       FR: zone ABB codee numeriquement.
     !       EN: ABB zone encoded as numeric value.
     !
     !   toolIndex:
-    !       FR: index base 1 dans trajTools. 0 = non d�fini.
+    !       FR: index base 1 dans trajTools. 0 = non defini.
     !       EN: 1-based index in trajTools. 0 = undefined.
     !
     !   wobjIndex:
-    !       FR: index base 1 dans trajWobjs. 0 = non d�fini.
+    !       FR: index base 1 dans trajWobjs. 0 = non defini.
     !       EN: 1-based index in trajWobjs. 0 = undefined.
     !
     !   processParamIndex:
-    !       FR: 0 = aucun param�tre process.
+    !       FR: 0 = aucun parametre process.
     !           1..256 = index de ligne dans processParams.
     !       EN: 0 = no process parameters.
     !           1..256 = row index in processParams.
@@ -249,8 +251,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   M�tadonn�es d'une trajectoire disponible dans le store PC.
-    !   Le PC �crit le tableau trajectories lors d'un refresh metadata.
+    !   Metadonnees d'une trajectoire disponible dans le store PC.
+    !   Le PC ecrit le tableau trajectories lors d'un refresh metadata.
     !
     ! EN:
     !   Metadata for one trajectory available in the PC store.
@@ -281,11 +283,11 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Entr�e workobject expos�e � TrajCenter.
+    !   Entree workobject exposee e TrajCenter.
     !
     !   Le PC lit trajWobjs via RWS.
     !   Il compare les wobj_name des fichiers .trajcenter aux champs name, puis
-    !   �crit l'index base 1 correspondant dans trajData{i}.wobjIndex.
+    !   ecrit l'index base 1 correspondant dans trajData{i}.wobjIndex.
     !
     ! EN:
     !   Workobject entry exposed to TrajCenter.
@@ -302,11 +304,11 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Entr�e tool expos�e � TrajCenter.
+    !   Entree tool exposee e TrajCenter.
     !
     !   Le PC lit trajTools via RWS.
     !   Il compare les tool_name des fichiers .trajcenter aux champs name, puis
-    !   �crit l'index base 1 correspondant dans trajData{i}.toolIndex.
+    !   ecrit l'index base 1 correspondant dans trajData{i}.toolIndex.
     !
     ! EN:
     !   Tool entry exposed to TrajCenter.
@@ -323,11 +325,11 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Param�tre process num�rique.
+    !   Parametre process numerique.
     !
     !   Convention :
-    !       name = "" signifie slot inutilis�.
-    !       value est num�rique uniquement.
+    !       name = "" signifie slot inutilise.
+    !       value est numerique uniquement.
     !
     ! EN:
     !   Numeric process parameter.
@@ -344,10 +346,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Type process connu c�t� robot.
+    !   Type process connu cete robot.
     !
-    !   Le PC lit processTypes via RWS pour valider que le process demand� par
-    !   une trajectoire existe sur le contr�leur.
+    !   Le PC lit processTypes via RWS pour valider que le process demande par
+    !   une trajectoire existe sur le contreleur.
     !
     ! EN:
     !   Process type known on the robot side.
@@ -357,7 +359,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !
     ! Fields / Champs:
     !   id:
-    !       FR: identifiant num�rique du process.
+    !       FR: identifiant numerique du process.
     !       EN: numeric process identifier.
     !
     !   name:
@@ -376,8 +378,8 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 ! FR:
 !   Limites dimensionnelles globales du protocole.
-!   Elles doivent rester coh�rentes avec les dimensions des tableaux RWS et avec
-!   les validations c�t� PC.
+!   Elles doivent rester coherentes avec les dimensions des tableaux RWS et avec
+!   les validations cete PC.
 !
 ! EN:
 !   Global dimensional limits of the protocol.
@@ -385,27 +387,27 @@ MODULE TRAJCENTER(SYSMODULE)
 !   validations.
 !==============================================================================
 
-    ! FR: Nombre maximal de trajectoires list�es par le PC.
+    ! FR: Nombre maximal de trajectoires listees par le PC.
     ! EN: Maximum number of trajectories listed by the PC.
     CONST num maxTrajCount := 256;
 
-    ! FR: Nombre maximal de points transf�rables dans trajData.
+    ! FR: Nombre maximal de points transferables dans trajData.
     ! EN: Maximum number of trajectory points transferable into trajData.
     CONST num maxTrajPointCount := 100000;
 
-    ! FR: Nombre maximal de jeux distincts de param�tres process.
+    ! FR: Nombre maximal de jeux distincts de parametres process.
     ! EN: Maximum number of distinct process parameter sets.
     CONST num maxProcessParamSetCount := 256;
 
-    ! FR: Nombre maximal de param�tres par jeu process.
+    ! FR: Nombre maximal de parametres par jeu process.
     ! EN: Maximum number of parameters per process parameter set.
     CONST num maxProcessParamPerSet := 10;
 
-    ! FR: Nombre maximal de tools expos�s � TrajCenter.
+    ! FR: Nombre maximal de tools exposes e TrajCenter.
     ! EN: Maximum number of tools exposed to TrajCenter.
     CONST num maxTrajToolCount := 256;
 
-    ! FR: Nombre maximal de workobjects expos�s � TrajCenter.
+    ! FR: Nombre maximal de workobjects exposes e TrajCenter.
     ! EN: Maximum number of workobjects exposed to TrajCenter.
     CONST num maxTrajWobjCount := 256;
 
@@ -417,13 +419,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !   Cette section regroupe deux familles d'erreurs distinctes :
 !
 !   3.1 Codes PC/RWS :
-!       Codes num�riques �crits par le PC dans lastErrorCode.
-!       Ils d�crivent l'�tat du protocole PC <-> robot.
+!       Codes numeriques ecrits par le PC dans lastErrorCode.
+!       Ils decrivent l'etat du protocole PC <-> robot.
 !
 !   3.2 Erreurs locales RAPID :
-!       Erreurs errnum lev�es par les routines RAPID TrajCenter avec RAISE.
-!       Elles d�crivent une mauvaise utilisation locale de l'API RAPID ou un
-!       �tat incoh�rent d�tect� c�t� robot.
+!       Erreurs errnum levees par les routines RAPID TrajCenter avec RAISE.
+!       Elles decrivent une mauvaise utilisation locale de l'API RAPID ou un
+!       etat incoherent detecte cete robot.
 !
 ! EN:
 !   This section groups two distinct error families:
@@ -445,11 +447,11 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Les codes 200xxx indiquent des �tats de succ�s.
+!   Les codes 200xxx indiquent des etats de succes.
 !   Les codes 400xxx indiquent des erreurs de validation trajectoire.
-!   Les codes 401/403/404/408/409 indiquent des erreurs d'acc�s, de ressource,
-!   de timeout ou d'�tat.
-!   Les codes 500xxx et plus indiquent des erreurs client, contr�leur ou
+!   Les codes 401/403/404/408/409 indiquent des erreurs d'acces, de ressource,
+!   de timeout ou d'etat.
+!   Les codes 500xxx et plus indiquent des erreurs client, contreleur ou
 !   infrastructure.
 !
 ! EN:
@@ -461,7 +463,7 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    ! Success / Succ�s
+    ! Success / Succes
     !--------------------------------------------------------------------------
     CONST num statusOk := 200000;
     CONST num statusMetadataRefreshed := 200001;
@@ -493,7 +495,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
     !--------------------------------------------------------------------------
-    ! RWS access and resources / Acc�s RWS et ressources
+    ! RWS access and resources / Acces RWS et ressources
     !--------------------------------------------------------------------------
     CONST num errorRwsAuthenticationRefused := 401001;
     CONST num errorMastershipRefused := 403001;
@@ -507,7 +509,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
     !--------------------------------------------------------------------------
-    ! Timeouts and state conflicts / Timeouts et conflits d'�tat
+    ! Timeouts and state conflicts / Timeouts et conflits d'etat
     !--------------------------------------------------------------------------
     CONST num errorRwsRequestTimeout := 408001;
     CONST num errorTransferTimeout := 408002;
@@ -517,7 +519,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! Internal, serialization and controller errors
-    ! Erreurs internes, s�rialisation et contr�leur
+    ! Erreurs internes, serialisation et contreleur
     !--------------------------------------------------------------------------
     CONST num errorInternalClient := 500001;
     CONST num errorSerialization := 500002;
@@ -532,10 +534,10 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Ces erreurs sont lev�es c�t� RAPID par les routines TRAJCENTER_*.
-!   Elles ne sont pas �crites par le PC dans lastErrorCode.
+!   Ces erreurs sont levees cete RAPID par les routines TRAJCENTER_*.
+!   Elles ne sont pas ecrites par le PC dans lastErrorCode.
 !
-!   Elles doivent �tre initialis�es une fois par TRAJCENTER_InitErrors avant
+!   Elles doivent etre initialisees une fois par TRAJCENTER_InitErrors avant
 !   utilisation des routines susceptibles de faire RAISE.
 !
 ! EN:
@@ -569,8 +571,8 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   Constantes de type de mouvement utilis�es dans trajData{i}.moveType.
-!   Ne pas modifier sans mettre � jour le PC et les routines d'ex�cution RAPID.
+!   Constantes de type de mouvement utilisees dans trajData{i}.moveType.
+!   Ne pas modifier sans mettre e jour le PC et les routines d'execution RAPID.
 !
 ! EN:
 !   Motion type constants used in trajData{i}.moveType.
@@ -592,8 +594,8 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 !   Pour ajouter un process :
 !       1. Ajouter une constante process.
-!       2. Incr�menter processTypeCount.
-!       3. Ajouter l'entr�e correspondante � processTypes.
+!       2. Incrementer processTypeCount.
+!       3. Ajouter l'entree correspondante e processTypes.
 !
 !   Ne modifier aucune autre section pour un simple ajout de process.
 !
@@ -626,7 +628,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Nombre d'entr�es valides dans processTypes.
+    !   Nombre d'entrees valides dans processTypes.
     !
     ! EN:
     !   Number of valid entries in processTypes.
@@ -636,13 +638,13 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Catalogue process connu c�t� robot.
+    !   Catalogue process connu cete robot.
     !
     !   Le PC lit ce tableau via RWS avant transfert trajectoire.
-    !   Les valeurs runtime des param�tres process ne sont pas stock�es ici.
-    !   Elles sont �crites par le PC dans processParams.
+    !   Les valeurs runtime des parametres process ne sont pas stockees ici.
+    !   Elles sont ecrites par le PC dans processParams.
     !
-    !   Entr�es valides :
+    !   Entrees valides :
     !       processTypes{1..processTypeCount}
     !
     ! EN:
@@ -670,23 +672,23 @@ MODULE TRAJCENTER(SYSMODULE)
 ! FR:
 !   Section cellule modifiable par le programmeur robot.
 !
-!   Cette section expose � TrajCenter les tools et workobjects disponibles dans
+!   Cette section expose e TrajCenter les tools et workobjects disponibles dans
 !   la cellule.
 !
 !   Le PC ne stocke pas les tooldata/wobjdata complets dans les fichiers
-!   .trajcenter. Il stocke ou re�oit seulement des noms logiques :
+!   .trajcenter. Il stocke ou reeoit seulement des noms logiques :
 !       - tool_name
 !       - wobj_name
 !
-!   Le PC lit trajTools et trajWobjs via RWS, r�sout ces noms en index RAPID
-!   base 1, puis �crit ces index dans trajData.
+!   Le PC lit trajTools et trajWobjs via RWS, resout ces noms en index RAPID
+!   base 1, puis ecrit ces index dans trajData.
 !
 !   Convention slot libre :
 !       trajTools{i}.name = ""  => slot tool libre
 !       trajWobjs{i}.name = ""  => slot wobj libre
 !
 !   Les routines TRAJCENTER_UpsertTool et TRAJCENTER_UpsertWobj permettent de
-!   mettre � jour cette configuration depuis un programme RAPID classique.
+!   mettre e jour cette configuration depuis un programme RAPID classique.
 !
 ! EN:
 !   Cell section editable by the robot programmer.
@@ -720,11 +722,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Workobjects disponibles pour TrajCenter.
     !
     !   Taille fixe protocole : maxTrajWobjCount.
-    !   Les slots dont name = "" sont consid�r�s libres.
+    !   Les slots dont name = "" sont consideres libres.
     !
     !   Recommandation :
-    !       appeler TRAJCENTER_InitCellConfig au d�marrage ou en mise en service
-    !       pour cr�er au minimum l'entr�e "wobj0".
+    !       appeler TRAJCENTER_InitCellConfig au demarrage ou en mise en service
+    !       pour creer au minimum l'entree "wobj0".
     !
     ! EN:
     !   Workobjects available for TrajCenter.
@@ -748,11 +750,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Tools disponibles pour TrajCenter.
     !
     !   Taille fixe protocole : maxTrajToolCount.
-    !   Les slots dont name = "" sont consid�r�s libres.
+    !   Les slots dont name = "" sont consideres libres.
     !
     !   Recommandation :
-    !       appeler TRAJCENTER_InitCellConfig au d�marrage ou en mise en service
-    !       pour cr�er au minimum l'entr�e "tool0".
+    !       appeler TRAJCENTER_InitCellConfig au demarrage ou en mise en service
+    !       pour creer au minimum l'entree "tool0".
     !
     ! EN:
     !   Tools available for TrajCenter.
@@ -773,8 +775,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Tooldata temporaire utilis� par les routines de maintenance.
-    !   Cette variable n'est pas utilis�e directement par le protocole de
+    !   Tooldata temporaire utilise par les routines de maintenance.
+    !   Cette variable n'est pas utilisee directement par le protocole de
     !   transfert PC <-> robot.
     !
     ! EN:
@@ -791,8 +793,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Wobjdata temporaire utilis� par les routines de maintenance.
-    !   Cette variable n'est pas utilis�e directement par le protocole de
+    !   Wobjdata temporaire utilise par les routines de maintenance.
+    !   Cette variable n'est pas utilisee directement par le protocole de
     !   transfert PC <-> robot.
     !
     ! EN:
@@ -855,13 +857,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   Variables d'�change ABB Robot Web Services.
+!   Variables d'echange ABB Robot Web Services.
 !
-!   Les flags de requ�te sont PERS afin de permettre l'abonnement RWS c�t� PC.
-!   Les autres variables sont VAR car elles repr�sentent un �tat runtime.
+!   Les flags de requete sont PERS afin de permettre l'abonnement RWS cete PC.
+!   Les autres variables sont VAR car elles representent un etat runtime.
 !
-!   Le PC doit �crire ces variables sous Mastership.
-!   Les �v�nements FALSE sur les flags de requ�te doivent �tre ignor�s c�t� PC.
+!   Le PC doit ecrire ces variables sous Mastership.
+!   Les evenements FALSE sur les flags de requete doivent etre ignores cete PC.
 !
 ! EN:
 !   ABB Robot Web Services exchange variables.
@@ -882,19 +884,19 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Demande de chargement trajectoire depuis le PC.
     !
-    !   S�quence c�t� robot :
+    !   Sequence cete robot :
     !       selectedTrajIndex := k;
     !       sendTrajRequest := TRUE;
     !
-    !   Comportement c�t� PC :
-    !       1. Recevoir l'�v�nement TRUE via abonnement RWS.
+    !   Comportement cete PC :
+    !       1. Recevoir l'evenement TRUE via abonnement RWS.
     !       2. Lire selectedTrajIndex.
     !       3. Charger le fichier .trajcenter correspondant.
     !       4. Lire les variables par defaut, tools, wobjs et processTypes.
-    !       5. R�soudre les champs robot.
-    !       6. �crire nbLoadedTrajPoints, processParams et trajData.
-    !       7. �crire les variables d'�tat.
-    !       8. Remettre sendTrajRequest � FALSE.
+    !       5. Resoudre les champs robot.
+    !       6. ecrire nbLoadedTrajPoints, processParams et trajData.
+    !       7. ecrire les variables d'etat.
+    !       8. Remettre sendTrajRequest e FALSE.
     !
     ! EN:
     !   Request trajectory loading from the PC.
@@ -918,18 +920,18 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Demande de rafra�chissement metadata depuis le PC.
+    !   Demande de rafraechissement metadata depuis le PC.
     !
-    !   S�quence c�t� robot :
+    !   Sequence cete robot :
     !       refreshMetaRequest := TRUE;
     !
-    !   Comportement c�t� PC :
-    !       1. Recevoir l'�v�nement TRUE via abonnement RWS.
+    !   Comportement cete PC :
+    !       1. Recevoir l'evenement TRUE via abonnement RWS.
     !       2. Scanner le store trajectoire PC.
     !       3. Lister les fichiers .trajcenter exportables.
-    !       4. �crire nbTrajAvailable et trajectories.
-    !       5. �crire les variables d'�tat.
-    !       6. Remettre refreshMetaRequest � FALSE.
+    !       4. ecrire nbTrajAvailable et trajectories.
+    !       5. ecrire les variables d'etat.
+    !       6. Remettre refreshMetaRequest e FALSE.
     !
     ! EN:
     !   Request metadata refresh from the PC.
@@ -954,10 +956,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Index de la trajectoire s�lectionn�e.
+    !   Index de la trajectoire selectionnee.
     !
     !   Convention :
-    !       0 = aucune trajectoire s�lectionn�e.
+    !       0 = aucune trajectoire selectionnee.
     !       1..nbTrajAvailable = index valide dans trajectories.
     !
     ! EN:
@@ -974,23 +976,23 @@ MODULE TRAJCENTER(SYSMODULE)
 ! SECTION 7.3 - ETAT OPERATIONNEL / OPERATION STATUS
 !------------------------------------------------------------------------------
 
-    ! FR: TRUE uniquement lorsque trajData est complet et ex�cutable.
+    ! FR: TRUE uniquement lorsque trajData est complet et executable.
     ! EN: TRUE only when trajData is complete and executable.
     VAR bool trajReady := FALSE;
 
-    ! FR: TRUE lorsque le dernier refresh ou transfert a �chou�.
+    ! FR: TRUE lorsque le dernier refresh ou transfert a echoue.
     ! EN: TRUE when the latest refresh or transfer failed.
     VAR bool transferError := FALSE;
 
-    ! FR: Dernier code d'�tat ou d'erreur �crit par le PC.
+    ! FR: Dernier code d'etat ou d'erreur ecrit par le PC.
     ! EN: Last status or error code written by the PC.
     VAR num lastErrorCode := statusOk;
 
-    ! FR: Message court associ� au dernier �tat ou � la derni�re erreur.
+    ! FR: Message court associe au dernier etat ou e la derniere erreur.
     ! EN: Short message associated with the latest status or error.
     VAR string lastError := "";
 
-    ! FR: Progression transfert en pourcentage, de 0 � 100.
+    ! FR: Progression transfert en pourcentage, de 0 e 100.
     ! EN: Transfer progress in percent, from 0 to 100.
     VAR num transferProgress := 0;
 
@@ -1001,12 +1003,12 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Nombre d'entr�es valides dans trajectories.
+    !   Nombre d'entrees valides dans trajectories.
     !
     !   Plage valide :
     !       0..256
     !
-    !   Entr�es valides :
+    !   Entrees valides :
     !       trajectories{1..nbTrajAvailable}
     !
     ! EN:
@@ -1023,7 +1025,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   M�tadonn�es des trajectoires disponibles dans le store PC.
+    !   Metadonnees des trajectoires disponibles dans le store PC.
     !
     !   Champs :
     !       trajectories{i}.name        = nom affichable
@@ -1047,9 +1049,9 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Nombre d'entr�es valides dans trajData pour la trajectoire charg�e.
+    !   Nombre d'entrees valides dans trajData pour la trajectoire chargee.
     !
-    !   Les routines d'ex�cution RAPID doivent parcourir :
+    !   Les routines d'execution RAPID doivent parcourir :
     !       FOR i FROM 1 TO nbLoadedTrajPoints DO
     !           ...
     !       ENDFOR
@@ -1067,9 +1069,9 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Donn�es de la trajectoire charg�e par le PC.
+    !   Donnees de la trajectoire chargee par le PC.
     !
-    !   Entr�es valides :
+    !   Entrees valides :
     !       trajData{1..nbLoadedTrajPoints}
     !
     ! EN:
@@ -1083,23 +1085,23 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Table des param�tres process �crite par le PC.
+    !   Table des parametres process ecrite par le PC.
     !
-    !   Premi�re dimension :
-    !       index du jeu de param�tres process, 1..256.
+    !   Premiere dimension :
+    !       index du jeu de parametres process, 1..256.
     !
-    !   Deuxi�me dimension :
-    !       slot de param�tre, 1..10.
+    !   Deuxieme dimension :
+    !       slot de parametre, 1..10.
     !
     !   Convention :
-    !       processParams{i,j}.name = "" signifie slot inutilis�.
+    !       processParams{i,j}.name = "" signifie slot inutilise.
     !
     !   Mapping point :
     !       trajData{k}.processParamIndex = 0
-    !           aucun param�tre process pour le point k.
+    !           aucun parametre process pour le point k.
     !
     !       trajData{k}.processParamIndex = p
-    !           les param�tres process sont processParams{p,1..10}.
+    !           les parametres process sont processParams{p,1..10}.
     !
     ! EN:
     !   Process parameter table written by the PC.
@@ -1128,13 +1130,13 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   Valeurs par d�faut lues par le PC avant transfert trajectoire.
+!   Valeurs par defaut lues par le PC avant transfert trajectoire.
 !
-!   Ces variables font partie du protocole RWS, mais sont isol�es ici car elles
-!   sont typiquement r�gl�es � la mise en service cellule.
+!   Ces variables font partie du protocole RWS, mais sont isolees ici car elles
+!   sont typiquement reglees e la mise en service cellule.
 !
 !   Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
-!   Un fallback n'est autoris� que si le flag hasDefault* correspondant vaut
+!   Un fallback n'est autorise que si le flag hasDefault* correspondant vaut
 !   TRUE.
 !
 ! EN:
@@ -1154,7 +1156,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Indique si une vitesse TCP par d�faut est disponible c�t� robot.
+    !   Indique si une vitesse TCP par defaut est disponible cete robot.
     !
     !   Si hasDefaultTcpSpeed = FALSE et que tcp_speed est absent du fichier
     !   .trajcenter, le PC doit refuser le transfert.
@@ -1170,8 +1172,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Vitesse TCP par d�faut en mm/s.
-    !   Utilis�e uniquement si hasDefaultTcpSpeed = TRUE.
+    !   Vitesse TCP par defaut en mm/s.
+    !   Utilisee uniquement si hasDefaultTcpSpeed = TRUE.
     !
     ! EN:
     !   Default TCP speed in mm/s.
@@ -1186,7 +1188,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Indique si une zone par d�faut est disponible c�t� robot.
+    !   Indique si une zone par defaut est disponible cete robot.
     !
     !   Si hasDefaultZoneType = FALSE et que zone_type est absent du fichier
     !   .trajcenter, le PC doit refuser le transfert.
@@ -1202,11 +1204,11 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Zone par d�faut.
+    !   Zone par defaut.
     !
-    !   Utilis�e uniquement si hasDefaultZoneType = TRUE.
+    !   Utilisee uniquement si hasDefaultZoneType = TRUE.
     !
-    !   Valeurs autoris�es :
+    !   Valeurs autorisees :
     !       0, 1, 5, 10, 15, 20, 30, 40, 50, 60,
     !       80, 100, 150, 200, 255.
     !
@@ -1228,7 +1230,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Indique si un nom de tool par d�faut est disponible c�t� robot.
+    !   Indique si un nom de tool par defaut est disponible cete robot.
     !
     !   Si hasDefaultToolName = FALSE et que tool_name est absent du fichier
     !   .trajcenter, le PC doit refuser le transfert.
@@ -1249,10 +1251,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Nom du tool par d�faut.
+    !   Nom du tool par defaut.
     !
     !   Ce n'est pas un tooldata.
-    !   Le PC r�sout ce nom dans trajTools pour obtenir un toolIndex.
+    !   Le PC resout ce nom dans trajTools pour obtenir un toolIndex.
     !
     ! EN:
     !   Default tool name.
@@ -1269,7 +1271,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Indique si un nom de workobject par d�faut est disponible c�t� robot.
+    !   Indique si un nom de workobject par defaut est disponible cete robot.
     !
     !   Si hasDefaultWobjName = FALSE et que wobj_name est absent du fichier
     !   .trajcenter, le PC doit refuser le transfert.
@@ -1291,10 +1293,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Nom du workobject par d�faut.
+    !   Nom du workobject par defaut.
     !
     !   Ce n'est pas un wobjdata.
-    !   Le PC r�sout ce nom dans trajWobjs pour obtenir un wobjIndex.
+    !   Le PC resout ce nom dans trajWobjs pour obtenir un wobjIndex.
     !
     ! EN:
     !   Default workobject name.
@@ -1311,14 +1313,14 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Type de mouvement par d�faut.
+    !   Type de mouvement par defaut.
     !
     !   Convention :
     !       moveTypeL = MoveL
     !       moveTypeJ = MoveJ
     !       moveTypeC = MoveC
     !
-    !   Recommand� :
+    !   Recommande :
     !       moveTypeL
     !
     ! EN:
@@ -1337,10 +1339,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Valeur par d�faut pour readConfs.
+    !   Valeur par defaut pour readConfs.
     !
-    !   Le PC peut appliquer une r�gle d'import plus sp�cifique :
-    !       - si confdata est pr�sent et readconfs absent : TRUE ;
+    !   Le PC peut appliquer une regle d'import plus specifique :
+    !       - si confdata est present et readconfs absent : TRUE ;
     !       - si confdata est absent et readconfs absent : FALSE.
     !
     ! EN:
@@ -1358,20 +1360,20 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   API RAPID destin�e aux programmes utilisateurs classiques.
+!   API RAPID destinee aux programmes utilisateurs classiques.
 !
 !   Elle permet de :
 !       - initialiser les erreurs locales RAPID ;
 !       - initialiser une configuration cellule minimale ;
-!       - ajouter ou mettre � jour des tools/wobjs expos�s � TrajCenter ;
-!       - d�clencher les requ�tes PC via RWS ;
+!       - ajouter ou mettre e jour des tools/wobjs exposes e TrajCenter ;
+!       - declencher les requetes PC via RWS ;
 !       - attendre la fin d'un refresh ou d'un transfert ;
-!       - acc�der aux points charg�s ;
-!       - ex�cuter une trajectoire charg�e sans process m�tier.
+!       - acceder aux points charges ;
+!       - executer une trajectoire chargee sans process metier.
 !
-!   Les routines d'ex�cution process sont volontairement laiss�es en attente.
-!   Les donn�es process sont transf�r�es et stock�es, mais leur interpr�tation
-!   d�pend du proc�d� cellule.
+!   Les routines d'execution process sont volontairement laissees en attente.
+!   Les donnees process sont transferees et stockees, mais leur interpretation
+!   depend du procede cellule.
 !
 ! EN:
 !   RAPID API intended for regular user programs.
@@ -1397,9 +1399,9 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Initialise les erreurs locales RAPID utilis�es par l'API TrajCenter.
+    !   Initialise les erreurs locales RAPID utilisees par l'API TrajCenter.
     !
-    !   Cette routine doit �tre appel�e une fois avant d'utiliser les routines
+    !   Cette routine doit etre appelee une fois avant d'utiliser les routines
     !   pouvant lever une erreur par RAISE.
     !
     ! EN:
@@ -1447,7 +1449,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !       - wobj0
     !
     !   Cette routine ne vide pas tous les tableaux.
-    !   Elle ajoute ou met � jour seulement les entr�es "tool0" et "wobj0".
+    !   Elle ajoute ou met e jour seulement les entrees "tool0" et "wobj0".
     !
     ! EN:
     !   Initializes a minimal cell configuration with:
@@ -1489,7 +1491,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Recherche un tool par nom dans trajTools.
     !
     !   Retour :
-    !       0  = non trouv�
+    !       0  = non trouve
     !       >0 = index base 1 dans trajTools
     !
     ! EN:
@@ -1517,7 +1519,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Recherche un workobject par nom dans trajWobjs.
     !
     !   Retour :
-    !       0  = non trouv�
+    !       0  = non trouve
     !       >0 = index base 1 dans trajWobjs
     !
     ! EN:
@@ -1542,16 +1544,16 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ajoute ou met � jour un tool expos� � TrajCenter.
+    !   Ajoute ou met e jour un tool expose e TrajCenter.
     !
-    !   R�gle :
-    !       - si le nom existe d�j�, sa valeur est remplac�e ;
-    !       - sinon, le premier slot libre name="" est utilis� ;
-    !       - si aucun slot n'est libre, une erreur RAPID est lev�e.
+    !   Regle :
+    !       - si le nom existe deje, sa valeur est remplacee ;
+    !       - sinon, le premier slot libre name="" est utilise ;
+    !       - si aucun slot n'est libre, une erreur RAPID est levee.
     !
-    !   Toute modification de tool invalide la trajectoire charg�e, car les
-    !   mouvements d�j� transf�r�s peuvent r�f�rencer une configuration devenue
-    !   obsol�te.
+    !   Toute modification de tool invalide la trajectoire chargee, car les
+    !   mouvements deje transferes peuvent referencer une configuration devenue
+    !   obsolete.
     !
     ! EN:
     !   Adds or updates a tool exposed to TrajCenter.
@@ -1598,16 +1600,16 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ajoute ou met � jour un workobject expos� � TrajCenter.
+    !   Ajoute ou met e jour un workobject expose e TrajCenter.
     !
-    !   R�gle :
-    !       - si le nom existe d�j�, sa valeur est remplac�e ;
-    !       - sinon, le premier slot libre name="" est utilis� ;
-    !       - si aucun slot n'est libre, une erreur RAPID est lev�e.
+    !   Regle :
+    !       - si le nom existe deje, sa valeur est remplacee ;
+    !       - sinon, le premier slot libre name="" est utilise ;
+    !       - si aucun slot n'est libre, une erreur RAPID est levee.
     !
-    !   Toute modification de workobject invalide la trajectoire charg�e, car
-    !   les mouvements d�j� transf�r�s peuvent r�f�rencer une configuration
-    !   devenue obsol�te.
+    !   Toute modification de workobject invalide la trajectoire chargee, car
+    !   les mouvements deje transferes peuvent referencer une configuration
+    !   devenue obsolete.
     !
     ! EN:
     !   Adds or updates a workobject exposed to TrajCenter.
@@ -1655,13 +1657,13 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Supprime un tool expos� � TrajCenter.
+    !   Supprime un tool expose e TrajCenter.
     !
-    !   La suppression lib�re le slot en mettant name � "" et remet une valeur
+    !   La suppression libere le slot en mettant name e "" et remet une valeur
     !   tooldata neutre.
     !
-    !   La trajectoire charg�e est invalid�e, car les index tool d�j� pr�sents
-    !   dans trajData peuvent devenir incoh�rents.
+    !   La trajectoire chargee est invalidee, car les index tool deje presents
+    !   dans trajData peuvent devenir incoherents.
     !
     ! EN:
     !   Deletes a tool exposed to TrajCenter.
@@ -1699,13 +1701,13 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Supprime un workobject expos� � TrajCenter.
+    !   Supprime un workobject expose e TrajCenter.
     !
-    !   La suppression lib�re le slot en mettant name � "" et remet une valeur
+    !   La suppression libere le slot en mettant name e "" et remet une valeur
     !   wobjdata neutre.
     !
-    !   La trajectoire charg�e est invalid�e, car les index wobj d�j� pr�sents
-    !   dans trajData peuvent devenir incoh�rents.
+    !   La trajectoire chargee est invalidee, car les index wobj deje presents
+    !   dans trajData peuvent devenir incoherents.
     !
     ! EN:
     !   Deletes a workobject exposed to TrajCenter.
@@ -1746,12 +1748,12 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Vide tous les tools expos�s � TrajCenter.
+    !   Vide tous les tools exposes e TrajCenter.
     !
-    !   Apr�s appel, il est recommand� d'appeler TRAJCENTER_InitCellConfig pour
-    !   recr�er au minimum tool0.
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer au minimum tool0.
     !
-    !   La trajectoire charg�e est invalid�e.
+    !   La trajectoire chargee est invalidee.
     !
     ! EN:
     !   Clears all tools exposed to TrajCenter.
@@ -1780,12 +1782,12 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Vide tous les workobjects expos�s � TrajCenter.
+    !   Vide tous les workobjects exposes e TrajCenter.
     !
-    !   Apr�s appel, il est recommand� d'appeler TRAJCENTER_InitCellConfig pour
-    !   recr�er au minimum wobj0.
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer au minimum wobj0.
     !
-    !   La trajectoire charg�e est invalid�e.
+    !   La trajectoire chargee est invalidee.
     !
     ! EN:
     !   Clears all workobjects exposed to TrajCenter.
@@ -1818,8 +1820,8 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Vide toute la configuration cellule TrajCenter : tools et workobjects.
     !
-    !   Apr�s appel, il est recommand� d'appeler TRAJCENTER_InitCellConfig pour
-    !   recr�er tool0 et wobj0.
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer tool0 et wobj0.
     !
     ! EN:
     !   Clears the whole TrajCenter cell configuration: tools and workobjects.
@@ -1835,7 +1837,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ajoute ou met � jour un tool depuis tempTool.
+    !   Ajoute ou met e jour un tool depuis tempTool.
     !
     ! EN:
     !   Adds or updates a tool from tempTool.
@@ -1847,7 +1849,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ajoute ou met � jour un workobject depuis tempWobj.
+    !   Ajoute ou met e jour un workobject depuis tempWobj.
     !
     ! EN:
     !   Adds or updates a workobject from tempWobj.
@@ -1863,17 +1865,17 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Recherche une trajectoire par nom dans les m�tadonn�es charg�es.
+    !   Recherche une trajectoire par nom dans les metadonnees chargees.
     !
-    !   Pr�requis :
-    !       Les m�tadonn�es doivent avoir �t� rafra�chies avec
+    !   Prerequis :
+    !       Les metadonnees doivent avoir ete rafraechies avec
     !       TRAJCENTER_RequestMetaRefresh et TRAJCENTER_WaitRequestDone.
     !
     !   Retour :
-    !       0  = non trouv�e
+    !       0  = non trouvee
     !       >0 = index base 1 dans trajectories
     !
-    !   La comparaison est exacte et sensible au contenu de la cha�ne �crite
+    !   La comparaison est exacte et sensible au contenu de la chaene ecrite
     !   par le PC dans trajectories{i}.name.
     !
     ! EN:
@@ -1908,7 +1910,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Demande au PC de rafra�chir les m�tadonn�es des trajectoires.
+    !   Demande au PC de rafraechir les metadonnees des trajectoires.
     !
     ! EN:
     !   Requests the PC to refresh trajectory metadata.
@@ -1959,11 +1961,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !
     !   Cette routine est une surcouche de TRAJCENTER_RequestTrajectory :
     !       1. cherche trajName dans trajectories ;
-    !       2. r�cup�re l'index correspondant ;
+    !       2. recupere l'index correspondant ;
     !       3. appelle TRAJCENTER_RequestTrajectory avec cet index.
     !
-    !   Pr�requis :
-    !       Les m�tadonn�es doivent avoir �t� rafra�chies avant l'appel.
+    !   Prerequis :
+    !       Les metadonnees doivent avoir ete rafraechies avant l'appel.
     !
     !   trajName :
     !       Nom exact de la trajectoire dans trajectories{i}.name.
@@ -2000,9 +2002,9 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Attend que les flags de requ�te soient remis � FALSE par le PC.
+    !   Attend que les flags de requete soient remis e FALSE par le PC.
     !
-    !   Cette routine est utile apr�s un refresh metadata.
+    !   Cette routine est utile apres un refresh metadata.
     !
     ! EN:
     !   Waits until request flags are reset to FALSE by the PC.
@@ -2031,10 +2033,10 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Attend que la trajectoire soit pr�te ou qu'une erreur soit signal�e.
+    !   Attend que la trajectoire soit prete ou qu'une erreur soit signalee.
     !
-    !   Si transferError devient TRUE, la routine l�ve ERR_TRAJCENTER_NOT_READY.
-    !   Le d�tail de l'erreur PC est disponible dans lastErrorCode/lastError.
+    !   Si transferError devient TRUE, la routine leve ERR_TRAJCENTER_NOT_READY.
+    !   Le detail de l'erreur PC est disponible dans lastErrorCode/lastError.
     !
     ! EN:
     !   Waits until the trajectory is ready or an error is reported.
@@ -2073,7 +2075,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Retourne le nombre de points charg�s.
+    !   Retourne le nombre de points charges.
     !
     ! EN:
     !   Returns the number of loaded points.
@@ -2085,7 +2087,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Copie un point trajectoire charg� dans pointData.
+    !   Copie un point trajectoire charge dans pointData.
     !
     ! EN:
     !   Copies one loaded trajectory point into pointData.
@@ -2196,8 +2198,8 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Construit un speeddata � partir de la vitesse TCP transf�r�e et des
-    !   vitesses compl�mentaires fournies par le programme utilisateur.
+    !   Construit un speeddata e partir de la vitesse TCP transferee et des
+    !   vitesses complementaires fournies par le programme utilisateur.
     !
     ! EN:
     !   Builds a speeddata from the transferred TCP speed and complementary
@@ -2215,9 +2217,9 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Convertit le zoneType num�rique TrajCenter en zonedata ABB.
+    !   Convertit le zoneType numerique TrajCenter en zonedata ABB.
     !
-    !   255 est interpr�t� comme fine.
+    !   255 est interprete comme fine.
     !
     ! EN:
     !   Converts the numeric TrajCenter zoneType into ABB zonedata.
@@ -2288,15 +2290,15 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Cette section ex�cute uniquement les mouvements.
+!   Cette section execute uniquement les mouvements.
 !
 !   Limite volontaire :
-!       - processParamIndex est ignor� ;
-!       - processParams est ignor� ;
-!       - aucune logique ACF/AAK/PUSHCORP n'est appliqu�e.
+!       - processParamIndex est ignore ;
+!       - processParams est ignore ;
+!       - aucune logique ACF/AAK/PUSHCORP n'est appliquee.
 !
-!   Les donn�es process sont n�anmoins transf�r�es et restent disponibles pour
-!   une future ex�cution avec process.
+!   Les donnees process sont neanmoins transferees et restent disponibles pour
+!   une future execution avec process.
 !
 ! EN:
 !   This section executes motion only.
@@ -2312,7 +2314,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ex�cute la trajectoire charg�e sans appliquer les param�tres process.
+    !   Execute la trajectoire chargee sans appliquer les parametres process.
     !
     !   Les vitesses ori/leax/reax sont fournies par le programme utilisateur.
     !
@@ -2403,7 +2405,7 @@ MODULE TRAJCENTER(SYSMODULE)
             ENDIF
         ENDWHILE
 
-        ! FR: Retour � une politique confdata s�re par d�faut.
+        ! FR: Retour e une politique confdata sere par defaut.
         ! EN: Return to a safe default confdata policy.
         ConfL \On;
         ConfJ \On;
@@ -2415,17 +2417,17 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Section pr�vue pour l'acc�s propre aux param�tres process par point.
+!   Section prevue pour l'acces propre aux parametres process par point.
 !
 !   Etat actuel :
-!       - imagin� ;
-!       - non impl�ment� dans cette version.
+!       - imagine ;
+!       - non implemente dans cette version.
 !
 !   Intention :
 !       - fournir TRAJCENTER_PointHasProcessParams(pointIndex) ;
 !       - fournir TRAJCENTER_GetProcessParam(pointIndex, paramName, found, value);
-!       - permettre � un module m�tier ACF/AAK/PUSHCORP d'interpr�ter les
-!         param�tres sans modifier le protocole de transfert.
+!       - permettre e un module metier ACF/AAK/PUSHCORP d'interpreter les
+!         parametres sans modifier le protocole de transfert.
 !
 ! EN:
 !   Section reserved for clean per-point process parameter access.
@@ -2447,16 +2449,16 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Section r�serv�e � l'ex�cution avec process.
+!   Section reservee e l'execution avec process.
 !
 !   Etat actuel :
-!       - non impl�ment�.
+!       - non implemente.
 !
 !   Intention :
 !       - conserver TRAJCENTER_ExecLoadedNoProc comme
-!         ex�cution g�n�rique pure mouvement ;
+!         execution generique pure mouvement ;
 !       - ajouter une routine avec process, ou une routine globale qui
-!         choisira l'ex�cution adapt�e.
+!         choisira l'execution adaptee.
 !
 !   Exemple futur possible :
 !       TRAJCENTER_ExecuteLoadedTrajectoryWithProcess
@@ -2480,10 +2482,10 @@ MODULE TRAJCENTER(SYSMODULE)
 !------------------------------------------------------------------------------
 
     ! TODO FR:
-    !   D�finir la strat�gie d'application process :
+    !   Definir la strategie d'application process :
     !       - avant mouvement ;
     !       - pendant mouvement ;
-    !       - apr�s mouvement ;
+    !       - apres mouvement ;
     !       - par point ;
     !       - par segment ;
     !       - par type de process.
