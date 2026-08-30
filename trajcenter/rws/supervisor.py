@@ -33,6 +33,7 @@ import asyncio
 import contextlib
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from abb_rws_client_python_rw6 import RWSClient
 from abb_rws_client_python_rw6.highlevel.subscription import (
@@ -261,6 +262,12 @@ async def run_rws_subscription_supervisor(
         cleanup on cancellation or stop request. ABB controllers allow only a
         small number of active subscription groups per client.
 
+        The supervisor must stop even when no RWS event is received. Therefore
+        the event loop waits concurrently for either:
+
+        - the next WebSocket subscription event;
+        - the local ``stop_event``.
+
     Args:
         client: Open RWS client.
         config: Supervisor configuration.
@@ -290,20 +297,49 @@ async def run_rws_subscription_supervisor(
     )
 
     async with contextlib.aclosing(watch_resources(client, resources)) as events:
-        async for name, value in events:
-            if stop_event is not None and stop_event.is_set():
-                break
+        if stop_event is None:
+            async for name, value in events:
+                await handle_supervisor_event(
+                    client,
+                    config,
+                    supervisor_state,
+                    name,
+                    value,
+                )
+        else:
+            while not stop_event.is_set():
+                event_task: asyncio.Task[tuple[str, str]] = asyncio.create_task(
+                    anext(events),
+                )
+                stop_task: asyncio.Task[bool] = asyncio.create_task(
+                    stop_event.wait(),
+                )
 
-            await handle_supervisor_event(
-                client,
-                config,
-                supervisor_state,
-                name,
-                value,
-            )
+                done, _pending = await asyncio.wait(
+                    (event_task, stop_task),
+                    return_when=asyncio.FIRST_COMPLETED,
+                )
 
-            if stop_event is not None and stop_event.is_set():
-                break
+                if stop_task in done:
+                    logger.info("Stop event received by RWS supervisor.")
+                    await _cancel_task_safely(event_task)
+                    break
+
+                await _cancel_task_safely(stop_task)
+
+                try:
+                    name, value = event_task.result()
+                except StopAsyncIteration:
+                    logger.info("RWS subscription event stream closed.")
+                    break
+
+                await handle_supervisor_event(
+                    client,
+                    config,
+                    supervisor_state,
+                    name,
+                    value,
+                )
 
     logger.info(
         "TrajCenter RWS subscription supervisor stopped: %d refresh, %d transfer",
@@ -311,6 +347,36 @@ async def run_rws_subscription_supervisor(
         supervisor_state.transfer_count,
     )
     return supervisor_state
+
+
+async def _cancel_task_safely(task: asyncio.Task[Any]) -> None:
+    """Cancel an asyncio task and wait for its cancellation.
+
+    ABB Route:
+        N/A — local asyncio cleanup helper.
+
+    ABB Constraints:
+        This helper is used during supervisor shutdown to avoid leaving a
+        pending WebSocket receive task alive after ``stop_event`` has been set.
+
+    Args:
+        task: Task to cancel.
+
+    Returns:
+        None.
+
+    Example:
+        ::
+
+            await _cancel_task_safely(pending_task)
+    """
+    if task.done():
+        return
+
+    task.cancel()
+
+    with contextlib.suppress(asyncio.CancelledError):
+        await task
 
 
 def _is_true_event(value: str) -> bool:
