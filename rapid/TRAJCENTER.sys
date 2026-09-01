@@ -1984,7 +1984,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !   trajName:
     !       Exact trajectory name in trajectories{i}.name.
     !--------------------------------------------------------------------------
-    PROC TRAJCENTER_RequestTrajectoryByName(string trajName)
+    PROC TRAJCENTER_RequestTrajByName(string trajName)
         VAR num trajIndex;
 
         trajIndex := TRAJCENTER_FindTrajectoryIndex(trajName);

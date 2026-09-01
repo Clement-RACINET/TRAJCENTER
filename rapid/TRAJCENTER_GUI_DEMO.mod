@@ -327,7 +327,7 @@ MODULE TRAJCENTER_GUI_DEMO
         TPWrite "Loading selected trajectory:";
         TPWrite guiSelectedTrajName;
 
-        TRAJCENTER_RequestTrajectoryByName guiSelectedTrajName;
+        TRAJCENTER_RequestTrajByName guiSelectedTrajName;
         TRAJCENTER_WaitTrajectoryReady guiTransferTimeout;
 
         IF transferError = TRUE THEN

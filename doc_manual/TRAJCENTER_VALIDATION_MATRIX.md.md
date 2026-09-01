@@ -82,7 +82,7 @@ Suggested validation level:
 |---|---|---|---|---|---|---|---|
 | RWS-001 | Metadata refresh request | Robot sets refreshMetaRequest TRUE, PC writes trajectories and resets flag | TRAJCENTER_RequestMetaRefresh + WaitRequestDone | PARTIAL | L2 | Demo executed until metadata | |
 | RWS-002 | Trajectory request by index | Robot sets selectedTrajIndex and sendTrajRequest TRUE | TRAJCENTER_RequestTrajectory | NOT_STARTED | L0 | | |
-| RWS-003 | Trajectory request by name | Robot finds trajectory name then requests by index | TRAJCENTER_RequestTrajectoryByName | PARTIAL | L2 | demoTrajectoryName="000_trajectory_demo" | |
+| RWS-003 | Trajectory request by name | Robot finds trajectory name then requests by index | TRAJCENTER_RequestTrajByName | PARTIAL | L2 | demoTrajectoryName="000_trajectory_demo" | |
 | RWS-004 | transferError handling | RAPID detects transferError TRUE | Force PC-side error | NOT_STARTED | L0 | | |
 | RWS-005 | lastErrorCode propagation | PC writes correct code, RAPID displays it | Force validation error | NOT_STARTED | L0 | | |
 | RWS-006 | timeout handling | RAPID raises ERR_TRAJCENTER_TIMEOUT | Stop PC supervisor before request | NOT_STARTED | L0 | | |

@@ -146,7 +146,7 @@ MODULE TRAJCENTER_DEMO
         TPWrite "Trajectory name:";
         TPWrite demoTrajectoryName;
 
-        TRAJCENTER_RequestTrajectoryByName demoTrajectoryName;
+        TRAJCENTER_RequestTrajByName demoTrajectoryName;
         TRAJCENTER_WaitTrajectoryReady demoTransferTimeout;
 
         IF transferError = TRUE THEN
@@ -166,7 +166,7 @@ MODULE TRAJCENTER_DEMO
 
 
         !----------------------------------------------------------------------
-        ! Exécution mouvement
+        ! Exï¿½cution mouvement
         !----------------------------------------------------------------------
         TPWrite "Step 7: execute without process";
         TRAJCENTER_ExecLoadedNoProc demoOriSpeed, demoLeaxSpeed, demoReaxSpeed;
