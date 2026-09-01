@@ -1,10 +1,10 @@
 # TRAJCENTER v2.0 — Protocole RWS PC ↔ Robot
 
-> **Version :** 2.5 draft  
-> **Date :** 2026-08-26  
-> **RobotWare :** 6.x  
-> **Transport :** ABB Robot Web Services uniquement  
-> **TCP custom / watchdog / polling nominal :** supprimés  
+> **Version :** 2.5 draft
+> **Date :** 2026-08-26
+> **RobotWare :** 6.x
+> **Transport :** ABB Robot Web Services uniquement
+> **TCP custom / watchdog / polling nominal :** supprimés
 > **Module RAPID :** module système unique `TRAJCENTER`
 
 ---
@@ -25,15 +25,15 @@ rapid/TRAJCENTER.mod
 
 Ce module regroupe tout le protocole robot côté ABB :
 
-| Section interne | Rôle                                 |
+| Section interne | Rôle                                |
 | --------------- | ------------------------------------ |
-| Section 1       | Types `RECORD`                       |
+| Section 1       | Types`RECORD`                      |
 | Section 2       | Limites globales                     |
-| Section 3       | Codes d’état et d’erreur             |
+| Section 3       | Codes d’état et d’erreur          |
 | Section 4       | Types de mouvement                   |
 | Section 5       | Process : constantes + catalogue     |
 | Section 6       | Configuration cellule : tools, wobjs |
-| Section 7       | Variables RWS PC ↔ robot             |
+| Section 7       | Variables RWS PC ↔ robot            |
 | Section 8       | Defaults robot                       |
 
 Il n’y a plus d’ordre de chargement entre plusieurs modules TrajCenter.
@@ -58,36 +58,36 @@ TRAJCENTER/trajData{1}
 Politique :
 
 | Cas                                      | Déclaration |
-| ---------------------------------------- | ----------- |
-| Flags abonnés RWS                        | `PERS`      |
-| Tools / wobjs cellule                    | `PERS`      |
-| Maintenance tools / wobjs                | `PERS`      |
-| Runtime, metadata, trajectoire, defaults | `VAR`       |
-| Tailles fixes, codes                     | `CONST`     |
+| ---------------------------------------- | ------------ |
+| Flags abonnés RWS                       | `PERS`     |
+| Tools / wobjs cellule                    | `PERS`     |
+| Maintenance tools / wobjs                | `PERS`     |
+| Runtime, metadata, trajectoire, defaults | `VAR`      |
+| Tailles fixes, codes                     | `CONST`    |
 
 Politique de modification :
 
 | Section               | Politique                                                        |
 | --------------------- | ---------------------------------------------------------------- |
-| Types `RECORD`        | Ne pas modifier sauf évolution coordonnée PC/RAPID               |
-| Limites globales      | Ne pas modifier sauf changement volontaire de capacité           |
-| Codes d’état/erreur   | Ne pas modifier sans mise à jour PC + documentation              |
-| Types de mouvement    | Ne pas modifier sauf ajout officiel supporté                     |
+| Types`RECORD`       | Ne pas modifier sauf évolution coordonnée PC/RAPID             |
+| Limites globales      | Ne pas modifier sauf changement volontaire de capacité          |
+| Codes d’état/erreur | Ne pas modifier sans mise à jour PC + documentation             |
+| Types de mouvement    | Ne pas modifier sauf ajout officiel supporté                    |
 | Process               | Modifier uniquement ici pour ajouter/retirer/renommer un process |
 | Configuration cellule | Modifiable par le programmeur robot                              |
-| Variables RWS         | Ne pas modifier noms/types/dimensions sans mise à jour PC        |
-| Defaults robot        | Réglables à la mise en service                                   |
+| Variables RWS         | Ne pas modifier noms/types/dimensions sans mise à jour PC       |
+| Defaults robot        | Réglables à la mise en service                                 |
 
 ---
 
 ## 2. Flux
 
-| Flux              | Déclencheur                 | Direction  | Mécanisme              |
-| ----------------- | --------------------------- | ---------- | ---------------------- |
-| Refresh metadata  | `refreshMetaRequest = TRUE` | Robot → PC | RWS subscription       |
-| Envoi trajectoire | `sendTrajRequest = TRUE`    | Robot → PC | RWS subscription       |
-| Écriture données  | PC                          | PC → Robot | RWS write + Mastership |
-| Lecture contexte  | PC                          | Robot → PC | RWS read               |
+| Flux               | Déclencheur                  | Direction   | Mécanisme             |
+| ------------------ | ----------------------------- | ----------- | ---------------------- |
+| Refresh metadata   | `refreshMetaRequest = TRUE` | Robot → PC | RWS subscription       |
+| Envoi trajectoire  | `sendTrajRequest = TRUE`    | Robot → PC | RWS subscription       |
+| Écriture données | PC                            | PC → Robot | RWS write + Mastership |
+| Lecture contexte   | PC                            | Robot → PC | RWS read               |
 
 Règles :
 
@@ -170,16 +170,16 @@ RECORD trajCenterPointData
 ENDRECORD
 ```
 
-| Champ               | Convention                             |
-| ------------------- | -------------------------------------- |
-| `moveType`          | `0=MoveL`, `1=MoveJ`, `2=MoveC`        |
-| `point`             | `robtarget` ABB                        |
-| `tcpSpeed`          | mm/s, `> 0`                            |
-| `zoneType`          | zone autorisée, `255=fine`             |
-| `readConfs`         | prise en compte `confdata`             |
-| `toolIndex`         | base 1 dans `trajTools`, `0=undefined` |
-| `wobjIndex`         | base 1 dans `trajWobjs`, `0=undefined` |
-| `processParamIndex` | base 1 dans `processParams`, `0=aucun` |
+| Champ                 | Convention                                |
+| --------------------- | ----------------------------------------- |
+| `moveType`          | `0=MoveL`, `1=MoveJ`, `2=MoveC`     |
+| `point`             | `robtarget` ABB                         |
+| `tcpSpeed`          | mm/s,`> 0`                              |
+| `zoneType`          | zone autorisée,`255=fine`              |
+| `readConfs`         | prise en compte`confdata`               |
+| `toolIndex`         | base 1 dans`trajTools`, `0=undefined` |
+| `wobjIndex`         | base 1 dans`trajWobjs`, `0=undefined` |
+| `processParamIndex` | base 1 dans`processParams`, `0=aucun` |
 
 ---
 
@@ -193,10 +193,10 @@ RECORD trajCenterTrajMeta
 ENDRECORD
 ```
 
-| Champ         | Convention                                                  |
-| ------------- | ----------------------------------------------------------- |
-| `name`        | nom affichable                                              |
-| `pointCount`  | nombre de points                                            |
+| Champ           | Convention                                                            |
+| --------------- | --------------------------------------------------------------------- |
+| `name`        | nom affichable                                                        |
+| `pointCount`  | nombre de points                                                      |
 | `processType` | `0=NONE`, `1=ACF`, `2=AAK`, `3=PUSHCORP`, `4..255=RESERVED` |
 
 ---
@@ -267,8 +267,8 @@ VAR trajCenterProcessType processTypes{processTypeCount}:=[
 ];
 ```
 
-|       ID | Nom        |
-| -------: | ---------- |
+|         ID | Nom          |
+| ---------: | ------------ |
 |      `0` | `NONE`     |
 |      `1` | `ACF`      |
 |      `2` | `AAK`      |
@@ -348,13 +348,13 @@ VAR string lastError := "";
 VAR num transferProgress := 0;
 ```
 
-| Variable           | Rôle                                |
-| ------------------ | ----------------------------------- |
-| `trajReady`        | trajectoire complète et exécutable  |
-| `transferError`    | dernier refresh/transfert en erreur |
+| Variable             | Rôle                                |
+| -------------------- | ------------------------------------ |
+| `trajReady`        | trajectoire complète et exécutable |
+| `transferError`    | dernier refresh/transfert en erreur  |
 | `lastErrorCode`    | code état/erreur                    |
-| `lastError`        | message court                       |
-| `transferProgress` | `0..100`                            |
+| `lastError`        | message court                        |
+| `transferProgress` | `0..100`                           |
 
 ---
 
@@ -453,14 +453,14 @@ points.parquet
 
 Champs usuels :
 
-| Champ           | Type                 | Rôle                        |
-| --------------- | -------------------- | --------------------------- |
-| `name`          | `str`                | nom trajectoire             |
-| `version`       | `str`                | version format              |
-| `source_format` | `str`                | format source               |
-| `robot_model`   | `str \| null`        | robot cible optionnel       |
+| Champ             | Type                 | Rôle                       |
+| ----------------- | -------------------- | --------------------------- |
+| `name`          | `str`              | nom trajectoire             |
+| `version`       | `str`              | version format              |
+| `source_format` | `str`              | format source               |
+| `robot_model`   | `str \| null`       | robot cible optionnel       |
 | `process_type`  | `str \| int \| null` | process principal optionnel |
-| `extra`         | `dict`               | metadata libre              |
+| `extra`         | `dict`             | metadata libre              |
 
 `process_type` :
 
@@ -476,29 +476,29 @@ autre                -> validation contre processTypes robot
 
 ### 8.2 Colonnes `points.parquet`
 
-| Colonne               | Exportable | Envoyable | Résolution                                         |
-| --------------------- | ---------: | --------: | -------------------------------------------------- |
-| `x`                   |        oui |       oui | obligatoire                                        |
-| `y`                   |        oui |       oui | obligatoire                                        |
-| `z`                   |        oui |       oui | obligatoire                                        |
-| `q1`                  |        oui |       oui | quaternion ABB `w`                                 |
-| `q2`                  |        oui |       oui | quaternion ABB `x`                                 |
-| `q3`                  |        oui |       oui | quaternion ABB `y`                                 |
-| `q4`                  |        oui |       oui | quaternion ABB `z`                                 |
-| `cf1`                 |        non |       oui | `0` si absent                                      |
-| `cf4`                 |        non |       oui | `0` si absent                                      |
-| `cf6`                 |        non |       oui | `0` si absent                                      |
-| `cfx`                 |        non |       oui | `0` si absent                                      |
-| `eax_a..eax_f`        |        non |       oui | absent/NaN = `9E+9` à l’écriture RWS uniquement    |
-| `tcp_speed`           |        non |       oui | erreur sauf default robot                          |
-| `zone_type`           |        non |       oui | erreur sauf default robot                          |
-| `move_type`           |        non |       oui | default robot si absent                            |
-| `tool_name`           |        non |       oui | erreur sauf default robot validé                   |
-| `wobj_name`           |        non |       oui | erreur sauf default robot validé                   |
-| `readconfs`           |        non |       oui | règle ci-dessous                                   |
-| `process_type`        |        non |       oui | optionnel, sinon `meta.process_type`, sinon `NONE` |
-| `process_params`      |        non |       oui | optionnel                                          |
-| `process_param_index` |        non |       non | généré PC, non fiable si stocké                    |
+| Colonne                 | Exportable | Envoyable | Résolution                                           |
+| ----------------------- | ---------: | --------: | ----------------------------------------------------- |
+| `x`                   |        oui |       oui | obligatoire                                           |
+| `y`                   |        oui |       oui | obligatoire                                           |
+| `z`                   |        oui |       oui | obligatoire                                           |
+| `q1`                  |        oui |       oui | quaternion ABB`w`                                   |
+| `q2`                  |        oui |       oui | quaternion ABB`x`                                   |
+| `q3`                  |        oui |       oui | quaternion ABB`y`                                   |
+| `q4`                  |        oui |       oui | quaternion ABB`z`                                   |
+| `cf1`                 |        non |       oui | `0` si absent                                       |
+| `cf4`                 |        non |       oui | `0` si absent                                       |
+| `cf6`                 |        non |       oui | `0` si absent                                       |
+| `cfx`                 |        non |       oui | `0` si absent                                       |
+| `eax_a..eax_f`        |        non |       oui | absent/NaN =`9E+9` à l’écriture RWS uniquement   |
+| `tcp_speed`           |        non |       oui | erreur sauf default robot                             |
+| `zone_type`           |        non |       oui | erreur sauf default robot                             |
+| `move_type`           |        non |       oui | default robot si absent                               |
+| `tool_name`           |        non |       oui | erreur sauf default robot validé                     |
+| `wobj_name`           |        non |       oui | erreur sauf default robot validé                     |
+| `readconfs`           |        non |       oui | règle ci-dessous                                     |
+| `process_type`        |        non |       oui | optionnel, sinon`meta.process_type`, sinon `NONE` |
+| `process_params`      |        non |       oui | optionnel                                             |
+| `process_param_index` |        non |       non | généré PC, non fiable si stocké                   |
 
 Règle `readconfs` si absent :
 
@@ -553,8 +553,8 @@ ordre paramètres = tri alphabétique par nom
 ### 8.4 Exportable vs envoyable
 
 | Niveau     | Définition                                                  |
-| ---------- | ----------------------------------------------------------- |
-| Exportable | `x,y,z,q1,q2,q3,q4` présents                                |
+| ---------- | ------------------------------------------------------------ |
+| Exportable | `x,y,z,q1,q2,q3,q4` présents                              |
 | Envoyable  | champs robot résolus + tools/wobjs/process/defaults valides |
 
 Une trajectoire exportable peut être listée mais refusée à l’envoi.
@@ -565,13 +565,13 @@ Une trajectoire exportable peut être listée mais refusée à l’envoi.
 
 ### 9.1 Indexation
 
-| Élément                  | Convention                      |
-| ------------------------ | ------------------------------- |
-| Tableaux RAPID           | base 1                          |
-| `selectedTrajIndex`      | base 1, `0=aucune sélection`    |
-| `toolIndex`, `wobjIndex` | base 1, `0=undefined`           |
-| `processParamIndex`      | base 1, `0=aucun`               |
-| Points `.trajcenter`     | ordre fichier -> RAPID `{1..N}` |
+| Élément                    | Convention                       |
+| ---------------------------- | -------------------------------- |
+| Tableaux RAPID               | base 1                           |
+| `selectedTrajIndex`        | base 1,`0=aucune sélection`   |
+| `toolIndex`, `wobjIndex` | base 1,`0=undefined`           |
+| `processParamIndex`        | base 1,`0=aucun`               |
+| Points`.trajcenter`        | ordre fichier -> RAPID`{1..N}` |
 
 ---
 
@@ -641,11 +641,11 @@ numérique, mm/s, > 0
 
 ### 9.6 Mouvements
 
-| RAPID | Mouvement | Alias acceptés        |
-| ----: | --------- | --------------------- |
-|   `0` | `MoveL`   | `"L"`, `"MoveL"`, `0` |
-|   `1` | `MoveJ`   | `"J"`, `"MoveJ"`, `1` |
-|   `2` | `MoveC`   | `"C"`, `"MoveC"`, `2` |
+| RAPID | Mouvement | Alias acceptés             |
+| ----: | --------- | --------------------------- |
+| `0` | `MoveL` | `"L"`, `"MoveL"`, `0` |
+| `1` | `MoveJ` | `"J"`, `"MoveJ"`, `1` |
+| `2` | `MoveC` | `"C"`, `"MoveC"`, `2` |
 
 ---
 
@@ -780,15 +780,15 @@ refreshMetaRequest = FALSE si erreur refresh
 
 Refus si :
 
-| Cas                              |     Code |
-| -------------------------------- | -------: |
+| Cas                                |       Code |
+| ---------------------------------- | ---------: |
 | `selectedTrajIndex` hors bornes  | `400001` |
-| fichier absent                   | `400002` |
-| format `.trajcenter` invalide    | `400003` |
+| fichier absent                     | `400002` |
+| format`.trajcenter` invalide     | `400003` |
 | `pointCount > maxTrajPointCount` | `400004` |
 | `zone_type` invalide             | `400005` |
 | `move_type` invalide             | `400006` |
-| paire `MoveC` invalide           | `400007` |
+| paire`MoveC` invalide            | `400007` |
 | `tcp_speed` absent sans default  | `400008` |
 | `zone_type` absent sans default  | `400009` |
 | `tool_name` absent sans default  | `400010` |
@@ -797,10 +797,10 @@ Refus si :
 | `wobj_name` introuvable          | `400013` |
 | `tcp_speed <= 0`                 | `400014` |
 | `readconfs` invalide             | `400015` |
-| robtarget non sérialisable       | `400016` |
-| process inconnu                  | `400017` |
-| trop de sets process             | `400018` |
-| process params invalides         | `400019` |
+| robtarget non sérialisable        | `400016` |
+| process inconnu                    | `400017` |
+| trop de sets process               | `400018` |
+| process params invalides           | `400019` |
 
 Process params invalides :
 
@@ -816,46 +816,46 @@ plus de 256 sets distincts
 
 ## 12. Codes d’état et d’erreur
 
-|     Code | Signification                      |
-| -------: | ---------------------------------- |
-| `200000` | OK                                 |
-| `200001` | Metadata refreshed                 |
-| `200002` | Trajectory transferred             |
-| `400001` | `selectedTrajIndex` hors bornes    |
-| `400002` | Fichier trajectoire introuvable    |
-| `400003` | Format `.trajcenter` invalide      |
-| `400004` | Trop de points                     |
-| `400005` | `zone_type` invalide               |
-| `400006` | `move_type` invalide               |
-| `400007` | Paire `MoveC` invalide             |
-| `400008` | `tcp_speed` manquant sans default  |
-| `400009` | `zone_type` manquant sans default  |
-| `400010` | `tool_name` manquant sans default  |
-| `400011` | `wobj_name` manquant sans default  |
+|       Code | Signification                          |
+| ---------: | -------------------------------------- |
+| `200000` | OK                                     |
+| `200001` | Metadata refreshed                     |
+| `200002` | Trajectory transferred                 |
+| `400001` | `selectedTrajIndex` hors bornes      |
+| `400002` | Fichier trajectoire introuvable        |
+| `400003` | Format`.trajcenter` invalide         |
+| `400004` | Trop de points                         |
+| `400005` | `zone_type` invalide                 |
+| `400006` | `move_type` invalide                 |
+| `400007` | Paire`MoveC` invalide                |
+| `400008` | `tcp_speed` manquant sans default    |
+| `400009` | `zone_type` manquant sans default    |
+| `400010` | `tool_name` manquant sans default    |
+| `400011` | `wobj_name` manquant sans default    |
 | `400012` | `tool_name` introuvable côté robot |
 | `400013` | `wobj_name` introuvable côté robot |
-| `400014` | Vitesse invalide                   |
-| `400015` | `readConfs` invalide               |
-| `400016` | Robtarget invalide                 |
-| `400017` | Process inconnu                    |
-| `400018` | Trop de sets process               |
-| `400019` | Paramètres process invalides       |
-| `401001` | Authentification RWS refusée       |
-| `403001` | Mastership refusé                  |
-| `403002` | Écriture RWS interdite             |
-| `404001` | Symbole RAPID introuvable          |
-| `404002` | `trajTools` introuvable            |
-| `404003` | `trajWobjs` introuvable            |
-| `404004` | Store trajectoire introuvable      |
-| `404005` | Default robot introuvable          |
-| `404006` | `processTypes` introuvable         |
-| `408001` | Timeout requête RWS                |
-| `408002` | Timeout transfert                  |
-| `409001` | Transfert déjà en cours            |
-| `409002` | État robot incompatible            |
-| `500001` | Erreur interne client              |
-| `500002` | Erreur de sérialisation            |
-| `500003` | Erreur de conversion trajectoire   |
-| `502001` | Réponse RWS invalide               |
-| `503001` | Contrôleur indisponible            |
-| `504001` | Timeout contrôleur                 |
+| `400014` | Vitesse invalide                       |
+| `400015` | `readConfs` invalide                 |
+| `400016` | Robtarget invalide                     |
+| `400017` | Process inconnu                        |
+| `400018` | Trop de sets process                   |
+| `400019` | Paramètres process invalides          |
+| `401001` | Authentification RWS refusée          |
+| `403001` | Mastership refusé                     |
+| `403002` | Écriture RWS interdite                |
+| `404001` | Symbole RAPID introuvable              |
+| `404002` | `trajTools` introuvable              |
+| `404003` | `trajWobjs` introuvable              |
+| `404004` | Store trajectoire introuvable          |
+| `404005` | Default robot introuvable              |
+| `404006` | `processTypes` introuvable           |
+| `408001` | Timeout requête RWS                   |
+| `408002` | Timeout transfert                      |
+| `409001` | Transfert déjà en cours              |
+| `409002` | État robot incompatible               |
+| `500001` | Erreur interne client                  |
+| `500002` | Erreur de sérialisation               |
+| `500003` | Erreur de conversion trajectoire       |
+| `502001` | Réponse RWS invalide                  |
+| `503001` | Contrôleur indisponible               |
+| `504001` | Timeout contrôleur                    |

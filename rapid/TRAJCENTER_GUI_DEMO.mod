@@ -32,6 +32,9 @@ MODULE TRAJCENTER_GUI_DEMO
 !
 !   The interface uses standard RAPID TPWrite and TPReadFK functions.
 !   It is not a custom ScreenMaker FlexPendant application.
+!
+! ENCODING:
+!   ASCII only. Do not use accents or non-ASCII characters.
 !------------------------------------------------------------------------------
 
 
@@ -51,9 +54,9 @@ MODULE TRAJCENTER_GUI_DEMO
 ! ETAT INTERFACE / INTERFACE STATE
 !==============================================================================
 
-    VAR num guiSelectedTrajIndex := 0;
-    VAR string guiSelectedTrajName := "";
-    VAR bool guiTrajectoryLoaded := FALSE;
+    VAR num guiSelTrajIdx := 0;
+    VAR string guiSelTrajName := "";
+    VAR bool guiTrajLoaded := FALSE;
 
 
 !==============================================================================
@@ -83,23 +86,23 @@ MODULE TRAJCENTER_GUI_DEMO
     PROC main()
         VAR num action;
 
-        TRAJCENTER_GUI_Init;
+        TCGUI_Init;
 
         WHILE TRUE DO
-            action := TRAJCENTER_GUI_MainMenu();
+            action := TCGUI_MainMenu();
 
             TEST action
             CASE 1:
-                TRAJCENTER_GUI_RefreshMetadata;
+                TCGUI_RefreshMeta;
 
             CASE 2:
-                TRAJCENTER_GUI_BrowseTrajectories;
+                TCGUI_BrowseTraj;
 
             CASE 3:
-                TRAJCENTER_GUI_LoadSelectedTrajectory;
+                TCGUI_LoadSelTraj;
 
             CASE 4:
-                TRAJCENTER_GUI_ExecuteLoadedTrajectory;
+                TCGUI_ExecLoaded;
 
             CASE 5:
                 TPWrite "TrajCenter GUI: exit requested";
@@ -124,7 +127,7 @@ MODULE TRAJCENTER_GUI_DEMO
 ! INITIALISATION / INITIALIZATION
 !==============================================================================
 
-    PROC TRAJCENTER_GUI_Init()
+    PROC TCGUI_Init()
         TPWrite "=== TrajCenter GUI START ===";
 
         TPWrite "Init TrajCenter errors";
@@ -153,9 +156,9 @@ MODULE TRAJCENTER_GUI_DEMO
         defaultMoveType := moveTypeL;
         defaultReadConfs := TRUE;
 
-        guiSelectedTrajIndex := 0;
-        guiSelectedTrajName := "";
-        guiTrajectoryLoaded := FALSE;
+        guiSelTrajIdx := 0;
+        guiSelTrajName := "";
+        guiTrajLoaded := FALSE;
 
         TPWrite "TrajCenter GUI initialized";
     ENDPROC
@@ -165,16 +168,16 @@ MODULE TRAJCENTER_GUI_DEMO
 ! MENU PRINCIPAL / MAIN MENU
 !==============================================================================
 
-    FUNC num TRAJCENTER_GUI_MainMenu()
+    FUNC num TCGUI_MainMenu()
         VAR num answer;
 
         TPWrite "";
         TPWrite "=== TrajCenter Menu ===";
         TPWrite "Available trajectories:" \Num:=nbTrajAvailable;
 
-        IF guiSelectedTrajIndex > 0 THEN
+        IF guiSelTrajIdx > 0 THEN
             TPWrite "Selected trajectory:";
-            TPWrite guiSelectedTrajName;
+            TPWrite guiSelTrajName;
         ELSE
             TPWrite "Selected trajectory: none";
         ENDIF
@@ -196,13 +199,13 @@ MODULE TRAJCENTER_GUI_DEMO
 ! REFRESH METADATA / METADATA REFRESH
 !==============================================================================
 
-    PROC TRAJCENTER_GUI_RefreshMetadata()
+    PROC TCGUI_RefreshMeta()
         TPWrite "";
-        TPWrite "Refreshing trajectory metadata...";
+        TPWrite "Refreshing trajectory metadata";
 
-        guiTrajectoryLoaded := FALSE;
-        guiSelectedTrajIndex := 0;
-        guiSelectedTrajName := "";
+        guiTrajLoaded := FALSE;
+        guiSelTrajIdx := 0;
+        guiSelTrajName := "";
 
         TRAJCENTER_RequestMetaRefresh;
         TRAJCENTER_WaitRequestDone guiRefreshTimeout;
@@ -227,8 +230,8 @@ MODULE TRAJCENTER_GUI_DEMO
 ! NAVIGATION TRAJECTOIRES / TRAJECTORY BROWSING
 !==============================================================================
 
-    PROC TRAJCENTER_GUI_BrowseTrajectories()
-        VAR num currentIndex;
+    PROC TCGUI_BrowseTraj()
+        VAR num curIdx;
         VAR num answer;
         VAR bool browsing;
 
@@ -238,49 +241,49 @@ MODULE TRAJCENTER_GUI_DEMO
             RETURN;
         ENDIF
 
-        IF guiSelectedTrajIndex >= 1 AND guiSelectedTrajIndex <= nbTrajAvailable THEN
-            currentIndex := guiSelectedTrajIndex;
+        IF guiSelTrajIdx >= 1 AND guiSelTrajIdx <= nbTrajAvailable THEN
+            curIdx := guiSelTrajIdx;
         ELSE
-            currentIndex := 1;
+            curIdx := 1;
         ENDIF
 
         browsing := TRUE;
 
         WHILE browsing = TRUE DO
-            TRAJCENTER_GUI_ShowTrajectory currentIndex;
+            TCGUI_ShowTraj curIdx;
 
             TPReadFK answer, "Browse trajectories", "Prev", "Next", "Select", "Refresh", "Back";
 
             TEST answer
             CASE 1:
-                IF currentIndex > 1 THEN
-                    currentIndex := currentIndex - 1;
+                IF curIdx > 1 THEN
+                    curIdx := curIdx - 1;
                 ELSE
-                    currentIndex := nbTrajAvailable;
+                    curIdx := nbTrajAvailable;
                 ENDIF
 
             CASE 2:
-                IF currentIndex < nbTrajAvailable THEN
-                    currentIndex := currentIndex + 1;
+                IF curIdx < nbTrajAvailable THEN
+                    curIdx := curIdx + 1;
                 ELSE
-                    currentIndex := 1;
+                    curIdx := 1;
                 ENDIF
 
             CASE 3:
-                guiSelectedTrajIndex := currentIndex;
-                guiSelectedTrajName := trajectories{currentIndex}.name;
-                guiTrajectoryLoaded := FALSE;
+                guiSelTrajIdx := curIdx;
+                guiSelTrajName := trajectories{curIdx}.name;
+                guiTrajLoaded := FALSE;
 
                 TPWrite "Selected trajectory:";
-                TPWrite guiSelectedTrajName;
+                TPWrite guiSelTrajName;
 
             CASE 4:
-                TRAJCENTER_GUI_RefreshMetadata;
+                TCGUI_RefreshMeta;
 
                 IF nbTrajAvailable < 1 THEN
                     browsing := FALSE;
                 ELSE
-                    currentIndex := 1;
+                    curIdx := 1;
                 ENDIF
 
             CASE 5:
@@ -293,22 +296,22 @@ MODULE TRAJCENTER_GUI_DEMO
     ENDPROC
 
 
-    PROC TRAJCENTER_GUI_ShowTrajectory(num trajIndex)
+    PROC TCGUI_ShowTraj(num trajIdx)
         TPWrite "";
         TPWrite "=== Trajectory ===";
-        TPWrite "Index:" \Num:=trajIndex;
+        TPWrite "Index:" \Num:=trajIdx;
         TPWrite "Total:" \Num:=nbTrajAvailable;
 
-        IF trajIndex < 1 OR trajIndex > nbTrajAvailable THEN
+        IF trajIdx < 1 OR trajIdx > nbTrajAvailable THEN
             TPWrite "Invalid trajectory index";
             RETURN;
         ENDIF
 
         TPWrite "Name:";
-        TPWrite trajectories{trajIndex}.name;
+        TPWrite trajectories{trajIdx}.name;
 
-        TPWrite "Point count:" \Num:=trajectories{trajIndex}.pointCount;
-        TPWrite "Process type:" \Num:=trajectories{trajIndex}.processType;
+        TPWrite "Point count:" \Num:=trajectories{trajIdx}.pointCount;
+        TPWrite "Process type:" \Num:=trajectories{trajIdx}.processType;
     ENDPROC
 
 
@@ -316,8 +319,8 @@ MODULE TRAJCENTER_GUI_DEMO
 ! CHARGEMENT TRAJECTOIRE / TRAJECTORY LOADING
 !==============================================================================
 
-    PROC TRAJCENTER_GUI_LoadSelectedTrajectory()
-        IF guiSelectedTrajIndex < 1 THEN
+    PROC TCGUI_LoadSelTraj()
+        IF guiSelTrajIdx < 1 THEN
             TPWrite "No trajectory selected";
             TPWrite "Use Browse and Select first";
             RETURN;
@@ -325,20 +328,20 @@ MODULE TRAJCENTER_GUI_DEMO
 
         TPWrite "";
         TPWrite "Loading selected trajectory:";
-        TPWrite guiSelectedTrajName;
+        TPWrite guiSelTrajName;
 
-        TRAJCENTER_RequestTrajByName guiSelectedTrajName;
+        TRAJCENTER_RequestTrajByName guiSelTrajName;
         TRAJCENTER_WaitTrajectoryReady guiTransferTimeout;
 
         IF transferError = TRUE THEN
             TPWrite "TrajCenter transfer error";
             TPWrite "Code:" \Num:=lastErrorCode;
             TPWrite lastError;
-            guiTrajectoryLoaded := FALSE;
+            guiTrajLoaded := FALSE;
             RETURN;
         ENDIF
 
-        guiTrajectoryLoaded := TRUE;
+        guiTrajLoaded := TRUE;
 
         TPWrite "Trajectory loaded";
         TPWrite "Loaded points:" \Num:=nbLoadedTrajPoints;
@@ -350,7 +353,7 @@ MODULE TRAJCENTER_GUI_DEMO
 ! EXECUTION TRAJECTOIRE / TRAJECTORY EXECUTION
 !==============================================================================
 
-    PROC TRAJCENTER_GUI_ExecuteLoadedTrajectory()
+    PROC TCGUI_ExecLoaded()
         VAR num answer;
 
         IF trajReady = FALSE THEN
@@ -359,7 +362,7 @@ MODULE TRAJCENTER_GUI_DEMO
             RETURN;
         ENDIF
 
-        IF guiTrajectoryLoaded = FALSE THEN
+        IF guiTrajLoaded = FALSE THEN
             TPWrite "GUI state: no trajectory loaded";
             TPWrite "Load a trajectory first";
             RETURN;
@@ -367,7 +370,7 @@ MODULE TRAJCENTER_GUI_DEMO
 
         TPWrite "";
         TPWrite "Ready to execute trajectory:";
-        TPWrite guiSelectedTrajName;
+        TPWrite guiSelTrajName;
         TPWrite "Loaded points:" \Num:=nbLoadedTrajPoints;
 
         TPReadFK answer, "Start motion?", "Start", "Cancel", "", "", "";
@@ -377,7 +380,7 @@ MODULE TRAJCENTER_GUI_DEMO
             RETURN;
         ENDIF
 
-        TPWrite "Executing trajectory without process...";
+        TPWrite "Executing trajectory without process";
         TRAJCENTER_ExecLoadedNoProc guiOriSpeed, guiLeaxSpeed, guiReaxSpeed;
 
         TPWrite "Trajectory execution done";

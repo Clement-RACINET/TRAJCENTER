@@ -25,8 +25,8 @@ from trajcenter.core.trajectory import Trajectory
 from trajcenter.exporter.excel_exporter import ExcelExporter
 from trajcenter.exporter.options import ExportOptions
 
-SOURCE_TRAJCENTER = Path("trajectory_store/mod_exemple.trajcenter")
-SOURCE_XLSX = Path("trajectory_files/test_basic.xlsx")
+SOURCE_TRAJCENTER = Path("trajectory_store/000_trajectory_demo.trajcenter")
+SOURCE_XLSX = Path("trajectory_files/000_trajectory_demo.xlsx")
 OUTPUT_DIR = Path("trajectory_exports")
 
 EXPORT_OPTIONS = ExportOptions(
