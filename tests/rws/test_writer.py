@@ -276,6 +276,36 @@ def _make_resolved_trajectory() -> ResolvedTrajectory:
     )
 
 
+def _merged_mastership_values(mock_set: AsyncMock) -> dict[str, str]:
+    """Merge ``values`` dictionaries from all mocked mastership calls.
+
+    ABB Route:
+        N/A — test helper.
+
+    ABB Constraints:
+        Preserves RAPID symbol payloads produced by batched writer calls.
+
+    Args:
+        mock_set: Mocked ``set_variables_with_mastership``.
+
+    Returns:
+        Merged dictionary of symbol URL to RAPID value.
+
+
+    Example:
+        ::
+
+            values = _merged_mastership_values(mock_set)
+    """
+    merged: dict[str, str] = {}
+
+    for call in mock_set.await_args_list:
+        values = call.kwargs["values"]
+        merged.update(values)
+
+    return merged
+
+
 class TestFormatHelpers:
     """Tests for RAPID value format helper functions."""
 
@@ -585,15 +615,18 @@ class TestWriteStoreMetadata:
     async def test_mastership_denied_retries(self, client: MagicMock) -> None:
         """``MastershipDenied`` triggers retries up to ``mastership_retries``."""
         mock_set = AsyncMock(side_effect=MastershipDenied("denied"))
-        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
-            with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
-                with pytest.raises(MastershipDenied):
-                    await write_store_metadata(
-                        client,
-                        names=["A"],
-                        point_counts=[10],
-                        mastership_retries=3,
-                    )
+
+        with (
+            patch(f"{_MODULE}.set_variables_with_mastership", mock_set),
+            patch(f"{_MODULE}.asyncio.sleep", AsyncMock()),
+            pytest.raises(MastershipDenied),
+        ):
+            await write_store_metadata(
+                client,
+                names=["A"],
+                point_counts=[10],
+                mastership_retries=3,
+            )
 
         assert mock_set.call_count == 3
 
@@ -619,16 +652,18 @@ class TestWriteResolvedTrajectory:
     """Tests for :func:`trajcenter.rws.writer.write_resolved_trajectory`."""
 
     @pytest.mark.asyncio
-    async def test_nominal_single_mastership_call(self, client: MagicMock) -> None:
-        """A resolved trajectory is written through one batched Mastership call."""
+    async def test_nominal_mastership_batches(self, client: MagicMock) -> None:
+        """A resolved trajectory is written through deterministic Mastership batches."""
         mock_set = AsyncMock()
         resolved = _make_resolved_trajectory()
 
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        mock_set.assert_awaited_once()
-        assert mock_set.call_args.kwargs["domain"] == "rapid"
+        assert mock_set.await_count == 3
+
+        for call in mock_set.await_args_list:
+            assert call.kwargs["domain"] == "rapid"
 
     @pytest.mark.asyncio
     async def test_status_and_flags_written(self, client: MagicMock) -> None:
@@ -639,7 +674,7 @@ class TestWriteResolvedTrajectory:
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        values = mock_set.call_args.kwargs["values"]
+        values = _merged_mastership_values(mock_set)
         assert values["RAPID/T_ROB1/TRAJCENTER/trajReady"] == "TRUE"
         assert values["RAPID/T_ROB1/TRAJCENTER/transferError"] == "FALSE"
         assert values["RAPID/T_ROB1/TRAJCENTER/sendTrajRequest"] == "FALSE"
@@ -658,7 +693,7 @@ class TestWriteResolvedTrajectory:
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        values = mock_set.call_args.kwargs["values"]
+        values = _merged_mastership_values(mock_set)
         assert values["RAPID/T_ROB1/TRAJCENTER/nbLoadedTrajPoints"] == "2"
 
     @pytest.mark.asyncio
@@ -670,7 +705,7 @@ class TestWriteResolvedTrajectory:
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        values = mock_set.call_args.kwargs["values"]
+        values = _merged_mastership_values(mock_set)
         first = values["RAPID/T_ROB1/TRAJCENTER/trajData%7B1%7D"]
         second = values["RAPID/T_ROB1/TRAJCENTER/trajData%7B2%7D"]
 
@@ -689,7 +724,7 @@ class TestWriteResolvedTrajectory:
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        values = mock_set.call_args.kwargs["values"]
+        values = _merged_mastership_values(mock_set)
 
         assert (
             values["RAPID/T_ROB1/TRAJCENTER/processParams%7B1%2C1%7D"]
@@ -710,7 +745,7 @@ class TestWriteResolvedTrajectory:
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_resolved_trajectory(client, resolved)
 
-        values = mock_set.call_args.kwargs["values"]
+        values = _merged_mastership_values(mock_set)
         process_keys = [key for key in values if "processParams%7B" in key]
         assert len(process_keys) == (
             MAX_PROCESS_PARAM_SET_COUNT * MAX_PROCESS_PARAM_PER_SET
@@ -798,14 +833,16 @@ class TestWriteResolvedTrajectory:
         mock_set = AsyncMock(side_effect=MastershipDenied("denied"))
         resolved = _make_resolved_trajectory()
 
-        with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
-            with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
-                with pytest.raises(MastershipDenied):
-                    await write_resolved_trajectory(
-                        client,
-                        resolved,
-                        mastership_retries=3,
-                    )
+        with (
+            patch(f"{_MODULE}.set_variables_with_mastership", mock_set),
+            patch(f"{_MODULE}.asyncio.sleep", AsyncMock()),
+            pytest.raises(MastershipDenied),
+        ):
+            await write_resolved_trajectory(
+                client,
+                resolved,
+                mastership_retries=3,
+            )
 
         assert mock_set.call_count == 3
 
@@ -854,9 +891,11 @@ class TestRetryMastership:
     async def test_denied_then_raises(self) -> None:
         """All denied attempts re-raise ``MastershipDenied``."""
         mock = AsyncMock(side_effect=MastershipDenied("denied"))
-        with patch(f"{_MODULE}.asyncio.sleep", AsyncMock()):
-            with pytest.raises(MastershipDenied):
-                await _retry_mastership(mock, retries=2)
+        with (
+            patch(f"{_MODULE}.asyncio.sleep", AsyncMock()),
+            pytest.raises(MastershipDenied),
+        ):
+            await _retry_mastership(mock, retries=2)
         assert mock.call_count == 2
 
 

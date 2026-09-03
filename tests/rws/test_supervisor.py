@@ -133,6 +133,7 @@ class _FakeEventStream:
                 stream = _FakeEventStream((("refreshMetaRequest", "TRUE"),))
         """
         self._events = events
+        self._index = 0
         self.closed = False
 
     def __aiter__(self) -> _FakeEventStream:
@@ -375,10 +376,12 @@ class TestRunRwsSubscriptionSupervisor:
         refresh_mock = AsyncMock(return_value=(entry,))
         transfer_mock = AsyncMock()
 
-        with patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)):
-            with patch(f"{_MODULE}.refresh_store_metadata", refresh_mock):
-                with patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock):
-                    state = await run_rws_subscription_supervisor(client, config)
+        with (
+            patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)),
+            patch(f"{_MODULE}.refresh_store_metadata", refresh_mock),
+            patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock),
+        ):
+            state = await run_rws_subscription_supervisor(client, config)
 
         assert stream.closed
         assert state.entries == (entry,)
@@ -411,14 +414,16 @@ class TestRunRwsSubscriptionSupervisor:
         refresh_mock = AsyncMock(side_effect=refresh_side_effect)
         transfer_mock = AsyncMock()
 
-        with patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)):
-            with patch(f"{_MODULE}.refresh_store_metadata", refresh_mock):
-                with patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock):
-                    state = await run_rws_subscription_supervisor(
-                        client,
-                        config,
-                        stop_event=stop_event,
-                    )
+        with (
+            patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)),
+            patch(f"{_MODULE}.refresh_store_metadata", refresh_mock),
+            patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock),
+        ):
+            state = await run_rws_subscription_supervisor(
+                client,
+                config,
+                stop_event=stop_event,
+            )
 
         assert stream.closed
         assert state.refresh_count == 1
@@ -438,13 +443,15 @@ class TestRunRwsSubscriptionSupervisor:
         stream = _FakeEventStream((("sendTrajRequest", "TRUE"),))
         transfer_mock = AsyncMock()
 
-        with patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)):
-            with patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock):
-                state = await run_rws_subscription_supervisor(
-                    client,
-                    config,
-                    state=initial_state,
-                )
+        with (
+            patch(f"{_MODULE}.watch_resources", MagicMock(return_value=stream)),
+            patch(f"{_MODULE}.transfer_selected_trajectory", transfer_mock),
+        ):
+            state = await run_rws_subscription_supervisor(
+                client,
+                config,
+                state=initial_state,
+            )
 
         assert state is initial_state
         assert state.transfer_count == 1
