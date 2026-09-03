@@ -4,6 +4,7 @@ trajcenter
 │   ├── route3.pdf
 │   ├── route4.md
 │   ├── route4.pdf
+│   ├── TRAJCENTER_V2_REORG_PLAN.txt
 │   └── TRAJCENTER_VALIDATION_MATRIX.md.md
 ├── icons
 │   ├── Image0.png
@@ -70,6 +71,10 @@ trajcenter
 │   ├── __init__.py
 │   └── conftest.py
 ├── trajcenter
+│   ├── cli
+│   │   └── __init__.py
+│   ├── convert
+│   │   └── __init__.py
 │   ├── converter
 │   │   ├── __init__.py
 │   │   ├── apt_converter.py
@@ -86,6 +91,8 @@ trajcenter
 │   │   ├── messages.json
 │   │   ├── messages.py
 │   │   └── trajectory.py
+│   ├── export
+│   │   └── __init__.py
 │   ├── exporter
 │   │   ├── __init__.py
 │   │   ├── base.py
@@ -93,6 +100,10 @@ trajcenter
 │   │   ├── excel_exporter.py
 │   │   ├── options.py
 │   │   └── tabular_exporter.py
+│   ├── robot
+│   │   ├── abb
+│   │   │   └── __init__.py
+│   │   └── __init__.py
 │   ├── rws
 │   │   ├── errors
 │   │   │   ├── __init__.py
@@ -109,6 +120,8 @@ trajcenter
 │   │   ├── store.py
 │   │   ├── supervisor.py
 │   │   └── writer.py
+│   ├── ui
+│   │   └── __init__.py
 │   └── __init__.py
 ├── trajectory_exports
 │   ├── 000_trajectory_demo.xlsx
