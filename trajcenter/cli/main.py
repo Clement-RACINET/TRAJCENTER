@@ -12,11 +12,18 @@ from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
+from trajcenter.convert import AptConverter, CsvConverter, ExcelConverter, ModConverter
+from trajcenter.core.trajectory import Trajectory
+from trajcenter.export import CsvExporter, ExcelExporter
 from trajcenter.rws.models import TrajectoryStoreEntry
 from trajcenter.rws.store import scan_trajectory_store
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
+CSV_EXTENSIONS = {".csv", ".txt"}
+EXCEL_EXTENSIONS = {".xlsx", ".xlsm", ".xls"}
+APT_EXTENSIONS = {".apt", ".aptsource"}
+RAPID_EXTENSIONS = {".mod"}
 
 
 def get_package_version() -> str:
@@ -52,6 +59,52 @@ def build_parser() -> argparse.ArgumentParser:
         "version",
         help="Show the installed TrajCenter version.",
         description="Show the installed TrajCenter version.",
+    )
+    convert_parser = subparsers.add_parser(
+        "convert",
+        help="Convert a source trajectory file to a .trajcenter archive.",
+        description="Convert a source trajectory file to a .trajcenter archive.",
+    )
+    convert_parser.add_argument(
+        "source",
+        type=Path,
+        help="Source file to convert (.csv, .xlsx, .xlsm, .xls, .apt, .aptsource, .mod).",
+    )
+    convert_parser.add_argument(
+        "dest_dir",
+        type=Path,
+        help="Destination directory for the produced .trajcenter archive.",
+    )
+    convert_parser.add_argument(
+        "--name",
+        help="Optional output archive stem. Defaults to the source file stem.",
+    )
+    convert_parser.add_argument(
+        "--format",
+        choices=["csv", "excel", "xlsx", "apt", "rapid", "mod"],
+        help="Optional source format override. By default, the format is inferred.",
+    )
+
+    export_parser = subparsers.add_parser(
+        "export",
+        help="Export a .trajcenter archive to CSV or Excel.",
+        description="Export a .trajcenter archive to CSV or Excel.",
+    )
+    export_parser.add_argument(
+        "source",
+        type=Path,
+        help="Source .trajcenter archive.",
+    )
+    export_parser.add_argument(
+        "dest_dir",
+        type=Path,
+        help="Destination directory for exported files.",
+    )
+    export_parser.add_argument(
+        "--format",
+        choices=["csv", "excel", "xlsx"],
+        default="csv",
+        help="Export format. Default: csv.",
     )
 
     store_parser = subparsers.add_parser(
@@ -198,6 +251,120 @@ def print_store_entry_details(entry: TrajectoryStoreEntry) -> None:
     print(f"Path:         {entry.path}")
 
 
+def infer_converter(source: Path, format_name: str | None = None):
+    """Return a converter instance for a source file.
+
+    Args:
+        source: Source file path.
+        format_name: Optional explicit source format.
+
+    Returns:
+        Converter instance.
+
+    Raises:
+        ValueError: If the format is unsupported.
+    """
+    normalized_format = format_name.casefold() if format_name is not None else None
+    suffix = source.suffix.casefold()
+
+    if normalized_format == "csv" or (
+        normalized_format is None and suffix in CSV_EXTENSIONS
+    ):
+        return CsvConverter()
+
+    if normalized_format in {"excel", "xlsx"} or (
+        normalized_format is None and suffix in EXCEL_EXTENSIONS
+    ):
+        return ExcelConverter()
+
+    if normalized_format == "apt" or (
+        normalized_format is None and suffix in APT_EXTENSIONS
+    ):
+        return AptConverter()
+
+    if normalized_format in {"rapid", "mod"} or (
+        normalized_format is None and suffix in RAPID_EXTENSIONS
+    ):
+        return ModConverter()
+
+    supported = ", ".join(
+        sorted(CSV_EXTENSIONS | EXCEL_EXTENSIONS | APT_EXTENSIONS | RAPID_EXTENSIONS)
+    )
+    raise ValueError(
+        f"Unsupported source format for {source}. "
+        f"Supported extensions: {supported}. "
+        "Use --format to override detection."
+    )
+
+
+def infer_exporter(format_name: str):
+    """Return an exporter instance for an output format.
+
+    Args:
+        format_name: Export format name.
+
+    Returns:
+        Exporter instance.
+
+    Raises:
+        ValueError: If the format is unsupported.
+    """
+    normalized_format = format_name.casefold()
+
+    if normalized_format == "csv":
+        return CsvExporter()
+
+    if normalized_format in {"excel", "xlsx"}:
+        return ExcelExporter()
+
+    raise ValueError(f"Unsupported export format: {format_name}")
+
+
+def handle_convert_command(args: argparse.Namespace) -> int:
+    """Run the ``trajcenter convert`` command.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        Process exit code.
+    """
+    try:
+        converter = infer_converter(args.source, args.format)
+        output = converter.convert_and_save(
+            source=args.source,
+            dest_dir=args.dest_dir,
+            stem=args.name,
+        )
+    except (FileNotFoundError, OSError, ValueError) as exc:
+        print(f"Error: {exc}")
+        return 1
+
+    print(f"Created: {output}")
+    return 0
+
+
+def handle_export_command(args: argparse.Namespace) -> int:
+    """Run the ``trajcenter export`` command.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        Process exit code.
+    """
+    try:
+        trajectory = Trajectory.load(args.source)
+        exporter = infer_exporter(args.format)
+        output = exporter.export(trajectory, args.dest_dir)
+    except (FileNotFoundError, OSError, ValueError) as exc:
+        print(f"Error: {exc}")
+        return 1
+
+    print(f"Exported: {output}")
+    return 0
+
+
 def handle_store_command(args: argparse.Namespace) -> int:
     """Run a ``trajcenter store`` subcommand.
 
@@ -247,6 +414,12 @@ def run_command(args: argparse.Namespace) -> int:
     if args.command == "version":
         print(f"{APP_NAME} {get_package_version()}")
         return 0
+
+    if args.command == "convert":
+        return handle_convert_command(args)
+
+    if args.command == "export":
+        return handle_export_command(args)
 
     if args.command == "store":
         return handle_store_command(args)
