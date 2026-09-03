@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Base - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Base";
+        var mkdocs_page_input_path = "api\\trajcenter\\convert\\base.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >Convert</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">Base</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.base">base</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.base.BaseConverter">BaseConverter</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../column_mapper/">Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../csv_converter/">Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/options/">Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/tabular_exporter/">Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >Abb</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/writer/">Writer</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">Trajcenter</li>
+          <li class="breadcrumb-item">Convert</li>
+      <li class="breadcrumb-item active">Base</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="base">Base</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.convert.base"></a>
+    <div class="doc doc-contents first">
+
+        <p>Abstract base class for all TrajCenter converters.</p>
+<blockquote>
+<p><strong>Author</strong>: Clément RACINET</p>
+</blockquote>
+<p>A converter transforms a local source file, such as RAPID <code>.mod</code>,
+CSV, Excel or APT, into a
+:class:<code>~trajcenter.core.trajectory.Trajectory</code>.</p>
+<h3 id="trajcenter.convert.base--trajcenter-v2-autocompletion-principle">TrajCenter v2 autocompletion principle</h3>
+<p>Converters preserve the source by default. They do not invent RAPID,
+process or cell-specific values unless the caller explicitly requests
+column autocompletion through
+:attr:<code>trajcenter.convert.defaults.ConversionDefaults.autocomplete_columns</code>.</p>
+<p>This enables two workflows:</p>
+<ol>
+<li><strong>Faithful import</strong>: keep only source-derived data.</li>
+<li><strong>Editable preparation</strong>: explicitly add selected columns, export to
+   Excel, edit locally, then re-import.</li>
+</ol>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local file conversion, no RWS route.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No mastership is acquired here. No RAPID variable is read or written.
+The RWS inactive-axis sentinel <code>9E+9</code> must not be injected by
+converters.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>from pathlib import Path
+from trajcenter.convert.defaults import ConversionDefaults
+from trajcenter.convert.apt_converter import AptConverter
+
+converter = AptConverter(
+    defaults=ConversionDefaults(
+        autocomplete_columns={"tcp_speed", "zone_type"},
+        tcp_speed=300.0,
+        zone_type=10,
+    )
+)
+traj = converter.convert(Path("trajectory_files/path.aptsource"))
+</code></pre>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.convert.base.BaseConverter" class="doc doc-heading">
+            <code>BaseConverter</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="abc.ABC">ABC</span></code></p>
+
+
+
+        <p>Abstract base for all source-file converters.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>defaults</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="ConversionDefaults (trajcenter.convert.defaults.ConversionDefaults)" href="../defaults/#trajcenter.convert.defaults.ConversionDefaults">ConversionDefaults</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Default values used for explicit autocompletion.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local conversion helper.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>This class does not communicate with ABB RWS.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>converter = SomeConverter(defaults=ConversionDefaults())
+</code></pre>
+</details>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>trajcenter\convert\base.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BaseConverter</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Abstract base for all source-file converters.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        defaults: Default values used for explicit autocompletion.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A — local conversion helper.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        This class does not communicate with ABB RWS.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            converter = SomeConverter(defaults=ConversionDefaults())</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialise the converter with optional default values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            defaults: Optional autocompletion defaults. When ``None``,</span>
+<span class="sd">                autocompletion is disabled.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No ABB controller access is performed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pydantic.ValidationError: If defaults are invalid.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                converter = SomeConverter(defaults=ConversionDefaults())</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="n">ConversionDefaults</span><span class="p">()</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert a source file into a trajectory.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A — local file conversion, no RWS route.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No RAPID write and no mastership acquisition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source: Path to the source file to convert.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Valid unsaved :class:`~trajcenter.core.trajectory.Trajectory`.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the source file does not exist.</span>
+<span class="sd">            ValueError: If the file is invalid or malformed.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                traj = converter.convert(Path("trajectory.mod"))</span>
+<span class="sd">        """</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_autocomplete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Fill explicitly requested missing columns with default values.</span>
+
+<span class="sd">        The method never overwrites existing columns. No column is added</span>
+<span class="sd">        unless its name is present in</span>
+<span class="sd">        ``self.defaults.autocomplete_columns``.</span>
+
+<span class="sd">        Supported explicit autocompletion columns are:</span>
+
+<span class="sd">        - ``cf1``</span>
+<span class="sd">        - ``cf4``</span>
+<span class="sd">        - ``cf6``</span>
+<span class="sd">        - ``cfx``</span>
+<span class="sd">        - ``move_type``</span>
+<span class="sd">        - ``readconfs``</span>
+<span class="sd">        - ``tcp_speed``</span>
+<span class="sd">        - ``zone_type``</span>
+<span class="sd">        - ``tool_name``</span>
+<span class="sd">        - ``wobj_name``</span>
+
+<span class="sd">        ``eax_*`` columns and ``process_param_index`` are never added</span>
+<span class="sd">        here.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A — local DataFrame transformation.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            The method must not infer cell-specific values unless they</span>
+<span class="sd">            are explicitly requested.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df: Partially filled point DataFrame.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple ``(completed_df, autocompleted_columns)``.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If a requested column has no configured value.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                df_out, autocompleted = converter._autocomplete(df)</span>
+<span class="sd">        """</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">autocompleted</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">requested</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">autocomplete_columns</span>
+        <span class="n">row_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">CONFDATA_COLUMNS</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">requested</span> <span class="ow">or</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">cf_value</span><span class="p">]</span> <span class="o">*</span> <span class="n">row_count</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Int8Dtype</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="n">autocompleted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+        <span class="n">optional_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"move_type"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">move_type</span><span class="p">,</span>
+            <span class="s2">"readconfs"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">readconfs</span><span class="p">,</span>
+            <span class="s2">"tcp_speed"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">tcp_speed</span><span class="p">,</span>
+            <span class="s2">"zone_type"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">zone_type</span><span class="p">,</span>
+            <span class="s2">"tool_name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">tool_name</span><span class="p">,</span>
+            <span class="s2">"wobj_name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">wobj_name</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">requested</span> <span class="ow">or</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Column </span><span class="si">{</span><span class="n">col</span><span class="si">!r}</span><span class="s2"> was requested for autocompletion but "</span>
+                    <span class="s2">"no default value was configured."</span>
+                <span class="p">)</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">autocompleted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">"readconfs"</span> <span class="ow">in</span> <span class="n">autocompleted</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">"readconfs"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"readconfs"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"boolean"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"tcp_speed"</span> <span class="ow">in</span> <span class="n">autocompleted</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">"tcp_speed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"tcp_speed"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float64"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"zone_type"</span> <span class="ow">in</span> <span class="n">autocompleted</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">"zone_type"</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"zone_type"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Int16Dtype</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">autocompleted</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_and_save</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">dest_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">stem</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Convert a source file and save it as ``.trajcenter``.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A — local conversion and archive serialisation.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No RAPID write and no mastership acquisition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source: Path to the source file.</span>
+<span class="sd">            dest_dir: Destination directory, created if absent.</span>
+<span class="sd">            stem: Output filename without extension. Defaults to the</span>
+<span class="sd">                source file stem.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Absolute path of the created ``.trajcenter`` file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If ``source`` does not exist.</span>
+<span class="sd">            ValueError: If conversion fails.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                path = converter.convert_and_save(</span>
+<span class="sd">                    source=Path("trajectory.mod"),</span>
+<span class="sd">                    dest_dir=Path("trajectory_store"),</span>
+<span class="sd">                )</span>
+<span class="sd">        """</span>
+        <span class="n">traj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">stem</span> <span class="ow">or</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span>
+        <span class="n">dest</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">traj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dest</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.trajcenter"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.convert.base.BaseConverter.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise the converter with optional default values.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>defaults</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="ConversionDefaults (trajcenter.convert.defaults.ConversionDefaults)" href="../defaults/#trajcenter.convert.defaults.ConversionDefaults">ConversionDefaults</a> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Optional autocompletion defaults. When <code>None</code>,
+autocompletion is disabled.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No ABB controller access is performed.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>None</code>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If defaults are invalid.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>converter = SomeConverter(defaults=ConversionDefaults())
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\base.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialise the converter with optional default values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        defaults: Optional autocompletion defaults. When ``None``,</span>
+<span class="sd">            autocompletion is disabled.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No ABB controller access is performed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        pydantic.ValidationError: If defaults are invalid.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            converter = SomeConverter(defaults=ConversionDefaults())</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="n">ConversionDefaults</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.convert.base.BaseConverter.convert" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">convert</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a source file into a trajectory.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local file conversion, no RWS route.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No RAPID write and no mastership acquisition.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>source</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to the source file to convert.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="Trajectory (trajcenter.core.trajectory.Trajectory)" href="../../core/trajectory/#trajcenter.core.trajectory.Trajectory">Trajectory</a></code>
+              –
+              <div class="doc-md-description">
+                <p>Valid unsaved :class:<code>~trajcenter.core.trajectory.Trajectory</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the source file does not exist.</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the file is invalid or malformed.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>traj = converter.convert(Path("trajectory.mod"))
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\base.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Trajectory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert a source file into a trajectory.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A — local file conversion, no RWS route.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No RAPID write and no mastership acquisition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: Path to the source file to convert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Valid unsaved :class:`~trajcenter.core.trajectory.Trajectory`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the source file does not exist.</span>
+<span class="sd">        ValueError: If the file is invalid or malformed.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            traj = converter.convert(Path("trajectory.mod"))</span>
+<span class="sd">    """</span>
+    <span class="o">...</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.convert.base.BaseConverter.convert_and_save" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">convert_and_save</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">,</span> <span class="n">stem</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a source file and save it as <code>.trajcenter</code>.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local conversion and archive serialisation.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No RAPID write and no mastership acquisition.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>source</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to the source file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dest_dir</code></b>
+                  (<code><span title="pathlib.Path">Path</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Destination directory, created if absent.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>stem</code></b>
+                  (<code><span title="str">str</span> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Output filename without extension. Defaults to the
+source file stem.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pathlib.Path">Path</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Absolute path of the created <code>.trajcenter</code> file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If <code>source</code> does not exist.</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If conversion fails.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>path = converter.convert_and_save(
+    source=Path("trajectory.mod"),
+    dest_dir=Path("trajectory_store"),
+)
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\base.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_and_save</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">dest_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">stem</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Convert a source file and save it as ``.trajcenter``.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A — local conversion and archive serialisation.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No RAPID write and no mastership acquisition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: Path to the source file.</span>
+<span class="sd">        dest_dir: Destination directory, created if absent.</span>
+<span class="sd">        stem: Output filename without extension. Defaults to the</span>
+<span class="sd">            source file stem.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Absolute path of the created ``.trajcenter`` file.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If ``source`` does not exist.</span>
+<span class="sd">        ValueError: If conversion fails.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            path = converter.convert_and_save(</span>
+<span class="sd">                source=Path("trajectory.mod"),</span>
+<span class="sd">                dest_dir=Path("trajectory_store"),</span>
+<span class="sd">            )</span>
+<span class="sd">    """</span>
+    <span class="n">traj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">stem</span> <span class="ow">or</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span>
+    <span class="n">dest</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">traj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dest</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.trajcenter"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../apt_converter/" class="btn btn-neutral float-left" title="Apt Converter"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../column_mapper/" class="btn btn-neutral float-right" title="Column Mapper">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../apt_converter/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../column_mapper/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

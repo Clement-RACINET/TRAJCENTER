@@ -18,7 +18,7 @@ from pathlib import Path
 
 from _demo_utils import active_external_axes, assert_same_geometry, point_count
 
-from trajcenter.converter.mod_converter import ModConverter
+from trajcenter.convert.mod_converter import ModConverter
 from trajcenter.core.trajectory import Trajectory
 
 SOURCE_FILE = Path("trajectory_files/mod_exemple.mod")

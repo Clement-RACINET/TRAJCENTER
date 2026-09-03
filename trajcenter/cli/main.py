@@ -11,13 +11,21 @@ import argparse
 from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from trajcenter.convert import AptConverter, CsvConverter, ExcelConverter, ModConverter
+from trajcenter.convert.apt_converter import AptConverter
+from trajcenter.convert.csv_converter import CsvConverter
+from trajcenter.convert.excel_converter import ExcelConverter
+from trajcenter.convert.mod_converter import ModConverter
 from trajcenter.core.trajectory import Trajectory
-from trajcenter.export import CsvExporter, ExcelExporter
+from trajcenter.export.csv_exporter import CsvExporter
+from trajcenter.export.excel_exporter import ExcelExporter
 from trajcenter.robot.abb.models import TrajectoryStoreEntry
 from trajcenter.robot.abb.store import scan_trajectory_store
 
+if TYPE_CHECKING:
+    from trajcenter.convert.base import BaseConverter
+    from trajcenter.export.base import BaseExporter
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
 CSV_EXTENSIONS = {".csv", ".txt"}
@@ -251,7 +259,7 @@ def print_store_entry_details(entry: TrajectoryStoreEntry) -> None:
     print(f"Path:         {entry.path}")
 
 
-def infer_converter(source: Path, format_name: str | None = None):
+def infer_converter(source: Path, format_name: str | None = None) -> BaseConverter:
     """Return a converter instance for a source file.
 
     Args:
@@ -297,7 +305,7 @@ def infer_converter(source: Path, format_name: str | None = None):
     )
 
 
-def infer_exporter(format_name: str):
+def infer_exporter(format_name: str) -> BaseExporter:
     """Return an exporter instance for an output format.
 
     Args:

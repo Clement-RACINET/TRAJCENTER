@@ -34,7 +34,7 @@ trajcenter
 │   ├── cli
 │   │   ├── __init__.py
 │   │   └── test_main.py
-│   ├── converter
+│   ├── convert
 │   │   ├── __init__.py
 │   │   ├── conftest.py
 │   │   ├── test_apt_converter.py
@@ -52,13 +52,11 @@ trajcenter
 │   │   └── test_trajectory_edge_cases.py
 │   ├── export
 │   │   ├── __init__.py
-│   │   └── test_public_api.py
-│   ├── exporter
-│   │   ├── __init__.py
 │   │   ├── conftest.py
 │   │   ├── test_csv_exporter.py
 │   │   ├── test_excel_exporter.py
 │   │   ├── test_process_tabular_exporter.py
+│   │   ├── test_public_api.py
 │   │   └── test_tabular_exporter.py
 │   ├── robot
 │   │   └── abb
@@ -82,8 +80,6 @@ trajcenter
 │   │   ├── __init__.py
 │   │   └── main.py
 │   ├── convert
-│   │   └── __init__.py
-│   ├── converter
 │   │   ├── __init__.py
 │   │   ├── apt_converter.py
 │   │   ├── base.py
@@ -100,8 +96,6 @@ trajcenter
 │   │   ├── messages.py
 │   │   └── trajectory.py
 │   ├── export
-│   │   └── __init__.py
-│   ├── exporter
 │   │   ├── __init__.py
 │   │   ├── base.py
 │   │   ├── csv_exporter.py

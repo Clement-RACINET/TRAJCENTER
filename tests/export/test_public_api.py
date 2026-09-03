@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from trajcenter import export
-from trajcenter.exporter import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
+from trajcenter.export import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
 
 
 def test_export_facade_reexports_exporter_public_api() -> None:

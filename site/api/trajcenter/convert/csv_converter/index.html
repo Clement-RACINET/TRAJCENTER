@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Csv Converter - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Csv Converter";
+        var mkdocs_page_input_path = "api\\trajcenter\\convert\\csv_converter.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >Convert</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../column_mapper/">Column Mapper</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">Csv Converter</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.csv_converter">csv_converter</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.csv_converter.CsvConverter">CsvConverter</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/options/">Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/tabular_exporter/">Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >Abb</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/writer/">Writer</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">Trajcenter</li>
+          <li class="breadcrumb-item">Convert</li>
+      <li class="breadcrumb-item active">Csv Converter</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="csv-converter">Csv Converter</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.convert.csv_converter"></a>
+    <div class="doc doc-contents first">
+
+        <p>Converter for CSV and delimited text files to <code>.trajcenter</code>.</p>
+<blockquote>
+<p><strong>Author</strong>: Clément RACINET</p>
+</blockquote>
+<p>Delegates all conversion logic to
+:class:<code>~trajcenter.convert.tabular_converter._TabularConverter</code>.
+This class implements CSV file reading with automatic separator detection
+and optional sidecar loading.</p>
+<h3 id="trajcenter.convert.csv_converter--trajcenter-v2-mapping">TrajCenter v2 mapping</h3>
+<p>The converter imports human-readable tabular columns into canonical v2
+trajectory columns:</p>
+<ul>
+<li><code>speed</code> / <code>v500</code> / numeric speed aliases -&gt; <code>tcp_speed</code>.</li>
+<li><code>zone</code> / <code>z10</code> -&gt; <code>zone_type=10</code>.</li>
+<li><code>zone</code> / <code>fine</code> -&gt; <code>zone_type=255</code>.</li>
+<li><code>tool</code> / tool aliases -&gt; <code>tool_name</code>.</li>
+<li><code>wobj</code> / work-object aliases -&gt; <code>wobj_name</code>.</li>
+</ul>
+<p>Legacy index columns such as <code>tool_index</code> and <code>wobj_index</code> are not
+part of the v2 output.</p>
+<h3 id="trajcenter.convert.csv_converter--csv-sidecars">CSV sidecars</h3>
+<p>When present beside the main CSV file, these optional sidecars are loaded
+automatically:</p>
+<ul>
+<li><code>{stem}_meta.csv</code>: key/value metadata table.</li>
+<li><code>{stem}_process_params.csv</code>: process parameter table.</li>
+</ul>
+<p>For an active process, the main CSV must contain <code>process_param_index</code>,
+the meta sidecar must contain <code>process_type</code> and
+<code>process_param_names</code>, and the process sidecar must contain
+<code>process_param_index</code> plus the declared parameter columns.</p>
+<h3 id="trajcenter.convert.csv_converter--unmapped-columns">Unmapped columns</h3>
+<p>Columns that cannot be mapped to the TrajCenter v2 schema are not stored
+in <code>Trajectory.points</code>. A <code>UserWarning</code> is emitted and their names are
+recorded in <code>Trajectory.meta.extra["unmapped_columns"]</code> for audit.</p>
+<h3 id="trajcenter.convert.csv_converter--separator">Separator</h3>
+<p>The separator is detected automatically via :func:<code>_detect_separator</code>
+by reading the first non-empty lines of the file. Supported delimiters
+are comma, semicolon, tab and pipe. If detection fails, comma is used.</p>
+<p>The separator can also be forced via the <code>separator</code> constructor
+parameter. The same separator is used for detected sidecars.</p>
+<h3 id="trajcenter.convert.csv_converter--encoding">Encoding</h3>
+<p>The default encoding is <code>"utf-8-sig"</code>, which supports UTF-8 files with
+or without a BOM. It can be overridden via the <code>encoding</code> parameter.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local CSV file conversion, no RWS route.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No mastership is acquired. No RAPID variable is read or written.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>from pathlib import Path
+from trajcenter.convert.csv_converter import CsvConverter
+
+traj = CsvConverter().convert(Path("data/trajectoire.csv"))
+
+traj = CsvConverter(separator=";", encoding="latin-1").convert(
+    Path("data/export_excel.csv")
+)
+</code></pre>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="trajcenter.convert.csv_converter.CsvConverter" class="doc doc-heading">
+            <code>CsvConverter</code>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="trajcenter.convert.tabular_converter._TabularConverter">_TabularConverter</span></code></p>
+
+
+
+        <p>Converter for CSV files to :class:<code>~trajcenter.core.trajectory.Trajectory</code>.</p>
+<p>The class inherits all v2 tabular conversion rules from
+:class:<code>~trajcenter.convert.tabular_converter._TabularConverter</code> and
+implements CSV reading, separator detection, encoding handling and
+optional sidecar loading.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local CSV file conversion.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No ABB controller access.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>defaults</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="ConversionDefaults (trajcenter.convert.defaults.ConversionDefaults)" href="../defaults/#trajcenter.convert.defaults.ConversionDefaults">ConversionDefaults</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Optional conversion defaults used only for missing optional
+v2 columns.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>separator</code></b>
+                  (<code><span title="str">str</span> | None</code>)
+              –
+              <div class="doc-md-description">
+                <p>Forced CSV separator. When <code>None</code>, auto-detection is
+used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>encoding</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Source file encoding. Defaults to <code>"utf-8-sig"</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>from pathlib import Path
+from trajcenter.convert.csv_converter import CsvConverter
+
+traj = CsvConverter().convert(Path("trajectoire.csv"))
+traj = CsvConverter(separator=";").convert(Path("export.csv"))
+</code></pre>
+</details>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>trajcenter\convert\csv_converter.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CsvConverter</span><span class="p">(</span><span class="n">_TabularConverter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Converter for CSV files to :class:`~trajcenter.core.trajectory.Trajectory`.</span>
+
+<span class="sd">    The class inherits all v2 tabular conversion rules from</span>
+<span class="sd">    :class:`~trajcenter.convert.tabular_converter._TabularConverter` and</span>
+<span class="sd">    implements CSV reading, separator detection, encoding handling and</span>
+<span class="sd">    optional sidecar loading.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A — local CSV file conversion.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No ABB controller access.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        defaults: Optional conversion defaults used only for missing optional</span>
+<span class="sd">            v2 columns.</span>
+<span class="sd">        separator: Forced CSV separator. When ``None``, auto-detection is</span>
+<span class="sd">            used.</span>
+<span class="sd">        encoding: Source file encoding. Defaults to ``"utf-8-sig"``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            from pathlib import Path</span>
+<span class="sd">            from trajcenter.convert.csv_converter import CsvConverter</span>
+
+<span class="sd">            traj = CsvConverter().convert(Path("trajectoire.csv"))</span>
+<span class="sd">            traj = CsvConverter(separator=";").convert(Path("export.csv"))</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"utf-8-sig"</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialise the CSV converter.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No ABB controller access.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            defaults: Default values for optional v2 columns. When ``None``,</span>
+<span class="sd">                no optional send column is added unless present in the source.</span>
+<span class="sd">            separator: Forced CSV separator. When ``None``, auto-detection is</span>
+<span class="sd">                used.</span>
+<span class="sd">            encoding: Source file encoding. Defaults to ``"utf-8-sig"``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pydantic.ValidationError: If defaults are invalid.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                converter = CsvConverter(separator=";", encoding="utf-8-sig")</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">separator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">encoding</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_source_format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SourceFormat</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the source format identifier for CSV imports.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No ABB controller access.</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :attr:`trajcenter.core.trajectory.SourceFormat.CSV`.</span>
+
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                assert converter._source_format == SourceFormat.CSV</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">SourceFormat</span><span class="o">.</span><span class="n">CSV</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_sheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Read the CSV file and optional sidecars as tabular sheets.</span>
+
+<span class="sd">        The main source is exposed as ``"sheet"``. If present, sidecars</span>
+<span class="sd">        are exposed as reserved sheets:</span>
+
+<span class="sd">        - ``"meta"`` from ``{stem}_meta.csv``.</span>
+<span class="sd">        - ``"process_params"`` from ``{stem}_process_params.csv``.</span>
+
+<span class="sd">        The separator is detected from the main CSV unless explicitly</span>
+<span class="sd">        configured, and then reused for sidecars.</span>
+
+<span class="sd">        ABB Route:</span>
+<span class="sd">            N/A — local CSV file read.</span>
+
+<span class="sd">        ABB Constraints:</span>
+<span class="sd">            No ABB controller access.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source: Path to the main CSV file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary containing the main sheet and optional sidecar</span>
+<span class="sd">            sheets.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: If the CSV path does not exist.</span>
+<span class="sd">            pandas.errors.ParserError: If pandas cannot parse CSV content.</span>
+<span class="sd">            UnicodeDecodeError: If the configured encoding is invalid for</span>
+<span class="sd">                the file content.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            ::</span>
+
+<span class="sd">                sheets = converter._read_sheets(Path("trajectory.csv"))</span>
+<span class="sd">        """</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="ow">or</span> <span class="n">_detect_separator</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="n">sheets</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"sheet"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">source</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span>
+                <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="n">meta_path</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_meta.csv"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">meta_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">sheets</span><span class="p">[</span><span class="s2">"meta"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">meta_path</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span>
+                <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">process_params_path</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_process_params.csv"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">process_params_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">sheets</span><span class="p">[</span><span class="s2">"process_params"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">process_params_path</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span>
+                <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sheets</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.convert.csv_converter.CsvConverter.__init__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8-sig'</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initialise the CSV converter.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No ABB controller access.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>defaults</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="ConversionDefaults (trajcenter.convert.defaults.ConversionDefaults)" href="../defaults/#trajcenter.convert.defaults.ConversionDefaults">ConversionDefaults</a> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Default values for optional v2 columns. When <code>None</code>,
+no optional send column is added unless present in the source.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>separator</code></b>
+                  (<code><span title="str">str</span> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Forced CSV separator. When <code>None</code>, auto-detection is
+used.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>encoding</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;utf-8-sig&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Source file encoding. Defaults to <code>"utf-8-sig"</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>None</code>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="pydantic.ValidationError">ValidationError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If defaults are invalid.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>converter = CsvConverter(separator=";", encoding="utf-8-sig")
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\csv_converter.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">defaults</span><span class="p">:</span> <span class="n">ConversionDefaults</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"utf-8-sig"</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialise the CSV converter.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No ABB controller access.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        defaults: Default values for optional v2 columns. When ``None``,</span>
+<span class="sd">            no optional send column is added unless present in the source.</span>
+<span class="sd">        separator: Forced CSV separator. When ``None``, auto-detection is</span>
+<span class="sd">            used.</span>
+<span class="sd">        encoding: Source file encoding. Defaults to ``"utf-8-sig"``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        pydantic.ValidationError: If defaults are invalid.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            converter = CsvConverter(separator=";", encoding="utf-8-sig")</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">separator</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">encoding</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../column_mapper/" class="btn btn-neutral float-left" title="Column Mapper"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../defaults/" class="btn btn-neutral float-right" title="Defaults">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../column_mapper/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../defaults/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

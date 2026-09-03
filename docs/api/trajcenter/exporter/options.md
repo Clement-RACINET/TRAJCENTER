@@ -1,3 +1,0 @@
-# Options
-
-::: trajcenter.exporter.options

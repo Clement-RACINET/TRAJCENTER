@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Column Mapper - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Column Mapper";
+        var mkdocs_page_input_path = "api\\trajcenter\\convert\\column_mapper.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >Convert</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../base/">Base</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">Column Mapper</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.column_mapper">column_mapper</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.column_mapper.canonical_name">canonical_name</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.convert.column_mapper.resolve_columns">resolve_columns</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../csv_converter/">Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/options/">Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/tabular_exporter/">Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >Abb</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/writer/">Writer</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">Trajcenter</li>
+          <li class="breadcrumb-item">Convert</li>
+      <li class="breadcrumb-item active">Column Mapper</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="column-mapper">Column Mapper</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.convert.column_mapper"></a>
+    <div class="doc doc-contents first">
+
+        <p>Column name normalisation for TrajCenter converters.</p>
+<blockquote>
+<p><strong>Author</strong>: Clément RACINET</p>
+</blockquote>
+<p>Resolution is case-insensitive and diacritic-insensitive via
+:func:<code>_normalize</code>.</p>
+<h3 id="trajcenter.convert.column_mapper--trajcenter-v2-canonical-names">TrajCenter v2 canonical names</h3>
+<p>Legacy user aliases are still accepted, but they now resolve to the v2
+canonical names:</p>
+<ul>
+<li><code>speed</code> / <code>vitesse</code> -&gt; <code>tcp_speed</code></li>
+<li><code>zone</code> / <code>precision</code> -&gt; <code>zone_type</code></li>
+<li><code>tool</code> / <code>outil</code> -&gt; <code>tool_name</code></li>
+<li><code>wobj</code> / <code>repere</code> -&gt; <code>wobj_name</code></li>
+</ul>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local column mapping, no RWS route.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>This module does not read or write RAPID data. It only normalises
+tabular source headers.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>canonical_name("Vitesse")  # "tcp_speed"
+canonical_name("Répère")   # "wobj_name"
+</code></pre>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="trajcenter.convert.column_mapper.canonical_name" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">canonical_name</span><span class="p">(</span><span class="n">col</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the canonical column name.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No ABB controller access.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>col</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Column name as it appears in the source file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="str">str</span> | None</code>
+              –
+              <div class="doc-md-description">
+                <p>Canonical TrajCenter name, or <code>None</code> if unrecognised.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="UnicodeError">UnicodeError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If unicode normalisation fails.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>canonical_name("Vitesse") == "tcp_speed"
+canonical_name("REPÈRE") == "wobj_name"
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\column_mapper.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">canonical_name</span><span class="p">(</span><span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the canonical column name.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No ABB controller access.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        col: Column name as it appears in the source file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Canonical TrajCenter name, or ``None`` if unrecognised.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UnicodeError: If unicode normalisation fails.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            canonical_name("Vitesse") == "tcp_speed"</span>
+<span class="sd">            canonical_name("REPÈRE") == "wobj_name"</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_ALIAS_INDEX</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_normalize</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="trajcenter.convert.column_mapper.resolve_columns" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">resolve_columns</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Rename DataFrame columns to their canonical names.</p>
+<p>Unrecognised columns are left intact and returned in <code>unresolved</code>.
+When two columns resolve to the same canonical name, the first one is
+kept and a :class:<code>UserWarning</code> is emitted.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local DataFrame header mapping.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No ABB controller access.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Source DataFrame.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="tuple">tuple</span>[<span title="pandas.DataFrame">DataFrame</span>, <span title="list">list</span>[<span title="str">str</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>Tuple <code>(renamed_df, unresolved_columns)</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="UserWarning">UserWarning</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Emitted when duplicate aliases resolve to the same
+canonical column.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>df_out, unknown = resolve_columns(df)
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\convert\column_mapper.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_columns</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Rename DataFrame columns to their canonical names.</span>
+
+<span class="sd">    Unrecognised columns are left intact and returned in ``unresolved``.</span>
+<span class="sd">    When two columns resolve to the same canonical name, the first one is</span>
+<span class="sd">    kept and a :class:`UserWarning` is emitted.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A — local DataFrame header mapping.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        No ABB controller access.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: Source DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple ``(renamed_df, unresolved_columns)``.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UserWarning: Emitted when duplicate aliases resolve to the same</span>
+<span class="sd">            canonical column.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            df_out, unknown = resolve_columns(df)</span>
+<span class="sd">    """</span>
+    <span class="n">rename_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">seen_canonical</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">unresolved</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">col_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">canon</span> <span class="o">=</span> <span class="n">canonical_name</span><span class="p">(</span><span class="n">col_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">canon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">unresolved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_str</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">canon</span> <span class="ow">in</span> <span class="n">seen_canonical</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="n">msg</span><span class="p">(</span>
+                    <span class="s2">"DUPLICATE_CANONICAL"</span><span class="p">,</span>
+                    <span class="n">canon</span><span class="o">=</span><span class="n">canon</span><span class="p">,</span>
+                    <span class="n">kept</span><span class="o">=</span><span class="n">seen_canonical</span><span class="p">[</span><span class="n">canon</span><span class="p">],</span>
+                    <span class="n">ignored</span><span class="o">=</span><span class="n">col_str</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">seen_canonical</span><span class="p">[</span><span class="n">canon</span><span class="p">]</span> <span class="o">=</span> <span class="n">col_str</span>
+        <span class="n">rename_map</span><span class="p">[</span><span class="n">col_str</span><span class="p">]</span> <span class="o">=</span> <span class="n">canon</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">rename_map</span><span class="p">),</span> <span class="n">unresolved</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../base/" class="btn btn-neutral float-left" title="Base"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../csv_converter/" class="btn btn-neutral float-right" title="Csv Converter">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../base/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../csv_converter/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,1343 +1,1494 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>TrajCenter</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Accueil";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
 
-<!doctype html>
-<html lang="en" class="no-js">
-  <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      
-      
-        <link rel="next" href="api/trajcenter/converter/apt_converter/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
-    
-    
-      
-        <title>TrajCenter</title>
-      
-    
-    
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+<body class="wy-body-for-nav" role="document">
 
-
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
-    
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
-
-    
-    
-  </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
-    <div data-md-component="skip">
-      
-        
-        <a href="#accueil" class="md-skip">
-          Skip to content
-        </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="TrajCenter" class="md-header__button md-logo" aria-label="TrajCenter" data-md-component="logo">
-      
-  <img src="assets/logo.png" alt="logo">
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            TrajCenter
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Accueil
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".">
+          <img src="assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
 </div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
-    <div class="md-container" data-md-component="container">
-      
-      
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Accueil</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Trajcenter</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/column_mapper/">Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/csv_converter/">Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/convert/tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/export/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/export/csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/export/excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/export/options/">Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="api/trajcenter/export/tabular_exporter/">Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >Abb</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="api/trajcenter/robot/abb/writer/">Writer</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">TrajCenter</a>
         
-          
-        
-      
-      <main class="md-main" data-md-component="main">
-        <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="." title="TrajCenter" class="md-nav__button md-logo" aria-label="TrajCenter" data-md-component="logo">
-      
-  <img src="assets/logo.png" alt="logo">
-
-    </a>
-    TrajCenter
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Accueil
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Accueil</li>
+    <li class="wy-breadcrumbs-aside">
     </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Référence API
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Référence API
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Trajcenter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Trajcenter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_1" id="__nav_2_1_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Converter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Converter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/apt_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Apt Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/base/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Base
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/column_mapper/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Column Mapper
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/csv_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Csv Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/defaults/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Defaults
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/excel_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Excel Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/mod_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Mod Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/converter/tabular_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tabular Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_2" id="__nav_2_1_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Core
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Core
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/core/logger/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Logger
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/core/messages/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Messages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/core/trajectory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Trajectory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_3" id="__nav_2_1_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Exporter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Exporter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/exporter/base/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Base
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/exporter/csv_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Csv Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/exporter/excel_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Excel Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/exporter/options/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Options
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/exporter/tabular_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tabular Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_4" id="__nav_2_1_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rws
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Rws
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/rws/_utils/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Utils
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/rws/reader/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reader
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="api/trajcenter/rws/writer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Writer
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="coverage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Coverage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-            
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
-
-
-
-<h1 id="accueil">Accueil</h1>
+                <h1 id="accueil">Accueil</h1>
 <h1 id="trajcenter">TRAJCENTER</h1>
-<p>Serveur TCP/IP Python permettant d'envoyer des trajectoires robotiques à un robot ABB
-sur requête. Le robot joue le rôle de client, Python celui de serveur.</p>
+<p>TrajCenter est une chaîne Python/RAPID permettant de convertir, stocker,
+résoudre et transférer des trajectoires industrielles vers un robot ABB
+RobotWare 6.x via <strong>Robot Web Services</strong>.</p>
 <blockquote>
-<p>Projet développé au LCFC (Laboratoire de Conception Fabrication Commande) — ENSAM  </p>
-<p>Auteurs : <strong>Josselin SCHUMACKER</strong> &amp; <strong>Clément RACINET</strong></p>
-<p>Version : <strong>1.0</strong> — Avril 2024</p>
+<p>Projet développé au LCFC — ENSAM<br />
+Auteurs principaux : Josselin SCHUMAKER &amp; Clément RACINET<br />
+Robot cible : ABB RobotWare 6.x<br />
+Transport : ABB Robot Web Services uniquement<br />
+Version : 2.0</p>
 </blockquote>
 <hr />
-<h2 id="description">Description</h2>
-<p>TRAJCENTER est un serveur TCP/IP écrit en Python qui expose des trajectoires
-(points de passage robot) à un client distant qui est un robot ABB programmé en RAPID.</p>
-<p>Le serveur lit des fichiers de trajectoires dans différents formats, les charge en mémoire
-sous forme de DataFrame, puis les transmet point par point sur requête du robot.
-La communication repose sur un protocole de requêtes textuelles simples de la forme :</p>
-<h2 id="structure-du-projet">Structure du projet</h2>
-<pre><code class="language-bash">TRAJCENTER/
-├── server.py                  # Code principal du serveur
-├── trajectory_files/          # Dossier contenant les fichiers de trajectoires
-│   ├── exemple.xlsx
-│   ├── exemple.mod
-│   └── ...
+<h2 id="statut">Statut</h2>
+<p>TrajCenter v2 remplace l’ancien protocole TCP de la v1.</p>
+<p>Le flux v2 actuel repose sur :</p>
+<ul>
+<li>des archives locales <code>.trajcenter</code> ;</li>
+<li>un <strong>module système RAPID unique</strong> ;</li>
+<li>des lectures/écritures RWS ;</li>
+<li>des subscriptions RWS sur flags RAPID ;</li>
+<li>des écritures protégées par Mastership.</li>
+</ul>
+<p>La v2 <strong>n’utilise plus</strong> :</p>
+<ul>
+<li>serveur TCP Python ;</li>
+<li>port custom type <code>50000</code> ;</li>
+<li>watchdog TCP ;</li>
+<li>polling nominal côté PC ;</li>
+<li>protocole texte <code>nbtraj</code>, <code>nomtraj</code>, <code>loadtraj</code>, <code>robt</code>, etc.</li>
+</ul>
+<hr />
+<h2 id="architecture-generale">Architecture générale</h2>
+<pre><code class="language-text">Robot ABB RAPID
+    |
+    | RWS subscription events
+    v
+PC Python TrajCenter supervisor
+    |
+    | scan / load / resolve
+    v
+trajectory_store/*.trajcenter
+    |
+    | RWS writes under Mastership
+    v
+TRAJCENTER RAPID system module
+</code></pre>
+<p>Flux principaux :</p>
+<table>
+<thead>
+<tr>
+<th>Flux</th>
+<th>Déclencheur RAPID</th>
+<th>Direction</th>
+<th>Mécanisme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Refresh metadata</td>
+<td><code>refreshMetaRequest := TRUE</code></td>
+<td>Robot → PC</td>
+<td>RWS subscription</td>
+</tr>
+<tr>
+<td>Envoi trajectoire</td>
+<td><code>sendTrajRequest := TRUE</code></td>
+<td>Robot → PC</td>
+<td>RWS subscription</td>
+</tr>
+<tr>
+<td>Lecture contexte robot</td>
+<td>PC</td>
+<td>Robot → PC</td>
+<td>RWS read</td>
+</tr>
+<tr>
+<td>Écriture trajectoire</td>
+<td>PC</td>
+<td>PC → Robot</td>
+<td>RWS write + Mastership</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="structure-utile-du-depot">Structure utile du dépôt</h2>
+<pre><code class="language-text">trajcenter/
+├── rapid/
+│   └── TRAJCENTER.mod
+├── scripts/
+│   └── run_trajcenter_supervisor.py
+├── tests/
+│   ├── converter/
+│   ├── core/
+│   ├── exporter/
+│   └── rws/
+├── trajcenter/
+│   ├── converter/
+│   ├── core/
+│   ├── exporter/
+│   └── rws/
+│       ├── reader.py
+│       ├── resolver.py
+│       ├── writer.py
+│       ├── service.py
+│       ├── store.py
+│       └── supervisor.py
+├── trajectory_files/
+├── trajectory_store/
+├── pyproject.toml
 └── README.md
 </code></pre>
 <hr />
-<h2 id="fonctionnalites">Fonctionnalités</h2>
+<h2 id="module-rapid-v2">Module RAPID v2</h2>
+<p>Le protocole robot est défini dans un <strong>module système unique</strong> :</p>
+<pre><code class="language-rapid">MODULE TRAJCENTER(SYSMODULE)
+</code></pre>
+<p>Fichier :</p>
+<pre><code class="language-text">rapid/TRAJCENTER.mod
+</code></pre>
+<p>Il n’y a plus plusieurs modules RAPID à charger dans un ordre particulier.</p>
+<h3 id="sections-internes-du-module">Sections internes du module</h3>
+<p>Le module est organisé en sections de maintenance :</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Rôle</th>
+<th>Politique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Section 1</td>
+<td>Types <code>RECORD</code></td>
+<td>Ne pas modifier sauf évolution protocole PC/RAPID</td>
+</tr>
+<tr>
+<td>Section 2</td>
+<td>Limites globales</td>
+<td>Ne pas modifier sauf changement volontaire des capacités</td>
+</tr>
+<tr>
+<td>Section 3</td>
+<td>Codes d’état et d’erreur</td>
+<td>Ne pas modifier sans mettre à jour le PC et la documentation</td>
+</tr>
+<tr>
+<td>Section 4</td>
+<td>Types de mouvement</td>
+<td>Ne pas modifier sauf ajout officiel d’un type de mouvement</td>
+</tr>
+<tr>
+<td>Section 5</td>
+<td>Process</td>
+<td>Modifier uniquement ici pour ajouter/retirer/renommer un process</td>
+</tr>
+<tr>
+<td>Section 6</td>
+<td>Configuration cellule</td>
+<td>Section modifiable pour déclarer tools et wobjs</td>
+</tr>
+<tr>
+<td>Section 7</td>
+<td>Variables RWS</td>
+<td>Ne pas modifier noms/types/dimensions sans mettre à jour le PC</td>
+</tr>
+<tr>
+<td>Section 8</td>
+<td>Defaults robot</td>
+<td>Section réglable à la mise en service</td>
+</tr>
+</tbody>
+</table>
+<h3 id="politique-de-declaration-rapid">Politique de déclaration RAPID</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Déclaration RAPID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flags abonnés RWS</td>
+<td><code>PERS</code></td>
+</tr>
+<tr>
+<td>Tools / wobjs cellule</td>
+<td><code>PERS</code></td>
+</tr>
+<tr>
+<td>Maintenance tools / wobjs</td>
+<td><code>PERS</code></td>
+</tr>
+<tr>
+<td>Runtime, metadata, trajectoire, defaults</td>
+<td><code>VAR</code></td>
+</tr>
+<tr>
+<td>Tailles fixes, codes</td>
+<td><code>CONST</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="variables-rapid-principales">Variables RAPID principales</h2>
+<p>Module RWS cible :</p>
+<pre><code class="language-text">TRAJCENTER
+</code></pre>
+<h3 id="requetes">Requêtes</h3>
+<pre><code class="language-rapid">PERS bool sendTrajRequest := FALSE;
+PERS bool refreshMetaRequest := FALSE;
+VAR num selectedTrajIndex := 0;
+</code></pre>
+<p>Convention :</p>
+<pre><code class="language-text">selectedTrajIndex = 0                  aucune sélection
+selectedTrajIndex = 1..nbTrajAvailable trajectoire valide
+</code></pre>
+<h3 id="etat-transfert">État transfert</h3>
+<pre><code class="language-rapid">VAR bool trajReady := FALSE;
+VAR bool transferError := FALSE;
+VAR num lastErrorCode := statusOk;
+VAR string lastError := &quot;&quot;;
+VAR num transferProgress := 0;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trajReady</code></td>
+<td>trajectoire complète et utilisable côté RAPID</td>
+</tr>
+<tr>
+<td><code>transferError</code></td>
+<td>dernier refresh/transfert en erreur</td>
+</tr>
+<tr>
+<td><code>lastErrorCode</code></td>
+<td>code état ou erreur</td>
+</tr>
+<tr>
+<td><code>lastError</code></td>
+<td>message court</td>
+</tr>
+<tr>
+<td><code>transferProgress</code></td>
+<td>progression <code>0..100</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="metadata-store">Metadata store</h3>
+<pre><code class="language-rapid">VAR num nbTrajAvailable := 0;
+VAR trajCenterTrajMeta trajectories{256};
+</code></pre>
+<p>Entrées valides :</p>
+<pre><code class="language-text">trajectories{1..nbTrajAvailable}
+</code></pre>
+<h3 id="trajectoire-chargee">Trajectoire chargée</h3>
+<pre><code class="language-rapid">VAR num nbLoadedTrajPoints := 0;
+VAR trajCenterPointData trajData{100000};
+VAR trajCenterProcessParameter processParams{256,10};
+</code></pre>
+<p>Entrées valides :</p>
+<pre><code class="language-text">trajData{1..nbLoadedTrajPoints}
+processParams{1..256,1..10}
+</code></pre>
+<hr />
+<h2 id="constantes-principales">Constantes principales</h2>
+<p>Les constantes protocole sont définies côté RAPID dans <code>TRAJCENTER</code>
+et côté Python dans <code>trajcenter/rws/constants.py</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Constante</th>
+<th style="text-align: right;">Valeur</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maxTrajCount</code></td>
+<td style="text-align: right;"><code>256</code></td>
+<td>nombre max de trajectoires listées</td>
+</tr>
+<tr>
+<td><code>maxTrajPointCount</code></td>
+<td style="text-align: right;"><code>100000</code></td>
+<td>nombre max de points transférables</td>
+</tr>
+<tr>
+<td><code>maxProcessParamSetCount</code></td>
+<td style="text-align: right;"><code>256</code></td>
+<td>nombre max de sets process</td>
+</tr>
+<tr>
+<td><code>maxProcessParamPerSet</code></td>
+<td style="text-align: right;"><code>10</code></td>
+<td>nombre max de paramètres par set</td>
+</tr>
+<tr>
+<td><code>processNone</code></td>
+<td style="text-align: right;"><code>0</code></td>
+<td>aucun process</td>
+</tr>
+<tr>
+<td><code>processAcf</code></td>
+<td style="text-align: right;"><code>1</code></td>
+<td>process ACF</td>
+</tr>
+<tr>
+<td><code>processAak</code></td>
+<td style="text-align: right;"><code>2</code></td>
+<td>process AAK</td>
+</tr>
+<tr>
+<td><code>processPushcorp</code></td>
+<td style="text-align: right;"><code>3</code></td>
+<td>process PUSHCORP</td>
+</tr>
+<tr>
+<td><code>moveTypeL</code></td>
+<td style="text-align: right;"><code>0</code></td>
+<td>MoveL</td>
+</tr>
+<tr>
+<td><code>moveTypeJ</code></td>
+<td style="text-align: right;"><code>1</code></td>
+<td>MoveJ</td>
+</tr>
+<tr>
+<td><code>moveTypeC</code></td>
+<td style="text-align: right;"><code>2</code></td>
+<td>MoveC</td>
+</tr>
+<tr>
+<td><code>statusOk</code></td>
+<td style="text-align: right;"><code>200000</code></td>
+<td>OK</td>
+</tr>
+<tr>
+<td><code>statusMetadataRefreshed</code></td>
+<td style="text-align: right;"><code>200001</code></td>
+<td>métadonnées rafraîchies</td>
+</tr>
+<tr>
+<td><code>statusTrajectoryTransferred</code></td>
+<td style="text-align: right;"><code>200002</code></td>
+<td>trajectoire transférée</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="catalogue-process">Catalogue process</h2>
+<p>Le catalogue process est déclaré dans le module RAPID <code>TRAJCENTER</code>.</p>
+<p>Exemple actuel :</p>
+<pre><code class="language-rapid">CONST num processNone := 0;
+CONST num processAcf := 1;
+CONST num processAak := 2;
+CONST num processPushcorp := 3;
+
+CONST num processTypeCount := 4;
+
+VAR trajCenterProcessType processTypes{processTypeCount}:=[
+    [processNone, &quot;NONE&quot;],
+    [processAcf, &quot;ACF&quot;],
+    [processAak, &quot;AAK&quot;],
+    [processPushcorp, &quot;PUSHCORP&quot;]
+];
+</code></pre>
+<p>Pour ajouter un process, modifier uniquement la section <code>PROCESS</code> du module RAPID :</p>
+<ol>
+<li>ajouter une constante process ;</li>
+<li>incrémenter <code>processTypeCount</code> ;</li>
+<li>ajouter l’entrée dans <code>processTypes</code>.</li>
+</ol>
+<hr />
+<h2 id="configuration-cellule-tools-wobjs">Configuration cellule tools / wobjs</h2>
+<p>Le module RAPID expose les outils et workobjects disponibles à TrajCenter :</p>
+<pre><code class="language-rapid">PERS trajCenterTool trajTools{N};
+PERS trajCenterWobj trajWobjs{M};
+
+PERS tooldata tempTool;
+PERS wobjdata tempWobj;
+</code></pre>
+<p>Règles :</p>
+<pre><code class="language-text">trajTools/trajWobjs sont cellule-dépendants.
+Le PC lit uniquement les champs .name pour résoudre tool_name et wobj_name.
+Les index RAPID envoyés sont en base 1.
+0 = non défini.
+</code></pre>
+<p>Les fichiers <code>.trajcenter</code> ne stockent pas de <code>tooldata</code> ou <code>wobjdata</code> complets.
+Ils référencent seulement des noms logiques :</p>
+<pre><code class="language-text">tool_name
+wobj_name
+</code></pre>
+<p>Le PC résout ensuite ces noms dans :</p>
+<pre><code class="language-text">trajTools
+trajWobjs
+</code></pre>
+<hr />
+<h2 id="defaults-robot">Defaults robot</h2>
+<p>Les valeurs par défaut sont lues par le PC avant transfert :</p>
+<pre><code class="language-rapid">VAR bool hasDefaultTcpSpeed := FALSE;
+VAR num defaultTcpSpeed := 0;
+
+VAR bool hasDefaultZoneType := FALSE;
+VAR num defaultZoneType := 255;
+
+VAR bool hasDefaultToolName := FALSE;
+VAR string defaultToolName := &quot;&quot;;
+
+VAR bool hasDefaultWobjName := FALSE;
+VAR string defaultWobjName := &quot;&quot;;
+
+VAR num defaultMoveType := moveTypeL;
+VAR bool defaultReadConfs := TRUE;
+</code></pre>
+<p>Règle importante :</p>
+<pre><code class="language-text">Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
+Fallback uniquement si le hasDefault* correspondant vaut TRUE.
+</code></pre>
+<p>Pour <code>tool_name</code> et <code>wobj_name</code>, le fallback est un <strong>nom</strong> :</p>
+<pre><code class="language-text">defaultToolName -&gt; résolution dans trajTools -&gt; toolIndex
+defaultWobjName -&gt; résolution dans trajWobjs -&gt; wobjIndex
+</code></pre>
+<p>Ce n’est pas un <code>tooldata</code> ou un <code>wobjdata</code> directement transféré depuis le fichier <code>.trajcenter</code>.</p>
+<hr />
+<h2 id="format-trajcenter">Format <code>.trajcenter</code></h2>
+<p>Une archive <code>.trajcenter</code> est un fichier ZIP contenant au minimum :</p>
+<pre><code class="language-text">meta.json
+points.parquet
+</code></pre>
+<h3 id="colonnes-geometriques-obligatoires">Colonnes géométriques obligatoires</h3>
+<p>Pour être exportable et résoluble, une trajectoire doit contenir :</p>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td>position ABB X</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td>position ABB Y</td>
+</tr>
+<tr>
+<td><code>z</code></td>
+<td>position ABB Z</td>
+</tr>
+<tr>
+<td><code>q1</code></td>
+<td>quaternion ABB w</td>
+</tr>
+<tr>
+<td><code>q2</code></td>
+<td>quaternion ABB x</td>
+</tr>
+<tr>
+<td><code>q3</code></td>
+<td>quaternion ABB y</td>
+</tr>
+<tr>
+<td><code>q4</code></td>
+<td>quaternion ABB z</td>
+</tr>
+</tbody>
+</table>
+<h3 id="colonnes-envoyables-vers-le-robot">Colonnes envoyables vers le robot</h3>
+<table>
+<thead>
+<tr>
+<th>Colonne</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cf1</code>, <code>cf4</code>, <code>cf6</code>, <code>cfx</code></td>
+<td>confdata ABB, valeur <code>0</code> si absente</td>
+</tr>
+<tr>
+<td><code>eax_a..eax_f</code></td>
+<td>axes externes optionnels</td>
+</tr>
+<tr>
+<td><code>tcp_speed</code></td>
+<td>vitesse TCP en mm/s</td>
+</tr>
+<tr>
+<td><code>zone_type</code></td>
+<td>zone ABB</td>
+</tr>
+<tr>
+<td><code>move_type</code></td>
+<td>mouvement <code>MoveL</code>, <code>MoveJ</code>, <code>MoveC</code></td>
+</tr>
+<tr>
+<td><code>tool_name</code></td>
+<td>nom outil à résoudre dans <code>trajTools</code></td>
+</tr>
+<tr>
+<td><code>wobj_name</code></td>
+<td>nom workobject à résoudre dans <code>trajWobjs</code></td>
+</tr>
+<tr>
+<td><code>readconfs</code></td>
+<td>prise en compte confdata</td>
+</tr>
+<tr>
+<td><code>process_type</code></td>
+<td>process optionnel</td>
+</tr>
+<tr>
+<td><code>process_params</code></td>
+<td>paramètres process optionnels</td>
+</tr>
+<tr>
+<td><code>process_param_index</code></td>
+<td>ignoré à l’envoi, recalculé côté PC</td>
+</tr>
+</tbody>
+</table>
+<p>Important :</p>
+<pre><code class="language-text">9E+9 ne doit jamais être stocké dans les fichiers .trajcenter.
+</code></pre>
+<p>Les axes externes absents ou NaN sont représentés localement par une absence de
+valeur, puis sérialisés en <code>9E+9</code> uniquement au moment de l’écriture RWS.</p>
+<hr />
+<h2 id="resolution-robot">Résolution robot</h2>
+<p>Avant transfert, TrajCenter lit le contexte robot :</p>
 <ul>
-<li>Serveur TCP/IP multi-clients avec gestion par threads</li>
-<li>Chargement de trajectoires depuis plusieurs formats de fichiers</li>
-<li>Protocole de requêtes léger et extensible</li>
-<li>Envoi des robtargets encodés en bytes (little-endian, int32)</li>
-<li>Gestion du timeout d'inactivité</li>
-<li>Logs structurés avec niveaux (message / warning / error)</li>
+<li>defaults robot ;</li>
+<li>tools disponibles ;</li>
+<li>wobjs disponibles ;</li>
+<li>catalogue process.</li>
+</ul>
+<p>Le resolver produit ensuite une trajectoire complètement résolue :</p>
+<table>
+<thead>
+<tr>
+<th>Entrée locale</th>
+<th>Sortie RAPID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tool_name</code></td>
+<td><code>toolIndex</code> base 1</td>
+</tr>
+<tr>
+<td><code>wobj_name</code></td>
+<td><code>wobjIndex</code> base 1</td>
+</tr>
+<tr>
+<td><code>move_type</code></td>
+<td><code>0</code>, <code>1</code>, <code>2</code></td>
+</tr>
+<tr>
+<td><code>zone_type</code></td>
+<td>zone ABB autorisée</td>
+</tr>
+<tr>
+<td><code>tcp_speed</code></td>
+<td><code>tcpSpeed</code></td>
+</tr>
+<tr>
+<td>process local</td>
+<td><code>processParamIndex</code> base 1 ou <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Le PC ne doit pas inventer silencieusement :</p>
+<ul>
+<li>outil ;</li>
+<li>workobject ;</li>
+<li>vitesse ;</li>
+<li>zone.</li>
+</ul>
+<p>Les valeurs manquantes ne peuvent être complétées que si les defaults robot
+correspondants sont explicitement activés côté RAPID.</p>
+<hr />
+<h2 id="zones-autorisees">Zones autorisées</h2>
+<pre><code class="language-text">0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 80, 100, 150, 200, 255
+</code></pre>
+<p>Convention :</p>
+<pre><code class="language-text">0   = z0
+255 = fine
+</code></pre>
+<hr />
+<h2 id="mouvements-supportes">Mouvements supportés</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Code</th>
+<th>Mouvement</th>
+<th>Alias acceptés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>0</code></td>
+<td><code>MoveL</code></td>
+<td><code>L</code>, <code>MoveL</code>, <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>1</code></td>
+<td><code>MoveJ</code></td>
+<td><code>J</code>, <code>MoveJ</code>, <code>1</code></td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>2</code></td>
+<td><code>MoveC</code></td>
+<td><code>C</code>, <code>MoveC</code>, <code>2</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="movec">MoveC</h3>
+<p>Encodage :</p>
+<pre><code class="language-text">MoveC = deux points consécutifs C,C
+C,C,C,C valide
+C,C,C invalide
+</code></pre>
+<p>Pour chaque paire <code>C,C</code>, doivent être identiques :</p>
+<pre><code class="language-text">tcpSpeed
+toolIndex
+wobjIndex
+zoneType
+readConfs
+processParamIndex
+</code></pre>
+<hr />
+<h2 id="pipeline-refresh-metadata">Pipeline refresh metadata</h2>
+<p>Déclencheur côté RAPID :</p>
+<pre><code class="language-rapid">refreshMetaRequest := TRUE;
+</code></pre>
+<p>Traitement PC :</p>
+<pre><code class="language-text">1. Réception de refreshMetaRequest = TRUE par subscription RWS.
+2. Scan de trajectory_store/.
+3. Chargement des archives .trajcenter.
+4. Extraction metadata : nom, nombre de points, type process.
+5. Écriture de nbTrajAvailable.
+6. Écriture de trajectories{1..nbTrajAvailable}.
+7. Écriture état OK.
+8. Remise de refreshMetaRequest à FALSE.
+</code></pre>
+<p>Les archives sont triées de manière stable côté PC. L’ordre écrit dans
+<code>trajectories</code> doit rester identique à l’ordre utilisé ensuite pour résoudre
+<code>selectedTrajIndex</code>.</p>
+<hr />
+<h2 id="pipeline-envoi-trajectoire">Pipeline envoi trajectoire</h2>
+<p>Déclencheur côté RAPID :</p>
+<pre><code class="language-rapid">selectedTrajIndex := k;
+sendTrajRequest := TRUE;
+</code></pre>
+<p>Traitement PC :</p>
+<pre><code class="language-text">1. Réception de sendTrajRequest = TRUE par subscription RWS.
+2. Lecture de selectedTrajIndex.
+3. Mapping index RAPID base 1 vers archive locale.
+4. Chargement de l’archive .trajcenter.
+5. Lecture contexte robot.
+6. Résolution trajectoire.
+7. Acquisition Mastership.
+8. Écriture état initial : trajReady FALSE, transferError FALSE, progress 0.
+9. Écriture nbLoadedTrajPoints.
+10. Écriture processParams si nécessaire.
+11. Écriture trajData{1..nbLoadedTrajPoints}.
+12. Mise à jour transferProgress.
+13. Écriture état final : progress 100, lastErrorCode 200002, trajReady TRUE.
+14. Remise de sendTrajRequest à FALSE.
+15. Release Mastership.
+</code></pre>
+<p>En erreur :</p>
+<pre><code class="language-text">trajReady = FALSE
+transferError = TRUE
+lastErrorCode = code erreur
+lastError = message court
+sendTrajRequest = FALSE
+refreshMetaRequest = FALSE si erreur refresh
+</code></pre>
+<p>Toute écriture RWS doit être faite sous Mastership avec release garanti.</p>
+<hr />
+<h2 id="supervisor-rws">Supervisor RWS</h2>
+<p>Le supervisor v2 est dans :</p>
+<pre><code class="language-text">trajcenter/rws/supervisor.py
+</code></pre>
+<p>Le script de lancement est :</p>
+<pre><code class="language-text">scripts/run_trajcenter_supervisor.py
+</code></pre>
+<p>Il s’abonne aux flags RAPID :</p>
+<pre><code class="language-text">TRAJCENTER/refreshMetaRequest
+TRAJCENTER/sendTrajRequest
+</code></pre>
+<p>Seuls les events <code>TRUE</code> déclenchent une action.</p>
+<p>Les events <code>FALSE</code> sont ignorés.</p>
+<p>Au démarrage ou après reconnexion, le PC doit relire l’état courant des flags
+afin de traiter une demande qui serait déjà pendante.</p>
+<hr />
+<h2 id="lancement-du-supervisor">Lancement du supervisor</h2>
+<p>Depuis la racine du dépôt :</p>
+<pre><code class="language-powershell">python scripts/run_trajcenter_supervisor.py --store trajectory_store
+</code></pre>
+<p>Options principales :</p>
+<pre><code class="language-powershell">python scripts/run_trajcenter_supervisor.py `
+  --store trajectory_store `
+  --task T_ROB1 `
+  --module TRAJCENTER `
+  --mastership-retries 3 `
+  --log-level INFO
+</code></pre>
+<p>La configuration de connexion RWS dépend de la librairie
+<code>abb-rws-client-python-rw6</code> et de son chargement d’environnement.</p>
+<p>Vérifier notamment :</p>
+<ul>
+<li>adresse contrôleur ;</li>
+<li>utilisateur ;</li>
+<li>mot de passe ;</li>
+<li>configuration réseau ;</li>
+<li>droits Mastership ;</li>
+<li>module système RAPID chargé ;</li>
+<li>module cible <code>TRAJCENTER</code>.</li>
 </ul>
 <hr />
-<h2 id="formats-de-fichiers-supportes">Formats de fichiers supportés</h2>
-<table>
-<thead>
-<tr>
-<th>Extension</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>.txt</code></td>
-<td>Liste de points structurés ligne par ligne (ast.literal_eval)</td>
-</tr>
-<tr>
-<td><code>.xlsx</code></td>
-<td>Fichier Excel avec colonnes x, y, z</td>
-</tr>
-<tr>
-<td><code>.mod</code></td>
-<td>Fichier RAPID ABB contenant des robtargets</td>
-</tr>
-<tr>
-<td><code>.aptsource</code></td>
-<td>Fichier APT-CL (GOTO x,y,z,i,j,k)</td>
-</tr>
-</tbody>
-</table>
-<p>Les fichiers de trajectoires doivent être placés dans le dossier <code>trajectory_files/</code>
-situé à la racine du projet.</p>
+<h2 id="installation-developpeur">Installation développeur</h2>
+<p>Le projet utilise <code>pixi</code>.</p>
+<p>Commandes usuelles :</p>
+<pre><code class="language-powershell">pixi install
+pixi run ruff check .
+pixi run tests
+</code></pre>
+<p>Correction automatique si configurée :</p>
+<pre><code class="language-powershell">pixi run pyinit-write
+</code></pre>
 <hr />
-<h2 id="protocole-de-communication">Protocole de communication</h2>
-<h3 id="requetes-techniques">Requêtes techniques</h3>
-<table>
-<thead>
-<tr>
-<th>Requête</th>
-<th>Arguments</th>
-<th>Réponse</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nbtraj</code></td>
-<td>aucun</td>
-<td>Nombre de trajectoires disponibles (int32)</td>
-</tr>
-<tr>
-<td><code>nomtraj[n]</code></td>
-<td>index (1-based)</td>
-<td>Nom du fichier de la trajectoire n (string)</td>
-</tr>
-<tr>
-<td><code>loadtraj[n]</code></td>
-<td>index (1-based)</td>
-<td><code>"loaded"</code> ou <code>"error"</code> (string)</td>
-</tr>
-<tr>
-<td><code>dimtraj</code></td>
-<td>aucun</td>
-<td>Nombre de points de la trajectoire (int32)</td>
-</tr>
-<tr>
-<td><code>robt[ref;nb]</code></td>
-<td>ligne de départ, nombre de points</td>
-<td>Paquet de robtargets encodés en bytes</td>
-</tr>
-</tbody>
-</table>
-<h3 id="requetes-de-service">Requêtes de service</h3>
-<table>
-<thead>
-<tr>
-<th>Requête</th>
-<th>Effet</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>stop</code></td>
-<td>Arrête le serveur proprement</td>
-</tr>
-<tr>
-<td><code>closesocket</code></td>
-<td>Ferme la connexion du client courant</td>
-</tr>
-<tr>
-<td><code>closseallsockets</code></td>
-<td>Ferme toutes les connexions actives</td>
-</tr>
-</tbody>
-</table>
-<h2 id="prerequis-pour-installation">Prérequis pour installation</h2>
+<h2 id="validation-locale-actuelle">Validation locale actuelle</h2>
+<p>La base de tests couvre :</p>
 <ul>
-<li>Python 3.8+</li>
-<li>Bibliothèques : <ul>
-<li>pandas</li>
-<li>numpy</li>
-<li>openpyxl</li>
+<li>conversion APT, CSV, Excel, MOD ;</li>
+<li>modèle cœur <code>Trajectory</code> ;</li>
+<li>export CSV/Excel ;</li>
+<li>parsing et résolution RWS ;</li>
+<li>writer RWS avec mocks ;</li>
+<li>reader RWS avec mocks ;</li>
+<li>service RWS ;</li>
+<li>supervisor RWS ;</li>
+<li>store local <code>.trajcenter</code> ;</li>
+<li>erreurs RWS.</li>
 </ul>
-</li>
+<p>Dernière validation locale connue :</p>
+<pre><code class="language-text">792 passed
+coverage globale : 99%
+</code></pre>
+<hr />
+<h2 id="tests-a-faire-avec-acces-robot">Tests à faire avec accès robot</h2>
+<p>Cette section liste les tests d’intégration réels à exécuter dès qu’un robot ABB
+RobotWare 6.x ou RobotStudio contrôleur virtuel sera disponible.</p>
+<h3 id="1-preparation-controleur">1. Préparation contrôleur</h3>
+<ul>
+<li>Installer/charger le module système RAPID :</li>
 </ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
+<pre><code class="language-rapid">MODULE TRAJCENTER(SYSMODULE)
+</code></pre>
+<ul>
+<li>Compiler le module.</li>
+<li>Vérifier que le module cible RWS est bien :</li>
+</ul>
+<pre><code class="language-text">TRAJCENTER
+</code></pre>
+<ul>
+<li>Vérifier que les symboles RWS existent :</li>
+<li><code>sendTrajRequest</code></li>
+<li><code>refreshMetaRequest</code></li>
+<li><code>selectedTrajIndex</code></li>
+<li><code>nbTrajAvailable</code></li>
+<li><code>trajectories</code></li>
+<li><code>trajReady</code></li>
+<li><code>transferError</code></li>
+<li><code>lastErrorCode</code></li>
+<li><code>lastError</code></li>
+<li><code>transferProgress</code></li>
+<li><code>nbLoadedTrajPoints</code></li>
+<li><code>trajData</code></li>
+<li><code>processParams</code></li>
+<li><code>hasDefaultTcpSpeed</code></li>
+<li><code>defaultTcpSpeed</code></li>
+<li><code>hasDefaultZoneType</code></li>
+<li><code>defaultZoneType</code></li>
+<li><code>hasDefaultToolName</code></li>
+<li><code>defaultToolName</code></li>
+<li><code>hasDefaultWobjName</code></li>
+<li><code>defaultWobjName</code></li>
+<li><code>defaultMoveType</code></li>
+<li><code>defaultReadConfs</code></li>
+<li><code>trajTools</code></li>
+<li><code>trajWobjs</code></li>
+<li><code>processTypes</code></li>
+</ul>
+<h3 id="2-test-connexion-rws">2. Test connexion RWS</h3>
+<p>Objectif : valider l’accès HTTP RWS.</p>
+<p>À vérifier :</p>
+<ul>
+<li>login OK ;</li>
+<li>lecture d’un symbole simple ;</li>
+<li>erreur propre si identifiants invalides ;</li>
+<li>timeout propre si contrôleur indisponible ;</li>
+<li>traduction correcte des erreurs RWS.</li>
+</ul>
+<h3 id="3-test-mastership">3. Test Mastership</h3>
+<p>Objectif : valider les écritures protégées.</p>
+<p>À vérifier :</p>
+<ul>
+<li>acquisition Mastership OK ;</li>
+<li>écriture d’une variable simple ;</li>
+<li>release Mastership même en cas d’exception ;</li>
+<li>comportement si Mastership refusé ;</li>
+<li>retry Mastership ;</li>
+<li>absence de Mastership résiduelle après arrêt brutal du script.</li>
+</ul>
+<h3 id="4-test-subscription-rws">4. Test subscription RWS</h3>
+<p>Objectif : valider le fonctionnement événementiel.</p>
+<p>À vérifier :</p>
+<ul>
+<li>création subscription sur <code>refreshMetaRequest</code> ;</li>
+<li>création subscription sur <code>sendTrajRequest</code> ;</li>
+<li>réception event <code>TRUE</code> ;</li>
+<li>event <code>FALSE</code> ignoré ;</li>
+<li>suppression propre du groupe subscription à l’arrêt ;</li>
+<li>reconnexion ou relance supervisor après interruption.</li>
+</ul>
+<h3 id="5-test-refresh-metadata-nominal">5. Test refresh metadata nominal</h3>
+<p>Objectif : remplir la liste robot des trajectoires disponibles.</p>
+<p>Procédure :</p>
+<pre><code class="language-rapid">refreshMetaRequest := TRUE;
+</code></pre>
+<p>Résultat attendu :</p>
+<pre><code class="language-text">refreshMetaRequest = FALSE
+transferError = FALSE
+lastErrorCode = 200001
+lastError = &quot;&quot;
+nbTrajAvailable &gt; 0
+trajectories{1..nbTrajAvailable} cohérent avec trajectory_store/
+</code></pre>
+<p>À contrôler :</p>
+<ul>
+<li>ordre des trajectoires ;</li>
+<li>noms ;</li>
+<li>nombres de points ;</li>
+<li>process type ;</li>
+<li>comportement avec store vide ;</li>
+<li>comportement avec archive invalide.</li>
+</ul>
+<h3 id="6-test-transfert-trajectoire-sans-process">6. Test transfert trajectoire sans process</h3>
+<p>Objectif : transférer une trajectoire simple.</p>
+<p>Procédure :</p>
+<pre><code class="language-rapid">selectedTrajIndex := 1;
+sendTrajRequest := TRUE;
+</code></pre>
+<p>Résultat attendu :</p>
+<pre><code class="language-text">sendTrajRequest = FALSE
+trajReady = TRUE
+transferError = FALSE
+lastErrorCode = 200002
+lastError = &quot;&quot;
+transferProgress = 100
+nbLoadedTrajPoints = pointCount attendu
+trajData{1..nbLoadedTrajPoints} renseigné
+trajData{i}.processParamIndex = 0
+</code></pre>
+<p>À contrôler :</p>
+<ul>
+<li><code>moveType</code> ;</li>
+<li>robtarget ;</li>
+<li>confdata ;</li>
+<li>axes externes absents écrits en <code>9E+9</code> côté RWS ;</li>
+<li><code>tcpSpeed</code> ;</li>
+<li><code>zoneType</code> ;</li>
+<li><code>readConfs</code> ;</li>
+<li><code>toolIndex</code> ;</li>
+<li><code>wobjIndex</code>.</li>
+</ul>
+<h3 id="7-test-transfert-trajectoire-avec-process">7. Test transfert trajectoire avec process</h3>
+<p>Objectif : valider <code>processParams</code> et <code>processParamIndex</code>.</p>
+<p>À contrôler :</p>
+<ul>
+<li><code>processType</code> transféré ;</li>
+<li>sets process écrits en base 1 ;</li>
+<li>slots inutilisés écrits avec <code>name=""</code>, <code>value=0</code> ;</li>
+<li>déduplication des sets identiques ;</li>
+<li>points sans process avec <code>processParamIndex = 0</code> ;</li>
+<li>cohérence entre <code>trajData{i}.processParamIndex</code> et <code>processParams{p,*}</code>.</li>
+</ul>
+<h3 id="8-test-defaults-robot">8. Test defaults robot</h3>
+<p>Objectif : valider les règles de fallback.</p>
+<p>Cas à tester :</p>
+<ul>
+<li><code>tcp_speed</code> absent avec <code>hasDefaultTcpSpeed = TRUE</code> ;</li>
+<li><code>tcp_speed</code> absent avec <code>hasDefaultTcpSpeed = FALSE</code> ;</li>
+<li><code>zone_type</code> absent avec/sans default ;</li>
+<li><code>tool_name</code> absent avec/sans default ;</li>
+<li><code>wobj_name</code> absent avec/sans default ;</li>
+<li><code>move_type</code> absent ;</li>
+<li><code>readconfs</code> absent.</li>
+</ul>
+<p>Résultat attendu :</p>
+<ul>
+<li>fallback uniquement si <code>hasDefault* = TRUE</code> ;</li>
+<li>erreur sinon ;</li>
+<li>aucun outil ou wobj inventé silencieusement.</li>
+</ul>
+<h3 id="9-test-erreurs-fonctionnelles">9. Test erreurs fonctionnelles</h3>
+<p>Cas à provoquer :</p>
+<table>
+<thead>
+<tr>
+<th>Cas</th>
+<th style="text-align: right;">Code attendu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selectedTrajIndex</code> hors bornes</td>
+<td style="text-align: right;"><code>400001</code></td>
+</tr>
+<tr>
+<td>archive absente</td>
+<td style="text-align: right;"><code>400002</code></td>
+</tr>
+<tr>
+<td>archive invalide</td>
+<td style="text-align: right;"><code>400003</code></td>
+</tr>
+<tr>
+<td>trop de points</td>
+<td style="text-align: right;"><code>400004</code></td>
+</tr>
+<tr>
+<td>zone invalide</td>
+<td style="text-align: right;"><code>400005</code></td>
+</tr>
+<tr>
+<td>mouvement invalide</td>
+<td style="text-align: right;"><code>400006</code></td>
+</tr>
+<tr>
+<td>paire <code>MoveC</code> invalide</td>
+<td style="text-align: right;"><code>400007</code></td>
+</tr>
+<tr>
+<td>vitesse absente sans default</td>
+<td style="text-align: right;"><code>400008</code></td>
+</tr>
+<tr>
+<td>zone absente sans default</td>
+<td style="text-align: right;"><code>400009</code></td>
+</tr>
+<tr>
+<td>outil absent sans default</td>
+<td style="text-align: right;"><code>400010</code></td>
+</tr>
+<tr>
+<td>wobj absent sans default</td>
+<td style="text-align: right;"><code>400011</code></td>
+</tr>
+<tr>
+<td>outil inconnu robot</td>
+<td style="text-align: right;"><code>400012</code></td>
+</tr>
+<tr>
+<td>wobj inconnu robot</td>
+<td style="text-align: right;"><code>400013</code></td>
+</tr>
+<tr>
+<td>vitesse invalide</td>
+<td style="text-align: right;"><code>400014</code></td>
+</tr>
+<tr>
+<td>readConfs invalide</td>
+<td style="text-align: right;"><code>400015</code></td>
+</tr>
+<tr>
+<td>robtarget invalide</td>
+<td style="text-align: right;"><code>400016</code></td>
+</tr>
+<tr>
+<td>process inconnu</td>
+<td style="text-align: right;"><code>400017</code></td>
+</tr>
+<tr>
+<td>trop de sets process</td>
+<td style="text-align: right;"><code>400018</code></td>
+</tr>
+<tr>
+<td>paramètres process invalides</td>
+<td style="text-align: right;"><code>400019</code></td>
+</tr>
+</tbody>
+</table>
+<p>À vérifier pour chaque erreur :</p>
+<pre><code class="language-text">trajReady = FALSE
+transferError = TRUE
+lastErrorCode = code attendu
+lastError non vide et court
+sendTrajRequest = FALSE
+refreshMetaRequest = FALSE si erreur refresh
+</code></pre>
+<h3 id="10-test-performance-transfert">10. Test performance transfert</h3>
+<p>Objectif : mesurer le temps réel d’écriture RWS.</p>
+<p>Jeux à tester :</p>
+<ul>
+<li>10 points ;</li>
+<li>100 points ;</li>
+<li>1 000 points ;</li>
+<li>10 000 points ;</li>
+<li>trajectoire proche limite si raisonnable.</li>
+</ul>
+<p>Mesures :</p>
+<ul>
+<li>durée totale ;</li>
+<li>temps acquisition Mastership ;</li>
+<li>temps écriture metadata ;</li>
+<li>temps écriture <code>processParams</code> ;</li>
+<li>temps écriture <code>trajData</code> ;</li>
+<li>évolution <code>transferProgress</code> ;</li>
+<li>comportement timeout.</li>
+</ul>
+<h3 id="11-test-robustesse-interruption">11. Test robustesse interruption</h3>
+<p>Cas à tester :</p>
+<ul>
+<li>arrêt PC pendant refresh ;</li>
+<li>arrêt PC pendant transfert ;</li>
+<li>perte réseau ;</li>
+<li>redémarrage supervisor ;</li>
+<li>demande déjà TRUE avant lancement supervisor ;</li>
+<li>Mastership refusé temporairement ;</li>
+<li>contrôleur redémarré.</li>
+</ul>
+<p>Résultat attendu :</p>
+<ul>
+<li>pas de subscription orpheline durable ;</li>
+<li>pas de Mastership bloquée ;</li>
+<li>flags remis dans un état cohérent ;</li>
+<li>demande pendante détectée au redémarrage si encore TRUE.</li>
+</ul>
+<h3 id="12-test-execution-rapid-apres-transfert">12. Test exécution RAPID après transfert</h3>
+<p>Objectif : vérifier que les données transférées sont réellement consommables.</p>
+<p>À faire côté RAPID :</p>
+<ul>
+<li>parcourir <code>trajData{1..nbLoadedTrajPoints}</code> ;</li>
+<li>construire les instructions <code>MoveL</code>, <code>MoveJ</code>, <code>MoveC</code> correspondantes ;</li>
+<li>utiliser <code>trajTools{toolIndex}.value</code> ;</li>
+<li>utiliser <code>trajWobjs{wobjIndex}.value</code> ;</li>
+<li>appliquer ou ignorer confdata selon <code>readConfs</code> ;</li>
+<li>appliquer le process selon <code>processParamIndex</code>.</li>
+</ul>
+<p>À vérifier :</p>
+<ul>
+<li>trajectoire simple sans process ;</li>
+<li>trajectoire avec process ;</li>
+<li>trajectoire avec axes externes absents ;</li>
+<li>trajectoire avec confdata ;</li>
+<li>trajectoire avec <code>fine</code>.</li>
+</ul>
+<hr />
+<h2 id="qualite-et-regles-de-contribution">Qualité et règles de contribution</h2>
+<p>Règles principales :</p>
+<ul>
+<li>Python &gt;= 3.11 ;</li>
+<li>code typé ;</li>
+<li><code>ruff</code> sans warning ;</li>
+<li>tests obligatoires ;</li>
+<li>mocks HTTP pour les appels RWS ;</li>
+<li>pas de print intempestif ;</li>
+<li>logging via le système projet ;</li>
+<li>aucune écriture RAPID hors Mastership ;</li>
+<li>aucun retour au protocole TCP v1.</li>
+</ul>
+<p>Commandes avant commit :</p>
+<pre><code class="language-powershell">pixi run pyinit-write
+pixi run ruff check .
+pixi run tests
+</code></pre>
+<hr />
+<h2 id="codes-detat-et-derreur">Codes d’état et d’erreur</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Code</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>200000</code></td>
+<td>OK</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>200001</code></td>
+<td>Metadata refreshed</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>200002</code></td>
+<td>Trajectory transferred</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400001</code></td>
+<td><code>selectedTrajIndex</code> hors bornes</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400002</code></td>
+<td>Fichier trajectoire introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400003</code></td>
+<td>Format <code>.trajcenter</code> invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400004</code></td>
+<td>Trop de points</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400005</code></td>
+<td><code>zone_type</code> invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400006</code></td>
+<td><code>move_type</code> invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400007</code></td>
+<td>Paire <code>MoveC</code> invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400008</code></td>
+<td><code>tcp_speed</code> manquant sans default</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400009</code></td>
+<td><code>zone_type</code> manquant sans default</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400010</code></td>
+<td><code>tool_name</code> manquant sans default</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400011</code></td>
+<td><code>wobj_name</code> manquant sans default</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400012</code></td>
+<td><code>tool_name</code> introuvable côté robot</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400013</code></td>
+<td><code>wobj_name</code> introuvable côté robot</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400014</code></td>
+<td>Vitesse invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400015</code></td>
+<td><code>readConfs</code> invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400016</code></td>
+<td>Robtarget invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400017</code></td>
+<td>Process inconnu</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400018</code></td>
+<td>Trop de sets process</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400019</code></td>
+<td>Paramètres process invalides</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>401001</code></td>
+<td>Authentification RWS refusée</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>403001</code></td>
+<td>Mastership refusé</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>403002</code></td>
+<td>Écriture RWS interdite</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404001</code></td>
+<td>Symbole RAPID introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404002</code></td>
+<td><code>trajTools</code> introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404003</code></td>
+<td><code>trajWobjs</code> introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404004</code></td>
+<td>Store trajectoire introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404005</code></td>
+<td>Default robot introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404006</code></td>
+<td><code>processTypes</code> introuvable</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>408001</code></td>
+<td>Timeout requête RWS</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>408002</code></td>
+<td>Timeout transfert</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>409001</code></td>
+<td>Transfert déjà en cours</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>409002</code></td>
+<td>État robot incompatible</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>500001</code></td>
+<td>Erreur interne client</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>500002</code></td>
+<td>Erreur de sérialisation</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>500003</code></td>
+<td>Erreur de conversion trajectoire</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>502001</code></td>
+<td>Réponse RWS invalide</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>503001</code></td>
+<td>Contrôleur indisponible</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>504001</code></td>
+<td>Timeout contrôleur</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="historique">Historique</h2>
+<h3 id="v1">v1</h3>
+<p>Ancienne version TCP/IP Python où le robot ABB jouait le rôle de client TCP.
+Cette version est obsolète.</p>
+<h3 id="v2">v2</h3>
+<p>Version actuelle basée exclusivement sur ABB Robot Web Services :</p>
+<ul>
+<li>module système RAPID unique <code>TRAJCENTER</code> ;</li>
+<li>RWS subscriptions ;</li>
+<li>RWS reads ;</li>
+<li>RWS writes ;</li>
+<li>Mastership ;</li>
+<li>archives <code>.trajcenter</code> ;</li>
+<li>pipeline PC événementiel.</li>
+</ul>
+              
             </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
-        </div>
-        
-      </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="api/trajcenter/cli/main/" class="btn btn-neutral float-right" title="Main">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
   </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-      
-    </div>
-    <div class="md-dialog" data-md-component="dialog">
-      <div class="md-dialog__inner md-typeset"></div>
-    </div>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
     
     
     
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": [], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <span><a href="api/trajcenter/cli/main/" style="color: #fcfcfc">Next &raquo;</a></span>
     
-    
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
-  </body>
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
 </html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-09-03 19:20:11.818296+00:00
+-->

@@ -30,8 +30,8 @@ from _demo_utils import (
     preview_columns,
 )
 
-from trajcenter.converter.apt_converter import AptConverter
-from trajcenter.converter.defaults import ConversionDefaults
+from trajcenter.convert.apt_converter import AptConverter
+from trajcenter.convert.defaults import ConversionDefaults
 from trajcenter.core.trajectory import Trajectory
 
 SOURCE = Path("trajectory_files/PrepaFlans_Pointage.aptsource")

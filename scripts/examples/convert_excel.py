@@ -20,7 +20,7 @@ from pathlib import Path
 
 from _demo_utils import assert_same_geometry, point_count
 
-from trajcenter.converter.excel_converter import ExcelConverter
+from trajcenter.convert.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
 
 SOURCE_SINGLE = Path("trajectory_files/trajectoires_mono.xlsx")

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../../../img/favicon.ico" />
+    <title>Translate - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Translate";
+        var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\errors\\translate.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../../../..">
+          <img src="../../../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/column_mapper/">Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/csv_converter/">Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../export/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../export/csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../export/excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../export/options/">Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../../export/tabular_exporter/">Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >Robot</a>
+    <ul class="current">
+                <li class="toctree-l3 current"><a class="reference internal current" >Abb</a>
+    <ul class="current">
+                <li class="toctree-l4"><a class="reference internal" href="../../_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../writer/">Writer</a>
+                </li>
+                <li class="toctree-l4 current"><a class="reference internal current" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../../../coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">Trajcenter</li>
+          <li class="breadcrumb-item">Robot</li>
+          <li class="breadcrumb-item">Abb</li>
+          <li class="breadcrumb-item">Errors</li>
+      <li class="breadcrumb-item active">Translate</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="translate">Translate</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.robot.abb.errors.translate"></a>
+    <div class="doc doc-contents first">
+
+        <p>Translation of transport-layer RWS exceptions into TrajCenter errors.</p>
+<blockquote>
+<p><strong>Author</strong>: Clément RACINET</p>
+</blockquote>
+<p>This module is the single point of contact between
+<code>abb_rws_client_python_rw6.core.exceptions</code> and the TrajCenter protocol
+error hierarchy (:mod:<code>trajcenter.robot.abb.errors.codes</code>). If the RW6 client
+library changes its exception hierarchy, only this module is affected.</p>
+<h3 id="trajcenter.robot.abb.errors.translate--usage-pattern-robotabbreaderpy-robotabbwriterpy">Usage pattern (<code>robot/abb/reader.py</code> / <code>robot/abb/writer.py</code>)</h3>
+<p>::</p>
+<pre><code>try:
+    raw = await get_variable(client, symbolurl=symbol(...))
+except Exception as exc:
+    raise from_rws_exception(exc, context="trajTools") from exc
+</code></pre>
+<h3 id="trajcenter.robot.abb.errors.translate--design-principle">Design principle</h3>
+<p>Validation failures produced locally by :mod:<code>trajcenter.robot.abb.resolver</code>
+(e.g. an out-of-bounds index, an unresolvable tool name) are raised
+directly as :mod:<code>trajcenter.robot.abb.errors.codes</code> exceptions -- they never
+pass through this module, since no <code>abb_rws_client_python_rw6</code>
+exception is involved in that case.</p>
+<h3 id="trajcenter.robot.abb.errors.translate--context-discriminant">Context discriminant</h3>
+<p>Several transport exceptions (<code>RWSNotFoundError</code>, <code>RWSTimeoutError</code>)
+map to more than one TrajCenter code depending on <em>what</em> was being read
+or written. The caller passes a short <code>context</code> string to disambiguate;
+an unrecognised or empty context falls back to the most generic code in
+that category (<code>404001</code> for not-found, <code>408001</code> for timeout).</p>
+<p>Known <code>context</code> values:
+    - <code>"trajTools"</code> -- reading the cell tool configuration array.
+    - <code>"trajWobjs"</code> -- reading the cell workobject configuration array.
+    - <code>"trajectory_store"</code> -- scanning the local trajectory store.
+    - <code>"robot_default"</code> -- reading a <code>TRAJCENTER</code> default.
+    - <code>"process_types"</code> -- reading the <code>TRAJCENTER</code> catalog.
+    - <code>"transfer"</code> -- the overall trajectory transfer operation.
+    - <code>"request"</code> (default) -- a single RWS request with no more
+      specific context.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="trajcenter.robot.abb.errors.translate.from_rws_exception" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">from_rws_exception</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">'request'</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Translate a transport-layer exception into a TrajCenter protocol error.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A -- pure translation helper, no RWS call performed.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>This function must be the only place in <code>trajcenter</code> that
+imports exception types from
+<code>abb_rws_client_python_rw6.core.exceptions</code>. Callers in
+<code>robot/abb/reader.py</code> / <code>robot/abb/writer.py</code> must always go through this
+function rather than re-raising a transport exception directly,
+so that <code>lastErrorCode</code>/<code>lastError</code> always carry a protocol
+code, never an ABB transport code.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>exc</code></b>
+                  (<code><span title="BaseException">BaseException</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The exception caught from an <code>abb_rws_client_python_rw6</code>
+call, or -- as a defensive fallback -- any other exception
+raised unexpectedly in that call site.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>context</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;request&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Discriminant used to disambiguate <code>RWSNotFoundError</code>
+and <code>RWSTimeoutError</code> into the correct TrajCenter code. See
+the module docstring for the list of known values. Defaults
+to <code>"request"</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+<b><code>A</code></b>(                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
+)              –
+              <div class="doc-md-description">
+                <p>class:<code>~trajcenter.robot.abb.errors.base.TrajCenterError</code> instance</p>
+              </div>
+            </li>
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
+              –
+              <div class="doc-md-description">
+                <p>ready to be raised (with <code>from exc</code> at the call site) and later</p>
+              </div>
+            </li>
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
+              –
+              <div class="doc-md-description">
+                <p>converted to a <code>(code, message)</code> pair via</p>
+              </div>
+            </li>
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
+              –
+              <div class="doc-md-description">
+                <p>meth:<code>~trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>try:
+    raw = await get_variable(client, symbolurl=url)
+except Exception as exc:
+    raise from_rws_exception(exc, context="trajTools") from exc
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\robot\abb\errors\translate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_rws_exception</span><span class="p">(</span>
+    <span class="n">exc</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"request"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrajCenterError</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Translate a transport-layer exception into a TrajCenter protocol error.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        N/A -- pure translation helper, no RWS call performed.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        This function must be the only place in ``trajcenter`` that</span>
+<span class="sd">        imports exception types from</span>
+<span class="sd">        ``abb_rws_client_python_rw6.core.exceptions``. Callers in</span>
+<span class="sd">        ``robot/abb/reader.py`` / ``robot/abb/writer.py`` must always go through this</span>
+<span class="sd">        function rather than re-raising a transport exception directly,</span>
+<span class="sd">        so that ``lastErrorCode``/``lastError`` always carry a protocol</span>
+<span class="sd">        code, never an ABB transport code.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        exc: The exception caught from an ``abb_rws_client_python_rw6``</span>
+<span class="sd">            call, or -- as a defensive fallback -- any other exception</span>
+<span class="sd">            raised unexpectedly in that call site.</span>
+<span class="sd">        context: Discriminant used to disambiguate ``RWSNotFoundError``</span>
+<span class="sd">            and ``RWSTimeoutError`` into the correct TrajCenter code. See</span>
+<span class="sd">            the module docstring for the list of known values. Defaults</span>
+<span class="sd">            to ``"request"``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A :class:`~trajcenter.robot.abb.errors.base.TrajCenterError` instance</span>
+<span class="sd">        ready to be raised (with ``from exc`` at the call site) and later</span>
+<span class="sd">        converted to a ``(code, message)`` pair via</span>
+<span class="sd">        :meth:`~trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid`.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            try:</span>
+<span class="sd">                raw = await get_variable(client, symbolurl=url)</span>
+<span class="sd">            except Exception as exc:</span>
+<span class="sd">                raise from_rws_exception(exc, context="trajTools") from exc</span>
+<span class="sd">    """</span>
+    <span class="c1"># -- Mastership branch (MastershipError is a sibling of RWSHTTPError</span>
+    <span class="c1"># under RWSError, not a subclass of it -- checked first, independently</span>
+    <span class="c1"># of the HTTP branch below).</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">MastershipDenied</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MastershipDeniedError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">MastershipNotHeld</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RWSWriteForbidden</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">MastershipError</span><span class="p">):</span>
+        <span class="c1"># Defensive fallback for any future MastershipError subclass not</span>
+        <span class="c1"># explicitly handled above.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Unmapped MastershipError subtype: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MastershipDeniedError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Authentication.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSAuthenticationError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RWSAuthenticationRefused</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Not found (must be checked before the generic RWSHTTPError branch,</span>
+    <span class="c1"># since RWSNotFoundError subclasses RWSHTTPError).</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSNotFoundError</span><span class="p">):</span>
+        <span class="n">not_found_cls</span> <span class="o">=</span> <span class="n">_NOT_FOUND_BY_CONTEXT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">RapidSymbolNotFound</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">not_found_cls</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="n">exc</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Network / timeout (checked before the generic RWSHTTPError branch;</span>
+    <span class="c1"># both are direct RWSError subclasses, not RWSHTTPError subclasses, but</span>
+    <span class="c1"># grouped here for readability).</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSConnectionError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ControllerUnavailable</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSTimeoutError</span><span class="p">):</span>
+        <span class="n">timeout_cls</span> <span class="o">=</span> <span class="n">_TIMEOUT_BY_CONTEXT</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">RWSRequestTimeout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">timeout_cls</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Generic HTTP &gt;= 400, not covered by a more specific exception</span>
+    <span class="c1"># above. The ABB symbolic code name is logged for diagnosis but never</span>
+    <span class="c1"># written to the RAPID-facing message (RAPID string is 80 chars max</span>
+    <span class="c1"># and must stay human-readable for the FlexPendant operator).</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSHTTPError</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">"Unmapped RWSHTTPError [context=</span><span class="si">%s</span><span class="s2">]: status=</span><span class="si">%s</span><span class="s2"> ctrl_code=</span><span class="si">%s</span><span class="s2"> message=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">exc</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+            <span class="n">exc</span><span class="o">.</span><span class="n">ctrl_code_name</span> <span class="ow">or</span> <span class="n">ctrl_code_name</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">ctrl_code</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">InternalClientError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="n">exc</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Client-side serialization failure (writing a Python value to a</span>
+    <span class="c1"># RAPID literal). Distinct from InvalidRWSResponse below, which covers</span>
+    <span class="c1"># a controller response that could not be parsed.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SerializationError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Any other RWSError subtype not explicitly handled above.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">RWSError</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"Unmapped RWSError subtype: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">InternalClientError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Plain ValueError raised by abb_rws_client_python_rw6 parsing</span>
+    <span class="c1"># helpers (e.g. highlevel.variables._parse_symbol_value,</span>
+    <span class="c1"># highlevel.symbol._parse_symbol_properties) when a controller</span>
+    <span class="c1"># response body cannot be parsed. Not an RWSError instance, so it must</span>
+    <span class="c1"># be checked explicitly and before the final catch-all.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">InvalidRWSResponse</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="c1"># -- Fully unexpected exception type: never silently swallowed, always</span>
+    <span class="c1"># logged with its real type for future mapping.</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+        <span class="s2">"Unexpected exception type reached from_rws_exception [context=</span><span class="si">%s</span><span class="s2">]: </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">exc</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">InternalClientError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../codes/" class="btn btn-neutral float-left" title="Codes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../../../../../coverage/" class="btn btn-neutral float-right" title="Coverage">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../codes/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../../../../../coverage/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../../../..";</script>
+    <script src="../../../../../../js/theme_extra.js"></script>
+    <script src="../../../../../../js/theme.js"></script>
+      <script src="../../../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

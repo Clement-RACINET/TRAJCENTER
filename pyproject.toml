@@ -136,8 +136,6 @@ reexport_allowlist = [
   "robot",
   "cli",
   "ui",
-  "converter",
-  "exporter",
 ]
 
 

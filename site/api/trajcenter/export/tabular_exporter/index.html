@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>Tabular Exporter - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tabular Exporter";
+        var mkdocs_page_input_path = "api\\trajcenter\\export\\tabular_exporter.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" >Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/apt_converter/">Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/column_mapper/">Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/csv_converter/">Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/defaults/">Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/excel_converter/">Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/mod_converter/">Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/tabular_converter/">Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >Export</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../base/">Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../csv_exporter/">Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../excel_exporter/">Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../options/">Options</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">Tabular Exporter</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.export.tabular_exporter">tabular_exporter</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" >Abb</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/_utils/">Utils</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/constants/">Constants</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/models/">Models</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/reader/">Reader</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/resolver/">Resolver</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/service/">Service</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/store/">Store</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/supervisor/">Supervisor</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/abb/writer/">Writer</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" >Errors</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../coverage/">Coverage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">Trajcenter</li>
+          <li class="breadcrumb-item">Export</li>
+      <li class="breadcrumb-item active">Tabular Exporter</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="tabular-exporter">Tabular Exporter</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="trajcenter.export.tabular_exporter"></a>
+    <div class="doc doc-contents first">
+
+        <p>Abstract tabular exporter shared by Excel and CSV exporters.</p>
+<blockquote>
+<p><strong>Author</strong>: Clément RACINET</p>
+</blockquote>
+<p>This module factors out the construction of tabular outputs used by CSV
+and Excel exporters:</p>
+<ul>
+<li>trajectory points;</li>
+<li>optional key/value metadata;</li>
+<li>optional process parameter table.</li>
+</ul>
+<h3 id="trajcenter.export.tabular_exporter--trajcenter-v2-export-policy">TrajCenter v2 export policy</h3>
+<p>The exporter writes canonical v2 columns. It does not reintroduce v1
+tables or index-based tool/work-object references.</p>
+<p>Exported send columns keep their internal representation:</p>
+<ul>
+<li><code>tcp_speed</code> is numeric, without a RAPID <code>v</code> prefix.</li>
+<li><code>zone_type</code> is numeric. <code>255</code> represents <code>fine</code>.</li>
+<li><code>tool_name</code> and <code>wobj_name</code> are inline names.</li>
+<li><code>tool_index</code> and <code>wobj_index</code> are never exported by default.</li>
+<li><code>speed</code> and <code>zone</code> legacy aliases are never created.</li>
+</ul>
+<h3 id="trajcenter.export.tabular_exporter--process-data">Process data</h3>
+<p>When a trajectory has process parameters, tabular exporters write:</p>
+<ul>
+<li><code>process_param_index</code> in the trajectory point table;</li>
+<li><code>process_type</code> and <code>process_param_names</code> in the metadata table;</li>
+<li>a process parameter table through the concrete exporter.</li>
+</ul>
+<p>Excel writes this table as a <code>process_params</code> sheet.
+CSV writes it as <code>{stem}_process_params.csv</code>.</p>
+<h3 id="trajcenter.export.tabular_exporter--column-selection">Column selection</h3>
+<p>The :attr:<code>trajcenter.export.options.ExportOptions.export_columns</code>
+option controls the exported point columns:</p>
+<ul>
+<li><code>None</code> exports known v2 columns that are present.</li>
+<li><code>("*",)</code> exports all columns present in <code>trajectory.points</code>.</li>
+<li><code>("default", "foo")</code> exports default known v2 columns plus <code>foo</code>
+  when present.</li>
+<li>Any other tuple exports exactly the requested columns when present.</li>
+</ul>
+<p>Unknown columns present in <code>trajectory.points</code> are not exported by
+default. A <code>UserWarning</code> is emitted so the user knows that these
+columns were seen but intentionally ignored.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>N/A — local file export, no RWS route.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>No mastership is acquired. No RAPID variable is read or written.
+The RWS inactive-axis sentinel <code>9E+9</code> must not be injected by
+exporters.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>from pathlib import Path
+from trajcenter.export.excel_exporter import ExcelExporter
+
+ExcelExporter().export(traj, Path("trajectory_exports"))
+</code></pre>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../options/" class="btn btn-neutral float-left" title="Options"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../robot/abb/_utils/" class="btn btn-neutral float-right" title="Utils">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../options/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../robot/abb/_utils/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

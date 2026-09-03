@@ -1,3 +1,0 @@
-# Defaults
-
-::: trajcenter.converter.defaults

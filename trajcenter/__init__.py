@@ -27,7 +27,7 @@ from .cli import (
     print_store_entry_details,
     run_command,
 )
-from .converter import (
+from .convert import (
     COLUMN_ALIASES,
     AptConverter,
     BaseConverter,
@@ -58,7 +58,7 @@ from .core import (
     msg,
     raw,
 )
-from .exporter import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
+from .export import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
 
 __all__ = [
     "APP_NAME",

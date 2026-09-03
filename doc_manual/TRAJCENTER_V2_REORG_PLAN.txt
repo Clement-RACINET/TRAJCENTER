@@ -152,7 +152,7 @@ trajcenter.convert
 
   Must not depend on robot/RWS code.
 
-trajcenter.converter
+trajcenter.convert
   Historical conversion implementation namespace.
 
   Kept for backward compatibility during v2 migration.
@@ -342,7 +342,7 @@ STEP 07 - Add conversion facade
 
   Legacy namespace still works:
 
-    trajcenter.converter
+    trajcenter.convert
 
 STEP 08 - Add export facade
   Status: DONE
