@@ -9,7 +9,7 @@ validation sets and default transfer settings used by the RWS reader, writer,
 resolver, store scanner and service orchestrator.
 
 ABB Route:
-    N/A — local constants only.
+    N/A - local constants only.
 
 ABB Constraints:
     Values mirror the RAPID declarations in TRAJCENTER sys module

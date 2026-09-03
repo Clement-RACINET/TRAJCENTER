@@ -31,11 +31,13 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import signal
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from abb_rws_client_python_rw6 import RWSClient
+from abb_rws_client_python_rw6 import RWSClient, configure_logging, load_env
+from abb_rws_client_python_rw6.core.exceptions import RWSError
 from abb_rws_client_python_rw6.highlevel.subscription import (
     SubscribedResource,
     SubscriptionPriority,
@@ -350,6 +352,106 @@ async def run_rws_subscription_supervisor(
         supervisor_state.transfer_count,
     )
     return supervisor_state
+
+
+async def run_rws_subscription_supervisor_app(
+    *,
+    store_root: Path,
+    task: str = DEFAULT_TASK,
+    module: str = TRAJCENTER_MODULE,
+    mastership_retries: int = 3,
+    log_level: str = "INFO",
+    env_file: Path | None = None,
+    env_override: bool = False,
+    host: str | None = None,
+    username: str | None = None,
+    password: str | None = None,
+    port: int | None = None,
+    timeout: float | None = None,
+) -> int:
+    """Run the complete TrajCenter RWS supervisor application.
+
+    ABB Route:
+        Connects to RWS and delegates subscription handling to
+        ``run_rws_subscription_supervisor``.
+
+    ABB Constraints:
+        Ctrl+C requests a graceful stop. The underlying supervisor closes the
+        RWS subscription generator, which deletes the ABB subscription group.
+
+        Connection parameters are loaded by ``abb_rws_client_python_rw6`` from
+        its environment configuration through ``load_env()``.
+
+    Args:
+        store_root: Directory containing local ``.trajcenter`` archives.
+        task: RAPID task name.
+        module: RAPID module name.
+        mastership_retries: Number of Mastership retry attempts.
+        log_level: Logging level passed to the ABB RWS client logging setup.
+        env_file: Optional explicit ``.env`` file or directory to load.
+        env_override: Whether loaded ``.env`` values override existing environment variables.
+        host: Optional ABB RWS controller host override.
+        username: Optional ABB RWS username override.
+        password: Optional ABB RWS password override.
+        port: Optional ABB RWS HTTP port override.
+        timeout: Optional ABB RWS request timeout override.
+
+
+    Returns:
+        Process exit code.
+
+    Example:
+        ::
+
+            code = await run_rws_subscription_supervisor_app(
+                store_root=Path("trajectory_store"),
+            )
+    """
+    load_env(env_file, override=env_override)
+    configure_logging(log_level)
+
+    stop_event = asyncio.Event()
+
+    def request_stop(*_: object) -> None:
+        """Request a graceful supervisor stop from OS signal handlers."""
+        logger.info("Stop requested.")
+        stop_event.set()
+
+    signal.signal(signal.SIGINT, request_stop)
+    signal.signal(signal.SIGTERM, request_stop)
+
+    config = RWSSupervisorConfig(
+        store_root=store_root,
+        task=task,
+        module=module,
+        mastership_retries=mastership_retries,
+    )
+
+    try:
+        async with RWSClient(
+            host=host,
+            username=username,
+            password=password,
+            port=port,
+            timeout=timeout,
+        ) as client:
+            logger.info("Connected to ABB controller.")
+            logger.info("Store root: %s", config.store_root)
+            logger.info("Task/module: %s/%s", config.task, config.module)
+            await run_rws_subscription_supervisor(
+                client,
+                config,
+                stop_event=stop_event,
+            )
+        return 0
+
+    except RWSError as exc:
+        logger.error("ABB RWS error: %s", exc)
+        return 2
+
+    except (FileNotFoundError, NotADirectoryError, ValueError) as exc:
+        logger.error("TrajCenter supervisor error: %s", exc)
+        return 1
 
 
 async def _cancel_task_safely(task: asyncio.Task[Any]) -> None:

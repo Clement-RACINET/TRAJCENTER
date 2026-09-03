@@ -210,3 +210,137 @@ def test_main_robot_supervise_help(capsys):
     assert exc_info.value.code == 0
     assert "Run the ABB robot supervision loop." in captured.out
     assert "--store" in captured.out
+    assert "--task" in captured.out
+    assert "--module" in captured.out
+    assert "--mastership-retries" in captured.out
+    assert "--log-level" in captured.out
+    assert "--env-file" in captured.out
+    assert "--env-override" in captured.out
+    assert "--host" in captured.out
+    assert "--port" in captured.out
+    assert "--username" in captured.out
+    assert "--password" in captured.out
+    assert "--password-env" in captured.out
+    assert "--timeout" in captured.out
+
+
+def test_main_robot_supervise_calls_app_runner(monkeypatch):
+    """The robot supervise command should call the package-level app runner."""
+    calls = {}
+
+    async def fake_runner(**kwargs):
+        calls.update(kwargs)
+        return 0
+
+    monkeypatch.setattr(
+        "trajcenter.robot.abb.supervisor.run_rws_subscription_supervisor_app",
+        fake_runner,
+    )
+
+    result = main(
+        [
+            "robot",
+            "supervise",
+            "--store",
+            "custom_store",
+            "--task",
+            "T_ROB2",
+            "--module",
+            "CUSTOM_MODULE",
+            "--mastership-retries",
+            "5",
+            "--log-level",
+            "DEBUG",
+            "--env-file",
+            ".env.robot",
+            "--env-override",
+            "--host",
+            "192.168.125.1",
+            "--port",
+            "80",
+            "--username",
+            "Default User",
+            "--password",
+            "robotics",
+            "--timeout",
+            "10.0",
+        ]
+    )
+
+    assert result == 0
+    assert calls["store_root"] == Path("custom_store")
+    assert calls["task"] == "T_ROB2"
+    assert calls["module"] == "CUSTOM_MODULE"
+    assert calls["mastership_retries"] == 5
+    assert calls["log_level"] == "DEBUG"
+    assert calls["env_file"] == Path(".env.robot")
+    assert calls["env_override"] is True
+    assert calls["host"] == "192.168.125.1"
+    assert calls["port"] == 80
+    assert calls["username"] == "Default User"
+    assert calls["password"] == "robotics"
+    assert calls["timeout"] == 10.0
+
+def test_main_robot_supervise_uses_password_env(monkeypatch):
+    """The robot supervise command should resolve password from an environment variable."""
+    calls = {}
+
+    async def fake_runner(**kwargs):
+        calls.update(kwargs)
+        return 0
+
+    monkeypatch.setenv("ABB_TEST_PASSWORD", "secret")
+
+    monkeypatch.setattr(
+        "trajcenter.robot.abb.supervisor.run_rws_subscription_supervisor_app",
+        fake_runner,
+    )
+
+    result = main(
+        [
+            "robot",
+            "supervise",
+            "--password-env",
+            "ABB_TEST_PASSWORD",
+        ]
+    )
+
+    assert result == 0
+    assert calls["password"] == "secret"
+
+def test_main_robot_supervise_rejects_password_and_password_env(capsys):
+    """The robot supervise command should reject duplicate password sources."""
+    result = main(
+        [
+            "robot",
+            "supervise",
+            "--password",
+            "robotics",
+            "--password-env",
+            "ABB_TEST_PASSWORD",
+        ]
+    )
+
+    captured = capsys.readouterr()
+
+    assert result == 1
+    assert "Use either --password or --password-env, not both." in captured.out
+
+def test_main_robot_supervise_rejects_missing_password_env(capsys):
+    """The robot supervise command should reject missing password environment variable."""
+    result = main(
+        [
+            "robot",
+            "supervise",
+            "--password-env",
+            "ABB_TEST_PASSWORD_MISSING",
+        ]
+    )
+
+    captured = capsys.readouterr()
+
+    assert result == 1
+    assert (
+        "Password environment variable is not set: ABB_TEST_PASSWORD_MISSING"
+        in captured.out
+    )

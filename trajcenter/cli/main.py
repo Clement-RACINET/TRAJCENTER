@@ -8,6 +8,8 @@ base ``trajcenter`` command works without optional CLI dependencies.
 from __future__ import annotations
 
 import argparse
+import asyncio
+import os
 from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
@@ -128,19 +130,6 @@ def build_parser() -> argparse.ArgumentParser:
         dest="store_command",
         metavar="STORE_COMMAND",
     )
-
-    store_list_parser = store_subparsers.add_parser(
-        "list",
-        help="List local .trajcenter archives.",
-        description="List local .trajcenter archives.",
-    )
-    store_list_parser.add_argument(
-        "--store",
-        type=Path,
-        default=DEFAULT_STORE,
-        help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
-    )
-
     store_inspect_parser = store_subparsers.add_parser(
         "inspect",
         help="Inspect one local .trajcenter archive by name, filename or index.",
@@ -185,6 +174,64 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_STORE,
         help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
+    )
+    robot_supervise_parser.add_argument(
+        "--env-file",
+        type=Path,
+        help="Optional .env file or directory to load before connecting to RWS.",
+    )
+    robot_supervise_parser.add_argument(
+        "--env-override",
+        action="store_true",
+        help="Allow loaded .env values to override existing environment variables.",
+    )
+    robot_supervise_parser.add_argument(
+        "--host",
+        help="ABB RWS controller host. Overrides RWS_HOST.",
+    )
+    robot_supervise_parser.add_argument(
+        "--port",
+        type=int,
+        help="ABB RWS HTTP port. Overrides RWS_PORT.",
+    )
+    robot_supervise_parser.add_argument(
+        "--username",
+        help="ABB RWS username. Overrides RWS_USER.",
+    )
+    robot_supervise_parser.add_argument(
+        "--password",
+        help="ABB RWS password. Overrides RWS_PASSWORD.",
+    )
+    robot_supervise_parser.add_argument(
+        "--password-env",
+        help="Environment variable containing the ABB RWS password.",
+    )
+    robot_supervise_parser.add_argument(
+        "--timeout",
+        type=float,
+        help="ABB RWS request timeout in seconds. Overrides RWS_TIMEOUT.",
+    )
+    robot_supervise_parser.add_argument(
+        "--task",
+        default="T_ROB1",
+        help="RAPID task name. Default: T_ROB1.",
+    )
+    robot_supervise_parser.add_argument(
+        "--module",
+        default="TRAJCENTER",
+        help="RAPID module name. Default: TRAJCENTER.",
+    )
+    robot_supervise_parser.add_argument(
+        "--mastership-retries",
+        type=int,
+        default=3,
+        help="Number of Mastership retry attempts for writer operations.",
+    )
+    robot_supervise_parser.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
+        help="Logging level. Default: INFO.",
     )
 
     return parser
@@ -447,6 +494,37 @@ def handle_store_command(args: argparse.Namespace) -> int:
     print(f"Unknown store command: {args.store_command}")
     return 2
 
+
+def resolve_robot_password(
+    password: str | None,
+    password_env: str | None,
+) -> str | None:
+    """Resolve an ABB RWS password from CLI value or environment variable.
+
+    Args:
+        password: Direct password value from CLI.
+        password_env: Name of the environment variable containing the password.
+
+    Returns:
+        Resolved password, or ``None`` if no explicit override is provided.
+
+    Raises:
+        ValueError: If both password sources are provided or if the requested
+            environment variable is missing or empty.
+    """
+    if password is not None and password_env is not None:
+        raise ValueError("Use either --password or --password-env, not both.")
+
+    if password_env is None:
+        return password
+
+    resolved = os.environ.get(password_env)
+    if not resolved:
+        raise ValueError(f"Password environment variable is not set: {password_env}")
+
+    return resolved
+
+
 def handle_robot_command(args: argparse.Namespace) -> int:
     """Run a ``trajcenter robot`` subcommand.
 
@@ -473,14 +551,36 @@ def handle_robot_command(args: argparse.Namespace) -> int:
 
     if args.robot_command == "supervise":
         try:
-            from trajcenter.robot.abb.supervisor import run_rws_subscription_supervisor
+            from trajcenter.robot.abb.supervisor import (
+                run_rws_subscription_supervisor_app,
+            )
         except ImportError as exc:
             print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
             print(f"Import error: {exc}")
             return 1
 
-        run_rws_subscription_supervisor()
-        return 0
+        try:
+            password = resolve_robot_password(args.password, args.password_env)
+        except ValueError as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        return asyncio.run(
+            run_rws_subscription_supervisor_app(
+                store_root=args.store,
+                task=args.task,
+                module=args.module,
+                mastership_retries=args.mastership_retries,
+                log_level=args.log_level,
+                env_file=args.env_file,
+                env_override=args.env_override,
+                host=args.host,
+                username=args.username,
+                password=password,
+                port=args.port,
+                timeout=args.timeout,
+            )
+        )
 
     print(f"Unknown robot command: {args.robot_command}")
     return 2
