@@ -20,18 +20,22 @@ from trajcenter.convert.mod_converter import ModConverter
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.export.csv_exporter import CsvExporter
 from trajcenter.export.excel_exporter import ExcelExporter
-from trajcenter.robot.abb.models import TrajectoryStoreEntry
-from trajcenter.robot.abb.store import scan_trajectory_store
 
 if TYPE_CHECKING:
     from trajcenter.convert.base import BaseConverter
     from trajcenter.export.base import BaseExporter
+    from trajcenter.robot.abb.models import TrajectoryStoreEntry
+
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
 CSV_EXTENSIONS = {".csv", ".txt"}
 EXCEL_EXTENSIONS = {".xlsx", ".xlsm", ".xls"}
 APT_EXTENSIONS = {".apt", ".aptsource"}
 RAPID_EXTENSIONS = {".mod"}
+ROBOT_OPTIONAL_DEPENDENCY_MESSAGE = (
+    "Robot support requires optional dependencies.\n"
+    'Install with: pip install "trajcenter[robot]"'
+)
 
 
 def get_package_version() -> str:
@@ -150,6 +154,33 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     store_inspect_parser.add_argument(
+        "--store",
+        type=Path,
+        default=DEFAULT_STORE,
+        help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
+    )
+    robot_parser = subparsers.add_parser(
+        "robot",
+        help="ABB robot communication commands.",
+        description="ABB robot communication commands.",
+    )
+    robot_subparsers = robot_parser.add_subparsers(
+        dest="robot_command",
+        metavar="ROBOT_COMMAND",
+    )
+
+    robot_subparsers.add_parser(
+        "check",
+        help="Check that ABB robot support is available.",
+        description="Check that ABB robot support is available.",
+    )
+
+    robot_supervise_parser = robot_subparsers.add_parser(
+        "supervise",
+        help="Run the ABB robot supervision loop.",
+        description="Run the ABB robot supervision loop.",
+    )
+    robot_supervise_parser.add_argument(
         "--store",
         type=Path,
         default=DEFAULT_STORE,
@@ -387,6 +418,13 @@ def handle_store_command(args: argparse.Namespace) -> int:
         return 2
 
     try:
+        from trajcenter.robot.abb.store import scan_trajectory_store
+    except ImportError as exc:
+        print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
+        print(f"Import error: {exc}")
+        return 1
+
+    try:
         entries = scan_trajectory_store(args.store)
     except (FileNotFoundError, NotADirectoryError, ValueError) as exc:
         print(f"Error: {exc}")
@@ -407,6 +445,44 @@ def handle_store_command(args: argparse.Namespace) -> int:
         return 0
 
     print(f"Unknown store command: {args.store_command}")
+    return 2
+
+def handle_robot_command(args: argparse.Namespace) -> int:
+    """Run a ``trajcenter robot`` subcommand.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        Process exit code.
+    """
+    if args.robot_command is None:
+        print("Missing robot command. Use: trajcenter robot --help")
+        return 2
+
+    if args.robot_command == "check":
+        try:
+            import trajcenter.robot.abb  # noqa: F401
+        except ImportError as exc:
+            print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
+            print(f"Import error: {exc}")
+            return 1
+
+        print("Robot ABB API available.")
+        return 0
+
+    if args.robot_command == "supervise":
+        try:
+            from trajcenter.robot.abb.supervisor import run_rws_subscription_supervisor
+        except ImportError as exc:
+            print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
+            print(f"Import error: {exc}")
+            return 1
+
+        run_rws_subscription_supervisor()
+        return 0
+
+    print(f"Unknown robot command: {args.robot_command}")
     return 2
 
 
@@ -431,6 +507,9 @@ def run_command(args: argparse.Namespace) -> int:
 
     if args.command == "store":
         return handle_store_command(args)
+
+    if args.command == "robot":
+        return handle_robot_command(args)
 
     return 0
 

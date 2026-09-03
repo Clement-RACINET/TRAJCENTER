@@ -8,12 +8,15 @@ from argparse import Namespace
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from trajcenter.cli.main import (
     build_parser,
     handle_convert_command,
     handle_export_command,
     infer_converter,
     infer_exporter,
+    main,
 )
 from trajcenter.convert import AptConverter, CsvConverter, ExcelConverter, ModConverter
 from trajcenter.export import CsvExporter, ExcelExporter
@@ -162,3 +165,48 @@ def test_handle_export_command_returns_error() -> None:
         side_effect=FileNotFoundError("missing"),
     ):
         assert handle_export_command(args) == 1
+
+
+def test_main_robot_help(capsys):
+    """The robot command should expose its help."""
+    with pytest.raises(SystemExit) as exc_info:
+        main(["robot", "--help"])
+
+    captured = capsys.readouterr()
+
+    assert exc_info.value.code == 0
+    assert "ABB robot communication commands." in captured.out
+    assert "check" in captured.out
+    assert "supervise" in captured.out
+
+
+def test_main_robot_check(capsys):
+    """The robot check command should validate ABB API availability."""
+    result = main(["robot", "check"])
+
+    captured = capsys.readouterr()
+
+    assert result == 0
+    assert "Robot ABB API available." in captured.out
+
+
+def test_main_robot_missing_subcommand(capsys):
+    """The robot command should require a subcommand."""
+    result = main(["robot"])
+
+    captured = capsys.readouterr()
+
+    assert result == 2
+    assert "Missing robot command. Use: trajcenter robot --help" in captured.out
+
+
+def test_main_robot_supervise_help(capsys):
+    """The robot supervise command should expose its help."""
+    with pytest.raises(SystemExit) as exc_info:
+        main(["robot", "supervise", "--help"])
+
+    captured = capsys.readouterr()
+
+    assert exc_info.value.code == 0
+    assert "Run the ABB robot supervision loop." in captured.out
+    assert "--store" in captured.out
