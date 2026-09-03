@@ -70,7 +70,7 @@ trajcenter/
 ├── rapid/
 │   └── TRAJCENTER.mod
 ├── scripts/
-│   └── run_rws_supervisor.py
+│   └── run_trajcenter_supervisor.py
 ├── tests/
 │   ├── converter/
 │   ├── core/
@@ -550,7 +550,7 @@ trajcenter/rws/supervisor.py
 Le script de lancement est :
 
 ```text
-scripts/run_rws_supervisor.py
+scripts/run_trajcenter_supervisor.py
 ```
 
 Il s’abonne aux flags RAPID :
@@ -574,13 +574,13 @@ afin de traiter une demande qui serait déjà pendante.
 Depuis la racine du dépôt :
 
 ```powershell
-python scripts/run_rws_supervisor.py --store trajectory_store
+python scripts/run_trajcenter_supervisor.py --store trajectory_store
 ```
 
 Options principales :
 
 ```powershell
-python scripts/run_rws_supervisor.py `
+python scripts/run_trajcenter_supervisor.py `
   --store trajectory_store `
   --task T_ROB1 `
   --module TRAJCENTER `

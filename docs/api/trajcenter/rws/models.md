@@ -1,3 +1,3 @@
 # Models
 
-::: trajcenter.rws.models
+::: trajcenter.robot.abb.models

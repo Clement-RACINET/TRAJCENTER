@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_store.py
-"""Unit tests for :mod:`trajcenter.rws.store`.
+# tests/robot/abb/test_store.py
+"""Unit tests for :mod:`trajcenter.robot.abb.store`.
 
 Author: Clement RACINET
 
@@ -21,8 +21,8 @@ from trajcenter.core.trajectory import (
     TrajectoryMeta,
     TrajectoryProcess,
 )
-from trajcenter.rws.constants import MAX_TRAJ
-from trajcenter.rws.store import scan_trajectory_store, store_entries_to_metadata
+from trajcenter.robot.abb.constants import MAX_TRAJ
+from trajcenter.robot.abb.store import scan_trajectory_store, store_entries_to_metadata
 
 
 def _make_points(
@@ -167,7 +167,7 @@ def _save_archive(
 
 
 class TestScanTrajectoryStore:
-    """Tests for :func:`trajcenter.rws.store.scan_trajectory_store`."""
+    """Tests for :func:`trajcenter.robot.abb.store.scan_trajectory_store`."""
 
     def test_empty_directory_returns_empty_tuple(self, tmp_path: Path) -> None:
         """An empty store returns no entries."""
@@ -294,7 +294,7 @@ class TestScanTrajectoryStore:
 
 
 class TestStoreEntriesToMetadata:
-    """Tests for :func:`trajcenter.rws.store.store_entries_to_metadata`."""
+    """Tests for :func:`trajcenter.robot.abb.store.store_entries_to_metadata`."""
 
     def test_empty_entries(self) -> None:
         """Empty entries produce empty metadata lists."""
@@ -381,7 +381,7 @@ def _entry(
 
             entry = _entry(index=1, path=path, name="A", point_count=1, process_type=0)
     """
-    from trajcenter.rws.models import TrajectoryStoreEntry
+    from trajcenter.robot.abb.models import TrajectoryStoreEntry
 
     return TrajectoryStoreEntry(
         index=index,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/models.py
+# trajcenter/robot/abb/models.py
 """Typed models for TrajCenter ABB RWS transfer operations.
 
 Author: Clement RACINET
@@ -53,7 +53,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from trajcenter.rws.constants import MAX_PROCESS_PARAM_PER_SET
+from trajcenter.robot.abb.constants import MAX_PROCESS_PARAM_PER_SET
 
 
 @dataclass(frozen=True, slots=True)

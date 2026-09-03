@@ -1,3 +1,3 @@
 # Store
 
-::: trajcenter.rws.store
+::: trajcenter.robot.abb.store

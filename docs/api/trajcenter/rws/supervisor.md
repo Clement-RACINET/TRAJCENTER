@@ -1,3 +1,3 @@
 # Supervisor
 
-::: trajcenter.rws.supervisor
+::: trajcenter.robot.abb.supervisor

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/service.py
+# trajcenter/robot/abb/service.py
 """RWS service orchestration for TrajCenter v2 trajectory transfers.
 
 Author: Clement RACINET
@@ -19,10 +19,10 @@ ABB Route:
 
     Context reads:
         Multiple ``GET /rw/rapid/symbol/data/{symbolurl}`` and symbol property
-        reads through ``trajcenter.rws.reader.read_robot_context``.
+        reads through ``trajcenter.robot.abb.reader.read_robot_context``.
 
     Writes:
-        Delegated to ``trajcenter.rws.writer.write_resolved_trajectory`` using
+        Delegated to ``trajcenter.robot.abb.writer.write_resolved_trajectory`` using
         Mastership-protected RWS writes.
 
 ABB Constraints:
@@ -43,18 +43,18 @@ from abb_rws_client_python_rw6 import RWSClient
 
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
-from trajcenter.rws.constants import (
+from trajcenter.robot.abb.constants import (
     DEFAULT_MASTERSHIP_RETRIES,
     DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
     DEFAULT_TASK,
     TRAJCENTER_MODULE,
 )
-from trajcenter.rws.models import ResolvedTrajectory, TrajectoryStoreEntry
-from trajcenter.rws.reader import read_robot_context, read_selected_traj_index
-from trajcenter.rws.resolver import resolve_trajectory
-from trajcenter.rws.store import scan_trajectory_store, store_entries_to_metadata
-from trajcenter.rws.writer import write_resolved_trajectory, write_store_metadata
+from trajcenter.robot.abb.models import ResolvedTrajectory, TrajectoryStoreEntry
+from trajcenter.robot.abb.reader import read_robot_context, read_selected_traj_index
+from trajcenter.robot.abb.resolver import resolve_trajectory
+from trajcenter.robot.abb.store import scan_trajectory_store, store_entries_to_metadata
+from trajcenter.robot.abb.writer import write_resolved_trajectory, write_store_metadata
 
 logger = get_logger(__name__)
 

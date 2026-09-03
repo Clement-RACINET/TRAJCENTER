@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# scripts/run_rws_supervisor.py
+# scripts/run_trajcenter_supervisor.py
 """Run the TrajCenter v2 RWS subscription supervisor.
 
 Author: Clement RACINET
@@ -19,7 +19,7 @@ ABB Route:
         ``DELETE /subscription/{group-id}``
 
     Service writes:
-        Delegated to ``trajcenter.rws.service`` and ``trajcenter.rws.writer``.
+        Delegated to ``trajcenter.robot.abb.service`` and ``trajcenter.robot.abb.writer``.
 
 ABB Constraints:
     - No TCP v1 server is used.
@@ -35,7 +35,7 @@ Example:
 
     ::
 
-        python scripts/run_rws_supervisor.py --store trajectory_store
+        python scripts/run_trajcenter_supervisor.py --store trajectory_store
 """
 
 from __future__ import annotations
@@ -50,8 +50,8 @@ from abb_rws_client_python_rw6.core.client import RWSClient
 from abb_rws_client_python_rw6.core.exceptions import RWSError
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws.constants import DEFAULT_TASK, TRAJCENTER_MODULE
-from trajcenter.rws.supervisor import (
+from trajcenter.robot.abb.constants import DEFAULT_TASK, TRAJCENTER_MODULE
+from trajcenter.robot.abb.supervisor import (
     RWSSupervisorConfig,
     run_rws_subscription_supervisor,
 )

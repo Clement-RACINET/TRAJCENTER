@@ -1,3 +1,3 @@
 # Service
 
-::: trajcenter.rws.service
+::: trajcenter.robot.abb.service

@@ -15,8 +15,8 @@ from pathlib import Path
 from trajcenter.convert import AptConverter, CsvConverter, ExcelConverter, ModConverter
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.export import CsvExporter, ExcelExporter
-from trajcenter.rws.models import TrajectoryStoreEntry
-from trajcenter.rws.store import scan_trajectory_store
+from trajcenter.robot.abb.models import TrajectoryStoreEntry
+from trajcenter.robot.abb.store import scan_trajectory_store
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")

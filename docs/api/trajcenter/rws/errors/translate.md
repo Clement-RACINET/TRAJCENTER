@@ -1,3 +1,3 @@
 # Translate
 
-::: trajcenter.rws.errors.translate
+::: trajcenter.robot.abb.errors.translate

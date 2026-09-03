@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-# trajcenter/rws/errors/translate.py
+# trajcenter/robot/abb/errors/translate.py
 """Translation of transport-layer RWS exceptions into TrajCenter errors.
 
 > **Author**: Clément RACINET
 
 This module is the single point of contact between
 ``abb_rws_client_python_rw6.core.exceptions`` and the TrajCenter protocol
-error hierarchy (:mod:`trajcenter.rws.errors.codes`). If the RW6 client
+error hierarchy (:mod:`trajcenter.robot.abb.errors.codes`). If the RW6 client
 library changes its exception hierarchy, only this module is affected.
 
-Usage pattern (``rws/reader.py`` / ``rws/writer.py``)
+Usage pattern (``robot/abb/reader.py`` / ``robot/abb/writer.py``)
 ------------------------------------------------------
 ::
 
@@ -20,9 +20,9 @@ Usage pattern (``rws/reader.py`` / ``rws/writer.py``)
 
 Design principle
 -----------------
-Validation failures produced locally by :mod:`trajcenter.rws.resolver`
+Validation failures produced locally by :mod:`trajcenter.robot.abb.resolver`
 (e.g. an out-of-bounds index, an unresolvable tool name) are raised
-directly as :mod:`trajcenter.rws.errors.codes` exceptions -- they never
+directly as :mod:`trajcenter.robot.abb.errors.codes` exceptions -- they never
 pass through this module, since no ``abb_rws_client_python_rw6``
 exception is involved in that case.
 
@@ -63,8 +63,8 @@ from abb_rws_client_python_rw6.core.exceptions import (
 )
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws.errors.base import TrajCenterError
-from trajcenter.rws.errors.codes import (
+from trajcenter.robot.abb.errors.base import TrajCenterError
+from trajcenter.robot.abb.errors.codes import (
     ControllerUnavailable,
     InternalClientError,
     InvalidRWSResponse,
@@ -116,7 +116,7 @@ def from_rws_exception(
         This function must be the only place in ``trajcenter`` that
         imports exception types from
         ``abb_rws_client_python_rw6.core.exceptions``. Callers in
-        ``rws/reader.py`` / ``rws/writer.py`` must always go through this
+        ``robot/abb/reader.py`` / ``robot/abb/writer.py`` must always go through this
         function rather than re-raising a transport exception directly,
         so that ``lastErrorCode``/``lastError`` always carry a protocol
         code, never an ABB transport code.
@@ -131,10 +131,10 @@ def from_rws_exception(
             to ``"request"``.
 
     Returns:
-        A :class:`~trajcenter.rws.errors.base.TrajCenterError` instance
+        A :class:`~trajcenter.robot.abb.errors.base.TrajCenterError` instance
         ready to be raised (with ``from exc`` at the call site) and later
         converted to a ``(code, message)`` pair via
-        :meth:`~trajcenter.rws.errors.base.TrajCenterError.to_rapid`.
+        :meth:`~trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid`.
 
     Example:
         ::

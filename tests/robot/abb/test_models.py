@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_models.py
-"""Tests for :mod:`trajcenter.rws.models`.
+# tests/robot/abb/test_models.py
+"""Tests for :mod:`trajcenter.robot.abb.models`.
 
 Author: Clement RACINET
 
@@ -15,7 +15,7 @@ from typing import TypeAlias
 
 import pytest
 
-from trajcenter.rws.models import (
+from trajcenter.robot.abb.models import (
     ProcessTypeEntry,
     ResolvedPoint,
     ResolvedProcessParam,
@@ -183,7 +183,7 @@ def _point() -> ResolvedPoint:
 
 
 class TestRobotDefaults:
-    """Tests for :class:`trajcenter.rws.models.RobotDefaults`."""
+    """Tests for :class:`trajcenter.robot.abb.models.RobotDefaults`."""
 
     def test_enabled_defaults(self) -> None:
         """Enabled defaults store values exactly."""
@@ -224,7 +224,7 @@ class TestRobotDefaults:
 
 
 class TestProcessTypeEntry:
-    """Tests for :class:`trajcenter.rws.models.ProcessTypeEntry`."""
+    """Tests for :class:`trajcenter.robot.abb.models.ProcessTypeEntry`."""
 
     def test_process_type_entry(self) -> None:
         """A process catalog entry stores id and name."""
@@ -235,7 +235,7 @@ class TestProcessTypeEntry:
 
 
 class TestRobotContext:
-    """Tests for :class:`trajcenter.rws.models.RobotContext`."""
+    """Tests for :class:`trajcenter.robot.abb.models.RobotContext`."""
 
     def test_tool_index_by_name_is_one_based(self) -> None:
         """Tool lookup returns RAPID base-1 indexes."""
@@ -276,7 +276,7 @@ class TestRobotContext:
 
 
 class TestResolvedRobTarget:
-    """Tests for :class:`trajcenter.rws.models.ResolvedRobTarget`."""
+    """Tests for :class:`trajcenter.robot.abb.models.ResolvedRobTarget`."""
 
     def test_resolved_robtarget(self) -> None:
         """Robtarget components are stored without RWS sentinel injection."""
@@ -311,7 +311,7 @@ class TestResolvedRobTarget:
 
 
 class TestResolvedProcessParamSet:
-    """Tests for :class:`trajcenter.rws.models.ResolvedProcessParamSet`."""
+    """Tests for :class:`trajcenter.robot.abb.models.ResolvedProcessParamSet`."""
 
     def test_valid_process_param_set(self) -> None:
         """A parameter set must contain exactly ten slots."""
@@ -359,7 +359,7 @@ class TestResolvedProcessParamSet:
 
 
 class TestResolvedPoint:
-    """Tests for :class:`trajcenter.rws.models.ResolvedPoint`."""
+    """Tests for :class:`trajcenter.robot.abb.models.ResolvedPoint`."""
 
     def test_resolved_point(self) -> None:
         """A resolved point stores all RAPID record fields."""
@@ -376,7 +376,7 @@ class TestResolvedPoint:
 
 
 class TestResolvedTrajectory:
-    """Tests for :class:`trajcenter.rws.models.ResolvedTrajectory`."""
+    """Tests for :class:`trajcenter.robot.abb.models.ResolvedTrajectory`."""
 
     def test_resolved_trajectory_without_process(self) -> None:
         """A trajectory without process has zero parameter sets."""
@@ -419,7 +419,7 @@ class TestResolvedTrajectory:
 
 
 class TestTrajectoryStoreEntry:
-    """Tests for :class:`trajcenter.rws.models.TrajectoryStoreEntry`."""
+    """Tests for :class:`trajcenter.robot.abb.models.TrajectoryStoreEntry`."""
 
     def test_store_entry(self) -> None:
         """A store entry maps one-based index to a trajectory archive path."""

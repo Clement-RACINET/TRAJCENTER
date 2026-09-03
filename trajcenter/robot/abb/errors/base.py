@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/errors/base.py
+# trajcenter/robot/abb/errors/base.py
 """Base exception hierarchy for the TrajCenter RWS transfer protocol.
 
 > **Author**: Clément RACINET
@@ -9,9 +9,9 @@ category-level subclasses, mirroring the code ranges documented in
 ``routes/TRAJCENTER.md`` section 12 (status and error codes).
 
 Concrete leaf exceptions (one per protocol error code) are declared in
-:mod:`trajcenter.rws.errors.codes`. Translation from
+:mod:`trajcenter.robot.abb.errors.codes`. Translation from
 ``abb_rws_client_python_rw6`` exceptions into this hierarchy is handled
-in :mod:`trajcenter.rws.errors.translate`.
+in :mod:`trajcenter.robot.abb.errors.translate`.
 
 Design principle
 -----------------
@@ -19,7 +19,7 @@ This hierarchy is a *protocol-level* taxonomy, distinct from the
 transport-level ``RWSError`` hierarchy of ``abb_rws_client_python_rw6``
 and distinct from the conversion-level messages in
 ``trajcenter.core.messages``. Transport errors are translated into this
-hierarchy at the boundary (``rws/reader.py`` / ``rws/writer.py``); they
+hierarchy at the boundary (``robot/abb/reader.py`` / ``robot/abb/writer.py``); they
 are never re-raised as-is toward the orchestrator or toward RAPID.
 
 ABB constraints
@@ -47,10 +47,10 @@ RAPID_STRMAX: Final[int] = 80
 class TrajCenterError(Exception):
     """Root of the TrajCenter RWS transfer protocol error hierarchy.
 
-    Every concrete error in :mod:`trajcenter.rws.errors.codes` subclasses
+    Every concrete error in :mod:`trajcenter.robot.abb.errors.codes` subclasses
     one of the eight category classes defined below, which themselves
     subclass ``TrajCenterError``. Catching ``TrajCenterError`` catches
-    every protocol error raised by the ``rws`` layer.
+    every protocol error raised by the ABB robot layer.
 
     ABB Route:
         N/A -- internal exception hierarchy, not an RWS route.
@@ -64,7 +64,7 @@ class TrajCenterError(Exception):
     Attributes:
         code: Numeric protocol status code, one of the values documented
             in ``routes/TRAJCENTER.md`` section 12. Set by each leaf
-            subclass in :mod:`trajcenter.rws.errors.codes`.
+            subclass in :mod:`trajcenter.robot.abb.errors.codes`.
         default_message: Short human-readable description used when no
             ``detail`` is supplied at raise time.
         detail: Optional contextual detail supplied at raise time, e.g.
@@ -152,7 +152,7 @@ class TrajCenterError(Exception):
 class TrajCenterValidationError(TrajCenterError):
     """Category base for trajectory/content validation errors (400xxx).
 
-    Raised by :mod:`trajcenter.rws.resolver` when a ``.trajcenter``
+    Raised by :mod:`trajcenter.robot.abb.resolver` when a ``.trajcenter``
     trajectory fails validation before transfer -- never by a translated
     RWS transport error.
     """
@@ -161,7 +161,7 @@ class TrajCenterValidationError(TrajCenterError):
 class TrajCenterAuthError(TrajCenterError):
     """Category base for RWS authentication errors (401xxx).
 
-    Raised only via :func:`trajcenter.rws.errors.translate.from_rws_exception`
+    Raised only via :func:`trajcenter.robot.abb.errors.translate.from_rws_exception`
     when the underlying ``abb_rws_client_python_rw6`` session rejects
     Digest authentication.
     """

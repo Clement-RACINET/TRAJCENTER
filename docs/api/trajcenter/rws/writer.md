@@ -1,3 +1,3 @@
 # Writer
 
-::: trajcenter.rws.writer
+::: trajcenter.robot.abb.writer

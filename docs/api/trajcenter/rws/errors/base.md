@@ -1,3 +1,3 @@
 # Base
 
-::: trajcenter.rws.errors.base
+::: trajcenter.robot.abb.errors.base

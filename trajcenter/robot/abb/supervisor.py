@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/supervisor.py
+# trajcenter/robot/abb/supervisor.py
 """RWS subscription supervisor for TrajCenter v2.
 
 Author: Clement RACINET
@@ -44,9 +44,12 @@ from abb_rws_client_python_rw6.highlevel.subscription import (
 )
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws.constants import DEFAULT_TASK, TRAJCENTER_MODULE
-from trajcenter.rws.models import TrajectoryStoreEntry
-from trajcenter.rws.service import refresh_store_metadata, transfer_selected_trajectory
+from trajcenter.robot.abb.constants import DEFAULT_TASK, TRAJCENTER_MODULE
+from trajcenter.robot.abb.models import TrajectoryStoreEntry
+from trajcenter.robot.abb.service import (
+    refresh_store_metadata,
+    transfer_selected_trajectory,
+)
 
 logger = get_logger(__name__)
 

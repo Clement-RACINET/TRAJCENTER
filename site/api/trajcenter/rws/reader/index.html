@@ -1,1597 +1,967 @@
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
-    
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      
-      
-      
-      
-        <link rel="prev" href="../_utils/">
-      
-      
-        <link rel="next" href="../writer/">
-      
-      
-        
-      
-      
-      <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
-    
-    
-      
-        <title>Reader - TrajCenter</title>
-      
-    
-    
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
-      
-      
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
+    <link rel="prev" href="../_utils/" />
 
-    
-    
-      
-    
-    
-      
-        
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-      
-    
-    
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
-    
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
+    <link rel="next" href="../writer/" />
 
-    
-    
+    <link rel="icon" href="../../../../assets/favicon.png" />
+    <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6" />
+
+    <title>Reader - TrajCenter</title>
+
+    <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"
+    />
+    <style>
+      :root {
+        --md-text-font: "Roboto";
+        --md-code-font: "Roboto Mono";
+      }
+    </style>
+
+    <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css" />
+
+    <script>
+      ((__md_scope = new URL("../../../..", location)),
+        (__md_hash = (e) => [...e].reduce((e, _) => (e << 5) - e + _.charCodeAt(0), 0)),
+        (__md_get = (e, _ = localStorage, t = __md_scope) =>
+          JSON.parse(_.getItem(t.pathname + "." + e))),
+        (__md_set = (e, _, t = localStorage, a = __md_scope) => {
+          try {
+            t.setItem(a.pathname + "." + e, JSON.stringify(_));
+          } catch (e) {}
+        }));
+    </script>
   </head>
-  
-  
-    <body dir="ltr">
-  
-    
-    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
-    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+
+  <body dir="ltr">
+    <input
+      class="md-toggle"
+      data-md-toggle="drawer"
+      type="checkbox"
+      id="__drawer"
+      autocomplete="off"
+    />
+    <input
+      class="md-toggle"
+      data-md-toggle="search"
+      type="checkbox"
+      id="__search"
+      autocomplete="off"
+    />
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#reader" class="md-skip">
-          Skip to content
+      <a href="#reader" class="md-skip"> Skip to content </a>
+    </div>
+    <div data-md-component="announce"></div>
+
+    <header class="md-header md-header--shadow" data-md-component="header">
+      <nav class="md-header__inner md-grid" aria-label="Header">
+        <a
+          href="../../../.."
+          title="TrajCenter"
+          class="md-header__button md-logo"
+          aria-label="TrajCenter"
+          data-md-component="logo"
+        >
+          <img src="../../../../assets/logo.png" alt="logo" />
         </a>
-      
-    </div>
-    <div data-md-component="announce">
-      
-    </div>
-    
-    
-      
-
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="TrajCenter" class="md-header__button md-logo" aria-label="TrajCenter" data-md-component="logo">
-      
-  <img src="../../../../assets/logo.png" alt="logo">
-
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            TrajCenter
-          </span>
+        <label class="md-header__button md-icon" for="__drawer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" />
+          </svg>
+        </label>
+        <div class="md-header__title" data-md-component="header-title">
+          <div class="md-header__ellipsis">
+            <div class="md-header__topic">
+              <span class="md-ellipsis"> TrajCenter </span>
+            </div>
+            <div class="md-header__topic" data-md-component="header-topic">
+              <span class="md-ellipsis"> Reader </span>
+            </div>
+          </div>
         </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            
-              Reader
-            
-          </span>
-        </div>
-      </div>
-    </div>
-    
-    
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
-    
-    
-    
-      
-      
+
+        <script>
+          var palette = __md_get("__palette");
+          if (palette && palette.color) {
+            if ("(prefers-color-scheme)" === palette.color.media) {
+              var media = matchMedia("(prefers-color-scheme: light)"),
+                input = document.querySelector(
+                  media.matches
+                    ? "[data-md-color-media='(prefers-color-scheme: light)']"
+                    : "[data-md-color-media='(prefers-color-scheme: dark)']"
+                );
+              ((palette.color.media = input.getAttribute("data-md-color-media")),
+                (palette.color.scheme = input.getAttribute("data-md-color-scheme")),
+                (palette.color.primary = input.getAttribute("data-md-color-primary")),
+                (palette.color.accent = input.getAttribute("data-md-color-accent")));
+            }
+            for (var [key, value] of Object.entries(palette.color))
+              document.body.setAttribute("data-md-color-" + key, value);
+          }
+        </script>
+
         <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"
+            />
+          </svg>
         </label>
         <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
+          <label class="md-search__overlay" for="__search"></label>
+          <div class="md-search__inner" role="search">
+            <form class="md-search__form" name="search">
+              <input
+                type="text"
+                class="md-search__input"
+                name="query"
+                aria-label="Search"
+                placeholder="Search"
+                autocapitalize="off"
+                autocorrect="off"
+                autocomplete="off"
+                spellcheck="false"
+                data-md-component="search-query"
+                required
+              />
+              <label class="md-search__icon md-icon" for="__search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path
+                    d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"
+                  />
+                </svg>
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z" />
+                </svg>
+              </label>
+              <nav class="md-search__options" aria-label="Search">
+                <button
+                  type="reset"
+                  class="md-search__icon md-icon"
+                  title="Clear"
+                  aria-label="Clear"
+                  tabindex="-1"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                    />
+                  </svg>
+                </button>
+              </nav>
+            </form>
+            <div class="md-search__output">
+              <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+                <div class="md-search-result" data-md-component="search-result">
+                  <div class="md-search-result__meta">Initializing search</div>
+                  <ol class="md-search-result__list" role="presentation"></ol>
+                </div>
+              </div>
+            </div>
           </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
-    
-  </nav>
-  
-</header>
-    
+      </nav>
+    </header>
+
     <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-        
-      
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
-          
-            
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-
-
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
-  <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="TrajCenter" class="md-nav__button md-logo" aria-label="TrajCenter" data-md-component="logo">
-      
-  <img src="../../../../assets/logo.png" alt="logo">
-
-    </a>
-    TrajCenter
-  </label>
-  
-  <ul class="md-nav__list" data-md-scrollfix>
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Accueil
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Référence API
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Référence API
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Trajcenter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Trajcenter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_1" id="__nav_2_1_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Converter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Converter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/apt_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Apt Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/base/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Base
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/column_mapper/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Column Mapper
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/csv_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Csv Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/defaults/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Defaults
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/excel_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Excel Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/mod_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Mod Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../converter/tabular_converter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tabular Converter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_2" id="__nav_2_1_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Core
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Core
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../core/logger/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Logger
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../core/messages/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Messages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../core/trajectory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Trajectory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_3" id="__nav_2_1_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Exporter
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Exporter
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../exporter/base/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Base
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../exporter/csv_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Csv Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../exporter/excel_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Excel Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../exporter/options/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Options
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../exporter/tabular_exporter/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tabular Exporter
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_1_4" id="__nav_2_1_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rws
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Rws
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_utils/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Utils
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reader
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reader
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        reader
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="reader">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader--abb-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ABB constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_nb_robtargets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_nb_robtargets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_nb_traj_dispo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_nb_traj_dispo
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_selected_traj_index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_selected_traj_index
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_traj_names" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_traj_names
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_traj_ready" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_traj_ready
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../writer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Writer
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../coverage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Coverage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-  </ul>
-</nav>
-                  </div>
-                </div>
+          <div
+            class="md-sidebar md-sidebar--primary"
+            data-md-component="sidebar"
+            data-md-type="navigation"
+          >
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                  <label class="md-nav__title" for="__drawer">
+                    <a
+                      href="../../../.."
+                      title="TrajCenter"
+                      class="md-nav__button md-logo"
+                      aria-label="TrajCenter"
+                      data-md-component="logo"
+                    >
+                      <img src="../../../../assets/logo.png" alt="logo" />
+                    </a>
+                    TrajCenter
+                  </label>
+
+                  <ul class="md-nav__list" data-md-scrollfix>
+                    <li class="md-nav__item">
+                      <a href="../../../.." class="md-nav__link">
+                        <span class="md-ellipsis"> Accueil </span>
+                      </a>
+                    </li>
+
+                    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+                      <input
+                        class="md-nav__toggle md-toggle"
+                        type="checkbox"
+                        id="__nav_2"
+                        checked
+                      />
+
+                      <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+                        <span class="md-ellipsis"> Référence API </span>
+
+                        <span class="md-nav__icon md-icon"></span>
+                      </label>
+
+                      <nav
+                        class="md-nav"
+                        data-md-level="1"
+                        aria-labelledby="__nav_2_label"
+                        aria-expanded="true"
+                      >
+                        <label class="md-nav__title" for="__nav_2">
+                          <span class="md-nav__icon md-icon"></span>
+
+                          Référence API
+                        </label>
+                        <ul class="md-nav__list" data-md-scrollfix>
+                          <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+                            <input
+                              class="md-nav__toggle md-toggle"
+                              type="checkbox"
+                              id="__nav_2_1"
+                              checked
+                            />
+
+                            <label
+                              class="md-nav__link"
+                              for="__nav_2_1"
+                              id="__nav_2_1_label"
+                              tabindex="0"
+                            >
+                              <span class="md-ellipsis"> Trajcenter </span>
+
+                              <span class="md-nav__icon md-icon"></span>
+                            </label>
+
+                            <nav
+                              class="md-nav"
+                              data-md-level="2"
+                              aria-labelledby="__nav_2_1_label"
+                              aria-expanded="true"
+                            >
+                              <label class="md-nav__title" for="__nav_2_1">
+                                <span class="md-nav__icon md-icon"></span>
+
+                                Trajcenter
+                              </label>
+                              <ul class="md-nav__list" data-md-scrollfix>
+                                <li class="md-nav__item md-nav__item--nested">
+                                  <input
+                                    class="md-nav__toggle md-toggle"
+                                    type="checkbox"
+                                    id="__nav_2_1_1"
+                                  />
+
+                                  <label
+                                    class="md-nav__link"
+                                    for="__nav_2_1_1"
+                                    id="__nav_2_1_1_label"
+                                    tabindex="0"
+                                  >
+                                    <span class="md-ellipsis"> Converter </span>
+
+                                    <span class="md-nav__icon md-icon"></span>
+                                  </label>
+
+                                  <nav
+                                    class="md-nav"
+                                    data-md-level="3"
+                                    aria-labelledby="__nav_2_1_1_label"
+                                    aria-expanded="false"
+                                  >
+                                    <label class="md-nav__title" for="__nav_2_1_1">
+                                      <span class="md-nav__icon md-icon"></span>
+
+                                      Converter
+                                    </label>
+                                    <ul class="md-nav__list" data-md-scrollfix>
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/apt_converter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Apt Converter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../converter/base/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Base </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/column_mapper/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Column Mapper </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/csv_converter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Csv Converter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../converter/defaults/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Defaults </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/excel_converter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Excel Converter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/mod_converter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Mod Converter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../converter/tabular_converter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Tabular Converter </span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </li>
+
+                                <li class="md-nav__item md-nav__item--nested">
+                                  <input
+                                    class="md-nav__toggle md-toggle"
+                                    type="checkbox"
+                                    id="__nav_2_1_2"
+                                  />
+
+                                  <label
+                                    class="md-nav__link"
+                                    for="__nav_2_1_2"
+                                    id="__nav_2_1_2_label"
+                                    tabindex="0"
+                                  >
+                                    <span class="md-ellipsis"> Core </span>
+
+                                    <span class="md-nav__icon md-icon"></span>
+                                  </label>
+
+                                  <nav
+                                    class="md-nav"
+                                    data-md-level="3"
+                                    aria-labelledby="__nav_2_1_2_label"
+                                    aria-expanded="false"
+                                  >
+                                    <label class="md-nav__title" for="__nav_2_1_2">
+                                      <span class="md-nav__icon md-icon"></span>
+
+                                      Core
+                                    </label>
+                                    <ul class="md-nav__list" data-md-scrollfix>
+                                      <li class="md-nav__item">
+                                        <a href="../../core/logger/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Logger </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../core/messages/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Messages </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../core/trajectory/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Trajectory </span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </li>
+
+                                <li class="md-nav__item md-nav__item--nested">
+                                  <input
+                                    class="md-nav__toggle md-toggle"
+                                    type="checkbox"
+                                    id="__nav_2_1_3"
+                                  />
+
+                                  <label
+                                    class="md-nav__link"
+                                    for="__nav_2_1_3"
+                                    id="__nav_2_1_3_label"
+                                    tabindex="0"
+                                  >
+                                    <span class="md-ellipsis"> Exporter </span>
+
+                                    <span class="md-nav__icon md-icon"></span>
+                                  </label>
+
+                                  <nav
+                                    class="md-nav"
+                                    data-md-level="3"
+                                    aria-labelledby="__nav_2_1_3_label"
+                                    aria-expanded="false"
+                                  >
+                                    <label class="md-nav__title" for="__nav_2_1_3">
+                                      <span class="md-nav__icon md-icon"></span>
+
+                                      Exporter
+                                    </label>
+                                    <ul class="md-nav__list" data-md-scrollfix>
+                                      <li class="md-nav__item">
+                                        <a href="../../exporter/base/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Base </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../exporter/csv_exporter/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Csv Exporter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../exporter/excel_exporter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Excel Exporter </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../../exporter/options/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Options </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a
+                                          href="../../exporter/tabular_exporter/"
+                                          class="md-nav__link"
+                                        >
+                                          <span class="md-ellipsis"> Tabular Exporter </span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </li>
+
+                                <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+                                  <input
+                                    class="md-nav__toggle md-toggle"
+                                    type="checkbox"
+                                    id="__nav_2_1_4"
+                                    checked
+                                  />
+
+                                  <label
+                                    class="md-nav__link"
+                                    for="__nav_2_1_4"
+                                    id="__nav_2_1_4_label"
+                                    tabindex="0"
+                                  >
+                                    <span class="md-ellipsis"> Rws </span>
+
+                                    <span class="md-nav__icon md-icon"></span>
+                                  </label>
+
+                                  <nav
+                                    class="md-nav"
+                                    data-md-level="3"
+                                    aria-labelledby="__nav_2_1_4_label"
+                                    aria-expanded="true"
+                                  >
+                                    <label class="md-nav__title" for="__nav_2_1_4">
+                                      <span class="md-nav__icon md-icon"></span>
+
+                                      Rws
+                                    </label>
+                                    <ul class="md-nav__list" data-md-scrollfix>
+                                      <li class="md-nav__item">
+                                        <a href="../_utils/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Utils </span>
+                                        </a>
+                                      </li>
+
+                                      <li class="md-nav__item md-nav__item--active">
+                                        <input
+                                          class="md-nav__toggle md-toggle"
+                                          type="checkbox"
+                                          id="__toc"
+                                        />
+
+                                        <label
+                                          class="md-nav__link md-nav__link--active"
+                                          for="__toc"
+                                        >
+                                          <span class="md-ellipsis"> Reader </span>
+
+                                          <span class="md-nav__icon md-icon"></span>
+                                        </label>
+
+                                        <a href="./" class="md-nav__link md-nav__link--active">
+                                          <span class="md-ellipsis"> Reader </span>
+                                        </a>
+
+                                        <nav
+                                          class="md-nav md-nav--secondary"
+                                          aria-label="Table of contents"
+                                        >
+                                          <label class="md-nav__title" for="__toc">
+                                            <span class="md-nav__icon md-icon"></span>
+                                            Table of contents
+                                          </label>
+                                          <ul
+                                            class="md-nav__list"
+                                            data-md-component="toc"
+                                            data-md-scrollfix
+                                          >
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis"> reader </span>
+                                              </a>
+
+                                              <nav class="md-nav" aria-label="reader">
+                                                <ul class="md-nav__list">
+                                                  <li class="md-nav__item">
+                                                    <a
+                                                      href="#trajcenter.robot.abb.reader--abb-constraints"
+                                                      class="md-nav__link"
+                                                    >
+                                                      <span class="md-ellipsis">
+                                                        ABB constraints
+                                                      </span>
+                                                    </a>
+                                                  </li>
+                                                </ul>
+                                              </nav>
+                                            </li>
+
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader.read_nb_robtargets"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis">
+                                                  read_nb_robtargets
+                                                </span>
+                                              </a>
+                                            </li>
+
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader.read_nb_traj_dispo"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis">
+                                                  read_nb_traj_dispo
+                                                </span>
+                                              </a>
+                                            </li>
+
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader.read_selected_traj_index"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis">
+                                                  read_selected_traj_index
+                                                </span>
+                                              </a>
+                                            </li>
+
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader.read_traj_names"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis"> read_traj_names </span>
+                                              </a>
+                                            </li>
+
+                                            <li class="md-nav__item">
+                                              <a
+                                                href="#trajcenter.robot.abb.reader.read_traj_ready"
+                                                class="md-nav__link"
+                                              >
+                                                <span class="md-ellipsis"> read_traj_ready </span>
+                                              </a>
+                                            </li>
+                                          </ul>
+                                        </nav>
+                                      </li>
+
+                                      <li class="md-nav__item">
+                                        <a href="../writer/" class="md-nav__link">
+                                          <span class="md-ellipsis"> Writer </span>
+                                        </a>
+                                      </li>
+                                    </ul>
+                                  </nav>
+                                </li>
+                              </ul>
+                            </nav>
+                          </li>
+                        </ul>
+                      </nav>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a href="../../../../coverage/" class="md-nav__link">
+                        <span class="md-ellipsis"> Coverage </span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-            
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
+            </div>
+          </div>
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        reader
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="reader">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader--abb-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ABB constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_nb_robtargets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_nb_robtargets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_nb_traj_dispo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_nb_traj_dispo
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_selected_traj_index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_selected_traj_index
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_traj_names" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_traj_names
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#trajcenter.rws.reader.read_traj_ready" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        read_traj_ready
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
+          <div
+            class="md-sidebar md-sidebar--secondary"
+            data-md-component="sidebar"
+            data-md-type="toc"
+          >
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+                  <label class="md-nav__title" for="__toc">
+                    <span class="md-nav__icon md-icon"></span>
+                    Table of contents
+                  </label>
+                  <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+                    <li class="md-nav__item">
+                      <a href="#trajcenter.robot.abb.reader" class="md-nav__link">
+                        <span class="md-ellipsis"> reader </span>
+                      </a>
+
+                      <nav class="md-nav" aria-label="reader">
+                        <ul class="md-nav__list">
+                          <li class="md-nav__item">
+                            <a
+                              href="#trajcenter.robot.abb.reader--abb-constraints"
+                              class="md-nav__link"
+                            >
+                              <span class="md-ellipsis"> ABB constraints </span>
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a
+                        href="#trajcenter.robot.abb.reader.read_nb_robtargets"
+                        class="md-nav__link"
+                      >
+                        <span class="md-ellipsis"> read_nb_robtargets </span>
+                      </a>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a
+                        href="#trajcenter.robot.abb.reader.read_nb_traj_dispo"
+                        class="md-nav__link"
+                      >
+                        <span class="md-ellipsis"> read_nb_traj_dispo </span>
+                      </a>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a
+                        href="#trajcenter.robot.abb.reader.read_selected_traj_index"
+                        class="md-nav__link"
+                      >
+                        <span class="md-ellipsis"> read_selected_traj_index </span>
+                      </a>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a href="#trajcenter.robot.abb.reader.read_traj_names" class="md-nav__link">
+                        <span class="md-ellipsis"> read_traj_names </span>
+                      </a>
+                    </li>
+
+                    <li class="md-nav__item">
+                      <a href="#trajcenter.robot.abb.reader.read_traj_ready" class="md-nav__link">
+                        <span class="md-ellipsis"> read_traj_ready </span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-            
-          
-          
-            <div class="md-content" data-md-component="content">
-              
-              <article class="md-content__inner md-typeset">
-                
-                  
+            </div>
+          </div>
 
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              <h1 id="reader">Reader</h1>
 
+              <div class="doc doc-object doc-module">
+                <a id="trajcenter.robot.abb.reader"></a>
+                <div class="doc doc-contents first">
+                  <p>RWS reader — reads RAPID variables from the ABB controller.</p>
+                  <p>Author: Clement RACINET</p>
+                  <p>
+                    This module is the <strong>only</strong> place in TrajCenter that calls
+                    <code>get_rapidsymbol_data</code>. It provides typed accessors for the RAPID
+                    persistent variables written by the TRAJCENTER module.
+                  </p>
+                  <p>RAPID variable map (read operations):</p>
+                  <p>
+                    ===== ======================== =========== ================================ Ref
+                    RAPID variable RAPID type Python return ===== ========================
+                    =========== ================================ R1 TrajSelectedIndex num
+                    <code>int</code> — 1-based RAPID index R2 TrajReady bool <code>bool</code> R3
+                    NbRobtargetsTraj num <code>int</code> R4 NbTrajDispo num <code>int</code> R5
+                    NomsTraj{1..MAX_TRAJ} string <code>list[str]</code> (stripped) =====
+                    ======================== =========== ================================
+                  </p>
+                  <p>
+                    All reads use <code>GET /rw/rapid/symbol/data/{symbolurl}</code> via
+                    <code>get_rapidsymbol_data</code> from the low-level RWS layer. Parsing is
+                    delegated to <code>get_variable</code> from <code>highlevel.rapid</code>.
+                  </p>
+                  <h3 id="trajcenter.robot.abb.reader--abb-constraints">ABB constraints</h3>
+                  <ul>
+                    <li>Symbol URL format: <code>RAPID/{task}/{module}/{var}</code></li>
+                    <li>RAPID arrays are 1-based on the controller side.</li>
+                    <li>
+                      <code>TrajReady</code> is a RAPID <code>bool</code> — controller returns
+                      <code>"TRUE"</code> or <code>"FALSE"</code> (case-insensitive).
+                    </li>
+                    <li>
+                      <code>NomsTraj</code> entries may contain trailing spaces — stripped here.
+                    </li>
+                  </ul>
 
-<h1 id="reader">Reader</h1>
+                  <div class="doc doc-children">
+                    <div class="doc doc-object doc-function">
+                      <h2
+                        id="trajcenter.robot.abb.reader.read_nb_robtargets"
+                        class="doc doc-heading"
+                      >
+                        <code class="highlight language-python"
+                          ><span class="n">read_nb_robtargets</span><span class="p">(</span
+                          ><span class="n">client</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">task</span><span class="o">=</span
+                          ><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span>
+                          <span class="n">module</span><span class="o">=</span
+                          ><span class="s1">&#39;TRAJCENTER&#39;</span
+                          ><span class="p">)</span></code
+                        >
 
+                        <span class="doc doc-labels">
+                          <small class="doc doc-label doc-label-async"><code>async</code></small>
+                        </span>
+                      </h2>
 
-<div class="doc doc-object doc-module">
+                      <div class="doc doc-contents">
+                        <p>Read the number of robtargets currently loaded on the controller.</p>
+                        <p>
+                          Reads <code>NbRobtargetsTraj</code> — written by :func:<code
+                            >~trajcenter.robot.abb.writer.write_trajectory</code
+                          >
+                          as step W4.
+                        </p>
+                        <p>Route (delegated): <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
 
+                        <details class="abb-constraints" open>
+                          <summary>ABB constraints</summary>
+                          <p>
+                            <code>NbRobtargetsTraj</code> must be declared as
+                            <code>PERS num</code> in the TRAJCENTER module.
+                          </p>
+                        </details>
 
+                        <p><span class="doc-section-title">Parameters:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Description</th>
+                              <th>Default</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>client</code>
+                              </td>
+                              <td>
+                                <code
+                                  ><span title="abb_rws_client_python_rw6.RWSClient"
+                                    >RWSClient</span
+                                  ></code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
+                                    instance.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <em>required</em>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>task</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;T_ROB1&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>module</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;TRAJCENTER&#39;</code>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-<a id="trajcenter.rws.reader"></a>
-    <div class="doc doc-contents first">
+                        <p><span class="doc-section-title">Returns:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="int">int</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>Number of robtargets currently declared on the controller</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="int">int</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>(<code>int</code>).</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-        <p>RWS reader — reads RAPID variables from the ABB controller.</p>
-<p>Author: Clement RACINET</p>
-<p>This module is the <strong>only</strong> place in TrajCenter that calls
-<code>get_rapidsymbol_data</code>. It provides typed accessors for the
-RAPID persistent variables written by the TRAJCENTER module.</p>
-<p>RAPID variable map (read operations):</p>
-<p>=====  ========================  ===========  ================================
-Ref    RAPID variable            RAPID type   Python return
-=====  ========================  ===========  ================================
-R1     TrajSelectedIndex         num          <code>int</code> — 1-based RAPID index
-R2     TrajReady                 bool         <code>bool</code>
-R3     NbRobtargetsTraj          num          <code>int</code>
-R4     NbTrajDispo               num          <code>int</code>
-R5     NomsTraj{1..MAX_TRAJ}     string       <code>list[str]</code> (stripped)
-=====  ========================  ===========  ================================</p>
-<p>All reads use <code>GET /rw/rapid/symbol/data/{symbolurl}</code> via
-<code>get_rapidsymbol_data</code> from the low-level RWS layer.
-Parsing is delegated to <code>get_variable</code> from <code>highlevel.rapid</code>.</p>
-<h3 id="trajcenter.rws.reader--abb-constraints">ABB constraints</h3>
-<ul>
-<li>Symbol URL format: <code>RAPID/{task}/{module}/{var}</code></li>
-<li>RAPID arrays are 1-based on the controller side.</li>
-<li><code>TrajReady</code> is a RAPID <code>bool</code> — controller returns <code>"TRUE"</code>
-  or <code>"FALSE"</code> (case-insensitive).</li>
-<li><code>NomsTraj</code> entries may contain trailing spaces — stripped here.</li>
-</ul>
+                        <p><span class="doc-section-title">Raises:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>On any unexpected HTTP error from the controller.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="ValueError">ValueError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>If the raw value cannot be converted to <code>int</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="trajcenter.rws.reader.read_nb_robtargets" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_nb_robtargets</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">)</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Read the number of robtargets currently loaded on the controller.</p>
-<p>Reads <code>NbRobtargetsTraj</code> — written by
-:func:<code>~trajcenter.rws.writer.write_trajectory</code> as step W4.</p>
-<p>Route (delegated):
-    <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
-
-
-<details class="abb-constraints" open>
-  <summary>ABB constraints</summary>
-  <p><code>NbRobtargetsTraj</code> must be declared as <code>PERS num</code> in the
-TRAJCENTER module.</p>
-</details>
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>client</code>
-            </td>
-            <td>
-                  <code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
-instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>task</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;T_ROB1&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>module</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;TRAJCENTER&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of robtargets currently declared on the controller</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>(<code>int</code>).</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>On any unexpected HTTP error from the controller.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="ValueError">ValueError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the raw value cannot be converted to <code>int</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>n = await read_nb_robtargets(client)
+                        <details class="example" open>
+                          <summary>Example</summary>
+                          <p>::</p>
+                          <pre><code>n = await read_nb_robtargets(client)
 print(f"{n} points loaded on controller")
 </code></pre>
-</details>
+                        </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+                        <details class="mkdocstrings-source">
+                          <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
+                          <div class="highlight">
+                            <table class="highlighttable">
+                              <tr>
+                                <td class="linenos">
+                                  <div class="linenodiv">
+                                    <pre><span></span><span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
@@ -1635,7 +1005,12 @@ print(f"{n} points loaded on controller")
 <span class="normal">200</span>
 <span class="normal">201</span>
 <span class="normal">202</span>
-<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_nb_robtargets</span><span class="p">(</span>
+<span class="normal">203</span></pre>
+                                  </div>
+                                </td>
+                                <td class="code">
+                                  <div>
+                                    <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_nb_robtargets</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T_ROB1&quot;</span><span class="p">,</span>
@@ -1644,7 +1019,7 @@ print(f"{n} points loaded on controller")
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the number of robtargets currently loaded on the controller.</span>
 
 <span class="sd">    Reads ``NbRobtargetsTraj`` — written by</span>
-<span class="sd">    :func:`~trajcenter.rws.writer.write_trajectory` as step W4.</span>
+<span class="sd">    :func:`~trajcenter.robot.abb.writer.write_trajectory` as step W4.</span>
 
 <span class="sd">    Route (delegated):</span>
 <span class="sd">        ``GET /rw/rapid/symbol/data/{symbolurl}``</span>
@@ -1680,171 +1055,197 @@ print(f"{n} points loaded on controller")
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">raw</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot parse NbRobtargetsTraj value </span><span class="si">{</span><span class="n">raw</span><span class="si">!r}</span><span class="s2"> as int&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
 
-</div>
+                    <div class="doc doc-object doc-function">
+                      <h2
+                        id="trajcenter.robot.abb.reader.read_nb_traj_dispo"
+                        class="doc doc-heading"
+                      >
+                        <code class="highlight language-python"
+                          ><span class="n">read_nb_traj_dispo</span><span class="p">(</span
+                          ><span class="n">client</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">task</span><span class="o">=</span
+                          ><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span>
+                          <span class="n">module</span><span class="o">=</span
+                          ><span class="s1">&#39;TRAJCENTER&#39;</span
+                          ><span class="p">)</span></code
+                        >
 
-<div class="doc doc-object doc-function">
+                        <span class="doc doc-labels">
+                          <small class="doc doc-label doc-label-async"><code>async</code></small>
+                        </span>
+                      </h2>
 
+                      <div class="doc doc-contents">
+                        <p>Read the number of trajectories declared in the store metadata.</p>
+                        <p>
+                          Reads <code>NbTrajDispo</code> — written by :func:<code
+                            >~trajcenter.robot.abb.writer.write_store_metadata</code
+                          >
+                          as step W1.
+                        </p>
+                        <p>Route (delegated): <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
 
-<h2 id="trajcenter.rws.reader.read_nb_traj_dispo" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_nb_traj_dispo</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">)</span></code>
+                        <details class="abb-constraints" open>
+                          <summary>ABB constraints</summary>
+                          <p>
+                            <code>NbTrajDispo</code> must be declared as <code>PERS num</code> in
+                            the TRAJCENTER module.
+                          </p>
+                        </details>
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+                        <p><span class="doc-section-title">Parameters:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Description</th>
+                              <th>Default</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>client</code>
+                              </td>
+                              <td>
+                                <code
+                                  ><span title="abb_rws_client_python_rw6.RWSClient"
+                                    >RWSClient</span
+                                  ></code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
+                                    instance.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <em>required</em>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>task</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;T_ROB1&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>module</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;TRAJCENTER&#39;</code>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-</h2>
+                        <p><span class="doc-section-title">Returns:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="int">int</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Number of trajectories available in the store
+                                    (<code>int</code>).
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
+                        <p><span class="doc-section-title">Raises:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>On any unexpected HTTP error from the controller.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="ValueError">ValueError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>If the raw value cannot be converted to <code>int</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-    <div class="doc doc-contents ">
-
-        <p>Read the number of trajectories declared in the store metadata.</p>
-<p>Reads <code>NbTrajDispo</code> — written by
-:func:<code>~trajcenter.rws.writer.write_store_metadata</code> as step W1.</p>
-<p>Route (delegated):
-    <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
-
-
-<details class="abb-constraints" open>
-  <summary>ABB constraints</summary>
-  <p><code>NbTrajDispo</code> must be declared as <code>PERS num</code> in the
-TRAJCENTER module.</p>
-</details>
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>client</code>
-            </td>
-            <td>
-                  <code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
-instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>task</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;T_ROB1&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>module</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;TRAJCENTER&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of trajectories available in the store (<code>int</code>).</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>On any unexpected HTTP error from the controller.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="ValueError">ValueError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the raw value cannot be converted to <code>int</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>n = await read_nb_traj_dispo(client)
+                        <details class="example" open>
+                          <summary>Example</summary>
+                          <p>::</p>
+                          <pre><code>n = await read_nb_traj_dispo(client)
 print(f"{n} trajectories available")
 </code></pre>
-</details>
+                        </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+                        <details class="mkdocstrings-source">
+                          <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
+                          <div class="highlight">
+                            <table class="highlighttable">
+                              <tr>
+                                <td class="linenos">
+                                  <div class="linenodiv">
+                                    <pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -1887,7 +1288,12 @@ print(f"{n} trajectories available")
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_nb_traj_dispo</span><span class="p">(</span>
+<span class="normal">249</span></pre>
+                                  </div>
+                                </td>
+                                <td class="code">
+                                  <div>
+                                    <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_nb_traj_dispo</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T_ROB1&quot;</span><span class="p">,</span>
@@ -1896,7 +1302,7 @@ print(f"{n} trajectories available")
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the number of trajectories declared in the store metadata.</span>
 
 <span class="sd">    Reads ``NbTrajDispo`` — written by</span>
-<span class="sd">    :func:`~trajcenter.rws.writer.write_store_metadata` as step W1.</span>
+<span class="sd">    :func:`~trajcenter.robot.abb.writer.write_store_metadata` as step W1.</span>
 
 <span class="sd">    Route (delegated):</span>
 <span class="sd">        ``GET /rw/rapid/symbol/data/{symbolurl}``</span>
@@ -1931,183 +1337,211 @@ print(f"{n} trajectories available")
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">raw</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot parse NbTrajDispo value </span><span class="si">{</span><span class="n">raw</span><span class="si">!r}</span><span class="s2"> as int&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
 
-</div>
+                    <div class="doc doc-object doc-function">
+                      <h2
+                        id="trajcenter.robot.abb.reader.read_selected_traj_index"
+                        class="doc doc-heading"
+                      >
+                        <code class="highlight language-python"
+                          ><span class="n">read_selected_traj_index</span><span class="p">(</span
+                          ><span class="n">client</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">task</span><span class="o">=</span
+                          ><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span>
+                          <span class="n">module</span><span class="o">=</span
+                          ><span class="s1">&#39;TRAJCENTER&#39;</span
+                          ><span class="p">)</span></code
+                        >
 
-<div class="doc doc-object doc-function">
+                        <span class="doc doc-labels">
+                          <small class="doc doc-label doc-label-async"><code>async</code></small>
+                        </span>
+                      </h2>
 
+                      <div class="doc doc-contents">
+                        <p>Read the trajectory index currently selected by RAPID.</p>
+                        <p>
+                          Reads <code>TrajSelectedIndex</code> — a RAPID <code>num</code> variable
+                          set by the robot program to indicate which trajectory it wants TrajCenter
+                          to transfer next. The value is <strong>1-based</strong> (RAPID
+                          convention).
+                        </p>
+                        <p>Route (delegated): <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
 
-<h2 id="trajcenter.rws.reader.read_selected_traj_index" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_selected_traj_index</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">)</span></code>
+                        <details class="abb-constraints" open>
+                          <summary>ABB constraints</summary>
+                          <p>
+                            <code>TrajSelectedIndex</code> must be declared as
+                            <code>PERS num</code> in the TRAJCENTER module. Returns
+                            <code>0</code> if RAPID has not yet written a selection.
+                          </p>
+                        </details>
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+                        <p><span class="doc-section-title">Parameters:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Description</th>
+                              <th>Default</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>client</code>
+                              </td>
+                              <td>
+                                <code
+                                  ><span title="abb_rws_client_python_rw6.RWSClient"
+                                    >RWSClient</span
+                                  ></code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
+                                    instance.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <em>required</em>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>task</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;T_ROB1&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>module</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;TRAJCENTER&#39;</code>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-</h2>
+                        <p><span class="doc-section-title">Returns:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="int">int</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    The selected trajectory index as a Python
+                                    <code>int</code> (1-based).
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="int">int</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Returns <code>0</code> if the variable holds <code>0</code> (no
+                                    selection).
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
+                        <p><span class="doc-section-title">Raises:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>On any unexpected HTTP error from the controller.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="ValueError">ValueError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>If the raw value cannot be converted to <code>int</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-    <div class="doc doc-contents ">
-
-        <p>Read the trajectory index currently selected by RAPID.</p>
-<p>Reads <code>TrajSelectedIndex</code> — a RAPID <code>num</code> variable set by the
-robot program to indicate which trajectory it wants TrajCenter to
-transfer next. The value is <strong>1-based</strong> (RAPID convention).</p>
-<p>Route (delegated):
-    <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
-
-
-<details class="abb-constraints" open>
-  <summary>ABB constraints</summary>
-  <p><code>TrajSelectedIndex</code> must be declared as <code>PERS num</code> in the
-TRAJCENTER module. Returns <code>0</code> if RAPID has not yet written
-a selection.</p>
-</details>
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>client</code>
-            </td>
-            <td>
-                  <code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
-instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>task</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;T_ROB1&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>module</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;TRAJCENTER&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The selected trajectory index as a Python <code>int</code> (1-based).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Returns <code>0</code> if the variable holds <code>0</code> (no selection).</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>On any unexpected HTTP error from the controller.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="ValueError">ValueError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the raw value cannot be converted to <code>int</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>idx = await read_selected_traj_index(client)
+                        <details class="example" open>
+                          <summary>Example</summary>
+                          <p>::</p>
+                          <pre><code>idx = await read_selected_traj_index(client)
 print(idx)  # e.g. 3  → RAPID wants trajectory #3
 </code></pre>
-</details>
+                        </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 54</span>
+                        <details class="mkdocstrings-source">
+                          <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
+                          <div class="highlight">
+                            <table class="highlighttable">
+                              <tr>
+                                <td class="linenos">
+                                  <div class="linenodiv">
+                                    <pre><span></span><span class="normal"> 54</span>
 <span class="normal"> 55</span>
 <span class="normal"> 56</span>
 <span class="normal"> 57</span>
@@ -2155,7 +1589,12 @@ print(idx)  # e.g. 3  → RAPID wants trajectory #3
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_selected_traj_index</span><span class="p">(</span>
+<span class="normal">102</span></pre>
+                                  </div>
+                                </td>
+                                <td class="code">
+                                  <div>
+                                    <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_selected_traj_index</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T_ROB1&quot;</span><span class="p">,</span>
@@ -2204,206 +1643,241 @@ print(idx)  # e.g. 3  → RAPID wants trajectory #3
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Cannot parse TrajSelectedIndex value </span><span class="si">{</span><span class="n">raw</span><span class="si">!r}</span><span class="s2"> as int&quot;</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
 
-</div>
+                    <div class="doc doc-object doc-function">
+                      <h2 id="trajcenter.robot.abb.reader.read_traj_names" class="doc doc-heading">
+                        <code class="highlight language-python"
+                          ><span class="n">read_traj_names</span><span class="p">(</span
+                          ><span class="n">client</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">task</span><span class="o">=</span
+                          ><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span>
+                          <span class="n">module</span><span class="o">=</span
+                          ><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">,</span>
+                          <span class="n">count</span><span class="o">=</span
+                          ><span class="kc">None</span><span class="p">)</span></code
+                        >
 
-<div class="doc doc-object doc-function">
+                        <span class="doc doc-labels">
+                          <small class="doc doc-label doc-label-async"><code>async</code></small>
+                        </span>
+                      </h2>
 
+                      <div class="doc doc-contents">
+                        <p>Read trajectory names from the controller store metadata.</p>
+                        <p>
+                          Reads <code>NomsTraj[1]</code> … <code>NomsTraj[count]</code> (1-based
+                          RAPID array). If <em>count</em> is <code>None</code>, first reads
+                          <code>NbTrajDispo</code> to determine how many names to fetch.
+                        </p>
+                        <p>Route (delegated): <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
 
-<h2 id="trajcenter.rws.reader.read_traj_names" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_traj_names</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+                        <details class="abb-constraints" open>
+                          <summary>ABB constraints</summary>
+                          <ul>
+                            <li>
+                              <code>NomsTraj</code> must be declared as
+                              <code>PERS string{MAX_TRAJ}</code> in the TRAJCENTER module.
+                            </li>
+                            <li>
+                              Only the first <em>count</em> entries are read — padded empty strings
+                              beyond <em>count</em> are never fetched.
+                            </li>
+                            <li>Trailing spaces and RAPID double-quotes are stripped.</li>
+                          </ul>
+                        </details>
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+                        <p><span class="doc-section-title">Parameters:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Description</th>
+                              <th>Default</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>client</code>
+                              </td>
+                              <td>
+                                <code
+                                  ><span title="abb_rws_client_python_rw6.RWSClient"
+                                    >RWSClient</span
+                                  ></code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
+                                    instance.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <em>required</em>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>task</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;T_ROB1&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>module</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;TRAJCENTER&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>count</code>
+                              </td>
+                              <td>
+                                <code><span title="int">int</span> | None</code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Number of names to read. If <code>None</code>, reads
+                                    <code>NbTrajDispo</code> first. Must be
+                                    <code>&lt;= MAX_TRAJ</code>.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>None</code>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-</h2>
+                        <p><span class="doc-section-title">Returns:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code
+                                  ><span title="list">list</span>[<span title="str">str</span
+                                  >]</code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Ordered list of trajectory name strings (stripped, unquoted).
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code
+                                  ><span title="list">list</span>[<span title="str">str</span
+                                  >]</code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>Empty list if <em>count</em> is <code>0</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
+                        <p><span class="doc-section-title">Raises:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="ValueError">ValueError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    If <em>count</em> &gt; :data:<code
+                                      >~trajcenter.robot.abb.writer.MAX_TRAJ</code
+                                    >
+                                    or if a raw value cannot be parsed.
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>On any unexpected HTTP error from the controller.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-    <div class="doc doc-contents ">
-
-        <p>Read trajectory names from the controller store metadata.</p>
-<p>Reads <code>NomsTraj[1]</code> … <code>NomsTraj[count]</code> (1-based RAPID array).
-If <em>count</em> is <code>None</code>, first reads <code>NbTrajDispo</code> to determine
-how many names to fetch.</p>
-<p>Route (delegated):
-    <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
-
-
-<details class="abb-constraints" open>
-  <summary>ABB constraints</summary>
-  <ul>
-<li><code>NomsTraj</code> must be declared as <code>PERS string{MAX_TRAJ}</code>
-  in the TRAJCENTER module.</li>
-<li>Only the first <em>count</em> entries are read — padded empty
-  strings beyond <em>count</em> are never fetched.</li>
-<li>Trailing spaces and RAPID double-quotes are stripped.</li>
-</ul>
-</details>
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>client</code>
-            </td>
-            <td>
-                  <code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
-instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>task</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;T_ROB1&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>module</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;TRAJCENTER&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>count</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of names to read. If <code>None</code>, reads
-<code>NbTrajDispo</code> first. Must be <code>&lt;= MAX_TRAJ</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Ordered list of trajectory name strings (stripped, unquoted).</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Empty list if <em>count</em> is <code>0</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="ValueError">ValueError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If <em>count</em> &gt;
-:data:<code>~trajcenter.rws.writer.MAX_TRAJ</code> or if a raw
-value cannot be parsed.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>On any unexpected HTTP error from the controller.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>names = await read_traj_names(client, count=3)
+                        <details class="example" open>
+                          <summary>Example</summary>
+                          <p>::</p>
+                          <pre><code>names = await read_traj_names(client, count=3)
 print(names)  # ['Traj1', 'Traj2', 'Traj3']
 </code></pre>
-</details>
+                        </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">252</span>
+                        <details class="mkdocstrings-source">
+                          <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
+                          <div class="highlight">
+                            <table class="highlighttable">
+                              <tr>
+                                <td class="linenos">
+                                  <div class="linenodiv">
+                                    <pre><span></span><span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
 <span class="normal">255</span>
@@ -2467,7 +1941,12 @@ print(names)  # ['Traj1', 'Traj2', 'Traj3']
 <span class="normal">313</span>
 <span class="normal">314</span>
 <span class="normal">315</span>
-<span class="normal">316</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_traj_names</span><span class="p">(</span>
+<span class="normal">316</span></pre>
+                                  </div>
+                                </td>
+                                <td class="code">
+                                  <div>
+                                    <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_traj_names</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T_ROB1&quot;</span><span class="p">,</span>
@@ -2504,7 +1983,7 @@ print(names)  # ['Traj1', 'Traj2', 'Traj3']
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If *count* &gt;</span>
-<span class="sd">            :data:`~trajcenter.rws.writer.MAX_TRAJ` or if a raw</span>
+<span class="sd">            :data:`~trajcenter.robot.abb.writer.MAX_TRAJ` or if a raw</span>
 <span class="sd">            value cannot be parsed.</span>
 <span class="sd">        RWSHTTPError: On any unexpected HTTP error from the controller.</span>
 
@@ -2532,186 +2011,210 @@ print(names)  # ['Traj1', 'Traj2', 'Traj3']
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Read </span><span class="si">%d</span><span class="s2"> trajectory names from controller&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">names</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
 
-</div>
+                    <div class="doc doc-object doc-function">
+                      <h2 id="trajcenter.robot.abb.reader.read_traj_ready" class="doc doc-heading">
+                        <code class="highlight language-python"
+                          ><span class="n">read_traj_ready</span><span class="p">(</span
+                          ><span class="n">client</span><span class="p">,</span>
+                          <span class="o">*</span><span class="p">,</span>
+                          <span class="n">task</span><span class="o">=</span
+                          ><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span>
+                          <span class="n">module</span><span class="o">=</span
+                          ><span class="s1">&#39;TRAJCENTER&#39;</span
+                          ><span class="p">)</span></code
+                        >
 
-<div class="doc doc-object doc-function">
+                        <span class="doc doc-labels">
+                          <small class="doc doc-label doc-label-async"><code>async</code></small>
+                        </span>
+                      </h2>
 
+                      <div class="doc doc-contents">
+                        <p>Read the <code>TrajReady</code> flag from the controller.</p>
+                        <p>
+                          <code>TrajReady</code> is set to <code>TRUE</code> by :func:<code
+                            >~trajcenter.robot.abb.writer.write_trajectory</code
+                          >
+                          as the final atomic signal after a full transfer. RAPID resets it to
+                          <code>FALSE</code> once it has consumed the trajectory.
+                        </p>
+                        <p>Route (delegated): <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
 
-<h2 id="trajcenter.rws.reader.read_traj_ready" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">read_traj_ready</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;T_ROB1&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;TRAJCENTER&#39;</span><span class="p">)</span></code>
+                        <details class="abb-constraints" open>
+                          <summary>ABB constraints</summary>
+                          <p>
+                            <code>TrajReady</code> must be declared as <code>PERS bool</code> in the
+                            TRAJCENTER module. The controller returns <code>"TRUE"</code> or
+                            <code>"FALSE"</code> (case-insensitive).
+                          </p>
+                        </details>
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+                        <p><span class="doc-section-title">Parameters:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Description</th>
+                              <th>Default</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>client</code>
+                              </td>
+                              <td>
+                                <code
+                                  ><span title="abb_rws_client_python_rw6.RWSClient"
+                                    >RWSClient</span
+                                  ></code
+                                >
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
+                                    instance.
+                                  </p>
+                                </div>
+                              </td>
+                              <td>
+                                <em>required</em>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>task</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;T_ROB1&#39;</code>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code>module</code>
+                              </td>
+                              <td>
+                                <code><span title="str">str</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
+                                </div>
+                              </td>
+                              <td>
+                                <code>&#39;TRAJCENTER&#39;</code>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-</h2>
+                        <p><span class="doc-section-title">Returns:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="bool">bool</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    <code>True</code> if <code>TrajReady == TRUE</code> on the
+                                    controller,
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="bool">bool</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p><code>False</code> otherwise.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
+                        <p><span class="doc-section-title">Raises:</span></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Type</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>On any unexpected HTTP error from the controller.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr class="doc-section-item">
+                              <td>
+                                <code><span title="ValueError">ValueError</span></code>
+                              </td>
+                              <td>
+                                <div class="doc-md-description">
+                                  <p>
+                                    If the raw value is neither <code>"TRUE"</code> nor
+                                    <code>"FALSE"</code>.
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-    <div class="doc doc-contents ">
-
-        <p>Read the <code>TrajReady</code> flag from the controller.</p>
-<p><code>TrajReady</code> is set to <code>TRUE</code> by
-:func:<code>~trajcenter.rws.writer.write_trajectory</code> as the final
-atomic signal after a full transfer. RAPID resets it to <code>FALSE</code>
-once it has consumed the trajectory.</p>
-<p>Route (delegated):
-    <code>GET /rw/rapid/symbol/data/{symbolurl}</code></p>
-
-
-<details class="abb-constraints" open>
-  <summary>ABB constraints</summary>
-  <p><code>TrajReady</code> must be declared as <code>PERS bool</code> in the
-TRAJCENTER module. The controller returns <code>"TRUE"</code> or
-<code>"FALSE"</code> (case-insensitive).</p>
-</details>
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>client</code>
-            </td>
-            <td>
-                  <code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Open :class:<code>~abb_rws_client_python_rw6.RWSClient</code>
-instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>task</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID task name. Defaults to <code>"T_ROB1"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;T_ROB1&#39;</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>module</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>RAPID module name. Defaults to <code>"TRAJCENTER"</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>&#39;TRAJCENTER&#39;</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p><code>True</code> if <code>TrajReady == TRUE</code> on the controller,</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p><code>False</code> otherwise.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Raises:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>On any unexpected HTTP error from the controller.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="ValueError">ValueError</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the raw value is neither <code>"TRUE"</code> nor
-<code>"FALSE"</code>.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>ready = await read_traj_ready(client)
+                        <details class="example" open>
+                          <summary>Example</summary>
+                          <p>::</p>
+                          <pre><code>ready = await read_traj_ready(client)
 if ready:
     print("Controller has consumed the trajectory.")
 </code></pre>
-</details>
+                        </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
+                        <details class="mkdocstrings-source">
+                          <summary>Source code in <code>trajcenter\rws\reader.py</code></summary>
+                          <div class="highlight">
+                            <table class="highlighttable">
+                              <tr>
+                                <td class="linenos">
+                                  <div class="linenodiv">
+                                    <pre><span></span><span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
@@ -2762,7 +2265,12 @@ if ready:
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_traj_ready</span><span class="p">(</span>
+<span class="normal">156</span></pre>
+                                  </div>
+                                </td>
+                                <td class="code">
+                                  <div>
+                                    <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_traj_ready</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;T_ROB1&quot;</span><span class="p">,</span>
@@ -2771,7 +2279,7 @@ if ready:
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the ``TrajReady`` flag from the controller.</span>
 
 <span class="sd">    ``TrajReady`` is set to ``TRUE`` by</span>
-<span class="sd">    :func:`~trajcenter.rws.writer.write_trajectory` as the final</span>
+<span class="sd">    :func:`~trajcenter.robot.abb.writer.write_trajectory` as the final</span>
 <span class="sd">    atomic signal after a full transfer. RAPID resets it to ``FALSE``</span>
 <span class="sd">    once it has consumed the trajectory.</span>
 
@@ -2814,73 +2322,68 @@ if ready:
     <span class="k">if</span> <span class="n">normalized</span> <span class="o">==</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected TrajReady value </span><span class="si">{</span><span class="n">raw</span><span class="si">!r}</span><span class="s2">: expected &#39;TRUE&#39; or &#39;FALSE&#39;&quot;</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
 
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
-          
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+          <script>
+            var target = document.getElementById(location.hash.slice(1));
+            target && target.name && (target.checked = target.name.startsWith("__tabbed_"));
+          </script>
         </div>
-        
       </main>
-      
-        <footer class="md-footer">
-  
-  <div class="md-footer-meta md-typeset">
-    <div class="md-footer-meta__inner md-grid">
-      <div class="md-copyright">
-  
-  
-    Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
-    </a>
-  
-</div>
-      
-    </div>
-  </div>
-</footer>
-      
+
+      <footer class="md-footer">
+        <div class="md-footer-meta md-typeset">
+          <div class="md-footer-meta__inner md-grid">
+            <div class="md-copyright">
+              Made with
+              <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                Material for MkDocs
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    
-    
-    
-      
-      
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
-      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-    
+
+    <script id="__config" type="application/json">
+      {
+        "annotate": null,
+        "base": "../../../..",
+        "features": [],
+        "search": "../../../../assets/javascripts/workers/search.2c215733.min.js",
+        "tags": null,
+        "translations": {
+          "clipboard.copied": "Copied to clipboard",
+          "clipboard.copy": "Copy to clipboard",
+          "search.result.more.one": "1 more on this page",
+          "search.result.more.other": "# more on this page",
+          "search.result.none": "No matching documents",
+          "search.result.one": "1 matching document",
+          "search.result.other": "# matching documents",
+          "search.result.placeholder": "Type to start searching",
+          "search.result.term.missing": "Missing",
+          "select.version": "Select version"
+        },
+        "version": null
+      }
+    </script>
+
+    <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
   </body>
 </html>

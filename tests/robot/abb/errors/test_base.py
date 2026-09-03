@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/errors/test_base.py
-"""Unit tests for :mod:`trajcenter.rws.errors.base`.
+# tests/robot/abb/errors/test_base.py
+"""Unit tests for :mod:`trajcenter.robot.abb.errors.base`.
 
 > **Author**: Clément RACINET
 """
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from trajcenter.rws.errors.base import RAPID_STRMAX, TrajCenterError
+from trajcenter.robot.abb.errors.base import RAPID_STRMAX, TrajCenterError
 
 
 class _DummyError(TrajCenterError):

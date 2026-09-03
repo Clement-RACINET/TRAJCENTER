@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_utils.py
-"""Tests for :mod:`trajcenter.rws._utils`.
+# tests/robot/abb/test_utils.py
+"""Tests for :mod:`trajcenter.robot.abb._utils`.
 
 > **Author**: Clément RACINET
 """
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from trajcenter.rws._utils import (
+from trajcenter.robot.abb._utils import (
     symbol,
     symbol_array_element,
     symbol_record_array_field,
@@ -17,7 +17,7 @@ from trajcenter.rws._utils import (
 
 
 class TestSymbol:
-    """Tests for the :func:`~trajcenter.rws._utils.symbol` helper."""
+    """Tests for the :func:`~trajcenter.robot.abb._utils.symbol` helper."""
 
     def test_simple_variable(self) -> None:
         """A simple variable name produces the correct ``RAPID/`` URL."""

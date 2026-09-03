@@ -1,3 +1,3 @@
 # Reader
 
-::: trajcenter.rws.reader
+::: trajcenter.robot.abb.reader

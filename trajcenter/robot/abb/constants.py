@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/constants.py
+# trajcenter/robot/abb/constants.py
 """Shared constants for the TrajCenter ABB RWS integration layer.
 
 Author: Clement RACINET
@@ -16,7 +16,7 @@ ABB Constraints:
 
 Example:
     ```python
-    from trajcenter.rws.constants import MAX_TRAJ_POINTS
+    from trajcenter.robot.abb.constants import MAX_TRAJ_POINTS
 
     assert MAX_TRAJ_POINTS == 100000
     ```

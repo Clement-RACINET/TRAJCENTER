@@ -138,7 +138,6 @@ reexport_allowlist = [
   "ui",
   "converter",
   "exporter",
-  "rws",
 ]
 
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# tests/rws/test_reader.py
-"""Tests for :mod:`trajcenter.rws.reader`.
+# tests/robot/abb/test_reader.py
+"""Tests for :mod:`trajcenter.robot.abb.reader`.
 
 Author: Clement RACINET
 
 All RWS calls are mocked — no HTTP traffic.
-Mock target: ``trajcenter.rws.reader.get_variable``.
+Mock target: ``trajcenter.robot.abb.reader.get_variable``.
 """
 
 from __future__ import annotations
@@ -14,9 +14,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from trajcenter.rws.constants import MAX_TRAJ
-from trajcenter.rws.models import ProcessTypeEntry, RobotContext, RobotDefaults
-from trajcenter.rws.reader import (
+from trajcenter.robot.abb.constants import MAX_TRAJ
+from trajcenter.robot.abb.models import ProcessTypeEntry, RobotContext, RobotDefaults
+from trajcenter.robot.abb.reader import (
     read_last_error,
     read_last_error_code,
     read_nb_robtargets,
@@ -38,7 +38,7 @@ from trajcenter.rws.reader import (
     read_transfer_progress,
 )
 
-_MODULE = "trajcenter.rws.reader"
+_MODULE = "trajcenter.robot.abb.reader"
 
 
 @pytest.fixture
@@ -67,7 +67,7 @@ def client() -> MagicMock:
 
 
 class TestReadSelectedTrajIndex:
-    """Tests for :func:`trajcenter.rws.reader.read_selected_traj_index`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_selected_traj_index`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
@@ -202,7 +202,7 @@ class TestStatusReaders:
 
 
 class TestReadNbRobtargets:
-    """Tests for :func:`trajcenter.rws.reader.read_nb_robtargets`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_nb_robtargets`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
@@ -236,7 +236,7 @@ class TestReadNbRobtargets:
 
 
 class TestReadNbTrajDispo:
-    """Tests for :func:`trajcenter.rws.reader.read_nb_traj_dispo`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_nb_traj_dispo`."""
 
     @pytest.mark.asyncio
     async def test_nominal(self, client: MagicMock) -> None:
@@ -263,7 +263,7 @@ class TestReadNbTrajDispo:
 
 
 class TestReadTrajNames:
-    """Tests for :func:`trajcenter.rws.reader.read_traj_names`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_traj_names`."""
 
     @pytest.mark.asyncio
     async def test_nominal_with_count(self, client: MagicMock) -> None:
@@ -328,7 +328,7 @@ class TestReadTrajNames:
 
 
 class TestReadRobotDefaults:
-    """Tests for :func:`trajcenter.rws.reader.read_robot_defaults`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_robot_defaults`."""
 
     @pytest.mark.asyncio
     async def test_all_defaults_enabled(self, client: MagicMock) -> None:
@@ -676,7 +676,7 @@ class TestProcessCatalogReaders:
 
 
 class TestReadRobotContext:
-    """Tests for :func:`trajcenter.rws.reader.read_robot_context`."""
+    """Tests for :func:`trajcenter.robot.abb.reader.read_robot_context`."""
 
     @pytest.mark.asyncio
     async def test_read_robot_context(self, client: MagicMock) -> None:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/reader.py
+# trajcenter/robot/abb/reader.py
 """RWS reader — reads TrajCenter v2 RAPID variables from the ABB controller.
 
 Author: Clement RACINET
@@ -44,13 +44,13 @@ from abb_rws_client_python_rw6.highlevel.symbol import get_array_length
 from abb_rws_client_python_rw6.highlevel.variables import get_variable
 
 from trajcenter.core.logger import get_logger
-from trajcenter.rws._utils import symbol, symbol_array_element
-from trajcenter.rws.constants import (
+from trajcenter.robot.abb._utils import symbol, symbol_array_element
+from trajcenter.robot.abb.constants import (
     DEFAULT_TASK,
     MAX_TRAJ,
     TRAJCENTER_MODULE,
 )
-from trajcenter.rws.models import ProcessTypeEntry, RobotContext, RobotDefaults
+from trajcenter.robot.abb.models import ProcessTypeEntry, RobotContext, RobotDefaults
 
 logger = get_logger(__name__)
 

@@ -1,5 +1,5 @@
-# trajcenter/robot/abb/__init__.py
-"""Lightweight initializer for the robot/abb package.
+# trajcenter/robot/abb/errors/__init__.py
+"""Lightweight initializer for the robot/abb/errors package.
 
 This file intentionally avoids eager public re-exports to prevent circular imports and expensive import side effects.
 

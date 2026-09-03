@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_resolver.py
-"""Tests for :mod:`trajcenter.rws.resolver`.
+# tests/robot/abb/test_resolver.py
+"""Tests for :mod:`trajcenter.robot.abb.resolver`.
 
 Author: Clement RACINET
 
@@ -19,13 +19,13 @@ from trajcenter.core.trajectory import (
     TrajectoryMeta,
     TrajectoryProcess,
 )
-from trajcenter.rws.models import (
+from trajcenter.robot.abb.models import (
     ProcessTypeEntry,
     ResolvedProcessParamSet,
     RobotContext,
     RobotDefaults,
 )
-from trajcenter.rws.resolver import (
+from trajcenter.robot.abb.resolver import (
     _build_process_param_slots,
     _is_missing,
     _process_param_rows_by_index,
@@ -40,7 +40,7 @@ from trajcenter.rws.resolver import (
     resolve_trajectory,
 )
 
-_MODULE = "trajcenter.rws.resolver"
+_MODULE = "trajcenter.robot.abb.resolver"
 
 
 def _defaults(

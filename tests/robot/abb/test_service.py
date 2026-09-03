@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_service.py
-"""Unit tests for :mod:`trajcenter.rws.service`.
+# tests/robot/abb/test_service.py
+"""Unit tests for :mod:`trajcenter.robot.abb.service`.
 
 Author: Clement RACINET
 
@@ -18,7 +18,7 @@ import pytest
 from abb_rws_client_python_rw6 import MastershipDenied
 
 from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
-from trajcenter.rws.models import (
+from trajcenter.robot.abb.models import (
     ProcessTypeEntry,
     ResolvedPoint,
     ResolvedRobTarget,
@@ -27,13 +27,13 @@ from trajcenter.rws.models import (
     RobotDefaults,
     TrajectoryStoreEntry,
 )
-from trajcenter.rws.service import (
+from trajcenter.robot.abb.service import (
     get_store_entry_by_selected_index,
     refresh_store_metadata,
     transfer_selected_trajectory,
 )
 
-_MODULE = "trajcenter.rws.service"
+_MODULE = "trajcenter.robot.abb.service"
 
 
 @pytest.fixture

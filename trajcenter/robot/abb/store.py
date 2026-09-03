@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/store.py
+# trajcenter/robot/abb/store.py
 """Local trajectory store scanner for TrajCenter ABB RWS integration.
 
 Author: Clement RACINET
@@ -35,8 +35,8 @@ from pathlib import Path
 
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
-from trajcenter.rws.constants import MAX_TRAJ
-from trajcenter.rws.models import TrajectoryStoreEntry
+from trajcenter.robot.abb.constants import MAX_TRAJ
+from trajcenter.robot.abb.models import TrajectoryStoreEntry
 
 logger = get_logger(__name__)
 

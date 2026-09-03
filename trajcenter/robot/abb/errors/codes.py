@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/errors/codes.py
+# trajcenter/robot/abb/errors/codes.py
 """Concrete TrajCenter protocol error codes.
 
 > **Author**: Clément RACINET
@@ -7,20 +7,20 @@
 One class per error code documented in ``routes/TRAJCENTER.md`` section
 12 (codes ``400001``-``504001``). Status codes ``200000``/``200001``/
 ``200002`` are successes, not exceptions -- they remain plain integer
-constants in :mod:`trajcenter.rws.writer`
+constants in :mod:`trajcenter.robot.abb.writer`
 (``STATUS_OK``/``STATUS_METADATA_REFRESHED``/``STATUS_TRAJECTORY_TRANSFERRED``).
 
 Each class only declares ``code`` and ``default_message``: all behaviour
 (``to_rapid``, message formatting, ``cause`` chaining) is inherited from
-:class:`trajcenter.rws.errors.base.TrajCenterError`.
+:class:`trajcenter.robot.abb.errors.base.TrajCenterError`.
 
 This module contains no HTTP or RWS translation logic -- see
-:mod:`trajcenter.rws.errors.translate` for that.
+:mod:`trajcenter.robot.abb.errors.translate` for that.
 """
 
 from __future__ import annotations
 
-from trajcenter.rws.errors.base import (
+from trajcenter.robot.abb.errors.base import (
     TrajCenterAuthError,
     TrajCenterConflictError,
     TrajCenterError,
@@ -505,7 +505,7 @@ class InternalClientError(TrajCenterInternalError):
     ABB Constraints:
         Catch-all for any exception not otherwise mapped. Always logged
         at ERROR level with full context by
-        :func:`trajcenter.rws.errors.translate.from_rws_exception`.
+        :func:`trajcenter.robot.abb.errors.translate.from_rws_exception`.
 
     Example:
         ::
@@ -584,7 +584,7 @@ class ControllerTimeout(TrajCenterUpstreamError):
     """The controller itself reported or caused a gateway-level timeout.
 
     ABB Constraints:
-        Distinct from :class:`trajcenter.rws.errors.codes.RWSRequestTimeout`
+        Distinct from :class:`trajcenter.robot.abb.errors.codes.RWSRequestTimeout`
         (408001): this code is reserved for controller-side timeout
         conditions explicitly identified by the caller, not for generic
         client-perceived timeouts.

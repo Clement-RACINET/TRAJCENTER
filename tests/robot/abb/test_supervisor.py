@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_supervisor.py
-"""Unit tests for :mod:`trajcenter.rws.supervisor`.
+# tests/robot/abb/test_supervisor.py
+"""Unit tests for :mod:`trajcenter.robot.abb.supervisor`.
 
 Author: Clement RACINET
 
@@ -16,8 +16,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from trajcenter.rws.models import TrajectoryStoreEntry
-from trajcenter.rws.supervisor import (
+from trajcenter.robot.abb.models import TrajectoryStoreEntry
+from trajcenter.robot.abb.supervisor import (
     RWSSupervisorConfig,
     RWSSupervisorState,
     build_trajcenter_subscription_resources,
@@ -25,7 +25,7 @@ from trajcenter.rws.supervisor import (
     run_rws_subscription_supervisor,
 )
 
-_MODULE = "trajcenter.rws.supervisor"
+_MODULE = "trajcenter.robot.abb.supervisor"
 
 
 @pytest.fixture

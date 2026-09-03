@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/errors/test_translate.py
-"""Unit tests for :mod:`trajcenter.rws.errors.translate`.
+# tests/robot/abb/errors/test_translate.py
+"""Unit tests for :mod:`trajcenter.robot.abb.errors.translate`.
 
 > **Author**: Clément RACINET
 
@@ -26,7 +26,7 @@ from abb_rws_client_python_rw6.core.exceptions import (
     RWSValueError,
 )
 
-from trajcenter.rws.errors.codes import (
+from trajcenter.robot.abb.errors.codes import (
     ControllerUnavailable,
     InternalClientError,
     InvalidRWSResponse,
@@ -43,7 +43,7 @@ from trajcenter.rws.errors.codes import (
     TrajWobjsNotFound,
     TransferTimeout,
 )
-from trajcenter.rws.errors.translate import from_rws_exception
+from trajcenter.robot.abb.errors.translate import from_rws_exception
 
 
 class TestMastershipTranslation:

@@ -1,3 +1,3 @@
 # Constants
 
-::: trajcenter.rws.constants
+::: trajcenter.robot.abb.constants

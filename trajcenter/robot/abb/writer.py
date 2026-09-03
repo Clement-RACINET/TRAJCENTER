@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/rws/writer.py
+# trajcenter/robot/abb/writer.py
 """RWS writer — writes TrajCenter v2 data to ABB RAPID variables.
 
 Author: Clement RACINET
@@ -42,8 +42,8 @@ from abb_rws_client_python_rw6.highlevel.variables import set_variables_with_mas
 
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
-from trajcenter.rws._utils import symbol, symbol_array_element
-from trajcenter.rws.models import (
+from trajcenter.robot.abb._utils import symbol, symbol_array_element
+from trajcenter.robot.abb.models import (
     ResolvedPoint,
     ResolvedProcessParam,
     ResolvedRobTarget,

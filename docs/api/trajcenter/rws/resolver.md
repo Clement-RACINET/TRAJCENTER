@@ -1,3 +1,3 @@
 # Resolver
 
-::: trajcenter.rws.resolver
+::: trajcenter.robot.abb.resolver

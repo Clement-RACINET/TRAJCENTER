@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# tests/rws/test_writer.py
-"""Unit tests for :mod:`trajcenter.rws.writer`.
+# tests/robot/abb/test_writer.py
+"""Unit tests for :mod:`trajcenter.robot.abb.writer`.
 
 Author: Clement RACINET
 
@@ -16,14 +16,14 @@ import pandas as pd
 import pytest
 from abb_rws_client_python_rw6 import MastershipDenied, RobTarget
 
-from trajcenter.rws.models import (
+from trajcenter.robot.abb.models import (
     ResolvedPoint,
     ResolvedProcessParam,
     ResolvedProcessParamSet,
     ResolvedRobTarget,
     ResolvedTrajectory,
 )
-from trajcenter.rws.writer import (
+from trajcenter.robot.abb.writer import (
     MAX_PROCESS_PARAM_PER_SET,
     MAX_PROCESS_PARAM_SET_COUNT,
     MAX_TRAJ,
@@ -46,7 +46,7 @@ from trajcenter.rws.writer import (
     write_trajectory,
 )
 
-_MODULE = "trajcenter.rws.writer"
+_MODULE = "trajcenter.robot.abb.writer"
 
 
 @pytest.fixture
@@ -392,7 +392,7 @@ class TestFormatHelpers:
 
 
 class TestEaxPresence:
-    """Tests for :func:`trajcenter.rws.writer._eax_presence`."""
+    """Tests for :func:`trajcenter.robot.abb.writer._eax_presence`."""
 
     def test_no_eax_columns(self) -> None:
         """A DataFrame with no ``eax_*`` columns returns all ``False``."""
@@ -413,7 +413,7 @@ class TestEaxPresence:
 
 
 class TestRowToRobtarget:
-    """Tests for :func:`trajcenter.rws.writer._row_to_robtarget`."""
+    """Tests for :func:`trajcenter.robot.abb.writer._row_to_robtarget`."""
 
     def test_nominal_no_eax(self) -> None:
         """All external axes inactive produce ``9e9`` sentinel values."""
@@ -506,7 +506,7 @@ class TestRowToRobtarget:
 
 
 class TestWriteStoreMetadata:
-    """Tests for :func:`trajcenter.rws.writer.write_store_metadata`."""
+    """Tests for :func:`trajcenter.robot.abb.writer.write_store_metadata`."""
 
     @pytest.mark.asyncio
     async def test_nominal_single_mastership_call(self, client: MagicMock) -> None:
@@ -649,7 +649,7 @@ class TestWriteStoreMetadata:
 
 
 class TestWriteResolvedTrajectory:
-    """Tests for :func:`trajcenter.rws.writer.write_resolved_trajectory`."""
+    """Tests for :func:`trajcenter.robot.abb.writer.write_resolved_trajectory`."""
 
     @pytest.mark.asyncio
     async def test_nominal_mastership_batches(self, client: MagicMock) -> None:
@@ -864,7 +864,7 @@ class TestWriteResolvedTrajectory:
 
 
 class TestRetryMastership:
-    """Tests for :func:`trajcenter.rws.writer._retry_mastership`."""
+    """Tests for :func:`trajcenter.robot.abb.writer._retry_mastership`."""
 
     @pytest.mark.asyncio
     async def test_success_first_attempt(self) -> None:

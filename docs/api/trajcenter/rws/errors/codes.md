@@ -1,3 +1,3 @@
 # Codes
 
-::: trajcenter.rws.errors.codes
+::: trajcenter.robot.abb.errors.codes

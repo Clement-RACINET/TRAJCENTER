@@ -29,8 +29,11 @@ trajcenter
 │   │   ├── convert_excel.py
 │   │   ├── convert_mod.py
 │   │   └── export_excel.py
-│   └── run_rws_supervisor.py
+│   └── run_trajcenter_supervisor.py
 ├── tests
+│   ├── cli
+│   │   ├── __init__.py
+│   │   └── test_main.py
 │   ├── converter
 │   │   ├── __init__.py
 │   │   ├── conftest.py
@@ -47,6 +50,9 @@ trajcenter
 │   │   ├── __init__.py
 │   │   ├── test_trajectory.py
 │   │   └── test_trajectory_edge_cases.py
+│   ├── export
+│   │   ├── __init__.py
+│   │   └── test_public_api.py
 │   ├── exporter
 │   │   ├── __init__.py
 │   │   ├── conftest.py
@@ -54,25 +60,27 @@ trajcenter
 │   │   ├── test_excel_exporter.py
 │   │   ├── test_process_tabular_exporter.py
 │   │   └── test_tabular_exporter.py
-│   ├── rws
-│   │   ├── errors
-│   │   │   ├── __init__.py
-│   │   │   ├── test_base.py
-│   │   │   └── test_translate.py
-│   │   ├── __init__.py
-│   │   ├── test_models.py
-│   │   ├── test_reader.py
-│   │   ├── test_resolver.py
-│   │   ├── test_service.py
-│   │   ├── test_store.py
-│   │   ├── test_supervisor.py
-│   │   ├── test_utils.py
-│   │   └── test_writer.py
+│   ├── robot
+│   │   └── abb
+│   │       ├── errors
+│   │       │   ├── __init__.py
+│   │       │   ├── test_base.py
+│   │       │   └── test_translate.py
+│   │       ├── __init__.py
+│   │       ├── test_models.py
+│   │       ├── test_reader.py
+│   │       ├── test_resolver.py
+│   │       ├── test_service.py
+│   │       ├── test_store.py
+│   │       ├── test_supervisor.py
+│   │       ├── test_utils.py
+│   │       └── test_writer.py
 │   ├── __init__.py
 │   └── conftest.py
 ├── trajcenter
 │   ├── cli
-│   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   └── main.py
 │   ├── convert
 │   │   └── __init__.py
 │   ├── converter
@@ -102,24 +110,22 @@ trajcenter
 │   │   └── tabular_exporter.py
 │   ├── robot
 │   │   ├── abb
-│   │   │   └── __init__.py
-│   │   └── __init__.py
-│   ├── rws
-│   │   ├── errors
+│   │   │   ├── errors
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py
+│   │   │   │   ├── codes.py
+│   │   │   │   └── translate.py
 │   │   │   ├── __init__.py
-│   │   │   ├── base.py
-│   │   │   ├── codes.py
-│   │   │   └── translate.py
-│   │   ├── __init__.py
-│   │   ├── _utils.py
-│   │   ├── constants.py
-│   │   ├── models.py
-│   │   ├── reader.py
-│   │   ├── resolver.py
-│   │   ├── service.py
-│   │   ├── store.py
-│   │   ├── supervisor.py
-│   │   └── writer.py
+│   │   │   ├── _utils.py
+│   │   │   ├── constants.py
+│   │   │   ├── models.py
+│   │   │   ├── reader.py
+│   │   │   ├── resolver.py
+│   │   │   ├── service.py
+│   │   │   ├── store.py
+│   │   │   ├── supervisor.py
+│   │   │   └── writer.py
+│   │   └── __init__.py
 │   ├── ui
 │   │   └── __init__.py
 │   └── __init__.py

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-# trajcenter/rws/resolver.py
+# trajcenter/robot/abb/resolver.py
 """Trajectory resolver for TrajCenter ABB RWS transfers.
 
 Author: Clement RACINET
 
 This module converts a local :class:`trajcenter.core.trajectory.Trajectory`
-archive into a fully resolved :class:`trajcenter.rws.models.ResolvedTrajectory`
+archive into a fully resolved :class:`trajcenter.robot.abb.models.ResolvedTrajectory`
 payload.
 
 The resolver is intentionally independent from RWS HTTP calls. It receives the
-robot-side context already read by ``trajcenter.rws.reader`` and produces typed
+robot-side context already read by ``trajcenter.robot.abb.reader`` and produces typed
 objects ready for the future RWS writer.
 
 ABB Route:
@@ -48,7 +48,7 @@ from trajcenter.core.trajectory import (
     MoveType,
     Trajectory,
 )
-from trajcenter.rws.constants import (
+from trajcenter.robot.abb.constants import (
     ALLOWED_ZONE_TYPES,
     MAX_PROCESS_PARAM_PER_SET,
     MAX_PROCESS_PARAM_SET_COUNT,
@@ -60,7 +60,7 @@ from trajcenter.rws.constants import (
     PROCESS_NONE,
     ROBTARGET_COLUMNS,
 )
-from trajcenter.rws.models import (
+from trajcenter.robot.abb.models import (
     ResolvedPoint,
     ResolvedProcessParam,
     ResolvedProcessParamSet,
