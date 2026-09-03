@@ -1,4 +1,10 @@
 trajcenter
+├── doc_manual
+│   ├── route3.md
+│   ├── route3.pdf
+│   ├── route4.md
+│   ├── route4.pdf
+│   └── TRAJCENTER_VALIDATION_MATRIX.md.md
 ├── icons
 │   ├── Image0.png
 │   ├── Image1.png
@@ -7,18 +13,15 @@ trajcenter
 ├── rapid
 │   ├── TRAJCENTER.sys
 │   ├── TRAJCENTER_DEMO.mod
-│   └── TRAJCENTER_DEMO.pgf
-├── routes
-│   ├── route3.md
-│   ├── route3.pdf
-│   ├── route4.md
-│   └── route4.pdf
+│   ├── TRAJCENTER_DEMO.pgf
+│   ├── TRAJCENTER_GUI_DEMO.mod
+│   └── TRAJCENTER_GUI_DEMO.pgf
 ├── scripts
 │   ├── doc
 │   │   ├── config.py
 │   │   ├── generate_api.py
 │   │   └── run_docs.py
-│   ├── exemples
+│   ├── examples
 │   │   ├── _demo_utils.py
 │   │   ├── basic_usage.py
 │   │   ├── convert_apt_example.py
@@ -108,11 +111,13 @@ trajcenter
 │   │   └── writer.py
 │   └── __init__.py
 ├── trajectory_exports
+│   ├── 000_trajectory_demo.xlsx
 │   ├── mod_exemple.xlsx
 │   └── test_basic.xlsx
 ├── trajectory_files
 │   ├── 0.2.xlsx
 │   ├── 0.5.xlsx
+│   ├── 000_trajectory_demo.xlsx
 │   ├── 1.xlsx
 │   ├── mod_exemple.mod
 │   ├── Mod_Traj_sphere05mm.mod
@@ -124,6 +129,7 @@ trajcenter
 │   ├── trajectoires_multi.xlsx
 │   └── TrajGeo1Reel.txt
 ├── trajectory_store
+│   ├── 000_trajectory_demo.trajcenter
 │   ├── demo_basic_usage.trajcenter
 │   ├── mod_exemple.trajcenter
 │   ├── PrepaFlans_Pointage.trajcenter
