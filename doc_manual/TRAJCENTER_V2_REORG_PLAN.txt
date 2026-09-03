@@ -608,4 +608,294 @@ STEP 13 - Final package namespace validation
     trajcenter/converter
     tests/rws
     tests/exporter
-   
+    tests/converter
+
+  Verified removed directories:
+
+    trajcenter/rws
+    trajcenter/exporter
+    trajcenter/converter
+    tests/rws
+    tests/exporter
+    tests/converter
+
+  Validation:
+
+    804 passed
+    coverage 93%
+    docs-build passes in strict mode
+
+
+Current validation snapshot
+---------------------------
+
+Commands run successfully:
+
+  pixi run pyinit-write --overwrite-manual
+  pixi run tests
+  pixi run docs-build
+  pixi run docs
+
+Current test result:
+
+  804 passed
+
+Current coverage:
+
+  93%
+
+Current docs result:
+
+  mkdocs build --strict passes
+
+Current generated API namespaces:
+
+  trajcenter.cli
+  trajcenter.convert
+  trajcenter.core
+  trajcenter.export
+  trajcenter.robot.abb
+
+
+Immediate next checkpoint
+-------------------------
+
+STEP 14 - Commit finalized modular package architecture
+  Status: NEXT
+
+  Goal:
+
+    Save the completed namespace reorganization in git.
+
+  Recommended cleanup before commit:
+
+    Remove-Item coverage.xml -ErrorAction SilentlyContinue
+    Remove-Item docs\coverage -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item site -Recurse -Force -ErrorAction SilentlyContinue
+
+  Recommended validation before commit:
+
+    pixi run tests
+    pixi run docs-build
+    git status
+
+  Recommended commit:
+
+    git add pyproject.toml pixi.toml mkdocs.yml README.md doc_manual scripts trajcenter tests docs
+    git add -u
+    git commit -m "refactor: finalize modular package architecture"
+    git push
+
+  Notes:
+
+    Include generated API documentation only if docs/api is intentionally
+    versioned in the repository.
+
+    Do not include coverage.xml, docs/coverage or site unless intentionally
+    versioned.
+
+
+Next development steps
+----------------------
+
+STEP 15 - Add robot CLI commands
+  Status: TODO
+
+  Add:
+
+    trajcenter robot check
+    trajcenter robot supervise
+
+  Requirements:
+
+    - Do not require robot optional dependencies for base CLI import.
+    - Robot imports should be lazy inside command handlers.
+    - If optional dependencies are missing, print a clear message.
+    - Keep scripts/run_trajcenter_supervisor.py working.
+    - Reuse existing robot API under trajcenter.robot.abb.
+    - Do not duplicate supervisor logic.
+
+  Suggested command behavior:
+
+    trajcenter robot check
+      Validate that robot optional dependencies are available.
+      Optionally validate basic configuration or connectivity when parameters
+      are provided.
+
+    trajcenter robot supervise
+      Launch the ABB/RWS supervision loop using the same logic as the existing
+      operational script.
+
+  Suggested implementation approach:
+
+    - Add a robot subparser in trajcenter.cli.main.
+    - Import trajcenter.robot.abb modules lazily inside robot command handlers.
+    - Catch ImportError for optional dependencies.
+    - Print an install hint:
+
+        pip install "trajcenter[robot]"
+
+  Validation:
+
+    pixi run tests
+    pixi run docs-build
+
+  Smoke tests:
+
+    trajcenter robot --help
+    trajcenter robot check --help
+    trajcenter robot supervise --help
+
+STEP 16 - Wrap supervisor launch script through CLI
+  Status: TODO
+
+  Keep:
+
+    scripts/run_trajcenter_supervisor.py
+
+  Then call the same underlying logic from:
+
+    trajcenter robot supervise
+
+  Requirements:
+
+    - Avoid duplicating supervisor logic between script and CLI.
+    - Keep the script useful for operational/manual launches.
+    - Prefer a shared function imported by both the script and CLI.
+
+STEP 17 - Add TUI skeleton
+  Status: TODO
+
+  Add:
+
+    trajcenter tui
+
+  Requirements:
+
+    - Base CLI must not require textual.
+    - Import textual lazily only when running the TUI command.
+    - If textual is missing, print a clear optional dependency message.
+
+  Suggested install hint:
+
+    pip install "trajcenter[tui]"
+
+STEP 18 - Update README and user documentation
+  Status: TODO
+
+  Document:
+
+    - installation profiles
+    - public package layout
+    - CLI commands
+    - conversion usage
+    - export usage
+    - ABB robot API
+    - RAPID files
+    - optional dependencies
+    - examples
+
+  Remove or update references to old namespaces:
+
+    trajcenter.converter
+    trajcenter.exporter
+    trajcenter.rws
+
+  Replace with:
+
+    trajcenter.convert
+    trajcenter.export
+    trajcenter.robot.abb
+
+STEP 19 - Documentation source cleanup
+  Status: TODO
+
+  Goal:
+
+    Clean and reorganize documentation sources after code architecture has
+    stabilized.
+
+  Possible actions:
+
+    - Review doc_manual.
+    - Move stable documentation into docs/.
+    - Remove obsolete migration notes or mark them as archived.
+    - Fix duplicate filename:
+
+        TRAJCENTER_VALIDATION_MATRIX.md.md
+
+    - Ensure mkdocs nav is clean.
+    - Keep generated API docs reproducible.
+
+STEP 20 - Final validation before merge to v2
+  Status: TODO
+
+  Run:
+
+    pixi run pyinit-write --overwrite-manual
+    pixi run tests
+    pixi run docs-build
+    pixi run lint
+    pixi run typecheck
+
+  Run CLI smoke tests:
+
+    trajcenter --help
+    trajcenter version
+    trajcenter store list
+    trajcenter convert --help
+    trajcenter export --help
+    trajcenter robot --help
+    trajcenter tui --help
+
+  Validate import smoke tests:
+
+    python -c "import trajcenter"
+    python -c "import trajcenter.core"
+    python -c "import trajcenter.convert"
+    python -c "import trajcenter.export"
+    python -c "import trajcenter.robot.abb"
+
+  Validate removed legacy namespaces if the decision remains final:
+
+    python -c "import trajcenter.converter"
+    python -c "import trajcenter.exporter"
+    python -c "import trajcenter.rws"
+
+  Expected for removed legacy namespaces:
+
+    ModuleNotFoundError
+
+  Validate RAPID modules separately on ABB controller side.
+
+
+Recommended path now
+--------------------
+
+The namespace migration is complete and validated.
+
+Recommended next action:
+
+  STEP 14 - Commit finalized modular package architecture.
+
+Then continue with:
+
+  STEP 15 - Add robot CLI commands.
+
+This is the best next functional step because:
+
+  - trajcenter.robot.abb is now stable as the public robot API.
+  - tests/robot/abb already validate the robot package.
+  - scripts/run_trajcenter_supervisor.py already exists.
+  - the CLI already has convert/export/store commands.
+  - robot commands are the natural next public entry point.
+
+
+RAPID rules
+-----------
+
+- ASCII only.
+- Function, variable and constant names below 30 characters.
+- Keep RAPID files synchronized with the Python robot API.
+- RAPID files remain in rapid/.
+- RAPID files are controller-side resources, not Python package modules.
