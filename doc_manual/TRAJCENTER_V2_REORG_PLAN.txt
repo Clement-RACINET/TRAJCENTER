@@ -1,0 +1,257 @@
+TRAJCENTER V2 - REORGANIZATION PLAN
+===================================
+
+Goal
+----
+
+Reorganize TrajCenter v2 into clear modules:
+
+- core trajectory model and validation
+- file conversion
+- file export
+- robot communication
+- CLI / terminal interface
+- RAPID controller-side files
+
+Keep one repository.
+Make robot communication optional.
+Keep file conversion usable without robot dependencies.
+
+
+Branches
+--------
+
+Base branch:
+
+  v2
+
+Work branch:
+
+  v2-modular-architecture
+
+Merge target:
+
+  v2-modular-architecture -> v2
+
+
+Target architecture
+-------------------
+
+trajcenter/
+├── docs/
+│   ├── architecture/
+│   ├── manual/
+│   ├── validation/
+│   └── api/
+│
+├── rapid/
+│   ├── TRAJCENTER.sys
+│   ├── TRAJCENTER_DEMO.mod
+│   ├── TRAJCENTER_DEMO.pgf
+│   ├── TRAJCENTER_GUI_DEMO.mod
+│   ├── TRAJCENTER_GUI_DEMO.pgf
+│   └── README.md
+│
+├── scripts/
+│   ├── examples/
+│   ├── doc/
+│   └── maintenance/
+│
+├── tests/
+│   ├── core/
+│   ├── convert/
+│   ├── export/
+│   ├── robot/
+│   │   └── abb/
+│   ├── cli/
+│   └── integration/
+│
+├── trajcenter/
+│   ├── core/
+│   ├── convert/
+│   ├── export/
+│   ├── robot/
+│   │   └── abb/
+│   ├── rws/
+│   ├── cli/
+│   └── ui/
+│
+├── trajectory_files/
+├── trajectory_store/
+├── trajectory_exports/
+├── pyproject.toml
+├── pixi.toml
+├── mkdocs.yml
+└── README.md
+
+
+Python packages
+---------------
+
+trajcenter.core
+  Shared trajectory model, validation, messages and logging.
+
+trajcenter.convert
+  File import/conversion API.
+  Must not depend on robot/RWS code.
+
+trajcenter.export
+  File export API.
+  Must not depend on robot/RWS code.
+
+trajcenter.robot.abb
+  ABB robot communication API.
+  RWS reader, writer, resolver, supervisor and errors.
+
+trajcenter.rws
+  Temporary compatibility package during migration.
+
+trajcenter.cli
+  Command line interface.
+
+trajcenter.ui
+  Optional terminal UI.
+
+
+Install profiles
+----------------
+
+Base install:
+
+  pip install trajcenter
+
+Development install:
+
+  pip install -e .
+
+Robot option:
+
+  pip install "trajcenter[robot]"
+
+CLI option:
+
+  pip install "trajcenter[cli]"
+
+TUI option:
+
+  pip install "trajcenter[tui]"
+
+Full option:
+
+  pip install "trajcenter[all]"
+
+
+Main CLI target
+---------------
+
+Command:
+
+  trajcenter
+
+Initial commands:
+
+  trajcenter --help
+  trajcenter version
+  trajcenter store list
+  trajcenter store inspect NAME
+  trajcenter convert INPUT --out OUTPUT
+  trajcenter export INPUT --out OUTPUT
+  trajcenter robot check
+  trajcenter robot supervise
+  trajcenter tui
+
+
+Large steps
+-----------
+
+STEP 01 - Save this plan
+  Add this file to the repository.
+
+STEP 02 - Reorganize documentation
+  Create docs/architecture, docs/manual, docs/validation and docs/api.
+  Move existing documentation progressively.
+
+STEP 03 - Create package boundaries
+  Add empty packages:
+    trajcenter/convert
+    trajcenter/export
+    trajcenter/robot
+    trajcenter/robot/abb
+    trajcenter/cli
+    trajcenter/ui
+
+STEP 04 - Add optional dependencies
+  Update pyproject.toml with:
+    robot
+    cli
+    tui
+    docs
+    dev
+    all
+
+STEP 05 - Add minimal CLI
+  Add trajcenter command.
+  Implement:
+    trajcenter --help
+    trajcenter version
+
+STEP 06 - Add store CLI
+  Implement:
+    trajcenter store list
+    trajcenter store inspect NAME
+
+STEP 07 - Add conversion API facade
+  Expose conversion API from trajcenter.convert.
+  Keep old trajcenter.converter working temporarily.
+
+STEP 08 - Add export API facade
+  Expose export API from trajcenter.export.
+  Keep old trajcenter.exporter working temporarily.
+
+STEP 09 - Add convert/export CLI commands
+  Implement:
+    trajcenter convert INPUT --out OUTPUT
+    trajcenter export INPUT --out OUTPUT
+
+STEP 10 - Add robot ABB API facade
+  Expose RWS functionality from trajcenter.robot.abb.
+  Keep old trajcenter.rws working temporarily.
+
+STEP 11 - Add robot CLI
+  Implement:
+    trajcenter robot check
+    trajcenter robot supervise
+
+STEP 12 - Move RWS code
+  Move trajcenter/rws implementation to trajcenter/robot/abb.
+  Leave compatibility wrappers in trajcenter/rws.
+
+STEP 13 - Reorganize tests
+  Move tests to:
+    tests/convert
+    tests/export
+    tests/robot/abb
+    tests/cli
+
+STEP 14 - Add TUI skeleton
+  Implement:
+    trajcenter tui
+
+STEP 15 - Update README and docs
+  Document new usage, architecture and installation options.
+
+STEP 16 - Clean imports
+  Ensure conversion/export packages do not import robot/RWS code.
+
+STEP 17 - Final validation
+  Run tests.
+  Run CLI smoke tests.
+  Validate RAPID modules separately.
+
+
+RAPID rules
+-----------
+
+- ASCII only.
+- Function, variable and constant names below 30 characters.
+- Keep RAPID files synchronized with Python robot API.
