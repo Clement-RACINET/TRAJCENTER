@@ -657,49 +657,10 @@ Current generated API namespaces:
   trajcenter.robot.abb
 
 
-Immediate next checkpoint
--------------------------
-
-STEP 14 - Commit finalized modular package architecture
-  Status: NEXT
-
-  Goal:
-
-    Save the completed namespace reorganization in git.
-
-  Recommended cleanup before commit:
-
-    Remove-Item coverage.xml -ErrorAction SilentlyContinue
-    Remove-Item docs\coverage -Recurse -Force -ErrorAction SilentlyContinue
-    Remove-Item site -Recurse -Force -ErrorAction SilentlyContinue
-
-  Recommended validation before commit:
-
-    pixi run tests
-    pixi run docs-build
-    git status
-
-  Recommended commit:
-
-    git add pyproject.toml pixi.toml mkdocs.yml README.md doc_manual scripts trajcenter tests docs
-    git add -u
-    git commit -m "refactor: finalize modular package architecture"
-    git push
-
-  Notes:
-
-    Include generated API documentation only if docs/api is intentionally
-    versioned in the repository.
-
-    Do not include coverage.xml, docs/coverage or site unless intentionally
-    versioned.
-
-
-Next development steps
 ----------------------
 
 STEP 15 - Add robot CLI commands
-  Status: TODO
+  Status: DONE
 
   Add:
 
@@ -747,7 +708,7 @@ STEP 15 - Add robot CLI commands
     trajcenter robot supervise --help
 
 STEP 16 - Wrap supervisor launch script through CLI
-  Status: TODO
+  Status: DONE
 
   Keep:
 
@@ -867,28 +828,6 @@ STEP 20 - Final validation before merge to v2
     ModuleNotFoundError
 
   Validate RAPID modules separately on ABB controller side.
-
-
-Recommended path now
---------------------
-
-The namespace migration is complete and validated.
-
-Recommended next action:
-
-  STEP 14 - Commit finalized modular package architecture.
-
-Then continue with:
-
-  STEP 15 - Add robot CLI commands.
-
-This is the best next functional step because:
-
-  - trajcenter.robot.abb is now stable as the public robot API.
-  - tests/robot/abb already validate the robot package.
-  - scripts/run_trajcenter_supervisor.py already exists.
-  - the CLI already has convert/export/store commands.
-  - robot commands are the natural next public entry point.
 
 
 RAPID rules
