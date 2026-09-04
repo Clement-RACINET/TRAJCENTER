@@ -349,17 +349,20 @@ def test_main_robot_supervise_rejects_missing_password_env(capsys):
     )
 
 
-def test_main_tui_quit(monkeypatch, capsys):
-    """The tui command should launch and exit cleanly."""
-    monkeypatch.setattr("builtins.input", lambda _prompt: "q")
+def test_main_tui_quit(monkeypatch):
+    """The tui command should launch the Textual TUI."""
+    calls = {}
+
+    def fake_run_tui(**kwargs):
+        calls.update(kwargs)
+        return 0
+
+    monkeypatch.setattr("trajcenter.cli.main.run_tui", fake_run_tui)
 
     result = main(["tui"])
 
-    captured = capsys.readouterr()
-
     assert result == 0
-    assert "Main menu" in captured.out
-    assert "File conversion / trajectory store" in captured.out
+    assert calls == {}
 
 
 def test_store_list_command_is_registered() -> None:

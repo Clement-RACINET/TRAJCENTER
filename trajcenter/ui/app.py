@@ -39,7 +39,7 @@ class TrajCenterTUI(App[None]):
 
     TITLE = "TrajCenter"
 
-    def __init__(self, *, config: UIConfig | None = None) -> None:
+    def __init__(self, config: UIConfig | None = None) -> None:
         """Initialize the TUI app.
 
         Args:
@@ -61,3 +61,17 @@ class TrajCenterTUI(App[None]):
     def action_show_splash(self) -> None:
         """Show splash screen."""
         self.switch_screen("splash")
+
+
+def run_tui(config: UIConfig | None = None) -> int:
+    """Run the TrajCenter Textual TUI.
+
+    Args:
+        config: Optional UI configuration.
+
+    Returns:
+        Process exit code.
+    """
+    app = TrajCenterTUI(config=config)
+    app.run()
+    return 0

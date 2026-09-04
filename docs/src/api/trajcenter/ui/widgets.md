@@ -1,0 +1,3 @@
+# Widgets
+
+::: trajcenter.ui.widgets

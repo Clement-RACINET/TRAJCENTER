@@ -22,6 +22,7 @@ from trajcenter.convert.mod_converter import ModConverter
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.export.csv_exporter import CsvExporter
 from trajcenter.export.excel_exporter import ExcelExporter
+from trajcenter.ui.app import run_tui
 
 if TYPE_CHECKING:
     from trajcenter.convert.base import BaseConverter
@@ -122,8 +123,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     tui_parser = subparsers.add_parser(
         "tui",
-        help="Launch the simple TrajCenter terminal UI.",
-        description="Launch the simple TrajCenter terminal UI.",
+        help="Launch the TrajCenter user interface.",
+        description="Launch the TUI.",
     )
     tui_parser.add_argument(
         "--store",
@@ -472,25 +473,6 @@ def handle_export_command(args: argparse.Namespace) -> int:
     return 0
 
 
-def handle_tui_command(args: argparse.Namespace) -> int:
-    """Run the simple TrajCenter terminal UI.
-
-    Args:
-        args: Parsed command-line arguments.
-
-    Returns:
-        Process exit code.
-    """
-    from trajcenter.ui.config import UIConfig
-    from trajcenter.ui.tui import run_tui
-
-    config = UIConfig(
-        store=args.store,
-    )
-
-    return run_tui(config=config)
-
-
 def handle_store_command(args: argparse.Namespace) -> int:
     """Run a ``trajcenter store`` subcommand.
 
@@ -646,7 +628,7 @@ def run_command(args: argparse.Namespace) -> int:
         return handle_export_command(args)
 
     if args.command == "tui":
-        return handle_tui_command(args)
+        return run_tui()
 
     if args.command == "store":
         return handle_store_command(args)

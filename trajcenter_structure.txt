@@ -133,13 +133,8 @@ trajcenter_v2
 │   │   ├── __init__.py
 │   │   ├── actions.py
 │   │   ├── app.py
-│   │   ├── banner.py
 │   │   ├── config.py
-│   │   ├── conversion.py
 │   │   ├── logos.py
-│   │   ├── robot.py
-│   │   ├── theme.py
-│   │   ├── tui.py
 │   │   └── widgets.py
 │   └── __init__.py
 ├── trajectory_exports
