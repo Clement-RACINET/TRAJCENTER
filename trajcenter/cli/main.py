@@ -120,7 +120,17 @@ def build_parser() -> argparse.ArgumentParser:
         default="csv",
         help="Export format. Default: csv.",
     )
-
+    tui_parser = subparsers.add_parser(
+        "tui",
+        help="Launch the simple TrajCenter terminal UI.",
+        description="Launch the simple TrajCenter terminal UI.",
+    )
+    tui_parser.add_argument(
+        "--store",
+        type=Path,
+        default=DEFAULT_STORE,
+        help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
+    )
     store_parser = subparsers.add_parser(
         "store",
         help="Inspect local .trajcenter trajectory stores.",
@@ -451,6 +461,25 @@ def handle_export_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def handle_tui_command(args: argparse.Namespace) -> int:
+    """Run the simple TrajCenter terminal UI.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        Process exit code.
+    """
+    from trajcenter.ui.app import run_ui
+    from trajcenter.ui.config import UIConfig
+
+    config = UIConfig(
+        store=args.store,
+    )
+
+    return run_ui(config)
+
+
 def handle_store_command(args: argparse.Namespace) -> int:
     """Run a ``trajcenter store`` subcommand.
 
@@ -604,6 +633,9 @@ def run_command(args: argparse.Namespace) -> int:
 
     if args.command == "export":
         return handle_export_command(args)
+
+    if args.command == "tui":
+        return handle_tui_command(args)
 
     if args.command == "store":
         return handle_store_command(args)

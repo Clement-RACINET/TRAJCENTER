@@ -347,3 +347,16 @@ def test_main_robot_supervise_rejects_missing_password_env(capsys):
         "Password environment variable is not set: ABB_TEST_PASSWORD_MISSING"
         in captured.out
     )
+
+
+def test_main_tui_quit(monkeypatch, capsys):
+    """The tui command should launch and exit cleanly."""
+    monkeypatch.setattr("builtins.input", lambda _prompt: "q")
+
+    result = main(["tui"])
+
+    captured = capsys.readouterr()
+
+    assert result == 0
+    assert "Main menu" in captured.out
+    assert "File conversion / trajectory store" in captured.out

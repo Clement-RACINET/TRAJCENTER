@@ -135,9 +135,6 @@ reexport_allowlist = [
   "core",
   "convert",
   "export",
-  "robot",
-  "cli",
-  "ui",
 ]
 
 discovery_mode = "all_public"

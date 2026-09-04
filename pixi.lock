@@ -478,7 +478,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2026c-h151e31d_0.conda
       - pypi: ./
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-clean-tools.git?branch=main#c85d91a39c184c5494cd846757457c3a4a606c8e
-      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#7e39198a56fa2b2ce1f90a845331d8900c516b35
+      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#500e7f3d40001258cfcbba51958b2731b45c5f8d
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-structure-tools.git?branch=main#cff24f286a53ae9ebeafa086a320f1fc4342713a
       - pypi: git+https://gitlab.com/robothub/abb-rws-client-python-rw6.git?branch=main#06a52b5d3ae985137f71fe35b4aae82a4a42492b
       - pypi: https://files.pythonhosted.org/packages/02/08/9c41fb51ab5b43eb21674aff13df270e8ba6c4b29c8624e328dc7a9482af/distlib-0.4.3-py2.py3-none-any.whl
@@ -652,7 +652,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/zstd-1.5.7-hf451053_7.conda
       - pypi: ./
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-clean-tools.git?branch=main#c85d91a39c184c5494cd846757457c3a4a606c8e
-      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#7e39198a56fa2b2ce1f90a845331d8900c516b35
+      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#500e7f3d40001258cfcbba51958b2731b45c5f8d
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-structure-tools.git?branch=main#cff24f286a53ae9ebeafa086a320f1fc4342713a
       - pypi: git+https://gitlab.com/robothub/abb-rws-client-python-rw6.git?branch=main#06a52b5d3ae985137f71fe35b4aae82a4a42492b
       - pypi: https://files.pythonhosted.org/packages/02/08/9c41fb51ab5b43eb21674aff13df270e8ba6c4b29c8624e328dc7a9482af/distlib-0.4.3-py2.py3-none-any.whl
@@ -821,7 +821,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_7.conda
       - pypi: ./
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-clean-tools.git?branch=main#c85d91a39c184c5494cd846757457c3a4a606c8e
-      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#7e39198a56fa2b2ce1f90a845331d8900c516b35
+      - pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#500e7f3d40001258cfcbba51958b2731b45c5f8d
       - pypi: git+https://gitlab.com/dev-tools-cr/python/py-structure-tools.git?branch=main#cff24f286a53ae9ebeafa086a320f1fc4342713a
       - pypi: git+https://gitlab.com/robothub/abb-rws-client-python-rw6.git?branch=main#06a52b5d3ae985137f71fe35b4aae82a4a42492b
       - pypi: https://files.pythonhosted.org/packages/02/08/9c41fb51ab5b43eb21674aff13df270e8ba6c4b29c8624e328dc7a9482af/distlib-0.4.3-py2.py3-none-any.whl
@@ -7135,7 +7135,7 @@ packages:
   name: py-clean-tools
   version: 0.1.0
   requires_python: '>=3.11'
-- pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#7e39198a56fa2b2ce1f90a845331d8900c516b35
+- pypi: git+https://gitlab.com/dev-tools-cr/python/py-init-tools.git?branch=main#500e7f3d40001258cfcbba51958b2731b45c5f8d
   name: py-init-tools
   version: 0.2.2
   requires_python: '>=3.12'
