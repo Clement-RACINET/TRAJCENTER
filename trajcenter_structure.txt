@@ -126,12 +126,21 @@ trajcenter_v2
 │   │   ├── metadata.py
 │   │   └── models.py
 │   ├── ui
+│   │   ├── screens
+│   │   │   ├── __init__.py
+│   │   │   ├── home.py
+│   │   │   └── splash.py
 │   │   ├── __init__.py
+│   │   ├── actions.py
 │   │   ├── app.py
 │   │   ├── banner.py
 │   │   ├── config.py
 │   │   ├── conversion.py
-│   │   └── robot.py
+│   │   ├── logos.py
+│   │   ├── robot.py
+│   │   ├── theme.py
+│   │   ├── tui.py
+│   │   └── widgets.py
 │   └── __init__.py
 ├── trajectory_exports
 │   ├── 000_trajectory_demo.xlsx

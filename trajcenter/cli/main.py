@@ -481,14 +481,14 @@ def handle_tui_command(args: argparse.Namespace) -> int:
     Returns:
         Process exit code.
     """
-    from trajcenter.ui.app import run_ui
     from trajcenter.ui.config import UIConfig
+    from trajcenter.ui.tui import run_tui
 
     config = UIConfig(
         store=args.store,
     )
 
-    return run_ui(config)
+    return run_tui(config=config)
 
 
 def handle_store_command(args: argparse.Namespace) -> int:

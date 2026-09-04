@@ -24,10 +24,10 @@ tui = { features = ["tui"], solve-group = "default" }
 robot = { features = ["robot"], solve-group = "default" }
 
 # Runtime full environment: TUI + robot + optional Textual.
-full = { features = ["tui", "textual", "robot"], solve-group = "default" }
+full = { features = ["tui", "robot"], solve-group = "default" }
 
 # Development environment: everything needed to run tests, docs, robot, TUI.
-dev = { features = ["dev", "docs", "tui", "textual", "robot"], solve-group = "default" }
+dev = { features = ["dev", "docs", "tui", "robot"], solve-group = "default" }
 
 
 # ==============================================================================
@@ -46,12 +46,6 @@ pytest = ">=9.1.1,<10"
 # ==============================================================================
 [feature.tui.pypi-dependencies]
 rich = ">=15.0.0,<16"
-
-
-# ==============================================================================
-# Optional future Textual feature
-# ==============================================================================
-[feature.textual.pypi-dependencies]
 textual = ">=8.2.8,<9"
 
 

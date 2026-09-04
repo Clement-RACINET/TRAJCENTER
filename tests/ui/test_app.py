@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from trajcenter.ui.app import run_ui
 from trajcenter.ui.config import UIConfig
+from trajcenter.ui.tui import run_tui
 
 
 def test_run_ui_quit(monkeypatch, capsys):
     """The UI should exit cleanly when the user selects quit."""
     monkeypatch.setattr("builtins.input", lambda _prompt: "q")
 
-    result = run_ui(UIConfig(store=Path("trajectory_store")))
+    result = run_tui(UIConfig(store=Path("trajectory_store")))
 
     captured = capsys.readouterr()
 
