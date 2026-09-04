@@ -15,26 +15,17 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from trajcenter.convert.apt_converter import AptConverter
-from trajcenter.convert.csv_converter import CsvConverter
-from trajcenter.convert.excel_converter import ExcelConverter
-from trajcenter.convert.mod_converter import ModConverter
+from trajcenter.convert.registry import infer_converter
 from trajcenter.core.trajectory import Trajectory
-from trajcenter.export.csv_exporter import CsvExporter
-from trajcenter.export.excel_exporter import ExcelExporter
+from trajcenter.export.registry import infer_exporter
 from trajcenter.ui.app import run_tui
+from trajcenter.ui.config import UIConfig
 
 if TYPE_CHECKING:
-    from trajcenter.convert.base import BaseConverter
-    from trajcenter.export.base import BaseExporter
     from trajcenter.store.models import TrajectoryStoreEntry
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
-CSV_EXTENSIONS = {".csv", ".txt"}
-EXCEL_EXTENSIONS = {".xlsx", ".xlsm", ".xls"}
-APT_EXTENSIONS = {".apt", ".aptsource"}
-RAPID_EXTENSIONS = {".mod"}
 ROBOT_OPTIONAL_DEPENDENCY_MESSAGE = (
     "Robot support requires optional dependencies.\n"
     'Install with: pip install "trajcenter[robot]"'
@@ -358,76 +349,6 @@ def print_store_entry_details(entry: TrajectoryStoreEntry) -> None:
     print(f"File:         {entry.path.name}")
     print(f"Path:         {entry.path}")
 
-
-def infer_converter(source: Path, format_name: str | None = None) -> BaseConverter:
-    """Return a converter instance for a source file.
-
-    Args:
-        source: Source file path.
-        format_name: Optional explicit source format.
-
-    Returns:
-        Converter instance.
-
-    Raises:
-        ValueError: If the format is unsupported.
-    """
-    normalized_format = format_name.casefold() if format_name is not None else None
-    suffix = source.suffix.casefold()
-
-    if normalized_format == "csv" or (
-        normalized_format is None and suffix in CSV_EXTENSIONS
-    ):
-        return CsvConverter()
-
-    if normalized_format in {"excel", "xlsx"} or (
-        normalized_format is None and suffix in EXCEL_EXTENSIONS
-    ):
-        return ExcelConverter()
-
-    if normalized_format == "apt" or (
-        normalized_format is None and suffix in APT_EXTENSIONS
-    ):
-        return AptConverter()
-
-    if normalized_format in {"rapid", "mod"} or (
-        normalized_format is None and suffix in RAPID_EXTENSIONS
-    ):
-        return ModConverter()
-
-    supported = ", ".join(
-        sorted(CSV_EXTENSIONS | EXCEL_EXTENSIONS | APT_EXTENSIONS | RAPID_EXTENSIONS)
-    )
-    raise ValueError(
-        f"Unsupported source format for {source}. "
-        f"Supported extensions: {supported}. "
-        "Use --format to override detection."
-    )
-
-
-def infer_exporter(format_name: str) -> BaseExporter:
-    """Return an exporter instance for an output format.
-
-    Args:
-        format_name: Export format name.
-
-    Returns:
-        Exporter instance.
-
-    Raises:
-        ValueError: If the format is unsupported.
-    """
-    normalized_format = format_name.casefold()
-
-    if normalized_format == "csv":
-        return CsvExporter()
-
-    if normalized_format in {"excel", "xlsx"}:
-        return ExcelExporter()
-
-    raise ValueError(f"Unsupported export format: {format_name}")
-
-
 def handle_convert_command(args: argparse.Namespace) -> int:
     """Run the ``trajcenter convert`` command.
 
@@ -628,7 +549,7 @@ def run_command(args: argparse.Namespace) -> int:
         return handle_export_command(args)
 
     if args.command == "tui":
-        return run_tui()
+        return run_tui(UIConfig(store=args.store))
 
     if args.command == "store":
         return handle_store_command(args)

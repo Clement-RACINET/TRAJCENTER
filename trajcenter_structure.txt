@@ -40,6 +40,7 @@ trajcenter_v2
 │   │   ├── test_excel_converter.py
 │   │   ├── test_mod_converter.py
 │   │   ├── test_process_tabular_converter.py
+│   │   ├── test_registry.py
 │   │   ├── test_tabular_converter.py
 │   │   └── test_tabular_converter_edge_cases.py
 │   ├── core
@@ -53,6 +54,7 @@ trajcenter_v2
 │   │   ├── test_excel_exporter.py
 │   │   ├── test_process_tabular_exporter.py
 │   │   ├── test_public_api.py
+│   │   ├── test_registry.py
 │   │   └── test_tabular_exporter.py
 │   ├── robot
 │   │   ├── errors
@@ -90,6 +92,7 @@ trajcenter_v2
 │   │   ├── defaults.py
 │   │   ├── excel_converter.py
 │   │   ├── mod_converter.py
+│   │   ├── registry.py
 │   │   └── tabular_converter.py
 │   ├── core
 │   │   ├── __init__.py
@@ -103,6 +106,7 @@ trajcenter_v2
 │   │   ├── csv_exporter.py
 │   │   ├── excel_exporter.py
 │   │   ├── options.py
+│   │   ├── registry.py
 │   │   └── tabular_exporter.py
 │   ├── robot
 │   │   ├── errors

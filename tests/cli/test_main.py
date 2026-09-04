@@ -11,6 +11,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from trajcenter.cli.main import (
+    DEFAULT_STORE,
     build_parser,
     handle_convert_command,
     handle_export_command,
@@ -353,8 +354,8 @@ def test_main_tui_quit(monkeypatch):
     """The tui command should launch the Textual TUI."""
     calls = {}
 
-    def fake_run_tui(**kwargs):
-        calls.update(kwargs)
+    def fake_run_tui(config):
+        calls["config"] = config
         return 0
 
     monkeypatch.setattr("trajcenter.cli.main.run_tui", fake_run_tui)
@@ -362,7 +363,23 @@ def test_main_tui_quit(monkeypatch):
     result = main(["tui"])
 
     assert result == 0
-    assert calls == {}
+    assert calls["config"].store == DEFAULT_STORE
+
+
+def test_main_tui_uses_store_option(monkeypatch, tmp_path):
+    """The tui command should pass the selected store to the Textual TUI."""
+    calls = {}
+
+    def fake_run_tui(config):
+        calls["config"] = config
+        return 0
+
+    monkeypatch.setattr("trajcenter.cli.main.run_tui", fake_run_tui)
+
+    result = main(["tui", "--store", str(tmp_path)])
+
+    assert result == 0
+    assert calls["config"].store == tmp_path
 
 
 def test_store_list_command_is_registered() -> None:

@@ -61,6 +61,7 @@ nav:
           - 📄 Defaults: api/trajcenter/convert/defaults.md
           - 📄 Excel Converter: api/trajcenter/convert/excel_converter.md
           - 📄 Mod Converter: api/trajcenter/convert/mod_converter.md
+          - 📄 Registry: api/trajcenter/convert/registry.md
           - 📄 Tabular Converter: api/trajcenter/convert/tabular_converter.md
         - 📂 Core:
           - 📖 Intro core: api/trajcenter/core/core.md
@@ -73,6 +74,7 @@ nav:
           - 📄 Csv Exporter: api/trajcenter/export/csv_exporter.md
           - 📄 Excel Exporter: api/trajcenter/export/excel_exporter.md
           - 📄 Options: api/trajcenter/export/options.md
+          - 📄 Registry: api/trajcenter/export/registry.md
           - 📄 Tabular Exporter: api/trajcenter/export/tabular_exporter.md
         - 📂 Robot:
           - 📖 Intro robot: api/trajcenter/robot/robot.md
