@@ -26,7 +26,7 @@ from trajcenter.export.excel_exporter import ExcelExporter
 if TYPE_CHECKING:
     from trajcenter.convert.base import BaseConverter
     from trajcenter.export.base import BaseExporter
-    from trajcenter.robot.abb.models import TrajectoryStoreEntry
+    from trajcenter.robot.models import TrajectoryStoreEntry
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
@@ -465,7 +465,7 @@ def handle_store_command(args: argparse.Namespace) -> int:
         return 2
 
     try:
-        from trajcenter.robot.abb.store import scan_trajectory_store
+        from trajcenter.robot.store import scan_trajectory_store
     except ImportError as exc:
         print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
         print(f"Import error: {exc}")
@@ -540,7 +540,7 @@ def handle_robot_command(args: argparse.Namespace) -> int:
 
     if args.robot_command == "check":
         try:
-            import trajcenter.robot.abb  # noqa: F401
+            import trajcenter.robot  # noqa: F401
         except ImportError as exc:
             print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
             print(f"Import error: {exc}")
@@ -551,7 +551,7 @@ def handle_robot_command(args: argparse.Namespace) -> int:
 
     if args.robot_command == "supervise":
         try:
-            from trajcenter.robot.abb.supervisor import (
+            from trajcenter.robot.supervisor import (
                 run_rws_subscription_supervisor_app,
             )
         except ImportError as exc:

@@ -2,23 +2,72 @@
 channels = ["conda-forge"]
 platforms = ["linux-64", "win-64", "osx-arm64"]
 
+
+# ==============================================================================
+# Base editable package
+# ==============================================================================
 [pypi-dependencies]
 trajcenter = { path = ".", editable = true }
-abb_rws_client_python_rw6 = { git = "https://gitlab.com/robothub/abb-rws-client-python-rw6.git", branch = "main" }
 
+
+# ==============================================================================
+# Environments
+# ==============================================================================
 [environments]
+# Minimal environment: conversion/export/store only.
 default = { features = [], solve-group = "default" }
-dev     = { features = ["dev"], solve-group = "default" }
-docs    = { features = ["docs"], solve-group = "default" }
 
+# Simple terminal menu environment.
+tui = { features = ["tui"], solve-group = "default" }
+
+# Robot/RWS environment.
+robot = { features = ["robot"], solve-group = "default" }
+
+# Runtime full environment: TUI + robot + optional Textual.
+full = { features = ["tui", "textual", "robot"], solve-group = "default" }
+
+# Development environment: everything needed to run tests, docs, robot, TUI.
+dev = { features = ["dev", "docs", "tui", "textual", "robot"], solve-group = "default" }
+
+# Documentation-only environment.
+docs = { features = ["docs"], solve-group = "default" }
+
+
+# ==============================================================================
+# Base dependencies
+# ==============================================================================
 [dependencies]
 python            = ">=3.12,<3.13"
 pyarrow           = ">=24.0.0,<25"
 pandas-stubs      = ">=3.0.3.260530,<4"
 typing_extensions = ">=4.16.0,<5"
-pytest            = ">=9.1.1,<10"
+pytest = ">=9.1.1,<10"
 
-# ── Tâches disponibles UNIQUEMENT dans l'environnement dev ───────────────────
+
+# ==============================================================================
+# TUI feature: simple maintainable terminal UI
+# ==============================================================================
+[feature.tui.pypi-dependencies]
+rich = ">=15.0.0,<16"
+
+
+# ==============================================================================
+# Optional future Textual feature
+# ==============================================================================
+[feature.textual.pypi-dependencies]
+textual = ">=8.2.8,<9"
+
+
+# ==============================================================================
+# Robot feature: ABB RWS communication
+# ==============================================================================
+[feature.robot.pypi-dependencies]
+abb_rws_client_python_rw6 = { git = "https://gitlab.com/robothub/abb-rws-client-python-rw6.git", branch = "main" }
+
+
+# ==============================================================================
+# Development feature
+# ==============================================================================
 [feature.dev.tasks]
 tests      = "pytest tests/"
 lint       = "ruff check trajcenter/"
@@ -53,7 +102,10 @@ py-init-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-init-tools.gi
 py-clean-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-clean-tools.git", branch = "main" }
 py-structure-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-structure-tools.git", branch = "main" }
 
-# ── Tâches disponibles UNIQUEMENT dans l'environnement docs ──────────────────
+
+# ==============================================================================
+# Documentation feature
+# ==============================================================================
 [feature.docs.tasks]
 docs       = "python scripts/doc/run_docs.py"
 docs-build = "python -m mkdocs build --strict"

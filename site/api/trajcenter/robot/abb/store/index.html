@@ -1,354 +1,447 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
+<!doctype html>
+<html class="writer-html5" lang="en">
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
     <title>Store - TrajCenter</title>
     <link rel="stylesheet" href="../../../../../css/theme.css" />
     <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Store";
-        var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\store.md";
-        var mkdocs_page_url = null;
-      </script>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+    />
+    <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+
+    <script>
+      // Current page data
+      var mkdocs_page_name = "Store";
+      var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\store.md";
+      var mkdocs_page_url = null;
+    </script>
+
     <!--[if lt IE 9]>
       <script src="../../../../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
 
-<body class="wy-body-for-nav" role="document">
+  <body class="wy-body-for-nav" role="document">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../..">
+              <img src="../../../../../assets/logo.png" class="logo" alt="Logo" />
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                  title="Type search term here"
+                />
+              </form>
+            </div>
+          </div>
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="../../../../..">
-          <img src="../../../../../assets/logo.png" class="logo" alt="Logo"/>
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Accueil</a>
-                </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Référence API</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
-    <ul class="current">
-                <li class="toctree-l2"><a class="reference internal" >Cli</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../cli/main/">Main</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Convert</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/apt_converter/">Apt Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/column_mapper/">Column Mapper</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/csv_converter/">Csv Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/defaults/">Defaults</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/excel_converter/">Excel Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/mod_converter/">Mod Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/tabular_converter/">Tabular Converter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Core</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/logger/">Logger</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/messages/">Messages</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/trajectory/">Trajectory</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Export</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/csv_exporter/">Csv Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/excel_exporter/">Excel Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/options/">Options</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/tabular_exporter/">Tabular Exporter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2 current"><a class="reference internal current" >Robot</a>
-    <ul class="current">
-                <li class="toctree-l3 current"><a class="reference internal current" >Abb</a>
-    <ul class="current">
-                <li class="toctree-l4"><a class="reference internal" href="../_utils/">Utils</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../constants/">Constants</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../models/">Models</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../reader/">Reader</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../resolver/">Resolver</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../service/">Service</a>
-                </li>
-                <li class="toctree-l4 current"><a class="reference internal current" href="#">Store</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../supervisor/">Supervisor</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../writer/">Writer</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" >Errors</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-    </ul>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../..">Accueil</a>
+              </li>
+            </ul>
+            <p class="caption"><span class="caption-text">Référence API</span></p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal current">Trajcenter</a>
+                <ul class="current">
+                  <li class="toctree-l2">
+                    <a class="reference internal">Cli</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../cli/main/">Main</a>
+                      </li>
+                    </ul>
                   </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../coverage/">Coverage</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Convert</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/apt_converter/"
+                          >Apt Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/column_mapper/"
+                          >Column Mapper</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/csv_converter/"
+                          >Csv Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/defaults/">Defaults</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/excel_converter/"
+                          >Excel Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/mod_converter/"
+                          >Mod Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/tabular_converter/"
+                          >Tabular Converter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Core</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/logger/">Logger</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/messages/">Messages</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/trajectory/"
+                          >Trajectory</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Export</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/csv_exporter/"
+                          >Csv Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/excel_exporter/"
+                          >Excel Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/options/">Options</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/tabular_exporter/"
+                          >Tabular Exporter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2 current">
+                    <a class="reference internal current">Robot</a>
+                    <ul class="current">
+                      <li class="toctree-l3 current">
+                        <a class="reference internal current">Abb</a>
+                        <ul class="current">
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../_utils/">Utils</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../constants/">Constants</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../models/">Models</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../reader/">Reader</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../resolver/">Resolver</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../service/">Service</a>
+                          </li>
+                          <li class="toctree-l4 current">
+                            <a class="reference internal current" href="#">Store</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../supervisor/">Supervisor</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../writer/">Writer</a>
+                          </li>
+                          <li class="toctree-l4"><a class="reference internal">Errors</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../coverage/">Coverage</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../..">TrajCenter</a>
-        
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Référence API</li>
-          <li class="breadcrumb-item">Trajcenter</li>
-          <li class="breadcrumb-item">Robot</li>
-          <li class="breadcrumb-item">Abb</li>
-      <li class="breadcrumb-item active">Store</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
+        </nav>
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="breadcrumbs navigation">
+              <ul class="wy-breadcrumbs">
+                <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+                <li class="breadcrumb-item">Référence API</li>
+                <li class="breadcrumb-item">Trajcenter</li>
+                <li class="breadcrumb-item">Robot</li>
+                <li class="breadcrumb-item">Abb</li>
+                <li class="breadcrumb-item active">Store</li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div class="section" itemprop="articleBody">
                 <h1 id="store">Store</h1>
 
+                <div class="doc doc-object doc-module">
+                  <a id="trajcenter.robot.store"></a>
+                  <div class="doc doc-contents first">
+                    <p>Local trajectory store scanner for TrajCenter ABB RWS integration.</p>
+                    <p>Author: Clement RACINET</p>
+                    <p>
+                      This module scans a local directory containing
+                      <code>.trajcenter</code> archives and builds immutable
+                      <code>TrajectoryStoreEntry</code> objects. These entries are then used to
+                      refresh robot-side metadata and to map <code>selectedTrajIndex</code> to a
+                      local archive during transfer.
+                    </p>
 
-<div class="doc doc-object doc-module">
+                    <details class="abb-route" open>
+                      <summary>ABB Route</summary>
+                      <p>N/A — local filesystem operations only.</p>
+                    </details>
 
+                    <details class="abb-constraints" open>
+                      <summary>ABB Constraints</summary>
+                      <ul>
+                        <li><code>TrajectoryStoreEntry.index</code> is RAPID base-1.</li>
+                        <li>
+                          Store ordering must be stable because robot
+                          <code>selectedTrajIndex</code> maps directly to this order.
+                        </li>
+                        <li>
+                          The scanner sorts archives by path/name, not by <code>meta.name</code>.
+                        </li>
+                        <li>
+                          <code>9E+9</code> inactive-axis sentinel is never injected while scanning
+                          local archives.
+                        </li>
+                      </ul>
+                    </details>
 
-
-<a id="trajcenter.robot.abb.store"></a>
-    <div class="doc doc-contents first">
-
-        <p>Local trajectory store scanner for TrajCenter ABB RWS integration.</p>
-<p>Author: Clement RACINET</p>
-<p>This module scans a local directory containing <code>.trajcenter</code> archives and
-builds immutable <code>TrajectoryStoreEntry</code> objects. These entries are then used
-to refresh robot-side metadata and to map <code>selectedTrajIndex</code> to a local
-archive during transfer.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A — local filesystem operations only.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <ul>
-<li><code>TrajectoryStoreEntry.index</code> is RAPID base-1.</li>
-<li>Store ordering must be stable because robot <code>selectedTrajIndex</code> maps
-  directly to this order.</li>
-<li>The scanner sorts archives by path/name, not by <code>meta.name</code>.</li>
-<li><code>9E+9</code> inactive-axis sentinel is never injected while scanning local
-  archives.</li>
-</ul>
-</details>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>entries = scan_trajectory_store("trajectory_store")
+                    <details class="example" open>
+                      <summary>Example</summary>
+                      <p>::</p>
+                      <pre><code>entries = scan_trajectory_store("trajectory_store")
 names, counts, process_types = store_entries_to_metadata(entries)
 </code></pre>
-</details>
+                    </details>
 
+                    <div class="doc doc-children">
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.store.scan_trajectory_store"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">scan_trajectory_store</span><span class="p">(</span
+                            ><span class="n">root</span><span class="p">)</span></code
+                          >
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p>Scan a directory and return sorted trajectory store entries.</p>
 
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>N/A — local filesystem scanner.</p>
+                          </details>
 
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <p>
+                              The returned indexes are RAPID base-1 and must match the order exposed
+                              to <code>TRAJCENTER/trajectories</code>. Archives are sorted by file
+                              name/path for deterministic selection.
+                            </p>
+                          </details>
 
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>root</code></b>
+                                      (<code
+                                        ><span title="str">str</span> |
+                                        <span title="pathlib.Path">Path</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Directory containing <code>.trajcenter</code> archives.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="trajcenter.robot.abb.store.scan_trajectory_store" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">scan_trajectory_store</span><span class="p">(</span><span class="n">root</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Scan a directory and return sorted trajectory store entries.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A — local filesystem scanner.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p>The returned indexes are RAPID base-1 and must match the order exposed
-to <code>TRAJCENTER/trajectories</code>. Archives are sorted by file
-name/path for deterministic selection.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>root</code></b>
-                  (<code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Directory containing <code>.trajcenter</code> archives.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="tuple">tuple</span>[<a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><span title="tuple">tuple</span>[<a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
 
 
   
       dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a>, ...]</code>
-              –
-              <div class="doc-md-description">
-                <p>Tuple of store entries sorted by archive path.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        >, ...]</code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>Tuple of store entries sorted by archive path.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Raises:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If <code>root</code> does not exist.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="NotADirectoryError">NotADirectoryError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If <code>root</code> is not a directory.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="ValueError">ValueError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If more than <code>MAX_TRAJ</code> archives are found or if one
-archive is invalid.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Raises:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><span title="FileNotFoundError"
+                                          >FileNotFoundError</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If <code>root</code> does not exist.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><span title="NotADirectoryError"
+                                          >NotADirectoryError</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If <code>root</code> is not a directory.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="ValueError">ValueError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          If more than <code>MAX_TRAJ</code> archives are found or
+                                          if one archive is invalid.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>entries = scan_trajectory_store("trajectory_store")
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>entries = scan_trajectory_store("trajectory_store")
 </code></pre>
-</details>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\store.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 46</span>
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\store.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal"> 46</span>
 <span class="normal"> 47</span>
 <span class="normal"> 48</span>
 <span class="normal"> 49</span>
@@ -422,7 +515,12 @@ archive is invalid.</p>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">scan_trajectory_store</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrajectoryStoreEntry</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="normal">120</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">scan_trajectory_store</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">TrajectoryStoreEntry</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Scan a directory and return sorted trajectory store entries.</span>
 
 <span class="sd">    ABB Route:</span>
@@ -497,122 +595,156 @@ archive is invalid.</p>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Scanned </span><span class="si">%d</span><span class="s2"> trajectory archives from </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">),</span> <span class="n">store_root</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
 
-</div>
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.store.store_entries_to_metadata"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">store_entries_to_metadata</span><span class="p">(</span
+                            ><span class="n">entries</span><span class="p">)</span></code
+                          >
+                        </h2>
 
-<div class="doc doc-object doc-function">
+                        <div class="doc doc-contents">
+                          <p>Convert store entries to writer metadata lists.</p>
 
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>N/A — local adapter for <code>write_store_metadata</code>.</p>
+                          </details>
 
-<h2 id="trajcenter.robot.abb.store.store_entries_to_metadata" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">store_entries_to_metadata</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span></code>
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <p>
+                              The order must be preserved because list position maps to RAPID
+                              <code>trajectories{i}</code>.
+                            </p>
+                          </details>
 
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Convert store entries to writer metadata lists.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A — local adapter for <code>write_store_metadata</code>.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p>The order must be preserved because list position maps to RAPID
-<code>trajectories{i}</code>.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>entries</code></b>
-                  (<code><span title="collections.abc.Sequence">Sequence</span>[<a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>entries</code></b>
+                                      (<code
+                                        ><span title="collections.abc.Sequence">Sequence</span>[<a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
 
 
   
       dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a>]</code>)
-              –
-              <div class="doc-md-description">
-                <p>Store entries produced by <code>scan_trajectory_store</code>.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        >]</code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Store entries produced by
+                                          <code>scan_trajectory_store</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="tuple">tuple</span>[<span title="list">list</span>[<span title="str">str</span>], <span title="list">list</span>[<span title="int">int</span>], <span title="list">list</span>[<span title="int">int</span>]]</code>
-              –
-              <div class="doc-md-description">
-                <p>Tuple <code>(names, point_counts, process_types)</code>.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><span title="tuple">tuple</span>[<span title="list"
+                                          >list</span
+                                        >[<span title="str">str</span>],
+                                        <span title="list">list</span>[<span title="int">int</span
+                                        >], <span title="list">list</span>[<span title="int"
+                                          >int</span
+                                        >]]</code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Tuple <code>(names, point_counts, process_types)</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Raises:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="ValueError">ValueError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If more than <code>MAX_TRAJ</code> entries are provided.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Raises:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code><span title="ValueError">ValueError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          If more than <code>MAX_TRAJ</code> entries are provided.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>names, counts, process_types = store_entries_to_metadata(entries)
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>names, counts, process_types = store_entries_to_metadata(entries)
 </code></pre>
-</details>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\store.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\store.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
@@ -645,7 +777,12 @@ archive is invalid.</p>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">store_entries_to_metadata</span><span class="p">(</span>
+<span class="normal">156</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">store_entries_to_metadata</span><span class="p">(</span>
     <span class="n">entries</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TrajectoryStoreEntry</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""Convert store entries to writer metadata lists.</span>
@@ -679,64 +816,63 @@ archive is invalid.</p>
     <span class="n">process_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">process_type</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">names</span><span class="p">,</span> <span class="n">point_counts</span><span class="p">,</span> <span class="n">process_types</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-              
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../service/" class="btn btn-neutral float-left" title="Service"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../supervisor/" class="btn btn-neutral float-right" title="Supervisor">Next <span class="icon icon-circle-arrow-right"></span></a>
+            <footer>
+              <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+                <a href="../service/" class="btn btn-neutral float-left" title="Service"
+                  ><span class="icon icon-circle-arrow-left"></span> Previous</a
+                >
+                <a href="../supervisor/" class="btn btn-neutral float-right" title="Supervisor"
+                  >Next <span class="icon icon-circle-arrow-right"></span
+                ></a>
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <!-- Copyright etc -->
+              </div>
+
+              Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by
+              <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
     </div>
 
-  <hr/>
+    <div class="rst-versions" role="note" aria-label="Versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span><a href="../service/" style="color: #fcfcfc">&laquo; Previous</a></span>
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-    
-      <span><a href="../service/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../supervisor/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
+        <span><a href="../supervisor/" style="color: #fcfcfc">Next &raquo;</a></span>
+      </span>
+    </div>
     <script src="../../../../../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "../../../../..";</script>
+    <script>
+      var base_url = "../../../../..";
+    </script>
     <script src="../../../../../js/theme_extra.js"></script>
     <script src="../../../../../js/theme.js"></script>
-      <script src="../../../../../search/main.js"></script>
+    <script src="../../../../../search/main.js"></script>
     <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
     </script>
-
-</body>
+  </body>
 </html>

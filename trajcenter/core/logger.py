@@ -1,23 +1,19 @@
+#!/usr/bin/env python3
 # trajcenter/core/logger.py
-"""Centralised logging access for TrajCenter.
-
-Re-exports :func:`get_logger` from ``abb_rws_client`` so that all TrajCenter
-modules obtain a properly namespaced child logger without importing the lib
-directly.
-
-The module is intentionally named ``logger`` (not ``logging``) to avoid
-shadowing the Python standard-library :mod:`logging` module.
-
-Usage::
-
-    from trajcenter.core.logger import get_logger
-
-    logger = get_logger(__name__)
-    logger.info("TrajCenter started")
-"""
+"""Logging helpers for TrajCenter."""
 
 from __future__ import annotations
 
-from abb_rws_client_python_rw6.core.logger import get_logger
+import logging
 
-__all__ = ["get_logger"]
+
+def get_logger(name: str) -> logging.Logger:
+    """Return a TrajCenter logger.
+
+    Args:
+        name: Logger name.
+
+    Returns:
+        Logger instance.
+    """
+    return logging.getLogger(name)

@@ -233,7 +233,7 @@ def test_main_robot_supervise_calls_app_runner(monkeypatch):
         return 0
 
     monkeypatch.setattr(
-        "trajcenter.robot.abb.supervisor.run_rws_subscription_supervisor_app",
+        "trajcenter.robot.supervisor.run_rws_subscription_supervisor_app",
         fake_runner,
     )
 
@@ -281,6 +281,7 @@ def test_main_robot_supervise_calls_app_runner(monkeypatch):
     assert calls["password"] == "robotics"
     assert calls["timeout"] == 10.0
 
+
 def test_main_robot_supervise_uses_password_env(monkeypatch):
     """The robot supervise command should resolve password from an environment variable."""
     calls = {}
@@ -292,7 +293,7 @@ def test_main_robot_supervise_uses_password_env(monkeypatch):
     monkeypatch.setenv("ABB_TEST_PASSWORD", "secret")
 
     monkeypatch.setattr(
-        "trajcenter.robot.abb.supervisor.run_rws_subscription_supervisor_app",
+        "trajcenter.robot.supervisor.run_rws_subscription_supervisor_app",
         fake_runner,
     )
 
@@ -307,6 +308,7 @@ def test_main_robot_supervise_uses_password_env(monkeypatch):
 
     assert result == 0
     assert calls["password"] == "secret"
+
 
 def test_main_robot_supervise_rejects_password_and_password_env(capsys):
     """The robot supervise command should reject duplicate password sources."""
@@ -325,6 +327,7 @@ def test_main_robot_supervise_rejects_password_and_password_env(capsys):
 
     assert result == 1
     assert "Use either --password or --password-env, not both." in captured.out
+
 
 def test_main_robot_supervise_rejects_missing_password_env(capsys):
     """The robot supervise command should reject missing password environment variable."""

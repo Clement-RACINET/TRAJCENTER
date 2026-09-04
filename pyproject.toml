@@ -17,12 +17,14 @@ robot = [
 
 cli = [
     "rich>=15.0.0,<16",
-    "typer>=0.26.8,<0.27",
 ]
 
 tui = [
     "rich>=15.0.0,<16",
-    "typer>=0.26.8,<0.27",
+]
+
+textual = [
+    "rich>=15.0.0,<16",
     "textual>=8.2.8,<9",
 ]
 
@@ -44,7 +46,7 @@ dev = [
 ]
 
 all = [
-    "trajcenter[robot,cli,tui,docs,dev]",
+    "trajcenter[robot,cli,tui,textual,docs,dev]",
 ]
 
 [project.scripts]
@@ -137,7 +139,6 @@ reexport_allowlist = [
   "cli",
   "ui",
 ]
-
 
 discovery_mode = "all_public"
 export_constants = true

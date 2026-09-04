@@ -1,362 +1,460 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
+<!doctype html>
+<html class="writer-html5" lang="en">
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
     <title>Service - TrajCenter</title>
     <link rel="stylesheet" href="../../../../../css/theme.css" />
     <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Service";
-        var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\service.md";
-        var mkdocs_page_url = null;
-      </script>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+    />
+    <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+
+    <script>
+      // Current page data
+      var mkdocs_page_name = "Service";
+      var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\service.md";
+      var mkdocs_page_url = null;
+    </script>
+
     <!--[if lt IE 9]>
       <script src="../../../../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
 
-<body class="wy-body-for-nav" role="document">
+  <body class="wy-body-for-nav" role="document">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../..">
+              <img src="../../../../../assets/logo.png" class="logo" alt="Logo" />
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                  title="Type search term here"
+                />
+              </form>
+            </div>
+          </div>
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="../../../../..">
-          <img src="../../../../../assets/logo.png" class="logo" alt="Logo"/>
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Accueil</a>
-                </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Référence API</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
-    <ul class="current">
-                <li class="toctree-l2"><a class="reference internal" >Cli</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../cli/main/">Main</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Convert</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/apt_converter/">Apt Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/column_mapper/">Column Mapper</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/csv_converter/">Csv Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/defaults/">Defaults</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/excel_converter/">Excel Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/mod_converter/">Mod Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../convert/tabular_converter/">Tabular Converter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Core</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/logger/">Logger</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/messages/">Messages</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../core/trajectory/">Trajectory</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Export</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/csv_exporter/">Csv Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/excel_exporter/">Excel Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/options/">Options</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../export/tabular_exporter/">Tabular Exporter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2 current"><a class="reference internal current" >Robot</a>
-    <ul class="current">
-                <li class="toctree-l3 current"><a class="reference internal current" >Abb</a>
-    <ul class="current">
-                <li class="toctree-l4"><a class="reference internal" href="../_utils/">Utils</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../constants/">Constants</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../models/">Models</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../reader/">Reader</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../resolver/">Resolver</a>
-                </li>
-                <li class="toctree-l4 current"><a class="reference internal current" href="#">Service</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../store/">Store</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../supervisor/">Supervisor</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../writer/">Writer</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" >Errors</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-    </ul>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../..">Accueil</a>
+              </li>
+            </ul>
+            <p class="caption"><span class="caption-text">Référence API</span></p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal current">Trajcenter</a>
+                <ul class="current">
+                  <li class="toctree-l2">
+                    <a class="reference internal">Cli</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../cli/main/">Main</a>
+                      </li>
+                    </ul>
                   </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../coverage/">Coverage</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Convert</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/apt_converter/"
+                          >Apt Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/column_mapper/"
+                          >Column Mapper</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/csv_converter/"
+                          >Csv Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/defaults/">Defaults</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/excel_converter/"
+                          >Excel Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/mod_converter/"
+                          >Mod Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../convert/tabular_converter/"
+                          >Tabular Converter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Core</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/logger/">Logger</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/messages/">Messages</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../core/trajectory/"
+                          >Trajectory</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Export</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/csv_exporter/"
+                          >Csv Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/excel_exporter/"
+                          >Excel Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/options/">Options</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../export/tabular_exporter/"
+                          >Tabular Exporter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2 current">
+                    <a class="reference internal current">Robot</a>
+                    <ul class="current">
+                      <li class="toctree-l3 current">
+                        <a class="reference internal current">Abb</a>
+                        <ul class="current">
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../_utils/">Utils</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../constants/">Constants</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../models/">Models</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../reader/">Reader</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../resolver/">Resolver</a>
+                          </li>
+                          <li class="toctree-l4 current">
+                            <a class="reference internal current" href="#">Service</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../store/">Store</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../supervisor/">Supervisor</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../writer/">Writer</a>
+                          </li>
+                          <li class="toctree-l4"><a class="reference internal">Errors</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../coverage/">Coverage</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../..">TrajCenter</a>
-        
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Référence API</li>
-          <li class="breadcrumb-item">Trajcenter</li>
-          <li class="breadcrumb-item">Robot</li>
-          <li class="breadcrumb-item">Abb</li>
-      <li class="breadcrumb-item active">Service</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
+        </nav>
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="breadcrumbs navigation">
+              <ul class="wy-breadcrumbs">
+                <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+                <li class="breadcrumb-item">Référence API</li>
+                <li class="breadcrumb-item">Trajcenter</li>
+                <li class="breadcrumb-item">Robot</li>
+                <li class="breadcrumb-item">Abb</li>
+                <li class="breadcrumb-item active">Service</li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div class="section" itemprop="articleBody">
                 <h1 id="service">Service</h1>
 
+                <div class="doc doc-object doc-module">
+                  <a id="trajcenter.robot.service"></a>
+                  <div class="doc doc-contents first">
+                    <p>RWS service orchestration for TrajCenter v2 trajectory transfers.</p>
+                    <p>Author: Clement RACINET</p>
+                    <p>This module coordinates the full PC-side RWS transfer workflow:</p>
+                    <ol>
+                      <li>read the selected trajectory index from <code>TRAJCENTER</code>;</li>
+                      <li>
+                        map this RAPID base-1 index to a local <code>TrajectoryStoreEntry</code>;
+                      </li>
+                      <li>load the selected <code>.trajcenter</code> archive;</li>
+                      <li>read the robot-side context;</li>
+                      <li>resolve the local trajectory against the robot context;</li>
+                      <li>write the resolved trajectory to RAPID variables.</li>
+                    </ol>
 
-<div class="doc doc-object doc-module">
+                    <details class="abb-route" open>
+                      <summary>ABB Route</summary>
+                      <p>
+                        Reads:
+                        <code
+                          >GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/selectedTrajIndex</code
+                        >
+                      </p>
+                      <p>
+                        Context reads: Multiple
+                        <code>GET /rw/rapid/symbol/data/{symbolurl}</code> and symbol property reads
+                        through <code>trajcenter.robot.reader.read_robot_context</code>.
+                      </p>
+                      <p>
+                        Writes: Delegated to
+                        <code>trajcenter.robot.writer.write_resolved_trajectory</code> using
+                        Mastership-protected RWS writes.
+                      </p>
+                    </details>
 
+                    <details class="abb-constraints" open>
+                      <summary>ABB Constraints</summary>
+                      <ul>
+                        <li><code>selectedTrajIndex</code> is RAPID base-1.</li>
+                        <li>
+                          <code>0</code> means no selected trajectory and is rejected by this
+                          transfer entry point.
+                        </li>
+                        <li>
+                          The local store order must match the metadata previously written to
+                          <code>trajectories{1..nbTrajAvailable}</code>.
+                        </li>
+                        <li>No RAPID write is performed directly in this module.</li>
+                      </ul>
+                    </details>
 
+                    <div class="doc doc-children">
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.service.get_store_entry_by_selected_index"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">get_store_entry_by_selected_index</span
+                            ><span class="p">(</span><span class="n">entries</span
+                            ><span class="p">,</span> <span class="n">selected_index</span
+                            ><span class="p">)</span></code
+                          >
+                        </h2>
 
-<a id="trajcenter.robot.abb.service"></a>
-    <div class="doc doc-contents first">
+                        <div class="doc doc-contents">
+                          <p>
+                            Return the local store entry matching <code>selectedTrajIndex</code>.
+                          </p>
 
-        <p>RWS service orchestration for TrajCenter v2 trajectory transfers.</p>
-<p>Author: Clement RACINET</p>
-<p>This module coordinates the full PC-side RWS transfer workflow:</p>
-<ol>
-<li>read the selected trajectory index from <code>TRAJCENTER</code>;</li>
-<li>map this RAPID base-1 index to a local <code>TrajectoryStoreEntry</code>;</li>
-<li>load the selected <code>.trajcenter</code> archive;</li>
-<li>read the robot-side context;</li>
-<li>resolve the local trajectory against the robot context;</li>
-<li>write the resolved trajectory to RAPID variables.</li>
-</ol>
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>N/A — local store lookup.</p>
+                          </details>
 
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <p>
+                              <code>selectedTrajIndex</code> is a RAPID base-1 index.
+                              <code>0</code> means no selected trajectory and is invalid for a
+                              transfer request.
+                            </p>
+                          </details>
 
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>Reads:
-    <code>GET /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/selectedTrajIndex</code></p>
-<p>Context reads:
-    Multiple <code>GET /rw/rapid/symbol/data/{symbolurl}</code> and symbol property
-    reads through <code>trajcenter.robot.abb.reader.read_robot_context</code>.</p>
-<p>Writes:
-    Delegated to <code>trajcenter.robot.abb.writer.write_resolved_trajectory</code> using
-    Mastership-protected RWS writes.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <ul>
-<li><code>selectedTrajIndex</code> is RAPID base-1.</li>
-<li><code>0</code> means no selected trajectory and is rejected by this transfer entry
-  point.</li>
-<li>The local store order must match the metadata previously written to
-  <code>trajectories{1..nbTrajAvailable}</code>.</li>
-<li>No RAPID write is performed directly in this module.</li>
-</ul>
-</details>
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="trajcenter.robot.abb.service.get_store_entry_by_selected_index" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">get_store_entry_by_selected_index</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">selected_index</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return the local store entry matching <code>selectedTrajIndex</code>.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A — local store lookup.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p><code>selectedTrajIndex</code> is a RAPID base-1 index. <code>0</code> means no selected
-trajectory and is invalid for a transfer request.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>entries</code></b>
-                  (<code><span title="collections.abc.Sequence">Sequence</span>[<a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
-
-
-  
-      dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a>]</code>)
-              –
-              <div class="doc-md-description">
-                <p>Ordered local trajectory store entries.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>selected_index</code></b>
-                  (<code><span title="int">int</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>RAPID base-1 selected trajectory index.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>entries</code></b>
+                                      (<code
+                                        ><span title="collections.abc.Sequence">Sequence</span>[<a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
 
 
   
       dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a></code>
-              –
-              <div class="doc-md-description">
-                <p>Matching trajectory store entry.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        >]</code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>Ordered local trajectory store entries.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>selected_index</code></b>
+                                      (<code><span title="int">int</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>RAPID base-1 selected trajectory index.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Raises:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="ValueError">ValueError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If <code>selected_index</code> is lower than <code>1</code>.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="IndexError">IndexError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If no entry matches the selected index.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
 
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>entry = get_store_entry_by_selected_index(entries, 1)
+
+  
+      dataclass
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>Matching trajectory store entry.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Raises:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code><span title="ValueError">ValueError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          If <code>selected_index</code> is lower than
+                                          <code>1</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="IndexError">IndexError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If no entry matches the selected index.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>entry = get_store_entry_by_selected_index(entries, 1)
 </code></pre>
-</details>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\service.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
@@ -398,7 +496,12 @@ trajectory and is invalid for a transfer request.</p>
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_store_entry_by_selected_index</span><span class="p">(</span>
+<span class="normal">176</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_store_entry_by_selected_index</span><span class="p">(</span>
     <span class="n">entries</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TrajectoryStoreEntry</span><span class="p">],</span>
     <span class="n">selected_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrajectoryStoreEntry</span><span class="p">:</span>
@@ -441,205 +544,286 @@ trajectory and is invalid for a transfer request.</p>
         <span class="s2">"selectedTrajIndex does not match any local trajectory store entry: "</span>
         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">selected_index</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
 
-</div>
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.service.refresh_store_metadata"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">refresh_store_metadata</span><span class="p">(</span
+                            ><span class="n">client</span><span class="p">,</span>
+                            <span class="n">store_root</span><span class="p">,</span>
+                            <span class="o">*</span><span class="p">,</span>
+                            <span class="n">task</span><span class="o">=</span
+                            ><span class="n">DEFAULT_TASK</span><span class="p">,</span>
+                            <span class="n">module</span><span class="o">=</span
+                            ><span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+                            <span class="n">mastership_retries</span><span class="o">=</span
+                            ><span class="mi">3</span><span class="p">)</span></code
+                          >
 
-<div class="doc doc-object doc-function">
+                          <span class="doc doc-labels">
+                            <small class="doc doc-label doc-label-async"><code>async</code></small>
+                          </span>
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p>
+                            Refresh robot-side trajectory store metadata from a local directory.
+                          </p>
 
-<h2 id="trajcenter.robot.abb.service.refresh_store_metadata" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">refresh_store_metadata</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">store_root</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">DEFAULT_TASK</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">TRAJCENTER_MODULE</span><span class="p">,</span> <span class="n">mastership_retries</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>Writes through <code>write_store_metadata</code>:</p>
+                            <ul>
+                              <li>
+                                <code>POST /rw/mastership/rapid</code> with
+                                <code>action=request</code>;
+                              </li>
+                              <li>
+                                <code>POST /rw/rapid/symbol/data/{symbolurl}</code> with
+                                <code>action=set</code>;
+                              </li>
+                              <li>
+                                <code>POST /rw/mastership/rapid</code> with
+                                <code>action=release</code>.
+                              </li>
+                            </ul>
+                          </details>
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <ul>
+                              <li>
+                                Local archives are sorted by file name/path through
+                                <code>scan_trajectory_store</code>.
+                              </li>
+                              <li>
+                                Returned <code>TrajectoryStoreEntry.index</code> values are RAPID
+                                base-1.
+                              </li>
+                              <li>
+                                Metadata order must remain stable because
+                                <code>selectedTrajIndex</code> maps directly to this order.
+                              </li>
+                              <li>
+                                <code>9E+9</code> is not read from or written to
+                                <code>.trajcenter</code> archives.
+                              </li>
+                              <li>
+                                RAPID writes are delegated to <code>write_store_metadata</code>,
+                                which acquires Mastership and releases it through the ABB RWS client
+                                helper.
+                              </li>
+                            </ul>
+                          </details>
 
-</h2>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>client</code></b>
+                                      (<code
+                                        ><span title="abb_rws_client_python_rw6.RWSClient"
+                                          >RWSClient</span
+                                        ></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>Open RWS client.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>store_root</code></b>
+                                      (<code
+                                        ><span title="str">str</span> |
+                                        <span title="pathlib.Path">Path</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Directory containing local
+                                          <code>.trajcenter</code> archives.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>task</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >, default:
+                                      <code
+                                        ><span title="trajcenter.robot.constants.DEFAULT_TASK"
+                                          >DEFAULT_TASK</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>RAPID task name.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>module</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >, default:
+                                      <code
+                                        ><span title="trajcenter.robot.constants.TRAJCENTER_MODULE"
+                                          >TRAJCENTER_MODULE</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          RAPID module name containing TrajCenter web-service
+                                          variables.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>mastership_retries</code></b>
+                                      (<code><span title="int">int</span></code
+                                      >, default:
+                                      <code>3</code>
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>Number of retries if RAPID Mastership is denied.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-
-    <div class="doc doc-contents ">
-
-        <p>Refresh robot-side trajectory store metadata from a local directory.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>Writes through <code>write_store_metadata</code>:</p>
-<ul>
-<li><code>POST /rw/mastership/rapid</code> with <code>action=request</code>;</li>
-<li><code>POST /rw/rapid/symbol/data/{symbolurl}</code> with <code>action=set</code>;</li>
-<li><code>POST /rw/mastership/rapid</code> with <code>action=release</code>.</li>
-</ul>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <ul>
-<li>Local archives are sorted by file name/path through
-  <code>scan_trajectory_store</code>.</li>
-<li>Returned <code>TrajectoryStoreEntry.index</code> values are RAPID base-1.</li>
-<li>Metadata order must remain stable because <code>selectedTrajIndex</code> maps
-  directly to this order.</li>
-<li><code>9E+9</code> is not read from or written to <code>.trajcenter</code> archives.</li>
-<li>RAPID writes are delegated to <code>write_store_metadata</code>, which acquires
-  Mastership and releases it through the ABB RWS client helper.</li>
-</ul>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>client</code></b>
-                  (<code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Open RWS client.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>store_root</code></b>
-                  (<code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Directory containing local <code>.trajcenter</code> archives.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>task</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.DEFAULT_TASK">DEFAULT_TASK</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>RAPID task name.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>module</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.TRAJCENTER_MODULE">TRAJCENTER_MODULE</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>RAPID module name containing TrajCenter web-service variables.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>mastership_retries</code></b>
-                  (<code><span title="int">int</span></code>, default:
-                      <code>3</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Number of retries if RAPID Mastership is denied.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="tuple">tuple</span>[<a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><span title="tuple">tuple</span>[<a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
 
 
   
       dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a>, ...]</code>
-              –
-              <div class="doc-md-description">
-                <p>Store entries that were written to robot metadata.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        >, ...]</code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>Store entries that were written to robot metadata.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Raises:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If <code>store_root</code> does not exist.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="NotADirectoryError">NotADirectoryError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If <code>store_root</code> is not a directory.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="ValueError">ValueError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If the store is invalid or exceeds RAPID limits.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="MastershipDenied">MastershipDenied</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If Mastership cannot be acquired after all retries.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>On unexpected controller HTTP errors.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Raises:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><span title="FileNotFoundError"
+                                          >FileNotFoundError</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If <code>store_root</code> does not exist.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><span title="NotADirectoryError"
+                                          >NotADirectoryError</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If <code>store_root</code> is not a directory.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="ValueError">ValueError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If the store is invalid or exceeds RAPID limits.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><span title="MastershipDenied"
+                                          >MastershipDenied</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If Mastership cannot be acquired after all retries.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>On unexpected controller HTTP errors.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>entries = await refresh_store_metadata(client, "trajectory_store")
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>entries = await refresh_store_metadata(client, "trajectory_store")
 </code></pre>
-</details>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 62</span>
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\service.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal"> 62</span>
 <span class="normal"> 63</span>
 <span class="normal"> 64</span>
 <span class="normal"> 65</span>
@@ -708,7 +892,12 @@ trajectory and is invalid for a transfer request.</p>
 <span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">refresh_store_metadata</span><span class="p">(</span>
+<span class="normal">131</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">refresh_store_metadata</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="n">store_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -778,238 +967,342 @@ trajectory and is invalid for a transfer request.</p>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Store metadata refresh completed: </span><span class="si">%d</span><span class="s2"> trajectories"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">entries</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="trajcenter.robot.abb.service.transfer_selected_trajectory" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">transfer_selected_trajectory</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">DEFAULT_TASK</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">TRAJCENTER_MODULE</span><span class="p">,</span> <span class="n">on_progress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mastership_retries</span><span class="o">=</span><span class="n">DEFAULT_MASTERSHIP_RETRIES</span><span class="p">,</span> <span class="n">retry_delay_s</span><span class="o">=</span><span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span><span class="p">,</span> <span class="n">progress_step_percent</span><span class="o">=</span><span class="n">DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span><span class="p">)</span></code>
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Transfer the trajectory selected by the robot HMI to RAPID variables.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>Reads:
-    <code>GET /rw/rapid/symbol/data/RAPID/{task}/{module}/selectedTrajIndex</code>.</p>
-<p>Writes:
-    Delegated to <code>write_resolved_trajectory</code>:
-    <code>POST /rw/rapid/symbol/data/{symbolurl}?action=set</code> under RAPID
-    Mastership.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <ul>
-<li><code>selectedTrajIndex</code> is base-1.</li>
-<li><code>selectedTrajIndex == 0</code> is rejected because no trajectory is
-  selected.</li>
-<li>The selected local <code>.trajcenter</code> archive is loaded through
-  <code>Trajectory.load</code>.</li>
-<li>Resolver and writer enforce the final RAPID protocol constraints.</li>
-</ul>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>client</code></b>
-                  (<code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Open RWS client.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>entries</code></b>
-                  (<code><span title="collections.abc.Sequence">Sequence</span>[<a class="autorefs autorefs-internal" title="TrajectoryStoreEntry
-
-
-  
-      dataclass
-   (trajcenter.robot.abb.models.TrajectoryStoreEntry)" href="../models/#trajcenter.robot.abb.models.TrajectoryStoreEntry">TrajectoryStoreEntry</a>]</code>)
-              –
-              <div class="doc-md-description">
-                <p>Local trajectory store entries ordered as exposed to the robot.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>task</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.DEFAULT_TASK">DEFAULT_TASK</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>RAPID task name.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>module</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.TRAJCENTER_MODULE">TRAJCENTER_MODULE</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Web-services RAPID module containing <code>selectedTrajIndex</code>.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>on_progress</code></b>
-                  (<code><span title="collections.abc.Callable">Callable</span>[[<span title="int">int</span>, <span title="int">int</span>], None] | None</code>, default:
-                      <code>None</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Optional progress callback forwarded to the writer.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>mastership_retries</code></b>
-                  (<code><span title="int">int</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.DEFAULT_MASTERSHIP_RETRIES">DEFAULT_MASTERSHIP_RETRIES</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Number of writer Mastership retry attempts.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>retry_delay_s</code></b>
-                  (<code><span title="float">float</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.DEFAULT_MASTERSHIP_RETRY_DELAY_S">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Delay between Mastership retry attempts.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>progress_step_percent</code></b>
-                  (<code><span title="int">int</span></code>, default:
-                      <code><span title="trajcenter.robot.abb.constants.DEFAULT_PROGRESS_UPDATE_STEP_PERCENT">DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span></code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Minimum writer progress step.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="ResolvedTrajectory
-
-
-  
-      dataclass
-   (trajcenter.robot.abb.models.ResolvedTrajectory)" href="../models/#trajcenter.robot.abb.models.ResolvedTrajectory">ResolvedTrajectory</a></code>
-              –
-              <div class="doc-md-description">
-                <p>Resolved trajectory that was written to the controller.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Raises:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="ValueError">ValueError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If no valid trajectory is selected.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="IndexError">IndexError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If the selected index is not present in <code>entries</code>.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If the selected local archive does not exist.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="RWSHTTPError">RWSHTTPError</span></code>
-              –
-              <div class="doc-md-description">
-                <p>On unexpected controller HTTP errors.</p>
-              </div>
-            </li>
-            <li>
-                  <code><span title="MastershipDenied">MastershipDenied</span></code>
-              –
-              <div class="doc-md-description">
-                <p>If writer Mastership cannot be acquired.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>resolved = await transfer_selected_trajectory(client, entries)
 </code></pre>
-</details>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.service.transfer_selected_trajectory"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">transfer_selected_trajectory</span
+                            ><span class="p">(</span><span class="n">client</span
+                            ><span class="p">,</span> <span class="n">entries</span
+                            ><span class="p">,</span> <span class="o">*</span
+                            ><span class="p">,</span> <span class="n">task</span
+                            ><span class="o">=</span><span class="n">DEFAULT_TASK</span
+                            ><span class="p">,</span> <span class="n">module</span
+                            ><span class="o">=</span><span class="n">TRAJCENTER_MODULE</span
+                            ><span class="p">,</span> <span class="n">on_progress</span
+                            ><span class="o">=</span><span class="kc">None</span
+                            ><span class="p">,</span> <span class="n">mastership_retries</span
+                            ><span class="o">=</span
+                            ><span class="n">DEFAULT_MASTERSHIP_RETRIES</span
+                            ><span class="p">,</span> <span class="n">retry_delay_s</span
+                            ><span class="o">=</span
+                            ><span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span
+                            ><span class="p">,</span> <span class="n">progress_step_percent</span
+                            ><span class="o">=</span
+                            ><span class="n">DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span
+                            ><span class="p">)</span></code
+                          >
+
+                          <span class="doc doc-labels">
+                            <small class="doc doc-label doc-label-async"><code>async</code></small>
+                          </span>
+                        </h2>
+
+                        <div class="doc doc-contents">
+                          <p>
+                            Transfer the trajectory selected by the robot HMI to RAPID variables.
+                          </p>
+
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>
+                              Reads:
+                              <code
+                                >GET
+                                /rw/rapid/symbol/data/RAPID/{task}/{module}/selectedTrajIndex</code
+                              >.
+                            </p>
+                            <p>
+                              Writes: Delegated to <code>write_resolved_trajectory</code>:
+                              <code>POST /rw/rapid/symbol/data/{symbolurl}?action=set</code> under
+                              RAPID Mastership.
+                            </p>
+                          </details>
+
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <ul>
+                              <li><code>selectedTrajIndex</code> is base-1.</li>
+                              <li>
+                                <code>selectedTrajIndex == 0</code> is rejected because no
+                                trajectory is selected.
+                              </li>
+                              <li>
+                                The selected local <code>.trajcenter</code> archive is loaded
+                                through <code>Trajectory.load</code>.
+                              </li>
+                              <li>
+                                Resolver and writer enforce the final RAPID protocol constraints.
+                              </li>
+                            </ul>
+                          </details>
+
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>client</code></b>
+                                      (<code
+                                        ><span title="abb_rws_client_python_rw6.RWSClient"
+                                          >RWSClient</span
+                                        ></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>Open RWS client.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>entries</code></b>
+                                      (<code
+                                        ><span title="collections.abc.Sequence">Sequence</span>[<a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajectoryStoreEntry
+
+
+  
+      dataclass
+   (trajcenter.robot.models.TrajectoryStoreEntry)"
+                                          href="../models/#trajcenter.robot.models.TrajectoryStoreEntry"
+                                          >TrajectoryStoreEntry</a
+                                        >]</code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Local trajectory store entries ordered as exposed to the
+                                          robot.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>task</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >, default:
+                                      <code
+                                        ><span title="trajcenter.robot.constants.DEFAULT_TASK"
+                                          >DEFAULT_TASK</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>RAPID task name.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>module</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >, default:
+                                      <code
+                                        ><span title="trajcenter.robot.constants.TRAJCENTER_MODULE"
+                                          >TRAJCENTER_MODULE</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Web-services RAPID module containing
+                                          <code>selectedTrajIndex</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>on_progress</code></b>
+                                      (<code
+                                        ><span title="collections.abc.Callable">Callable</span
+                                        >[[<span title="int">int</span>,
+                                        <span title="int">int</span>], None] | None</code
+                                      >, default:
+                                      <code>None</code>
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>Optional progress callback forwarded to the writer.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>mastership_retries</code></b>
+                                      (<code><span title="int">int</span></code
+                                      >, default:
+                                      <code
+                                        ><span
+                                          title="trajcenter.robot.constants.DEFAULT_MASTERSHIP_RETRIES"
+                                          >DEFAULT_MASTERSHIP_RETRIES</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>Number of writer Mastership retry attempts.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>retry_delay_s</code></b>
+                                      (<code><span title="float">float</span></code
+                                      >, default:
+                                      <code
+                                        ><span
+                                          title="trajcenter.robot.constants.DEFAULT_MASTERSHIP_RETRY_DELAY_S"
+                                          >DEFAULT_MASTERSHIP_RETRY_DELAY_S</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>Delay between Mastership retry attempts.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>progress_step_percent</code></b>
+                                      (<code><span title="int">int</span></code
+                                      >, default:
+                                      <code
+                                        ><span
+                                          title="trajcenter.robot.constants.DEFAULT_PROGRESS_UPDATE_STEP_PERCENT"
+                                          >DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>Minimum writer progress step.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="ResolvedTrajectory
+
+
+  
+      dataclass
+   (trajcenter.robot.models.ResolvedTrajectory)"
+                                          href="../models/#trajcenter.robot.models.ResolvedTrajectory"
+                                          >ResolvedTrajectory</a
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Resolved trajectory that was written to the controller.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Raises:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <code><span title="ValueError">ValueError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If no valid trajectory is selected.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="IndexError">IndexError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          If the selected index is not present in
+                                          <code>entries</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><span title="FileNotFoundError"
+                                          >FileNotFoundError</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If the selected local archive does not exist.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code><span title="RWSHTTPError">RWSHTTPError</span></code>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>On unexpected controller HTTP errors.</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><span title="MastershipDenied"
+                                          >MastershipDenied</span
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>If writer Mastership cannot be acquired.</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>resolved = await transfer_selected_trajectory(client, entries)
+</code></pre>
+                          </details>
+
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\service.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
@@ -1097,7 +1390,12 @@ trajectory and is invalid for a transfer request.</p>
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">transfer_selected_trajectory</span><span class="p">(</span>
+<span class="normal">267</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">transfer_selected_trajectory</span><span class="p">(</span>
     <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
     <span class="n">entries</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">TrajectoryStoreEntry</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1186,64 +1484,63 @@ trajectory and is invalid for a transfer request.</p>
         <span class="n">entry</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">resolved</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-              
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../resolver/" class="btn btn-neutral float-left" title="Resolver"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../store/" class="btn btn-neutral float-right" title="Store">Next <span class="icon icon-circle-arrow-right"></span></a>
+            <footer>
+              <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+                <a href="../resolver/" class="btn btn-neutral float-left" title="Resolver"
+                  ><span class="icon icon-circle-arrow-left"></span> Previous</a
+                >
+                <a href="../store/" class="btn btn-neutral float-right" title="Store"
+                  >Next <span class="icon icon-circle-arrow-right"></span
+                ></a>
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <!-- Copyright etc -->
+              </div>
+
+              Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by
+              <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
     </div>
 
-  <hr/>
+    <div class="rst-versions" role="note" aria-label="Versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span><a href="../resolver/" style="color: #fcfcfc">&laquo; Previous</a></span>
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-    
-      <span><a href="../resolver/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../store/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
+        <span><a href="../store/" style="color: #fcfcfc">Next &raquo;</a></span>
+      </span>
+    </div>
     <script src="../../../../../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "../../../../..";</script>
+    <script>
+      var base_url = "../../../../..";
+    </script>
     <script src="../../../../../js/theme_extra.js"></script>
     <script src="../../../../../js/theme.js"></script>
-      <script src="../../../../../search/main.js"></script>
+    <script src="../../../../../search/main.js"></script>
     <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
     </script>
-
-</body>
+  </body>
 </html>

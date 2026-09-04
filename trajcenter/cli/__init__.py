@@ -27,6 +27,7 @@ from .main import (
     main,
     print_store_entries,
     print_store_entry_details,
+    resolve_robot_password,
     run_command,
 )
 
@@ -51,5 +52,6 @@ __all__ = [
     "main",
     "print_store_entries",
     "print_store_entry_details",
+    "resolve_robot_password",
     "run_command",
 ]

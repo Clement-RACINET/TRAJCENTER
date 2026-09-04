@@ -1,360 +1,499 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
+<!doctype html>
+<html class="writer-html5" lang="en">
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../../../../../../img/favicon.ico" />
+    <link rel="shortcut icon" href="../../../../../../img/favicon.ico" />
     <title>Translate - TrajCenter</title>
     <link rel="stylesheet" href="../../../../../../css/theme.css" />
     <link rel="stylesheet" href="../../../../../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Translate";
-        var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\errors\\translate.md";
-        var mkdocs_page_url = null;
-      </script>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+    />
+    <link href="../../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+
+    <script>
+      // Current page data
+      var mkdocs_page_name = "Translate";
+      var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\errors\\translate.md";
+      var mkdocs_page_url = null;
+    </script>
+
     <!--[if lt IE 9]>
       <script src="../../../../../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
 
-<body class="wy-body-for-nav" role="document">
+  <body class="wy-body-for-nav" role="document">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../..">
+              <img src="../../../../../../assets/logo.png" class="logo" alt="Logo" />
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                  title="Type search term here"
+                />
+              </form>
+            </div>
+          </div>
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="../../../../../..">
-          <img src="../../../../../../assets/logo.png" class="logo" alt="Logo"/>
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../..">Accueil</a>
-                </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Référence API</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
-    <ul class="current">
-                <li class="toctree-l2"><a class="reference internal" >Cli</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../cli/main/">Main</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Convert</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/apt_converter/">Apt Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/column_mapper/">Column Mapper</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/csv_converter/">Csv Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/defaults/">Defaults</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/excel_converter/">Excel Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/mod_converter/">Mod Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/tabular_converter/">Tabular Converter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Core</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/logger/">Logger</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/messages/">Messages</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/trajectory/">Trajectory</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Export</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/csv_exporter/">Csv Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/excel_exporter/">Excel Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/options/">Options</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/tabular_exporter/">Tabular Exporter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2 current"><a class="reference internal current" >Robot</a>
-    <ul class="current">
-                <li class="toctree-l3 current"><a class="reference internal current" >Abb</a>
-    <ul class="current">
-                <li class="toctree-l4"><a class="reference internal" href="../../_utils/">Utils</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../constants/">Constants</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../models/">Models</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../reader/">Reader</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../resolver/">Resolver</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../service/">Service</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../store/">Store</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../supervisor/">Supervisor</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../writer/">Writer</a>
-                </li>
-                <li class="toctree-l4 current"><a class="reference internal current" >Errors</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-    </ul>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../..">Accueil</a>
+              </li>
+            </ul>
+            <p class="caption"><span class="caption-text">Référence API</span></p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal current">Trajcenter</a>
+                <ul class="current">
+                  <li class="toctree-l2">
+                    <a class="reference internal">Cli</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../cli/main/">Main</a>
+                      </li>
+                    </ul>
                   </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../../coverage/">Coverage</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Convert</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/apt_converter/"
+                          >Apt Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/column_mapper/"
+                          >Column Mapper</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/csv_converter/"
+                          >Csv Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/defaults/"
+                          >Defaults</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/excel_converter/"
+                          >Excel Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/mod_converter/"
+                          >Mod Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/tabular_converter/"
+                          >Tabular Converter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Core</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/logger/">Logger</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/messages/">Messages</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/trajectory/"
+                          >Trajectory</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Export</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/csv_exporter/"
+                          >Csv Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/excel_exporter/"
+                          >Excel Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/options/">Options</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/tabular_exporter/"
+                          >Tabular Exporter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2 current">
+                    <a class="reference internal current">Robot</a>
+                    <ul class="current">
+                      <li class="toctree-l3 current">
+                        <a class="reference internal current">Abb</a>
+                        <ul class="current">
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../_utils/">Utils</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../constants/">Constants</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../models/">Models</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../reader/">Reader</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../resolver/">Resolver</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../service/">Service</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../store/">Store</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../supervisor/">Supervisor</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../writer/">Writer</a>
+                          </li>
+                          <li class="toctree-l4 current">
+                            <a class="reference internal current">Errors</a>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../coverage/">Coverage</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../..">TrajCenter</a>
-        
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="../../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Référence API</li>
-          <li class="breadcrumb-item">Trajcenter</li>
-          <li class="breadcrumb-item">Robot</li>
-          <li class="breadcrumb-item">Abb</li>
-          <li class="breadcrumb-item">Errors</li>
-      <li class="breadcrumb-item active">Translate</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
+        </nav>
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="breadcrumbs navigation">
+              <ul class="wy-breadcrumbs">
+                <li><a href="../../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+                <li class="breadcrumb-item">Référence API</li>
+                <li class="breadcrumb-item">Trajcenter</li>
+                <li class="breadcrumb-item">Robot</li>
+                <li class="breadcrumb-item">Abb</li>
+                <li class="breadcrumb-item">Errors</li>
+                <li class="breadcrumb-item active">Translate</li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div class="section" itemprop="articleBody">
                 <h1 id="translate">Translate</h1>
 
-
-<div class="doc doc-object doc-module">
-
-
-
-<a id="trajcenter.robot.abb.errors.translate"></a>
-    <div class="doc doc-contents first">
-
-        <p>Translation of transport-layer RWS exceptions into TrajCenter errors.</p>
-<blockquote>
-<p><strong>Author</strong>: Clément RACINET</p>
-</blockquote>
-<p>This module is the single point of contact between
-<code>abb_rws_client_python_rw6.core.exceptions</code> and the TrajCenter protocol
-error hierarchy (:mod:<code>trajcenter.robot.abb.errors.codes</code>). If the RW6 client
-library changes its exception hierarchy, only this module is affected.</p>
-<h3 id="trajcenter.robot.abb.errors.translate--usage-pattern-robotabbreaderpy-robotabbwriterpy">Usage pattern (<code>robot/abb/reader.py</code> / <code>robot/abb/writer.py</code>)</h3>
-<p>::</p>
-<pre><code>try:
+                <div class="doc doc-object doc-module">
+                  <a id="trajcenter.robot.errors.translate"></a>
+                  <div class="doc doc-contents first">
+                    <p>Translation of transport-layer RWS exceptions into TrajCenter errors.</p>
+                    <blockquote>
+                      <p><strong>Author</strong>: Clément RACINET</p>
+                    </blockquote>
+                    <p>
+                      This module is the single point of contact between
+                      <code>abb_rws_client_python_rw6.core.exceptions</code> and the TrajCenter
+                      protocol error hierarchy (:mod:<code>trajcenter.robot.errors.codes</code>). If
+                      the RW6 client library changes its exception hierarchy, only this module is
+                      affected.
+                    </p>
+                    <h3
+                      id="trajcenter.robot.errors.translate--usage-pattern-robotabbreaderpy-robotabbwriterpy"
+                    >
+                      Usage pattern (<code>robot/abb/reader.py</code> /
+                      <code>robot/abb/writer.py</code>)
+                    </h3>
+                    <p>::</p>
+                    <pre><code>try:
     raw = await get_variable(client, symbolurl=symbol(...))
 except Exception as exc:
     raise from_rws_exception(exc, context="trajTools") from exc
 </code></pre>
-<h3 id="trajcenter.robot.abb.errors.translate--design-principle">Design principle</h3>
-<p>Validation failures produced locally by :mod:<code>trajcenter.robot.abb.resolver</code>
-(e.g. an out-of-bounds index, an unresolvable tool name) are raised
-directly as :mod:<code>trajcenter.robot.abb.errors.codes</code> exceptions -- they never
-pass through this module, since no <code>abb_rws_client_python_rw6</code>
-exception is involved in that case.</p>
-<h3 id="trajcenter.robot.abb.errors.translate--context-discriminant">Context discriminant</h3>
-<p>Several transport exceptions (<code>RWSNotFoundError</code>, <code>RWSTimeoutError</code>)
-map to more than one TrajCenter code depending on <em>what</em> was being read
-or written. The caller passes a short <code>context</code> string to disambiguate;
-an unrecognised or empty context falls back to the most generic code in
-that category (<code>404001</code> for not-found, <code>408001</code> for timeout).</p>
-<p>Known <code>context</code> values:
-    - <code>"trajTools"</code> -- reading the cell tool configuration array.
-    - <code>"trajWobjs"</code> -- reading the cell workobject configuration array.
-    - <code>"trajectory_store"</code> -- scanning the local trajectory store.
-    - <code>"robot_default"</code> -- reading a <code>TRAJCENTER</code> default.
-    - <code>"process_types"</code> -- reading the <code>TRAJCENTER</code> catalog.
-    - <code>"transfer"</code> -- the overall trajectory transfer operation.
-    - <code>"request"</code> (default) -- a single RWS request with no more
-      specific context.</p>
+                    <h3 id="trajcenter.robot.errors.translate--design-principle">
+                      Design principle
+                    </h3>
+                    <p>
+                      Validation failures produced locally by :mod:<code
+                        >trajcenter.robot.resolver</code
+                      >
+                      (e.g. an out-of-bounds index, an unresolvable tool name) are raised directly
+                      as :mod:<code>trajcenter.robot.errors.codes</code> exceptions -- they never
+                      pass through this module, since no
+                      <code>abb_rws_client_python_rw6</code> exception is involved in that case.
+                    </p>
+                    <h3 id="trajcenter.robot.errors.translate--context-discriminant">
+                      Context discriminant
+                    </h3>
+                    <p>
+                      Several transport exceptions (<code>RWSNotFoundError</code>,
+                      <code>RWSTimeoutError</code>) map to more than one TrajCenter code depending
+                      on <em>what</em> was being read or written. The caller passes a short
+                      <code>context</code> string to disambiguate; an unrecognised or empty context
+                      falls back to the most generic code in that category (<code>404001</code> for
+                      not-found, <code>408001</code> for timeout).
+                    </p>
+                    <p>
+                      Known <code>context</code> values: - <code>"trajTools"</code> -- reading the
+                      cell tool configuration array. - <code>"trajWobjs"</code> -- reading the cell
+                      workobject configuration array. - <code>"trajectory_store"</code> -- scanning
+                      the local trajectory store. - <code>"robot_default"</code> -- reading a
+                      <code>TRAJCENTER</code> default. - <code>"process_types"</code> -- reading the
+                      <code>TRAJCENTER</code> catalog. - <code>"transfer"</code> -- the overall
+                      trajectory transfer operation. - <code>"request"</code> (default) -- a single
+                      RWS request with no more specific context.
+                    </p>
 
+                    <div class="doc doc-children">
+                      <div class="doc doc-object doc-function">
+                        <h2
+                          id="trajcenter.robot.errors.translate.from_rws_exception"
+                          class="doc doc-heading"
+                        >
+                          <code class="highlight language-python"
+                            ><span class="n">from_rws_exception</span><span class="p">(</span
+                            ><span class="n">exc</span><span class="p">,</span>
+                            <span class="o">*</span><span class="p">,</span>
+                            <span class="n">context</span><span class="o">=</span
+                            ><span class="s1">'request'</span><span class="p">)</span></code
+                          >
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p>
+                            Translate a transport-layer exception into a TrajCenter protocol error.
+                          </p>
 
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>N/A -- pure translation helper, no RWS call performed.</p>
+                          </details>
 
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <p>
+                              This function must be the only place in <code>trajcenter</code> that
+                              imports exception types from
+                              <code>abb_rws_client_python_rw6.core.exceptions</code>. Callers in
+                              <code>robot/abb/reader.py</code> /
+                              <code>robot/abb/writer.py</code> must always go through this function
+                              rather than re-raising a transport exception directly, so that
+                              <code>lastErrorCode</code>/<code>lastError</code> always carry a
+                              protocol code, never an ABB transport code.
+                            </p>
+                          </details>
 
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Parameters:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>exc</code></b>
+                                      (<code><span title="BaseException">BaseException</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          The exception caught from an
+                                          <code>abb_rws_client_python_rw6</code> call, or -- as a
+                                          defensive fallback -- any other exception raised
+                                          unexpectedly in that call site.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>context</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >, default:
+                                      <code>&#39;request&#39;</code>
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Discriminant used to disambiguate
+                                          <code>RWSNotFoundError</code> and
+                                          <code>RWSTimeoutError</code> into the correct TrajCenter
+                                          code. See the module docstring for the list of known
+                                          values. Defaults to <code>"request"</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Returns:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>A</code></b
+                                      >(
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                          href="../base/#trajcenter.robot.errors.base.TrajCenterError"
+                                          >TrajCenterError</a
+                                        ></code
+                                      >
+                                      ) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          class:<code
+                                            >~trajcenter.robot.errors.base.TrajCenterError</code
+                                          >
+                                          instance
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                          href="../base/#trajcenter.robot.errors.base.TrajCenterError"
+                                          >TrajCenterError</a
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          ready to be raised (with <code>from exc</code> at the call
+                                          site) and later
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                          href="../base/#trajcenter.robot.errors.base.TrajCenterError"
+                                          >TrajCenterError</a
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>converted to a <code>(code, message)</code> pair via</p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <code
+                                        ><a
+                                          class="autorefs autorefs-internal"
+                                          title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                          href="../base/#trajcenter.robot.errors.base.TrajCenterError"
+                                          >TrajCenterError</a
+                                        ></code
+                                      >
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          meth:<code>~trajcenter.robot.errors.base.TrajCenterError.to_rapid</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
 
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="trajcenter.robot.abb.errors.translate.from_rws_exception" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">from_rws_exception</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s1">'request'</span><span class="p">)</span></code>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Translate a transport-layer exception into a TrajCenter protocol error.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A -- pure translation helper, no RWS call performed.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p>This function must be the only place in <code>trajcenter</code> that
-imports exception types from
-<code>abb_rws_client_python_rw6.core.exceptions</code>. Callers in
-<code>robot/abb/reader.py</code> / <code>robot/abb/writer.py</code> must always go through this
-function rather than re-raising a transport exception directly,
-so that <code>lastErrorCode</code>/<code>lastError</code> always carry a protocol
-code, never an ABB transport code.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>exc</code></b>
-                  (<code><span title="BaseException">BaseException</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>The exception caught from an <code>abb_rws_client_python_rw6</code>
-call, or -- as a defensive fallback -- any other exception
-raised unexpectedly in that call site.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>context</code></b>
-                  (<code><span title="str">str</span></code>, default:
-                      <code>&#39;request&#39;</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Discriminant used to disambiguate <code>RWSNotFoundError</code>
-and <code>RWSTimeoutError</code> into the correct TrajCenter code. See
-the module docstring for the list of known values. Defaults
-to <code>"request"</code>.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-<b><code>A</code></b>(                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
-)              –
-              <div class="doc-md-description">
-                <p>class:<code>~trajcenter.robot.abb.errors.base.TrajCenterError</code> instance</p>
-              </div>
-            </li>
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
-              –
-              <div class="doc-md-description">
-                <p>ready to be raised (with <code>from exc</code> at the call site) and later</p>
-              </div>
-            </li>
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
-              –
-              <div class="doc-md-description">
-                <p>converted to a <code>(code, message)</code> pair via</p>
-              </div>
-            </li>
-            <li>
-                  <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="../base/#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code>
-              –
-              <div class="doc-md-description">
-                <p>meth:<code>~trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid</code>.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>try:
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>try:
     raw = await get_variable(client, symbolurl=url)
 except Exception as exc:
     raise from_rws_exception(exc, context="trajTools") from exc
 </code></pre>
-</details>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\errors\translate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+                          <details class="mkdocstrings-source">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\translate.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
@@ -470,7 +609,12 @@ except Exception as exc:
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_rws_exception</span><span class="p">(</span>
+<span class="normal">223</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_rws_exception</span><span class="p">(</span>
     <span class="n">exc</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"request"</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrajCenterError</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Translate a transport-layer exception into a TrajCenter protocol error.</span>
@@ -497,10 +641,10 @@ except Exception as exc:
 <span class="sd">            to ``"request"``.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A :class:`~trajcenter.robot.abb.errors.base.TrajCenterError` instance</span>
+<span class="sd">        A :class:`~trajcenter.robot.errors.base.TrajCenterError` instance</span>
 <span class="sd">        ready to be raised (with ``from exc`` at the call site) and later</span>
 <span class="sd">        converted to a ``(code, message)`` pair via</span>
-<span class="sd">        :meth:`~trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid`.</span>
+<span class="sd">        :meth:`~trajcenter.robot.errors.base.TrajCenterError.to_rapid`.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        ::</span>
@@ -587,64 +731,66 @@ except Exception as exc:
         <span class="n">exc</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">InternalClientError</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-              
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../codes/" class="btn btn-neutral float-left" title="Codes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../../../../../coverage/" class="btn btn-neutral float-right" title="Coverage">Next <span class="icon icon-circle-arrow-right"></span></a>
+            <footer>
+              <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+                <a href="../codes/" class="btn btn-neutral float-left" title="Codes"
+                  ><span class="icon icon-circle-arrow-left"></span> Previous</a
+                >
+                <a
+                  href="../../../../../../coverage/"
+                  class="btn btn-neutral float-right"
+                  title="Coverage"
+                  >Next <span class="icon icon-circle-arrow-right"></span
+                ></a>
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <!-- Copyright etc -->
+              </div>
+
+              Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by
+              <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
     </div>
 
-  <hr/>
+    <div class="rst-versions" role="note" aria-label="Versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span><a href="../codes/" style="color: #fcfcfc">&laquo; Previous</a></span>
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-    
-      <span><a href="../codes/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../../../../../../coverage/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
+        <span><a href="../../../../../../coverage/" style="color: #fcfcfc">Next &raquo;</a></span>
+      </span>
+    </div>
     <script src="../../../../../../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "../../../../../..";</script>
+    <script>
+      var base_url = "../../../../../..";
+    </script>
     <script src="../../../../../../js/theme_extra.js"></script>
     <script src="../../../../../../js/theme.js"></script>
-      <script src="../../../../../../search/main.js"></script>
+    <script src="../../../../../../search/main.js"></script>
     <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
     </script>
-
-</body>
+  </body>
 </html>

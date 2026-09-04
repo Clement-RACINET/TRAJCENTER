@@ -46,20 +46,19 @@ nav:
         - Options: api/trajcenter/export/options.md
         - Tabular Exporter: api/trajcenter/export/tabular_exporter.md
       - Robot:
-        - Abb:
-          - Utils: api/trajcenter/robot/abb/_utils.md
-          - Constants: api/trajcenter/robot/abb/constants.md
-          - Models: api/trajcenter/robot/abb/models.md
-          - Reader: api/trajcenter/robot/abb/reader.md
-          - Resolver: api/trajcenter/robot/abb/resolver.md
-          - Service: api/trajcenter/robot/abb/service.md
-          - Store: api/trajcenter/robot/abb/store.md
-          - Supervisor: api/trajcenter/robot/abb/supervisor.md
-          - Writer: api/trajcenter/robot/abb/writer.md
-          - Errors:
-            - Base: api/trajcenter/robot/abb/errors/base.md
-            - Codes: api/trajcenter/robot/abb/errors/codes.md
-            - Translate: api/trajcenter/robot/abb/errors/translate.md
+        - Utils: api/trajcenter/robot/_utils.md
+        - Constants: api/trajcenter/robot/constants.md
+        - Models: api/trajcenter/robot/models.md
+        - Reader: api/trajcenter/robot/reader.md
+        - Resolver: api/trajcenter/robot/resolver.md
+        - Service: api/trajcenter/robot/service.md
+        - Store: api/trajcenter/robot/store.md
+        - Supervisor: api/trajcenter/robot/supervisor.md
+        - Writer: api/trajcenter/robot/writer.md
+        - Errors:
+          - Base: api/trajcenter/robot/errors/base.md
+          - Codes: api/trajcenter/robot/errors/codes.md
+          - Translate: api/trajcenter/robot/errors/translate.md
 # --- AUTOGEN_API_END ---
   - Coverage: coverage.md 
 

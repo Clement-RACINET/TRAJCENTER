@@ -81,6 +81,8 @@
     <ul class="current">
     <li class="toctree-l4"><a class="reference internal" href="#trajcenter.core.logger">logger</a>
     </li>
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.core.logger.get_logger">get_logger</a>
+    </li>
     </ul>
                 </li>
                 <li class="toctree-l3"><a class="reference internal" href="../messages/">Messages</a>
@@ -174,18 +176,7 @@
 <a id="trajcenter.core.logger"></a>
     <div class="doc doc-contents first">
 
-        <p>Centralised logging access for TrajCenter.</p>
-<p>Re-exports :func:<code>get_logger</code> from <code>abb_rws_client</code> so that all TrajCenter
-modules obtain a properly namespaced child logger without importing the lib
-directly.</p>
-<p>The module is intentionally named <code>logger</code> (not <code>logging</code>) to avoid
-shadowing the Python standard-library :mod:<code>logging</code> module.</p>
-<p>Usage::</p>
-<pre><code>from trajcenter.core.logger import get_logger
-
-logger = get_logger(__name__)
-logger.info("TrajCenter started")
-</code></pre>
+        <p>Logging helpers for TrajCenter.</p>
 
 
 
@@ -206,6 +197,94 @@ logger.info("TrajCenter started")
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="trajcenter.core.logger.get_logger" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return a TrajCenter logger.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>name</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Logger name.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="logging.Logger">Logger</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Logger instance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\core\logger.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return a TrajCenter logger.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Logger name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Logger instance.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

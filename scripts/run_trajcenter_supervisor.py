@@ -19,7 +19,7 @@ ABB Route:
         ``DELETE /subscription/{group-id}``
 
     Service writes:
-        Delegated to ``trajcenter.robot.abb.service`` and ``trajcenter.robot.abb.writer``.
+        Delegated to ``trajcenter.robot.service`` and ``trajcenter.robot.writer``.
 
 ABB Constraints:
     - No TCP v1 server is used.
@@ -42,8 +42,8 @@ import argparse
 import asyncio
 from pathlib import Path
 
-from trajcenter.robot.abb.constants import DEFAULT_TASK, TRAJCENTER_MODULE
-from trajcenter.robot.abb.supervisor import run_rws_subscription_supervisor_app
+from trajcenter.robot.constants import DEFAULT_TASK, TRAJCENTER_MODULE
+from trajcenter.robot.supervisor import run_rws_subscription_supervisor_app
 
 
 def parse_args() -> argparse.Namespace:

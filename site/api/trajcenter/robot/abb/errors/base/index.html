@@ -1,457 +1,539 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
+<!doctype html>
+<html class="writer-html5" lang="en">
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../../../../../../img/favicon.ico" />
+    <link rel="shortcut icon" href="../../../../../../img/favicon.ico" />
     <title>Base - TrajCenter</title>
     <link rel="stylesheet" href="../../../../../../css/theme.css" />
     <link rel="stylesheet" href="../../../../../../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
-        <link href="../../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
-    
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Base";
-        var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\errors\\base.md";
-        var mkdocs_page_url = null;
-      </script>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+    />
+    <link href="../../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+
+    <script>
+      // Current page data
+      var mkdocs_page_name = "Base";
+      var mkdocs_page_input_path = "api\\trajcenter\\robot\\abb\\errors\\base.md";
+      var mkdocs_page_url = null;
+    </script>
+
     <!--[if lt IE 9]>
       <script src="../../../../../../js/html5shiv.min.js"></script>
     <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
 
-<body class="wy-body-for-nav" role="document">
+  <body class="wy-body-for-nav" role="document">
+    <div class="wy-grid-for-nav">
+      <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+        <div class="wy-side-scroll">
+          <div class="wy-side-nav-search">
+            <a href="../../../../../..">
+              <img src="../../../../../../assets/logo.png" class="logo" alt="Logo" />
+            </a>
+            <div role="search">
+              <form
+                id="rtd-search-form"
+                class="wy-form"
+                action="../../../../../../search.html"
+                method="get"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  placeholder="Search docs"
+                  aria-label="Search docs"
+                  title="Type search term here"
+                />
+              </form>
+            </div>
+          </div>
 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href="../../../../../..">
-          <img src="../../../../../../assets/logo.png" class="logo" alt="Logo"/>
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../..">Accueil</a>
-                </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Référence API</span></p>
-              <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" >Trajcenter</a>
-    <ul class="current">
-                <li class="toctree-l2"><a class="reference internal" >Cli</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../cli/main/">Main</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Convert</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/apt_converter/">Apt Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/column_mapper/">Column Mapper</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/csv_converter/">Csv Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/defaults/">Defaults</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/excel_converter/">Excel Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/mod_converter/">Mod Converter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../convert/tabular_converter/">Tabular Converter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Core</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/logger/">Logger</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/messages/">Messages</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../core/trajectory/">Trajectory</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" >Export</a>
-    <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/base/">Base</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/csv_exporter/">Csv Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/excel_exporter/">Excel Exporter</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/options/">Options</a>
-                </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../../../export/tabular_exporter/">Tabular Exporter</a>
-                </li>
-    </ul>
-                </li>
-                <li class="toctree-l2 current"><a class="reference internal current" >Robot</a>
-    <ul class="current">
-                <li class="toctree-l3 current"><a class="reference internal current" >Abb</a>
-    <ul class="current">
-                <li class="toctree-l4"><a class="reference internal" href="../../_utils/">Utils</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../constants/">Constants</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../models/">Models</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../reader/">Reader</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../resolver/">Resolver</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../service/">Service</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../store/">Store</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../supervisor/">Supervisor</a>
-                </li>
-                <li class="toctree-l4"><a class="reference internal" href="../../writer/">Writer</a>
-                </li>
-                <li class="toctree-l4 current"><a class="reference internal current" >Errors</a>
-                </li>
-    </ul>
-                </li>
-    </ul>
-                </li>
-    </ul>
+          <div
+            class="wy-menu wy-menu-vertical"
+            data-spy="affix"
+            role="navigation"
+            aria-label="Navigation menu"
+          >
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../..">Accueil</a>
+              </li>
+            </ul>
+            <p class="caption"><span class="caption-text">Référence API</span></p>
+            <ul class="current">
+              <li class="toctree-l1 current">
+                <a class="reference internal current">Trajcenter</a>
+                <ul class="current">
+                  <li class="toctree-l2">
+                    <a class="reference internal">Cli</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../cli/main/">Main</a>
+                      </li>
+                    </ul>
                   </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../../../../../coverage/">Coverage</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Convert</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/apt_converter/"
+                          >Apt Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/column_mapper/"
+                          >Column Mapper</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/csv_converter/"
+                          >Csv Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/defaults/"
+                          >Defaults</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/excel_converter/"
+                          >Excel Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/mod_converter/"
+                          >Mod Converter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../convert/tabular_converter/"
+                          >Tabular Converter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Core</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/logger/">Logger</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/messages/">Messages</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../core/trajectory/"
+                          >Trajectory</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2">
+                    <a class="reference internal">Export</a>
+                    <ul>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/base/">Base</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/csv_exporter/"
+                          >Csv Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/excel_exporter/"
+                          >Excel Exporter</a
+                        >
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/options/">Options</a>
+                      </li>
+                      <li class="toctree-l3">
+                        <a class="reference internal" href="../../../../export/tabular_exporter/"
+                          >Tabular Exporter</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="toctree-l2 current">
+                    <a class="reference internal current">Robot</a>
+                    <ul class="current">
+                      <li class="toctree-l3 current">
+                        <a class="reference internal current">Abb</a>
+                        <ul class="current">
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../_utils/">Utils</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../constants/">Constants</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../models/">Models</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../reader/">Reader</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../resolver/">Resolver</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../service/">Service</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../store/">Store</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../supervisor/">Supervisor</a>
+                          </li>
+                          <li class="toctree-l4">
+                            <a class="reference internal" href="../../writer/">Writer</a>
+                          </li>
+                          <li class="toctree-l4 current">
+                            <a class="reference internal current">Errors</a>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../coverage/">Coverage</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+      <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../..">TrajCenter</a>
-        
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="../../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Référence API</li>
-          <li class="breadcrumb-item">Trajcenter</li>
-          <li class="breadcrumb-item">Robot</li>
-          <li class="breadcrumb-item">Abb</li>
-          <li class="breadcrumb-item">Errors</li>
-      <li class="breadcrumb-item active">Base</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
+        </nav>
+        <div class="wy-nav-content">
+          <div class="rst-content">
+            <div role="navigation" aria-label="breadcrumbs navigation">
+              <ul class="wy-breadcrumbs">
+                <li><a href="../../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+                <li class="breadcrumb-item">Référence API</li>
+                <li class="breadcrumb-item">Trajcenter</li>
+                <li class="breadcrumb-item">Robot</li>
+                <li class="breadcrumb-item">Abb</li>
+                <li class="breadcrumb-item">Errors</li>
+                <li class="breadcrumb-item active">Base</li>
+                <li class="wy-breadcrumbs-aside"></li>
+              </ul>
+              <hr />
+            </div>
+            <div
+              role="main"
+              class="document"
+              itemscope="itemscope"
+              itemtype="http://schema.org/Article"
+            >
+              <div class="section" itemprop="articleBody">
                 <h1 id="base">Base</h1>
 
+                <div class="doc doc-object doc-module">
+                  <a id="trajcenter.robot.errors.base"></a>
+                  <div class="doc doc-contents first">
+                    <p>Base exception hierarchy for the TrajCenter RWS transfer protocol.</p>
+                    <blockquote>
+                      <p><strong>Author</strong>: Clément RACINET</p>
+                    </blockquote>
+                    <p>
+                      This module defines the root :class:<code>TrajCenterError</code> and its eight
+                      category-level subclasses, mirroring the code ranges documented in
+                      <code>routes/TRAJCENTER.md</code> section 12 (status and error codes).
+                    </p>
+                    <p>
+                      Concrete leaf exceptions (one per protocol error code) are declared in
+                      :mod:<code>trajcenter.robot.errors.codes</code>. Translation from
+                      <code>abb_rws_client_python_rw6</code> exceptions into this hierarchy is
+                      handled in :mod:<code>trajcenter.robot.errors.translate</code>.
+                    </p>
+                    <h3 id="trajcenter.robot.errors.base--design-principle">Design principle</h3>
+                    <p>
+                      This hierarchy is a <em>protocol-level</em> taxonomy, distinct from the
+                      transport-level <code>RWSError</code> hierarchy of
+                      <code>abb_rws_client_python_rw6</code>
+                      and distinct from the conversion-level messages in
+                      <code>trajcenter.core.messages</code>. Transport errors are translated into
+                      this hierarchy at the boundary (<code>robot/abb/reader.py</code> /
+                      <code>robot/abb/writer.py</code>); they are never re-raised as-is toward the
+                      orchestrator or toward RAPID.
+                    </p>
+                    <h3 id="trajcenter.robot.errors.base--abb-constraints">ABB constraints</h3>
+                    <ul>
+                      <li>
+                        All four TrajCenter RAPID modules must be saved as ISO-8859-1. Error
+                        messages built here therefore use only ASCII separators (<code>"-"</code>,
+                        <code>"..."</code>) so :meth:<code>TrajCenterError.to_rapid</code> never
+                        produces a string that cannot be encoded when written to the RAPID
+                        <code>lastError</code> variable.
+                      </li>
+                      <li>
+                        RAPID <code>string</code> values have a maximum length of 80 characters
+                        (<code>RAPID_STRMAX</code>). Longer messages are truncated by
+                        :meth:<code>TrajCenterError.to_rapid</code>.
+                      </li>
+                    </ul>
 
-<div class="doc doc-object doc-module">
+                    <div class="doc doc-children">
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterAuthError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterAuthError</code>
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for RWS authentication errors (401xxx).</p>
+                          <p>
+                            Raised only via :func:<code
+                              >trajcenter.robot.errors.translate.from_rws_exception</code
+                            >
+                            when the underlying <code>abb_rws_client_python_rw6</code> session
+                            rejects Digest authentication.
+                          </p>
 
-<a id="trajcenter.robot.abb.errors.base"></a>
-    <div class="doc doc-contents first">
-
-        <p>Base exception hierarchy for the TrajCenter RWS transfer protocol.</p>
-<blockquote>
-<p><strong>Author</strong>: Clément RACINET</p>
-</blockquote>
-<p>This module defines the root :class:<code>TrajCenterError</code> and its eight
-category-level subclasses, mirroring the code ranges documented in
-<code>routes/TRAJCENTER.md</code> section 12 (status and error codes).</p>
-<p>Concrete leaf exceptions (one per protocol error code) are declared in
-:mod:<code>trajcenter.robot.abb.errors.codes</code>. Translation from
-<code>abb_rws_client_python_rw6</code> exceptions into this hierarchy is handled
-in :mod:<code>trajcenter.robot.abb.errors.translate</code>.</p>
-<h3 id="trajcenter.robot.abb.errors.base--design-principle">Design principle</h3>
-<p>This hierarchy is a <em>protocol-level</em> taxonomy, distinct from the
-transport-level <code>RWSError</code> hierarchy of <code>abb_rws_client_python_rw6</code>
-and distinct from the conversion-level messages in
-<code>trajcenter.core.messages</code>. Transport errors are translated into this
-hierarchy at the boundary (<code>robot/abb/reader.py</code> / <code>robot/abb/writer.py</code>); they
-are never re-raised as-is toward the orchestrator or toward RAPID.</p>
-<h3 id="trajcenter.robot.abb.errors.base--abb-constraints">ABB constraints</h3>
-<ul>
-<li>All four TrajCenter RAPID modules must be saved as ISO-8859-1. Error
-  messages built here therefore use only ASCII separators (<code>"-"</code>,
-  <code>"..."</code>) so :meth:<code>TrajCenterError.to_rapid</code> never produces a string
-  that cannot be encoded when written to the RAPID <code>lastError</code>
-  variable.</li>
-<li>RAPID <code>string</code> values have a maximum length of 80 characters
-  (<code>RAPID_STRMAX</code>). Longer messages are truncated by
-  :meth:<code>TrajCenterError.to_rapid</code>.</li>
-</ul>
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterAuthError" class="doc doc-heading">
-            <code>TrajCenterAuthError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for RWS authentication errors (401xxx).</p>
-<p>Raised only via :func:<code>trajcenter.robot.abb.errors.translate.from_rws_exception</code>
-when the underlying <code>abb_rws_client_python_rw6</code> session rejects
-Digest authentication.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">161</span>
 <span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
-<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterAuthError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">167</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterAuthError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for RWS authentication errors (401xxx).</span>
 
-<span class="sd">    Raised only via :func:`trajcenter.robot.abb.errors.translate.from_rws_exception`</span>
+<span class="sd">    Raised only via :func:`trajcenter.robot.errors.translate.from_rws_exception`</span>
 <span class="sd">    when the underlying ``abb_rws_client_python_rw6`` session rejects</span>
 <span class="sd">    Digest authentication.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterConflictError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterConflictError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for state-conflict errors (409xxx).</p>
+                          <p>
+                            Raised by the service orchestrator (not by
+                            <code>reader</code>/<code>writer</code>) when a transfer is requested
+                            while one is already running, or when the robot controller state is
+                            incompatible with the request.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterConflictError" class="doc doc-heading">
-            <code>TrajCenterConflictError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for state-conflict errors (409xxx).</p>
-<p>Raised by the service orchestrator (not by <code>reader</code>/<code>writer</code>)
-when a transfer is requested while one is already running, or when
-the robot controller state is incompatible with the request.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">197</span>
 <span class="normal">198</span>
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
 <span class="normal">202</span>
-<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterConflictError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">203</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterConflictError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for state-conflict errors (409xxx).</span>
 
 <span class="sd">    Raised by the service orchestrator (not by ``reader``/``writer``)</span>
 <span class="sd">    when a transfer is requested while one is already running, or when</span>
 <span class="sd">    the robot controller state is incompatible with the request.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterError" class="doc doc-heading">
-            <code>TrajCenterError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="Exception">Exception</span></code></p>
-
-
-
-        <p>Root of the TrajCenter RWS transfer protocol error hierarchy.</p>
-<p>Every concrete error in :mod:<code>trajcenter.robot.abb.errors.codes</code> subclasses
-one of the eight category classes defined below, which themselves
-subclass <code>TrajCenterError</code>. Catching <code>TrajCenterError</code> catches
-every protocol error raised by the ABB robot layer.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>N/A -- internal exception hierarchy, not an RWS route.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p>Instances are converted to a <code>(code, message)</code> pair via
-:meth:<code>to_rapid</code> before being written to the RAPID
-<code>lastErrorCode</code> (<code>num</code>) and <code>lastError</code> (<code>string</code>)
-variables declared in <code>TRAJCENTER</code>.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Attributes:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>code</code></b>
-                  (<code><span title="int">int</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Numeric protocol status code, one of the values documented
-in <code>routes/TRAJCENTER.md</code> section 12. Set by each leaf
-subclass in :mod:<code>trajcenter.robot.abb.errors.codes</code>.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>default_message</code></b>
-                  (<code><span title="str">str</span></code>)
-              –
-              <div class="doc-md-description">
-                <p>Short human-readable description used when no
-<code>detail</code> is supplied at raise time.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>detail</code></b>
-              –
-              <div class="doc-md-description">
-                <p>Optional contextual detail supplied at raise time, e.g.
-the offending value or resource name.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>raise MastershipDeniedError(detail="attempt 3/3")
 </code></pre>
-</details>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterError</code>
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases: <code><span title="Exception">Exception</span></code>
+                          </p>
 
+                          <p>Root of the TrajCenter RWS transfer protocol error hierarchy.</p>
+                          <p>
+                            Every concrete error in :mod:<code>trajcenter.robot.errors.codes</code>
+                            subclasses one of the eight category classes defined below, which
+                            themselves subclass <code>TrajCenterError</code>. Catching
+                            <code>TrajCenterError</code> catches every protocol error raised by the
+                            ABB robot layer.
+                          </p>
 
+                          <details class="abb-route" open>
+                            <summary>ABB Route</summary>
+                            <p>N/A -- internal exception hierarchy, not an RWS route.</p>
+                          </details>
 
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 47</span>
+                          <details class="abb-constraints" open>
+                            <summary>ABB Constraints</summary>
+                            <p>
+                              Instances are converted to a <code>(code, message)</code> pair via
+                              :meth:<code>to_rapid</code> before being written to the RAPID
+                              <code>lastErrorCode</code> (<code>num</code>) and
+                              <code>lastError</code> (<code>string</code>) variables declared in
+                              <code>TRAJCENTER</code>.
+                            </p>
+                          </details>
+
+                          <table class="field-list">
+                            <colgroup>
+                              <col class="field-name" />
+                              <col class="field-body" />
+                            </colgroup>
+                            <tbody valign="top">
+                              <tr class="field">
+                                <th class="field-name">Attributes:</th>
+                                <td class="field-body">
+                                  <ul class="first simple">
+                                    <li>
+                                      <b><code>code</code></b>
+                                      (<code><span title="int">int</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Numeric protocol status code, one of the values documented
+                                          in <code>routes/TRAJCENTER.md</code> section 12. Set by
+                                          each leaf subclass in
+                                          :mod:<code>trajcenter.robot.errors.codes</code>.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>default_message</code></b>
+                                      (<code><span title="str">str</span></code
+                                      >) –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Short human-readable description used when no
+                                          <code>detail</code> is supplied at raise time.
+                                        </p>
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <b><code>detail</code></b>
+                                      –
+                                      <div class="doc-md-description">
+                                        <p>
+                                          Optional contextual detail supplied at raise time, e.g.
+                                          the offending value or resource name.
+                                        </p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <details class="example" open>
+                            <summary>Example</summary>
+                            <p>::</p>
+                            <pre><code>raise MastershipDeniedError(detail="attempt 3/3")
+</code></pre>
+                          </details>
+
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal"> 47</span>
 <span class="normal"> 48</span>
 <span class="normal"> 49</span>
 <span class="normal"> 50</span>
@@ -553,10 +635,15 @@ the offending value or resource name.</p>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="normal">149</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Root of the TrajCenter RWS transfer protocol error hierarchy.</span>
 
-<span class="sd">    Every concrete error in :mod:`trajcenter.robot.abb.errors.codes` subclasses</span>
+<span class="sd">    Every concrete error in :mod:`trajcenter.robot.errors.codes` subclasses</span>
 <span class="sd">    one of the eight category classes defined below, which themselves</span>
 <span class="sd">    subclass ``TrajCenterError``. Catching ``TrajCenterError`` catches</span>
 <span class="sd">    every protocol error raised by the ABB robot layer.</span>
@@ -573,7 +660,7 @@ the offending value or resource name.</p>
 <span class="sd">    Attributes:</span>
 <span class="sd">        code: Numeric protocol status code, one of the values documented</span>
 <span class="sd">            in ``routes/TRAJCENTER.md`` section 12. Set by each leaf</span>
-<span class="sd">            subclass in :mod:`trajcenter.robot.abb.errors.codes`.</span>
+<span class="sd">            subclass in :mod:`trajcenter.robot.errors.codes`.</span>
 <span class="sd">        default_message: Short human-readable description used when no</span>
 <span class="sd">            ``detail`` is supplied at raise time.</span>
 <span class="sd">        detail: Optional contextual detail supplied at raise time, e.g.</span>
@@ -656,109 +743,120 @@ the offending value or resource name.</p>
 <span class="sd">            String showing the class name, numeric code and detail.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(code=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">, detail=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">detail</span><span class="si">!r}</span><span class="s2">)"</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="trajcenter.robot.abb.errors.base.TrajCenterError.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">detail</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cause</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Build a TrajCenter protocol error.</p>
-
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Parameters:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-              <b><code>detail</code></b>
-                  (<code><span title="str">str</span> | None</code>, default:
-                      <code>None</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Optional contextual detail appended to
-<code>default_message</code> after an ASCII <code>" - "</code> separator.</p>
-              </div>
-            </li>
-            <li>
-              <b><code>cause</code></b>
-                  (<code><span title="BaseException">BaseException</span> | None</code>, default:
-                      <code>None</code>
-)
-              –
-              <div class="doc-md-description">
-                <p>Optional originating exception. Chained as
-<code>__cause__</code> so the full traceback stays visible in
-logs, without leaking transport-layer detail into the
-RAPID-facing message.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code>None</code>
-              –
-              <div class="doc-md-description">
-                <p>None.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>TrajToolsNotFound(detail="RAPID/T_ROB1/.../trajTools")
 </code></pre>
-</details>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
+                          <div class="doc doc-children">
+                            <div class="doc doc-object doc-function">
+                              <h3
+                                id="trajcenter.robot.errors.base.TrajCenterError.__init__"
+                                class="doc doc-heading"
+                              >
+                                <code class="highlight language-python"
+                                  ><span class="fm">__init__</span><span class="p">(</span
+                                  ><span class="n">detail</span><span class="o">=</span
+                                  ><span class="kc">None</span><span class="p">,</span>
+                                  <span class="o">*</span><span class="p">,</span>
+                                  <span class="n">cause</span><span class="o">=</span
+                                  ><span class="kc">None</span><span class="p">)</span></code
+                                >
+                              </h3>
+
+                              <div class="doc doc-contents">
+                                <p>Build a TrajCenter protocol error.</p>
+
+                                <table class="field-list">
+                                  <colgroup>
+                                    <col class="field-name" />
+                                    <col class="field-body" />
+                                  </colgroup>
+                                  <tbody valign="top">
+                                    <tr class="field">
+                                      <th class="field-name">Parameters:</th>
+                                      <td class="field-body">
+                                        <ul class="first simple">
+                                          <li>
+                                            <b><code>detail</code></b>
+                                            (<code><span title="str">str</span> | None</code>,
+                                            default:
+                                            <code>None</code>
+                                            ) –
+                                            <div class="doc-md-description">
+                                              <p>
+                                                Optional contextual detail appended to
+                                                <code>default_message</code> after an ASCII
+                                                <code>" - "</code> separator.
+                                              </p>
+                                            </div>
+                                          </li>
+                                          <li>
+                                            <b><code>cause</code></b>
+                                            (<code
+                                              ><span title="BaseException">BaseException</span> |
+                                              None</code
+                                            >, default:
+                                            <code>None</code>
+                                            ) –
+                                            <div class="doc-md-description">
+                                              <p>
+                                                Optional originating exception. Chained as
+                                                <code>__cause__</code> so the full traceback stays
+                                                visible in logs, without leaking transport-layer
+                                                detail into the RAPID-facing message.
+                                              </p>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+
+                                <table class="field-list">
+                                  <colgroup>
+                                    <col class="field-name" />
+                                    <col class="field-body" />
+                                  </colgroup>
+                                  <tbody valign="top">
+                                    <tr class="field">
+                                      <th class="field-name">Returns:</th>
+                                      <td class="field-body">
+                                        <ul class="first simple">
+                                          <li>
+                                            <code>None</code>
+                                            –
+                                            <div class="doc-md-description">
+                                              <p>None.</p>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+
+                                <details class="example" open>
+                                  <summary>Example</summary>
+                                  <p>::</p>
+                                  <pre><code>TrajToolsNotFound(detail="RAPID/T_ROB1/.../trajTools")
+</code></pre>
+                                </details>
+
+                                <details class="mkdocstrings-source">
+                                  <summary>
+                                    Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                                  </summary>
+                                  <div class="highlight">
+                                    <table class="highlighttable">
+                                      <tr>
+                                        <td class="linenos">
+                                          <div class="linenodiv">
+                                            <pre><span></span><span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
@@ -788,7 +886,12 @@ RAPID-facing message.</p>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">112</span></pre>
+                                          </div>
+                                        </td>
+                                        <td class="code">
+                                          <div>
+                                            <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">detail</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -819,134 +922,179 @@ RAPID-facing message.</p>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cause</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__cause__</span> <span class="o">=</span> <span class="n">cause</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </details>
+                              </div>
+                            </div>
 
-</div>
+                            <div class="doc doc-object doc-function">
+                              <h3
+                                id="trajcenter.robot.errors.base.TrajCenterError.__repr__"
+                                class="doc doc-heading"
+                              >
+                                <code class="highlight language-python"
+                                  ><span class="fm">__repr__</span><span class="p">()</span></code
+                                >
+                              </h3>
 
-<div class="doc doc-object doc-function">
+                              <div class="doc doc-contents">
+                                <p>Return a concise debug representation.</p>
 
+                                <table class="field-list">
+                                  <colgroup>
+                                    <col class="field-name" />
+                                    <col class="field-body" />
+                                  </colgroup>
+                                  <tbody valign="top">
+                                    <tr class="field">
+                                      <th class="field-name">Returns:</th>
+                                      <td class="field-body">
+                                        <ul class="first simple">
+                                          <li>
+                                            <code><span title="str">str</span></code>
+                                            –
+                                            <div class="doc-md-description">
+                                              <p>
+                                                String showing the class name, numeric code and
+                                                detail.
+                                              </p>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
 
-<h3 id="trajcenter.robot.abb.errors.base.TrajCenterError.__repr__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__repr__</span><span class="p">()</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Return a concise debug representation.</p>
-
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="str">str</span></code>
-              –
-              <div class="doc-md-description">
-                <p>String showing the class name, numeric code and detail.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+                                <details class="mkdocstrings-source">
+                                  <summary>
+                                    Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                                  </summary>
+                                  <div class="highlight">
+                                    <table class="highlighttable">
+                                      <tr>
+                                        <td class="linenos">
+                                          <div class="linenodiv">
+                                            <pre><span></span><span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">149</span></pre>
+                                          </div>
+                                        </td>
+                                        <td class="code">
+                                          <div>
+                                            <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Return a concise debug representation.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        String showing the class name, numeric code and detail.</span>
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(code=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">, detail=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">detail</span><span class="si">!r}</span><span class="s2">)"</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </details>
+                              </div>
+                            </div>
 
-</div>
+                            <div class="doc doc-object doc-function">
+                              <h3
+                                id="trajcenter.robot.errors.base.TrajCenterError.to_rapid"
+                                class="doc doc-heading"
+                              >
+                                <code class="highlight language-python"
+                                  ><span class="n">to_rapid</span><span class="p">()</span></code
+                                >
+                              </h3>
 
-<div class="doc doc-object doc-function">
+                              <div class="doc doc-contents">
+                                <p>
+                                  Convert this error to a
+                                  <code>(lastErrorCode, lastError)</code> pair.
+                                </p>
 
+                                <details class="abb-route" open>
+                                  <summary>ABB Route</summary>
+                                  <p>
+                                    Result is written via
+                                    <code
+                                      >POST
+                                      /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/lastErrorCode</code
+                                    >
+                                    and the equivalent <code>.../lastError</code> call.
+                                  </p>
+                                </details>
 
-<h3 id="trajcenter.robot.abb.errors.base.TrajCenterError.to_rapid" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">to_rapid</span><span class="p">()</span></code>
+                                <details class="abb-constraints" open>
+                                  <summary>ABB Constraints</summary>
+                                  <p>
+                                    RAPID <code>string</code> values are limited to
+                                    <code>RAPID_STRMAX</code> (80) characters. Longer messages are
+                                    truncated with an ASCII <code>"..."</code> suffix. Only
+                                    ASCII/Latin-1-safe characters are ever produced, since the RAPID
+                                    modules require ISO-8859-1 encoding.
+                                  </p>
+                                </details>
 
-</h3>
+                                <table class="field-list">
+                                  <colgroup>
+                                    <col class="field-name" />
+                                    <col class="field-body" />
+                                  </colgroup>
+                                  <tbody valign="top">
+                                    <tr class="field">
+                                      <th class="field-name">Returns:</th>
+                                      <td class="field-body">
+                                        <ul class="first simple">
+                                          <li>
+                                            <code
+                                              ><span title="tuple">tuple</span>[<span title="int"
+                                                >int</span
+                                              >, <span title="str">str</span>]</code
+                                            >
+                                            –
+                                            <div class="doc-md-description">
+                                              <p>
+                                                Tuple of <code>(code, message)</code> ready to write
+                                                to RAPID.
+                                              </p>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
 
-
-    <div class="doc doc-contents ">
-
-        <p>Convert this error to a <code>(lastErrorCode, lastError)</code> pair.</p>
-
-
-<details class="abb-route" open>
-  <summary>ABB Route</summary>
-  <p>Result is written via
-<code>POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/lastErrorCode</code>
-and the equivalent <code>.../lastError</code> call.</p>
-</details>
-
-<details class="abb-constraints" open>
-  <summary>ABB Constraints</summary>
-  <p>RAPID <code>string</code> values are limited to <code>RAPID_STRMAX</code> (80)
-characters. Longer messages are truncated with an ASCII
-<code>"..."</code> suffix. Only ASCII/Latin-1-safe characters are
-ever produced, since the RAPID modules require ISO-8859-1
-encoding.</p>
-</details>
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="tuple">tuple</span>[<span title="int">int</span>, <span title="str">str</span>]</code>
-              –
-              <div class="doc-md-description">
-                <p>Tuple of <code>(code, message)</code> ready to write to RAPID.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>::</p>
-<pre><code>code, message = MastershipDeniedError().to_rapid()
+                                <details class="example" open>
+                                  <summary>Example</summary>
+                                  <p>::</p>
+                                  <pre><code>code, message = MastershipDeniedError().to_rapid()
 assert code == 403001
 </code></pre>
-</details>
+                                </details>
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
+                                <details class="mkdocstrings-source">
+                                  <summary>
+                                    Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                                  </summary>
+                                  <div class="highlight">
+                                    <table class="highlighttable">
+                                      <tr>
+                                        <td class="linenos">
+                                          <div class="linenodiv">
+                                            <pre><span></span><span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
@@ -973,7 +1121,12 @@ assert code == 403001
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_rapid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="normal">141</span></pre>
+                                          </div>
+                                        </td>
+                                        <td class="code">
+                                          <div>
+                                            <pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_rapid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Convert this error to a ``(lastErrorCode, lastError)`` pair.</span>
 
 <span class="sd">    ABB Route:</span>
@@ -1001,125 +1154,134 @@ assert code == 403001
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">RAPID_STRMAX</span><span class="p">:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span> <span class="n">RAPID_STRMAX</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">text</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+</code></pre>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </details>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-</div>
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterForbiddenError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterForbiddenError</code>
+                        </h2>
 
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for RWS permission errors (403xxx).</p>
+                          <p>
+                            Covers both a denied Mastership acquisition and a write attempt rejected
+                            by the controller for policy reasons.
+                          </p>
 
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterForbiddenError" class="doc doc-heading">
-            <code>TrajCenterForbiddenError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for RWS permission errors (403xxx).</p>
-<p>Covers both a denied Mastership acquisition and a write attempt
-rejected by the controller for policy reasons.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
-<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterForbiddenError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">175</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterForbiddenError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for RWS permission errors (403xxx).</span>
 
 <span class="sd">    Covers both a denied Mastership acquisition and a write attempt</span>
 <span class="sd">    rejected by the controller for policy reasons.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterInternalError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterInternalError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for internal client-side errors (500xxx).</p>
+                          <p>
+                            Covers unexpected client failures, serialization failures in
+                            <code>abb_rws_client_python_rw6</code>, and trajectory conversion
+                            failures. Never expected in normal operation; always logged at ERROR
+                            level with full context when raised.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterInternalError" class="doc doc-heading">
-            <code>TrajCenterInternalError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for internal client-side errors (500xxx).</p>
-<p>Covers unexpected client failures, serialization failures in
-<code>abb_rws_client_python_rw6</code>, and trajectory conversion failures.
-Never expected in normal operation; always logged at ERROR level
-with full context when raised.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterInternalError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">213</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterInternalError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for internal client-side errors (500xxx).</span>
 
 <span class="sd">    Covers unexpected client failures, serialization failures in</span>
@@ -1127,138 +1289,136 @@ with full context when raised.</p>
 <span class="sd">    Never expected in normal operation; always logged at ERROR level</span>
 <span class="sd">    with full context when raised.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterNotFoundError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterNotFoundError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for missing-resource errors (404xxx).</p>
+                          <p>
+                            Covers RAPID symbols, cell configuration arrays (<code>trajTools</code>,
+                            <code>trajWobjs</code>), the local trajectory store, robot defaults and
+                            the process catalog.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterNotFoundError" class="doc doc-heading">
-            <code>TrajCenterNotFoundError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for missing-resource errors (404xxx).</p>
-<p>Covers RAPID symbols, cell configuration arrays (<code>trajTools</code>,
-<code>trajWobjs</code>), the local trajectory store, robot defaults and the
-process catalog.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
 <span class="normal">183</span>
-<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterNotFoundError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">184</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterNotFoundError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for missing-resource errors (404xxx).</span>
 
 <span class="sd">    Covers RAPID symbols, cell configuration arrays (``trajTools``,</span>
 <span class="sd">    ``trajWobjs``), the local trajectory store, robot defaults and the</span>
 <span class="sd">    process catalog.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterTimeoutError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterTimeoutError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for client-perceived timeout errors (408xxx).</p>
+                          <p>
+                            Raised when an RWS request or a full trajectory transfer does not
+                            complete within the operation's own timeout budget. Distinct from
+                            :class:<code>TrajCenterUpstreamError</code> (504001), which represents a
+                            controller-side gateway timeout reported by RWS itself.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterTimeoutError" class="doc doc-heading">
-            <code>TrajCenterTimeoutError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for client-perceived timeout errors (408xxx).</p>
-<p>Raised when an RWS request or a full trajectory transfer does not
-complete within the operation's own timeout budget. Distinct from
-:class:<code>TrajCenterUpstreamError</code> (504001), which represents a
-controller-side gateway timeout reported by RWS itself.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
-<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterTimeoutError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">194</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterTimeoutError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for client-perceived timeout errors (408xxx).</span>
 
 <span class="sd">    Raised when an RWS request or a full trajectory transfer does not</span>
@@ -1266,70 +1426,69 @@ controller-side gateway timeout reported by RWS itself.</p>
 <span class="sd">    :class:`TrajCenterUpstreamError` (504001), which represents a</span>
 <span class="sd">    controller-side gateway timeout reported by RWS itself.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterUpstreamError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterUpstreamError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for controller/upstream availability errors.</p>
+                          <p>
+                            Covers an invalid or unparsable RWS response (502001), an unreachable
+                            controller (503001), and a controller-side gateway timeout (504001).
+                            These mirror HTTP 502/503/504 semantics applied to the ABB controller as
+                            the upstream service.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterUpstreamError" class="doc doc-heading">
-            <code>TrajCenterUpstreamError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for controller/upstream availability errors.</p>
-<p>Covers an invalid or unparsable RWS response (502001), an
-unreachable controller (503001), and a controller-side gateway
-timeout (504001). These mirror HTTP 502/503/504 semantics applied to
-the ABB controller as the upstream service.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterUpstreamError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">223</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterUpstreamError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for controller/upstream availability errors.</span>
 
 <span class="sd">    Covers an invalid or unparsable RWS response (502001), an</span>
@@ -1337,152 +1496,132 @@ the ABB controller as the upstream service.</p>
 <span class="sd">    timeout (504001). These mirror HTTP 502/503/504 semantics applied to</span>
 <span class="sd">    the ABB controller as the upstream service.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
 
+                      <div class="doc doc-object doc-class">
+                        <h2
+                          id="trajcenter.robot.errors.base.TrajCenterValidationError"
+                          class="doc doc-heading"
+                        >
+                          <code>TrajCenterValidationError</code>
+                        </h2>
 
-<div class="doc doc-children">
+                        <div class="doc doc-contents">
+                          <p class="doc doc-class-bases">
+                            Bases:
+                            <code
+                              ><a
+                                class="autorefs autorefs-internal"
+                                title="TrajCenterError (trajcenter.robot.errors.base.TrajCenterError)"
+                                href="#trajcenter.robot.errors.base.TrajCenterError"
+                                >TrajCenterError</a
+                              ></code
+                            >
+                          </p>
 
+                          <p>Category base for trajectory/content validation errors (400xxx).</p>
+                          <p>
+                            Raised by :mod:<code>trajcenter.robot.resolver</code> when a
+                            <code>.trajcenter</code> trajectory fails validation before transfer --
+                            never by a translated RWS transport error.
+                          </p>
 
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="trajcenter.robot.abb.errors.base.TrajCenterValidationError" class="doc doc-heading">
-            <code>TrajCenterValidationError</code>
-
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="TrajCenterError (trajcenter.robot.abb.errors.base.TrajCenterError)" href="#trajcenter.robot.abb.errors.base.TrajCenterError">TrajCenterError</a></code></p>
-
-
-
-        <p>Category base for trajectory/content validation errors (400xxx).</p>
-<p>Raised by :mod:<code>trajcenter.robot.abb.resolver</code> when a <code>.trajcenter</code>
-trajectory fails validation before transfer -- never by a translated
-RWS transport error.</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>trajcenter\robot\abb\errors\base.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
+                          <details class="quote">
+                            <summary>
+                              Source code in <code>trajcenter\robot\abb\errors\base.py</code>
+                            </summary>
+                            <div class="highlight">
+                              <table class="highlighttable">
+                                <tr>
+                                  <td class="linenos">
+                                    <div class="linenodiv">
+                                      <pre><span></span><span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
-<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterValidationError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
+<span class="normal">158</span></pre>
+                                    </div>
+                                  </td>
+                                  <td class="code">
+                                    <div>
+                                      <pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterValidationError</span><span class="p">(</span><span class="n">TrajCenterError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Category base for trajectory/content validation errors (400xxx).</span>
 
-<span class="sd">    Raised by :mod:`trajcenter.robot.abb.resolver` when a ``.trajcenter``</span>
+<span class="sd">    Raised by :mod:`trajcenter.robot.resolver` when a ``.trajcenter``</span>
 <span class="sd">    trajectory fails validation before transfer -- never by a translated</span>
 <span class="sd">    RWS transport error.</span>
 <span class="sd">    """</span>
-</code></pre></div></td></tr></table></div>
-              </details>
+</code></pre>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </table>
+                            </div>
+                          </details>
 
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-
-</div>
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-              
+                          <div class="doc doc-children"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../writer/" class="btn btn-neutral float-left" title="Writer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../codes/" class="btn btn-neutral float-right" title="Codes">Next <span class="icon icon-circle-arrow-right"></span></a>
+            <footer>
+              <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+                <a href="../../writer/" class="btn btn-neutral float-left" title="Writer"
+                  ><span class="icon icon-circle-arrow-left"></span> Previous</a
+                >
+                <a href="../codes/" class="btn btn-neutral float-right" title="Codes"
+                  >Next <span class="icon icon-circle-arrow-right"></span
+                ></a>
+              </div>
+
+              <hr />
+
+              <div role="contentinfo">
+                <!-- Copyright etc -->
+              </div>
+
+              Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a
+              <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by
+              <a href="https://readthedocs.org">Read the Docs</a>.
+            </footer>
+          </div>
+        </div>
+      </section>
     </div>
 
-  <hr/>
+    <div class="rst-versions" role="note" aria-label="Versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span><a href="../../writer/" style="color: #fcfcfc">&laquo; Previous</a></span>
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
-
-  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-
-  <div class="rst-versions" role="note" aria-label="Versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    
-    
-      <span><a href="../../writer/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../codes/" style="color: #fcfcfc">Next &raquo;</a></span>
-    
-  </span>
-</div>
+        <span><a href="../codes/" style="color: #fcfcfc">Next &raquo;</a></span>
+      </span>
+    </div>
     <script src="../../../../../../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "../../../../../..";</script>
+    <script>
+      var base_url = "../../../../../..";
+    </script>
     <script src="../../../../../../js/theme_extra.js"></script>
     <script src="../../../../../../js/theme.js"></script>
-      <script src="../../../../../../search/main.js"></script>
+    <script src="../../../../../../search/main.js"></script>
     <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
+      jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+      });
     </script>
-
-</body>
+  </body>
 </html>

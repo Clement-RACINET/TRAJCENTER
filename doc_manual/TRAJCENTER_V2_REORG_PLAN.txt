@@ -102,7 +102,7 @@ Current rules
 
 - Robot communication must be importable through the public namespace:
 
-    trajcenter.robot.abb
+    trajcenter.robot.
 
 - The historical namespaces are no longer present in this working state:
 
@@ -202,7 +202,7 @@ trajcenter.export
     trajcenter.export.options
     trajcenter.export.tabular_exporter
 
-trajcenter.robot.abb
+trajcenter.robot.
   Public ABB robot communication API.
 
   This is the target namespace for robot communication.
@@ -212,18 +212,18 @@ trajcenter.robot.abb
 
   Current modules:
 
-    trajcenter.robot.abb._utils
-    trajcenter.robot.abb.constants
-    trajcenter.robot.abb.models
-    trajcenter.robot.abb.reader
-    trajcenter.robot.abb.resolver
-    trajcenter.robot.abb.service
-    trajcenter.robot.abb.store
-    trajcenter.robot.abb.supervisor
-    trajcenter.robot.abb.writer
-    trajcenter.robot.abb.errors.base
-    trajcenter.robot.abb.errors.codes
-    trajcenter.robot.abb.errors.translate
+    trajcenter.robot._utils
+    trajcenter.robot.constants
+    trajcenter.robot.models
+    trajcenter.robot.reader
+    trajcenter.robot.resolver
+    trajcenter.robot.service
+    trajcenter.robot.store
+    trajcenter.robot.supervisor
+    trajcenter.robot.writer
+    trajcenter.robot.errors.base
+    trajcenter.robot.errors.codes
+    trajcenter.robot.errors.translate
 
 trajcenter.cli
   Command line interface.
@@ -255,7 +255,7 @@ Current expected result:
 
   import trajcenter.convert      works
   import trajcenter.export       works
-  import trajcenter.robot.abb    works
+  import trajcenter.robot.    works
 
   import trajcenter.converter    fails
   import trajcenter.exporter     fails
@@ -386,7 +386,7 @@ The API documentation has been regenerated for the new namespaces:
 
   trajcenter.convert
   trajcenter.export
-  trajcenter.robot.abb
+  trajcenter.robot.
 
 Old generated API folders have been removed:
 
@@ -513,13 +513,13 @@ STEP 10 - Migrate ABB robot API namespace
 
   Goal:
 
-    Make trajcenter.robot.abb the public ABB robot API.
+    Make trajcenter.robot. the public ABB robot API.
 
   Final state:
 
     The ABB/RWS implementation now lives under:
 
-      trajcenter.robot.abb
+      trajcenter.robot.
 
     The former historical namespace has been removed:
 
@@ -527,16 +527,16 @@ STEP 10 - Migrate ABB robot API namespace
 
   Current modules:
 
-    trajcenter.robot.abb._utils
-    trajcenter.robot.abb.constants
-    trajcenter.robot.abb.models
-    trajcenter.robot.abb.reader
-    trajcenter.robot.abb.resolver
-    trajcenter.robot.abb.service
-    trajcenter.robot.abb.store
-    trajcenter.robot.abb.supervisor
-    trajcenter.robot.abb.writer
-    trajcenter.robot.abb.errors
+    trajcenter.robot._utils
+    trajcenter.robot.constants
+    trajcenter.robot.models
+    trajcenter.robot.reader
+    trajcenter.robot.resolver
+    trajcenter.robot.service
+    trajcenter.robot.store
+    trajcenter.robot.supervisor
+    trajcenter.robot.writer
+    trajcenter.robot.errors
 
   Validation:
 
@@ -582,7 +582,7 @@ STEP 12 - Clean generated API documentation after namespace migration
 
     trajcenter.convert
     trajcenter.export
-    trajcenter.robot.abb
+    trajcenter.robot.
 
   Fixed strict documentation build warnings by adding missing return type
   annotations in trajcenter.cli.main.
@@ -654,7 +654,7 @@ Current generated API namespaces:
   trajcenter.convert
   trajcenter.core
   trajcenter.export
-  trajcenter.robot.abb
+  trajcenter.robot.
 
 
 ----------------------
@@ -673,7 +673,7 @@ STEP 15 - Add robot CLI commands
     - Robot imports should be lazy inside command handlers.
     - If optional dependencies are missing, print a clear message.
     - Keep scripts/run_trajcenter_supervisor.py working.
-    - Reuse existing robot API under trajcenter.robot.abb.
+    - Reuse existing robot API under trajcenter.robot.
     - Do not duplicate supervisor logic.
 
   Suggested command behavior:
@@ -690,7 +690,7 @@ STEP 15 - Add robot CLI commands
   Suggested implementation approach:
 
     - Add a robot subparser in trajcenter.cli.main.
-    - Import trajcenter.robot.abb modules lazily inside robot command handlers.
+    - Import trajcenter.robot. modules lazily inside robot command handlers.
     - Catch ImportError for optional dependencies.
     - Print an install hint:
 
@@ -766,7 +766,7 @@ STEP 18 - Update README and user documentation
 
     trajcenter.convert
     trajcenter.export
-    trajcenter.robot.abb
+    trajcenter.robot.
 
 STEP 19 - Documentation source cleanup
   Status: TODO
@@ -815,7 +815,7 @@ STEP 20 - Final validation before merge to v2
     python -c "import trajcenter.core"
     python -c "import trajcenter.convert"
     python -c "import trajcenter.export"
-    python -c "import trajcenter.robot.abb"
+    python -c "import trajcenter.robot."
 
   Validate removed legacy namespaces if the decision remains final:
 
