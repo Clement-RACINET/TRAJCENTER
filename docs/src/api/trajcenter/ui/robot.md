@@ -1,0 +1,3 @@
+# Robot
+
+::: trajcenter.ui.robot

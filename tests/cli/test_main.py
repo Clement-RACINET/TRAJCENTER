@@ -360,3 +360,26 @@ def test_main_tui_quit(monkeypatch, capsys):
     assert result == 0
     assert "Main menu" in captured.out
     assert "File conversion / trajectory store" in captured.out
+
+
+def test_store_list_command_is_registered() -> None:
+    """The store list command parses the optional store path."""
+    parser = build_parser()
+
+    args = parser.parse_args(["store", "list", "--store", "custom_store"])
+
+    assert args.command == "store"
+    assert args.store_command == "list"
+    assert args.store == Path("custom_store")
+
+
+def test_store_inspect_command_is_registered() -> None:
+    """The store inspect command parses query and store path."""
+    parser = build_parser()
+
+    args = parser.parse_args(["store", "inspect", "demo", "--store", "custom_store"])
+
+    assert args.command == "store"
+    assert args.store_command == "inspect"
+    assert args.name == "demo"
+    assert args.store == Path("custom_store")

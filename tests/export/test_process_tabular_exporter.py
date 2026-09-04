@@ -19,10 +19,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-from trajcenter.export.csv_exporter import CsvExporter
-from trajcenter.export.excel_exporter import ExcelExporter
-from trajcenter.export.options import ExportOptions
-from trajcenter.export.tabular_exporter import _TabularExporter
 
 from trajcenter.convert.csv_converter import CsvConverter
 from trajcenter.convert.excel_converter import ExcelConverter
@@ -32,6 +28,10 @@ from trajcenter.core.trajectory import (
     TrajectoryMeta,
     TrajectoryProcess,
 )
+from trajcenter.export.csv_exporter import CsvExporter
+from trajcenter.export.excel_exporter import ExcelExporter
+from trajcenter.export.options import ExportOptions
+from trajcenter.export.tabular_exporter import _TabularExporter
 
 
 def _make_process_trajectory() -> Trajectory:

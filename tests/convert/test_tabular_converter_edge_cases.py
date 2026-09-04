@@ -140,9 +140,11 @@ class TestTabularConvertErrors:
             encoding="utf-8",
         )
 
-        with pytest.warns(UserWarning, match="force|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_type is 0"):
-                CsvConverter().convert(main)
+        with (
+            pytest.warns(UserWarning, match="force|Unknown|inconnue"),
+            pytest.raises(ValueError, match="process_type is 0"),
+        ):
+            CsvConverter().convert(main)
 
 
 class TestTabularValueParsers:

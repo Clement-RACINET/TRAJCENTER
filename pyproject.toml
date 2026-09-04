@@ -135,6 +135,7 @@ reexport_allowlist = [
   "core",
   "convert",
   "export",
+  "store",
 ]
 
 discovery_mode = "all_public"
@@ -164,3 +165,92 @@ use_gitignore = true
 max_depth = 5
 default_formats = ["txt", "html"]
 output_basename = "trajcenter_structure"
+
+
+# =============================================================================
+# py-doc-tools
+# =============================================================================
+
+[tool.py-doc-tools]
+docs_dir = "docs"
+docs_src_dir = "docs/src"
+mkdocs_config = "mkdocs.yml"
+packages = ["trajcenter"]
+
+enable_api = true
+enable_examples = false
+enable_coverage = false
+enable_readme = true
+enable_todo = false
+enable_diagnostics = false
+enable_tags = false
+enable_diagrams = false
+
+use_emojis = true
+console_emojis = false
+verbose = true
+
+
+# -----------------------------------------------------------------------------
+# API documentation
+# -----------------------------------------------------------------------------
+
+[tool.py-doc-tools.api]
+output_dir = "docs/src/api"
+nav_start_marker = "# --- AUTOGEN_API_START ---"
+nav_end_marker = "# --- AUTOGEN_API_END ---"
+
+clean_output_dir = true
+
+overview_enabled = false
+
+folder_intro_enabled = true
+folder_intro_filename = "__doc__.md"
+module_pre_suffix = ".pre.md"
+module_post_suffix = ".post.md"
+
+exclude_dirs = [
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".pixi",
+    ".vscode",
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    "venv",
+    "site-packages",
+    "docs",
+    "docs/build",
+    "site",
+    "build",
+    "dist",
+    "outputs",
+    "data",
+    "sandbox",
+    "trajectory_files",
+    "trajectory_exports",
+    "trajectory_store",
+    "doc_manual",
+    "icons",
+    "rapid",
+]
+
+exclude_files = [
+    "__init__.py",
+    "*.pyc",
+    "*.pyo",
+    "*.json",
+]
+
+# -----------------------------------------------------------------------------
+# README documentation
+# -----------------------------------------------------------------------------
+
+[tool.py-doc-tools.readme]
+source_file = "README.md"
+output_file = "docs/src/readme.md"
+title = "README"
+include_toc_note = true

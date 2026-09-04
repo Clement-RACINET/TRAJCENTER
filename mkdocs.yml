@@ -1,64 +1,109 @@
 site_name: TrajCenter
+site_description: Documentation utilisateur et référence API de TrajCenter
+site_author: Clément RACINET
+copyright: "© 2026 Clément RACINET — TrajCenter"
+
+docs_dir: docs/src
+site_dir: docs/build/site
+
 theme:
   name: readthedocs
+  language: fr
   logo: assets/logo.png
   favicon: assets/favicon.png
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: ["."]
+  - sane_lists
+  - toc:
+      permalink: true
 
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
+          paths:
+            - .
           options:
             docstring_style: google
+            docstring_section_style: list
+            show_root_heading: true
             show_source: true
-  - coverage:
-      html_report_dir: docs/coverage  # le rapport HTML
-
-markdown_extensions:
-  - pymdownx.snippets:
-      base_path: ["."]
+            separate_signature: true
+            show_signature_annotations: true
 
 nav:
   - Accueil: index.md
-  - Référence API:
-    # --- AUTOGEN_API_START ---
-    - Trajcenter:
-      - Cli:
-        - Main: api/trajcenter/cli/main.md
-      - Convert:
-        - Apt Converter: api/trajcenter/convert/apt_converter.md
-        - Base: api/trajcenter/convert/base.md
-        - Column Mapper: api/trajcenter/convert/column_mapper.md
-        - Csv Converter: api/trajcenter/convert/csv_converter.md
-        - Defaults: api/trajcenter/convert/defaults.md
-        - Excel Converter: api/trajcenter/convert/excel_converter.md
-        - Mod Converter: api/trajcenter/convert/mod_converter.md
-        - Tabular Converter: api/trajcenter/convert/tabular_converter.md
-      - Core:
-        - Logger: api/trajcenter/core/logger.md
-        - Messages: api/trajcenter/core/messages.md
-        - Trajectory: api/trajcenter/core/trajectory.md
-      - Export:
-        - Base: api/trajcenter/export/base.md
-        - Csv Exporter: api/trajcenter/export/csv_exporter.md
-        - Excel Exporter: api/trajcenter/export/excel_exporter.md
-        - Options: api/trajcenter/export/options.md
-        - Tabular Exporter: api/trajcenter/export/tabular_exporter.md
-      - Robot:
-        - Utils: api/trajcenter/robot/_utils.md
-        - Constants: api/trajcenter/robot/constants.md
-        - Models: api/trajcenter/robot/models.md
-        - Reader: api/trajcenter/robot/reader.md
-        - Resolver: api/trajcenter/robot/resolver.md
-        - Service: api/trajcenter/robot/service.md
-        - Store: api/trajcenter/robot/store.md
-        - Supervisor: api/trajcenter/robot/supervisor.md
-        - Writer: api/trajcenter/robot/writer.md
-        - Errors:
-          - Base: api/trajcenter/robot/errors/base.md
-          - Codes: api/trajcenter/robot/errors/codes.md
-          - Translate: api/trajcenter/robot/errors/translate.md
-# --- AUTOGEN_API_END ---
-  - Coverage: coverage.md 
 
+  - README: readme.md
+
+  # - Exemples:
+  #     # --- AUTOGEN_EXAMPLES_START ---
+  #     # --- AUTOGEN_EXAMPLES_END ---
+
+  - Référence API:
+      # --- AUTOGEN_API_START ---
+      - 📂 Trajcenter:
+        - 📖 Intro trajcenter: api/trajcenter/trajcenter.md
+        - 📂 Cli:
+          - 📖 Intro cli: api/trajcenter/cli/cli.md
+          - 📄 Main: api/trajcenter/cli/main.md
+        - 📂 Convert:
+          - 📖 Intro convert: api/trajcenter/convert/convert.md
+          - 📄 Apt Converter: api/trajcenter/convert/apt_converter.md
+          - 📄 Base: api/trajcenter/convert/base.md
+          - 📄 Column Mapper: api/trajcenter/convert/column_mapper.md
+          - 📄 Csv Converter: api/trajcenter/convert/csv_converter.md
+          - 📄 Defaults: api/trajcenter/convert/defaults.md
+          - 📄 Excel Converter: api/trajcenter/convert/excel_converter.md
+          - 📄 Mod Converter: api/trajcenter/convert/mod_converter.md
+          - 📄 Tabular Converter: api/trajcenter/convert/tabular_converter.md
+        - 📂 Core:
+          - 📖 Intro core: api/trajcenter/core/core.md
+          - 📄 Logger: api/trajcenter/core/logger.md
+          - 📄 Messages: api/trajcenter/core/messages.md
+          - 📄 Trajectory: api/trajcenter/core/trajectory.md
+        - 📂 Export:
+          - 📖 Intro export: api/trajcenter/export/export.md
+          - 📄 Base: api/trajcenter/export/base.md
+          - 📄 Csv Exporter: api/trajcenter/export/csv_exporter.md
+          - 📄 Excel Exporter: api/trajcenter/export/excel_exporter.md
+          - 📄 Options: api/trajcenter/export/options.md
+          - 📄 Tabular Exporter: api/trajcenter/export/tabular_exporter.md
+        - 📂 Robot:
+          - 📖 Intro robot: api/trajcenter/robot/robot.md
+          - 📄 Utils: api/trajcenter/robot/_utils.md
+          - 📄 Constants: api/trajcenter/robot/constants.md
+          - 📄 Models: api/trajcenter/robot/models.md
+          - 📄 Reader: api/trajcenter/robot/reader.md
+          - 📄 Resolver: api/trajcenter/robot/resolver.md
+          - 📄 Service: api/trajcenter/robot/service.md
+          - 📄 Supervisor: api/trajcenter/robot/supervisor.md
+          - 📄 Writer: api/trajcenter/robot/writer.md
+          - 📂 Errors:
+            - 📖 Intro errors: api/trajcenter/robot/errors/errors.md
+            - 📄 Base: api/trajcenter/robot/errors/base.md
+            - 📄 Codes: api/trajcenter/robot/errors/codes.md
+            - 📄 Translate: api/trajcenter/robot/errors/translate.md
+        - 📂 Store:
+          - 📖 Intro store: api/trajcenter/store/store.md
+          - 📄 Constants: api/trajcenter/store/constants.md
+          - 📄 Local: api/trajcenter/store/local.md
+          - 📄 Metadata: api/trajcenter/store/metadata.md
+          - 📄 Models: api/trajcenter/store/models.md
+        - 📂 Ui:
+          - 📖 Intro ui: api/trajcenter/ui/ui.md
+          - 📄 App: api/trajcenter/ui/app.md
+          - 📄 Banner: api/trajcenter/ui/banner.md
+          - 📄 Config: api/trajcenter/ui/config.md
+          - 📄 Conversion: api/trajcenter/ui/conversion.md
+          - 📄 Robot: api/trajcenter/ui/robot.md
+      # --- AUTOGEN_API_END ---
+
+  # - Qualité:
+  #     # --- AUTOGEN_COVERAGE_START ---
+  #     # --- AUTOGEN_COVERAGE_END ---

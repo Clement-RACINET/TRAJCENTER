@@ -18,20 +18,18 @@ import pytest
 from abb_rws_client_python_rw6 import MastershipDenied
 
 from trajcenter.core.trajectory import Trajectory, TrajectoryMeta
+from trajcenter.robot.constants import MAX_TRAJ
 from trajcenter.robot.models import (
     ProcessTypeEntry,
-    ResolvedPoint,
-    ResolvedRobTarget,
-    ResolvedTrajectory,
     RobotContext,
     RobotDefaults,
-    TrajectoryStoreEntry,
 )
 from trajcenter.robot.service import (
     get_store_entry_by_selected_index,
     refresh_store_metadata,
     transfer_selected_trajectory,
 )
+from trajcenter.store.models import TrajectoryStoreEntry
 
 _MODULE = "trajcenter.robot.service"
 
@@ -163,7 +161,10 @@ def _save_trajectory(tmp_path: Path, name: str = "demo") -> Path:
 
 
 def _make_entry(
-    path: Path, *, index: int = 1, name: str = "demo"
+    path: Path,
+    *,
+    index: int = 1,
+    name: str = "demo",
 ) -> TrajectoryStoreEntry:
     """Build a trajectory store entry for tests.
 
@@ -236,60 +237,6 @@ def _make_context() -> RobotContext:
     )
 
 
-def _make_resolved(name: str = "demo") -> ResolvedTrajectory:
-    """Build a resolved trajectory for service tests using mocked resolver.
-
-    ABB Route:
-        N/A — local test helper.
-
-    ABB Constraints:
-        External axes are inactive as ``None`` and would be serialized by the
-        writer only.
-
-    Args:
-        name: Resolved trajectory name.
-
-    Returns:
-        Resolved trajectory.
-
-
-    Example:
-        ::
-
-            resolved = _make_resolved()
-    """
-    robtarget = ResolvedRobTarget(
-        x=100.0,
-        y=200.0,
-        z=300.0,
-        q1=1.0,
-        q2=0.0,
-        q3=0.0,
-        q4=0.0,
-        cf1=0,
-        cf4=0,
-        cf6=0,
-        cfx=0,
-        eax=(None, None, None, None, None, None),
-    )
-    point = ResolvedPoint(
-        move_type=0,
-        robtarget=robtarget,
-        tcp_speed=500.0,
-        zone_type=10,
-        read_confs=True,
-        tool_index=1,
-        wobj_index=1,
-        process_param_index=0,
-    )
-    return ResolvedTrajectory(
-        name=name,
-        process_type=0,
-        points=(point,),
-        process_param_sets=(),
-    )
-
-
 class TestGetStoreEntryBySelectedIndex:
     """Tests for store entry lookup from RAPID selected index."""
 
@@ -339,10 +286,12 @@ class TestTransferSelectedTrajectory:
         mock_read_context = AsyncMock(return_value=_make_context())
         mock_write = AsyncMock()
 
-        with patch(f"{_MODULE}.read_selected_traj_index", mock_read_index):
-            with patch(f"{_MODULE}.read_robot_context", mock_read_context):
-                with patch(f"{_MODULE}.write_resolved_trajectory", mock_write):
-                    resolved = await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", mock_read_index),
+            patch(f"{_MODULE}.read_robot_context", mock_read_context),
+            patch(f"{_MODULE}.write_resolved_trajectory", mock_write),
+        ):
+            resolved = await transfer_selected_trajectory(client, (entry,))
 
         assert resolved.name == "demo"
         assert resolved.point_count == 1
@@ -364,9 +313,11 @@ class TestTransferSelectedTrajectory:
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path, index=1, name="demo")
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=0)):
-            with pytest.raises(ValueError, match="selectedTrajIndex"):
-                await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=0)),
+            pytest.raises(ValueError, match="selectedTrajIndex"),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_selected_index_out_of_store_raises(
@@ -378,20 +329,26 @@ class TestTransferSelectedTrajectory:
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path, index=1, name="demo")
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=2)):
-            with pytest.raises(IndexError, match="does not match"):
-                await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=2)),
+            pytest.raises(IndexError, match="does not match"),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_missing_archive_raises(
-        self, client: MagicMock, tmp_path: Path
+        self,
+        client: MagicMock,
+        tmp_path: Path,
     ) -> None:
         """A missing selected archive propagates ``FileNotFoundError``."""
         entry = _make_entry(tmp_path / "missing.trajcenter", index=1, name="missing")
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)):
-            with pytest.raises(FileNotFoundError):
-                await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)),
+            pytest.raises(FileNotFoundError),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_reader_error_is_propagated(
@@ -406,10 +363,12 @@ class TestTransferSelectedTrajectory:
         mock_read_index = AsyncMock(return_value=1)
         mock_read_context = AsyncMock(side_effect=ValueError("bad context"))
 
-        with patch(f"{_MODULE}.read_selected_traj_index", mock_read_index):
-            with patch(f"{_MODULE}.read_robot_context", mock_read_context):
-                with pytest.raises(ValueError, match="bad context"):
-                    await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", mock_read_index),
+            patch(f"{_MODULE}.read_robot_context", mock_read_context),
+            pytest.raises(ValueError, match="bad context"),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_resolver_error_is_propagated(
@@ -421,16 +380,19 @@ class TestTransferSelectedTrajectory:
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path, index=1, name="demo")
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)):
-            with patch(
-                f"{_MODULE}.read_robot_context", AsyncMock(return_value=_make_context())
-            ):
-                with patch(
-                    f"{_MODULE}.resolve_trajectory",
-                    MagicMock(side_effect=ValueError("resolve failed")),
-                ):
-                    with pytest.raises(ValueError, match="resolve failed"):
-                        await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)),
+            patch(
+                f"{_MODULE}.read_robot_context",
+                AsyncMock(return_value=_make_context()),
+            ),
+            patch(
+                f"{_MODULE}.resolve_trajectory",
+                MagicMock(side_effect=ValueError("resolve failed")),
+            ),
+            pytest.raises(ValueError, match="resolve failed"),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_writer_error_is_propagated(
@@ -444,13 +406,16 @@ class TestTransferSelectedTrajectory:
 
         mock_write = AsyncMock(side_effect=MastershipDenied("denied"))
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)):
-            with patch(
-                f"{_MODULE}.read_robot_context", AsyncMock(return_value=_make_context())
-            ):
-                with patch(f"{_MODULE}.write_resolved_trajectory", mock_write):
-                    with pytest.raises(MastershipDenied):
-                        await transfer_selected_trajectory(client, (entry,))
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)),
+            patch(
+                f"{_MODULE}.read_robot_context",
+                AsyncMock(return_value=_make_context()),
+            ),
+            patch(f"{_MODULE}.write_resolved_trajectory", mock_write),
+            pytest.raises(MastershipDenied),
+        ):
+            await transfer_selected_trajectory(client, (entry,))
 
     @pytest.mark.asyncio
     async def test_writer_receives_progress_and_transfer_options(
@@ -464,21 +429,24 @@ class TestTransferSelectedTrajectory:
         progress = MagicMock()
         mock_write = AsyncMock()
 
-        with patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)):
-            with patch(
-                f"{_MODULE}.read_robot_context", AsyncMock(return_value=_make_context())
-            ):
-                with patch(f"{_MODULE}.write_resolved_trajectory", mock_write):
-                    await transfer_selected_trajectory(
-                        client,
-                        (entry,),
-                        task="T_ROB2",
-                        module="MY_WEB",
-                        on_progress=progress,
-                        mastership_retries=5,
-                        retry_delay_s=0.25,
-                        progress_step_percent=10,
-                    )
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", AsyncMock(return_value=1)),
+            patch(
+                f"{_MODULE}.read_robot_context",
+                AsyncMock(return_value=_make_context()),
+            ),
+            patch(f"{_MODULE}.write_resolved_trajectory", mock_write),
+        ):
+            await transfer_selected_trajectory(
+                client,
+                (entry,),
+                task="T_ROB2",
+                module="MY_WEB",
+                on_progress=progress,
+                mastership_retries=5,
+                retry_delay_s=0.25,
+                progress_step_percent=10,
+            )
 
         kwargs = mock_write.call_args.kwargs
         assert kwargs["task"] == "T_ROB2"
@@ -499,17 +467,20 @@ class TestTransferSelectedTrajectory:
         entry = _make_entry(path, index=1, name="demo")
         mock_read_index = AsyncMock(return_value=1)
 
-        with patch(f"{_MODULE}.read_selected_traj_index", mock_read_index):
-            with patch(
-                f"{_MODULE}.read_robot_context", AsyncMock(return_value=_make_context())
-            ):
-                with patch(f"{_MODULE}.write_resolved_trajectory", AsyncMock()):
-                    await transfer_selected_trajectory(
-                        client,
-                        (entry,),
-                        task="T_ROB2",
-                        module="MY_WEB",
-                    )
+        with (
+            patch(f"{_MODULE}.read_selected_traj_index", mock_read_index),
+            patch(
+                f"{_MODULE}.read_robot_context",
+                AsyncMock(return_value=_make_context()),
+            ),
+            patch(f"{_MODULE}.write_resolved_trajectory", AsyncMock()),
+        ):
+            await transfer_selected_trajectory(
+                client,
+                (entry,),
+                task="T_ROB2",
+                module="MY_WEB",
+            )
 
         mock_read_index.assert_awaited_once_with(
             client,
@@ -534,14 +505,16 @@ class TestRefreshStoreMetadata:
         mock_to_metadata = MagicMock(return_value=(["demo"], [1], [0]))
         mock_write = AsyncMock()
 
-        with patch(f"{_MODULE}.scan_trajectory_store", mock_scan):
-            with patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata):
-                with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                    entries = await refresh_store_metadata(client, tmp_path)
+        with (
+            patch(f"{_MODULE}.scan_trajectory_store", mock_scan),
+            patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata),
+            patch(f"{_MODULE}.write_store_metadata", mock_write),
+        ):
+            entries = await refresh_store_metadata(client, tmp_path)
 
         assert entries == (entry,)
-        mock_scan.assert_called_once_with(tmp_path)
-        mock_to_metadata.assert_called_once_with((entry,))
+        mock_scan.assert_called_once_with(tmp_path, max_entries=MAX_TRAJ)
+        mock_to_metadata.assert_called_once_with((entry,), max_entries=MAX_TRAJ)
         mock_write.assert_awaited_once_with(
             client,
             ["demo"],
@@ -561,14 +534,13 @@ class TestRefreshStoreMetadata:
         """Custom RWS write options are forwarded to metadata writer."""
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_scan = MagicMock(return_value=(entry,))
+        mock_to_metadata = MagicMock(return_value=(["demo"], [1], [0]))
         mock_write = AsyncMock()
 
         with (
-            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
-            patch(
-                f"{_MODULE}.store_entries_to_metadata",
-                MagicMock(return_value=(["demo"], [1], [0])),
-            ),
+            patch(f"{_MODULE}.scan_trajectory_store", mock_scan),
+            patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata),
             patch(f"{_MODULE}.write_store_metadata", mock_write),
         ):
             await refresh_store_metadata(
@@ -579,6 +551,8 @@ class TestRefreshStoreMetadata:
                 mastership_retries=5,
             )
 
+        mock_scan.assert_called_once_with(tmp_path, max_entries=MAX_TRAJ)
+        mock_to_metadata.assert_called_once_with((entry,), max_entries=MAX_TRAJ)
         mock_write.assert_awaited_once_with(
             client,
             ["demo"],
@@ -622,11 +596,14 @@ class TestRefreshStoreMetadata:
         mock_scan = MagicMock(side_effect=FileNotFoundError("missing store"))
         mock_write = AsyncMock()
 
-        with patch(f"{_MODULE}.scan_trajectory_store", mock_scan):
-            with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                with pytest.raises(FileNotFoundError, match="missing store"):
-                    await refresh_store_metadata(client, tmp_path)
+        with (
+            patch(f"{_MODULE}.scan_trajectory_store", mock_scan),
+            patch(f"{_MODULE}.write_store_metadata", mock_write),
+            pytest.raises(FileNotFoundError, match="missing store"),
+        ):
+            await refresh_store_metadata(client, tmp_path)
 
+        mock_scan.assert_called_once_with(tmp_path, max_entries=MAX_TRAJ)
         mock_write.assert_not_awaited()
 
     @pytest.mark.asyncio
@@ -638,17 +615,20 @@ class TestRefreshStoreMetadata:
         """Metadata conversion errors are propagated before RWS write."""
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_scan = MagicMock(return_value=(entry,))
         mock_to_metadata = MagicMock(side_effect=ValueError("bad metadata"))
         mock_write = AsyncMock()
 
         with (
-            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
+            patch(f"{_MODULE}.scan_trajectory_store", mock_scan),
             patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata),
+            patch(f"{_MODULE}.write_store_metadata", mock_write),
+            pytest.raises(ValueError, match="bad metadata"),
         ):
-            with patch(f"{_MODULE}.write_store_metadata", mock_write):
-                with pytest.raises(ValueError, match="bad metadata"):
-                    await refresh_store_metadata(client, tmp_path)
+            await refresh_store_metadata(client, tmp_path)
 
+        mock_scan.assert_called_once_with(tmp_path, max_entries=MAX_TRAJ)
+        mock_to_metadata.assert_called_once_with((entry,), max_entries=MAX_TRAJ)
         mock_write.assert_not_awaited()
 
     @pytest.mark.asyncio
@@ -660,15 +640,26 @@ class TestRefreshStoreMetadata:
         """Metadata writer errors are propagated."""
         path = _save_trajectory(tmp_path, name="demo")
         entry = _make_entry(path.resolve(), index=1, name="demo")
+        mock_scan = MagicMock(return_value=(entry,))
+        mock_to_metadata = MagicMock(return_value=(["demo"], [1], [0]))
         mock_write = AsyncMock(side_effect=ValueError("write failed"))
 
         with (
-            patch(f"{_MODULE}.scan_trajectory_store", MagicMock(return_value=(entry,))),
-            patch(
-                f"{_MODULE}.store_entries_to_metadata",
-                MagicMock(return_value=(["demo"], [1], [0])),
-            ),
+            patch(f"{_MODULE}.scan_trajectory_store", mock_scan),
+            patch(f"{_MODULE}.store_entries_to_metadata", mock_to_metadata),
             patch(f"{_MODULE}.write_store_metadata", mock_write),
+            pytest.raises(ValueError, match="write failed"),
         ):
-            with pytest.raises(ValueError, match="write failed"):
-                await refresh_store_metadata(client, tmp_path)
+            await refresh_store_metadata(client, tmp_path)
+
+        mock_scan.assert_called_once_with(tmp_path, max_entries=MAX_TRAJ)
+        mock_to_metadata.assert_called_once_with((entry,), max_entries=MAX_TRAJ)
+        mock_write.assert_awaited_once_with(
+            client,
+            ["demo"],
+            [1],
+            task="T_ROB1",
+            module="TRAJCENTER",
+            process_types=[0],
+            mastership_retries=3,
+        )

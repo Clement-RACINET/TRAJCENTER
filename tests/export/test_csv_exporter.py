@@ -10,11 +10,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import pandas as pd
-from trajcenter.export.csv_exporter import CsvExporter
-from trajcenter.export.options import ExportOptions
 
 from trajcenter.convert.csv_converter import CsvConverter
 from trajcenter.core.trajectory import Trajectory
+from trajcenter.export.csv_exporter import CsvExporter
+from trajcenter.export.options import ExportOptions
 
 
 def _export(

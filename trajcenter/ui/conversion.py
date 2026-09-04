@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from trajcenter.cli.main import infer_converter
+from trajcenter.store.local import scan_trajectory_store
 from trajcenter.ui.config import UIConfig
 
 VALID_INPUT_FORMATS = frozenset(
@@ -48,22 +49,29 @@ def run_conversion_menu(config: UIConfig) -> None:
 
 def _list_trajcenter_files(config: UIConfig) -> None:
     """List .trajcenter files from the configured store."""
-    store = config.store
-
-    if not store.exists():
-        print(f"Store does not exist: {store}")
+    try:
+        entries = scan_trajectory_store(config.store)
+    except (FileNotFoundError, NotADirectoryError, ValueError) as exc:
+        print(f"Error: {exc}")
         return
 
-    files = sorted(store.glob("*.trajcenter"))
-
-    if not files:
-        print(f"No .trajcenter files found in: {store}")
+    if not entries:
+        print(f"No .trajcenter files found in: {config.store}")
         return
 
     print()
     print("Available .trajcenter files:")
-    for index, path in enumerate(files, start=1):
-        print(f"{index}. {path.name}")
+    print(f"{'IDX':>3}  {'NAME':<32}  {'POINTS':>6}  {'PROCESS':>7}  FILE")
+    print(f"{'-' * 3}  {'-' * 32}  {'-' * 6}  {'-' * 7}  {'-' * 4}")
+
+    for entry in entries:
+        print(
+            f"{entry.index:>3}  "
+            f"{entry.name:<32}  "
+            f"{entry.point_count:>6}  "
+            f"{entry.process_type:>7}  "
+            f"{entry.path.name}"
+        )
 
 
 def _print_supported_input_formats() -> None:

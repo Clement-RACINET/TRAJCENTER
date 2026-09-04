@@ -47,11 +47,11 @@ from abb_rws_client_python_rw6.highlevel.subscription import (
 
 from trajcenter.core.logger import get_logger
 from trajcenter.robot.constants import DEFAULT_TASK, TRAJCENTER_MODULE
-from trajcenter.robot.models import TrajectoryStoreEntry
 from trajcenter.robot.service import (
     refresh_store_metadata,
     transfer_selected_trajectory,
 )
+from trajcenter.store.models import TrajectoryStoreEntry
 
 logger = get_logger(__name__)
 

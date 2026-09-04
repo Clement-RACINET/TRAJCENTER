@@ -10,7 +10,7 @@ going through a converter.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pandas as pd
@@ -57,7 +57,7 @@ def _make_traj(
             source_format=SourceFormat.TRAJCENTER,
             robot_model=robot_model,
             extra=extra or {},
-            created_at=datetime(2026, 7, 8, 12, 0, 0, tzinfo=timezone.utc),
+            created_at=datetime(2026, 7, 8, 12, 0, 0, tzinfo=UTC),
         ),
         points=pd.DataFrame(rows),
     )

@@ -51,7 +51,6 @@ Example:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
 
 from trajcenter.robot.constants import MAX_PROCESS_PARAM_PER_SET
 
@@ -512,40 +511,3 @@ class ResolvedTrajectory:
             ```
         """
         return len(self.points)
-
-
-@dataclass(frozen=True, slots=True)
-class TrajectoryStoreEntry:
-    """One trajectory file discovered in the local PC store.
-
-    ABB Route:
-        N/A — local filesystem metadata.
-
-    ABB Constraints:
-        ``index`` is one-based and maps directly to ``selectedTrajIndex``.
-
-    Args:
-        index: One-based store index.
-        path: Path to the ``.trajcenter`` archive.
-        name: Display name written into ``trajectories{i}.name``.
-        point_count: Number of points written into ``trajectories{i}.pointCount``.
-        process_type: Process type written into ``trajectories{i}.processType``.
-
-
-    Example:
-        ```python
-        entry = TrajectoryStoreEntry(
-            index=1,
-            path=Path("trajectory_store/demo.trajcenter"),
-            name="demo",
-            point_count=10,
-            process_type=0,
-        )
-        ```
-    """
-
-    index: int
-    path: Path
-    name: str
-    point_count: int
-    process_type: int

@@ -10,7 +10,6 @@ reader and service layers. No ABB controller access is performed.
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TypeAlias
 
 import pytest
@@ -24,7 +23,6 @@ from trajcenter.robot.models import (
     ResolvedTrajectory,
     RobotContext,
     RobotDefaults,
-    TrajectoryStoreEntry,
 )
 
 ProcessParamTuple: TypeAlias = tuple[
@@ -416,23 +414,3 @@ class TestResolvedTrajectory:
         assert trajectory.point_count == 1
         assert trajectory.process_type == 1
         assert trajectory.process_param_sets[0].index == 1
-
-
-class TestTrajectoryStoreEntry:
-    """Tests for :class:`trajcenter.robot.models.TrajectoryStoreEntry`."""
-
-    def test_store_entry(self) -> None:
-        """A store entry maps one-based index to a trajectory archive path."""
-        entry = TrajectoryStoreEntry(
-            index=1,
-            path=Path("trajectory_store/demo.trajcenter"),
-            name="demo",
-            point_count=10,
-            process_type=0,
-        )
-
-        assert entry.index == 1
-        assert entry.path == Path("trajectory_store/demo.trajcenter")
-        assert entry.name == "demo"
-        assert entry.point_count == 10
-        assert entry.process_type == 0

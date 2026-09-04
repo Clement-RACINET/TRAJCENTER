@@ -18,10 +18,6 @@ trajcenter_v2
 │   ├── TRAJCENTER_GUI_DEMO.mod
 │   └── TRAJCENTER_GUI_DEMO.pgf
 ├── scripts
-│   ├── doc
-│   │   ├── config.py
-│   │   ├── generate_api.py
-│   │   └── run_docs.py
 │   ├── examples
 │   │   ├── _demo_utils.py
 │   │   ├── basic_usage.py
@@ -68,10 +64,14 @@ trajcenter_v2
 │   │   ├── test_reader.py
 │   │   ├── test_resolver.py
 │   │   ├── test_service.py
-│   │   ├── test_store.py
 │   │   ├── test_supervisor.py
 │   │   ├── test_utils.py
 │   │   └── test_writer.py
+│   ├── store
+│   │   ├── __init__.py
+│   │   ├── test_local.py
+│   │   ├── test_metadata.py
+│   │   └── test_models.py
 │   ├── ui
 │   │   ├── __init__.py
 │   │   └── test_app.py
@@ -117,9 +117,14 @@ trajcenter_v2
 │   │   ├── reader.py
 │   │   ├── resolver.py
 │   │   ├── service.py
-│   │   ├── store.py
 │   │   ├── supervisor.py
 │   │   └── writer.py
+│   ├── store
+│   │   ├── __init__.py
+│   │   ├── constants.py
+│   │   ├── local.py
+│   │   ├── metadata.py
+│   │   └── models.py
 │   ├── ui
 │   │   ├── __init__.py
 │   │   ├── app.py

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# tests/robot/abb/test_store.py
-"""Unit tests for :mod:`trajcenter.robot.store`.
-
-Author: Clement RACINET
+"""Unit tests for :mod:`trajcenter.store.local`.
 
 The scanner tests create real temporary ``.trajcenter`` archives and never
 contact an ABB controller.
@@ -16,13 +13,11 @@ import pandas as pd
 import pytest
 
 from trajcenter.core.trajectory import (
-    MAX_PROCESS_PARAM_SET_COUNT,
     Trajectory,
     TrajectoryMeta,
     TrajectoryProcess,
 )
-from trajcenter.robot.constants import MAX_TRAJ
-from trajcenter.robot.store import scan_trajectory_store, store_entries_to_metadata
+from trajcenter.store.local import scan_trajectory_store
 
 
 def _make_points(
@@ -30,27 +25,7 @@ def _make_points(
     n: int = 1,
     process_param_indexes: list[int] | None = None,
 ) -> pd.DataFrame:
-    """Build a valid points table for store scanner tests.
-
-    ABB Route:
-        N/A — local test helper.
-
-    ABB Constraints:
-        No ``9E+9`` sentinel is stored in local trajectory archives.
-
-    Args:
-        n: Number of points.
-        process_param_indexes: Optional process parameter indexes.
-
-    Returns:
-        Points DataFrame.
-
-
-    Example:
-        ::
-
-            points = _make_points(n=2)
-    """
+    """Build a valid points table for store scanner tests."""
     data: dict[str, object] = {
         "x": [100.0 + i for i in range(n)],
         "y": [200.0] * n,
@@ -78,26 +53,7 @@ def _make_points(
 
 
 def _make_process_params() -> pd.DataFrame:
-    """Build a valid process parameter table.
-
-    ABB Route:
-        N/A — local test helper.
-
-    ABB Constraints:
-        ``process_param_index`` uses base-1 local source indexes.
-
-    Args:
-        None.
-
-    Returns:
-        Process parameter DataFrame.
-
-
-    Example:
-        ::
-
-            params = _make_process_params()
-    """
+    """Build a valid process parameter table."""
     return pd.DataFrame(
         {
             "process_param_index": [1],
@@ -115,33 +71,7 @@ def _save_archive(
     point_count: int = 1,
     process_type: int = 0,
 ) -> Path:
-    """Create one temporary ``.trajcenter`` archive.
-
-    ABB Route:
-        N/A — local test helper.
-
-    ABB Constraints:
-        Archive creation goes through the real ``Trajectory.save`` method.
-
-    Args:
-        tmp_path: Pytest temporary directory.
-        filename: Archive file name.
-        meta_name: Trajectory metadata name.
-        point_count: Number of points.
-        process_type: Process type.
-
-    Returns:
-        Path to the archive.
-
-    Raises:
-        ValueError: If test trajectory data is inconsistent.
-        OSError: If the archive cannot be written.
-
-    Example:
-        ::
-
-            path = _save_archive(tmp_path, filename="a.trajcenter", meta_name="A")
-    """
+    """Create one temporary ``.trajcenter`` archive."""
     if process_type == 0:
         trajectory = Trajectory(
             meta=TrajectoryMeta(name=meta_name),
@@ -167,7 +97,7 @@ def _save_archive(
 
 
 class TestScanTrajectoryStore:
-    """Tests for :func:`trajcenter.robot.store.scan_trajectory_store`."""
+    """Tests for :func:`trajcenter.store.local.scan_trajectory_store`."""
 
     def test_empty_directory_returns_empty_tuple(self, tmp_path: Path) -> None:
         """An empty store returns no entries."""
@@ -256,7 +186,7 @@ class TestScanTrajectoryStore:
         assert entries[0].name == "A"
 
     def test_entry_contains_point_count_and_process_type(self, tmp_path: Path) -> None:
-        """Store entries expose metadata required by ``write_store_metadata``."""
+        """Store entries expose archive metadata."""
         _save_archive(
             tmp_path,
             filename="process.trajcenter",
@@ -272,121 +202,21 @@ class TestScanTrajectoryStore:
         assert entries[0].process_type == 1
 
     def test_invalid_archive_raises_value_error(self, tmp_path: Path) -> None:
-        """Invalid ``.trajcenter`` archives propagate validation errors."""
+        """Invalid ``.trajcenter`` archives raise ``ValueError``."""
         invalid = tmp_path / "bad.trajcenter"
         invalid.write_text("not a zip archive", encoding="utf-8")
 
         with pytest.raises(ValueError):
             scan_trajectory_store(tmp_path)
 
-    def test_too_many_archives_raises(self, tmp_path: Path) -> None:
-        """More than ``MAX_TRAJ`` archives are rejected before loading."""
-        for index in range(MAX_TRAJ + 1):
+    def test_too_many_archives_raises_when_max_entries_is_set(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        """More than ``max_entries`` archives are rejected before loading."""
+        for index in range(3):
             path = tmp_path / f"{index:03d}.trajcenter"
             path.write_text("placeholder", encoding="utf-8")
 
-        with pytest.raises(ValueError, match="MAX_TRAJ"):
-            scan_trajectory_store(tmp_path)
-
-    def test_max_process_param_set_count_constant_is_available(self) -> None:
-        """The imported process limit remains aligned with trajectory tests."""
-        assert MAX_PROCESS_PARAM_SET_COUNT == 256
-
-
-class TestStoreEntriesToMetadata:
-    """Tests for :func:`trajcenter.robot.store.store_entries_to_metadata`."""
-
-    def test_empty_entries(self) -> None:
-        """Empty entries produce empty metadata lists."""
-        names, counts, process_types = store_entries_to_metadata(())
-
-        assert names == []
-        assert counts == []
-        assert process_types == []
-
-    def test_converts_entries_preserving_order(self, tmp_path: Path) -> None:
-        """Entry order is preserved for RAPID metadata mapping."""
-        path_a = tmp_path / "a.trajcenter"
-        path_b = tmp_path / "b.trajcenter"
-
-        entries = (
-            _entry(
-                index=1,
-                path=path_a,
-                name="A",
-                point_count=10,
-                process_type=0,
-            ),
-            _entry(
-                index=2,
-                path=path_b,
-                name="B",
-                point_count=20,
-                process_type=1,
-            ),
-        )
-
-        names, counts, process_types = store_entries_to_metadata(entries)
-
-        assert names == ["A", "B"]
-        assert counts == [10, 20]
-        assert process_types == [0, 1]
-
-    def test_too_many_entries_raises(self, tmp_path: Path) -> None:
-        """More than ``MAX_TRAJ`` entries are rejected."""
-        entries = tuple(
-            _entry(
-                index=index + 1,
-                path=tmp_path / f"{index}.trajcenter",
-                name=f"T{index}",
-                point_count=1,
-                process_type=0,
-            )
-            for index in range(MAX_TRAJ + 1)
-        )
-
-        with pytest.raises(ValueError, match="MAX_TRAJ"):
-            store_entries_to_metadata(entries)
-
-
-def _entry(
-    *,
-    index: int,
-    path: Path,
-    name: str,
-    point_count: int,
-    process_type: int,
-):
-    """Build a ``TrajectoryStoreEntry`` without importing it at top level.
-
-    ABB Route:
-        N/A — local test helper.
-
-    ABB Constraints:
-        ``index`` is RAPID base-1.
-
-    Args:
-        index: Store index.
-        path: Archive path.
-        name: Display name.
-        point_count: Number of points.
-        process_type: Process type.
-
-    Returns:
-        Store entry.
-
-
-    Example:
-        ::
-
-            entry = _entry(index=1, path=path, name="A", point_count=1, process_type=0)
-    """
-    from trajcenter.robot.models import TrajectoryStoreEntry
-
-    return TrajectoryStoreEntry(
-        index=index,
-        path=path,
-        name=name,
-        point_count=point_count,
-        process_type=process_type,
-    )
+        with pytest.raises(ValueError, match="max_entries=2"):
+            scan_trajectory_store(tmp_path, max_entries=2)

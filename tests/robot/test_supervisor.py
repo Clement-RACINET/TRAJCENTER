@@ -16,7 +16,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from trajcenter.robot.models import TrajectoryStoreEntry
 from trajcenter.robot.supervisor import (
     RWSSupervisorConfig,
     RWSSupervisorState,
@@ -24,6 +23,7 @@ from trajcenter.robot.supervisor import (
     handle_supervisor_event,
     run_rws_subscription_supervisor,
 )
+from trajcenter.store.models import TrajectoryStoreEntry
 
 _MODULE = "trajcenter.robot.supervisor"
 

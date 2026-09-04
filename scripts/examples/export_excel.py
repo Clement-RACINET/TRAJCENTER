@@ -19,11 +19,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from _demo_utils import point_count
-from trajcenter.export.excel_exporter import ExcelExporter
-from trajcenter.export.options import ExportOptions
 
 from trajcenter.convert.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
+from trajcenter.export.excel_exporter import ExcelExporter
+from trajcenter.export.options import ExportOptions
 
 SOURCE_TRAJCENTER = Path("trajectory_store/000_trajectory_demo.trajcenter")
 SOURCE_XLSX = Path("trajectory_files/000_trajectory_demo.xlsx")

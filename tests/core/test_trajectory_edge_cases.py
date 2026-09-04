@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import io
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -85,7 +85,7 @@ def _process_meta() -> TrajectoryMeta:
     return TrajectoryMeta(
         name="process",
         source_format=SourceFormat.MANUAL,
-        created_at=datetime(2026, 7, 8, 12, 0, 0, tzinfo=timezone.utc),
+        created_at=datetime(2026, 7, 8, 12, 0, 0, tzinfo=UTC),
         process=TrajectoryProcess(
             process_type=1,
             process_param_names=["force", "travel_speed"],

@@ -26,7 +26,7 @@ from trajcenter.export.excel_exporter import ExcelExporter
 if TYPE_CHECKING:
     from trajcenter.convert.base import BaseConverter
     from trajcenter.export.base import BaseExporter
-    from trajcenter.robot.models import TrajectoryStoreEntry
+    from trajcenter.store.models import TrajectoryStoreEntry
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
@@ -139,6 +139,17 @@ def build_parser() -> argparse.ArgumentParser:
     store_subparsers = store_parser.add_subparsers(
         dest="store_command",
         metavar="STORE_COMMAND",
+    )
+    store_list_parser = store_subparsers.add_parser(
+        "list",
+        help="List local .trajcenter archives.",
+        description="List local .trajcenter archives.",
+    )
+    store_list_parser.add_argument(
+        "--store",
+        type=Path,
+        default=DEFAULT_STORE,
+        help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
     )
     store_inspect_parser = store_subparsers.add_parser(
         "inspect",
@@ -494,7 +505,7 @@ def handle_store_command(args: argparse.Namespace) -> int:
         return 2
 
     try:
-        from trajcenter.robot.store import scan_trajectory_store
+        from trajcenter.store.local import scan_trajectory_store
     except ImportError as exc:
         print(ROBOT_OPTIONAL_DEPENDENCY_MESSAGE)
         print(f"Import error: {exc}")

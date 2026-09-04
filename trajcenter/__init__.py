@@ -38,6 +38,13 @@ from .core import (
     raw,
 )
 from .export import BaseExporter, CsvExporter, ExcelExporter, ExportOptions
+from .store import (
+    TRAJCENTER_SUFFIX,
+    TrajectoryStoreEntry,
+    find_store_entry,
+    scan_trajectory_store,
+    store_entries_to_metadata,
+)
 
 __all__ = [
     "COLUMN_ALIASES",
@@ -50,6 +57,7 @@ __all__ = [
     "OPTIONAL_COLUMNS",
     "REQUIRED_COLUMNS",
     "SEND_OPTIONAL_COLUMNS",
+    "TRAJCENTER_SUFFIX",
     "AptConverter",
     "BaseConverter",
     "BaseExporter",
@@ -66,12 +74,16 @@ __all__ = [
     "Trajectory",
     "TrajectoryMeta",
     "TrajectoryProcess",
+    "TrajectoryStoreEntry",
     "__version__",
     "canonical_name",
+    "find_store_entry",
     "get_logger",
     "msg",
     "raw",
     "resolve_columns",
+    "scan_trajectory_store",
+    "store_entries_to_metadata",
 ]
 
 __version__ = "2.1.0"

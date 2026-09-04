@@ -5,13 +5,7 @@
 > **Author**: Clément RACINET
 
 These tests validate process-aware imports from Excel workbooks and CSV
-sidecars:
-
-- ``meta`` sheet/sidecar with ``process_type`` and
-  ``process_param_names``;
-- ``process_param_index`` in point tables;
-- ``process_params`` sheet/sidecar;
-- strict validation errors when process data is incomplete.
+sidecars.
 """
 
 from __future__ import annotations
@@ -25,6 +19,8 @@ from trajcenter.convert.csv_converter import CsvConverter
 from trajcenter.convert.excel_converter import ExcelConverter
 from trajcenter.core.trajectory import Trajectory
 
+_PROCESS_WARNING_RE = "force|travel_speed|Unknown|inconnue"
+
 
 def _write_process_workbook(
     path: Path,
@@ -33,31 +29,7 @@ def _write_process_workbook(
     include_process_param_index: bool = True,
     process_param_names: str = "force;travel_speed",
 ) -> Path:
-    """Write an Excel workbook with optional process data.
-
-    ABB Route:
-        N/A — test helper.
-
-    ABB Constraints:
-        No ABB controller access.
-
-    Args:
-        path: Workbook destination path.
-        include_process_params: Whether to write the ``process_params`` sheet.
-        include_process_param_index: Whether to include point process indexes.
-        process_param_names: Metadata value for process parameter names.
-
-    Returns:
-        Created workbook path.
-
-    Raises:
-        OSError: If the workbook cannot be written.
-
-    Example:
-        ::
-
-            path = _write_process_workbook(tmp_path / "process.xlsx")
-    """
+    """Write an Excel workbook with optional process data."""
     traj_data: dict[str, list[float | int]] = {
         "x": [100.0, 200.0, 300.0],
         "y": [10.0, 20.0, 30.0],
@@ -106,34 +78,7 @@ def _write_process_csv_set(
     include_process_param_index: bool = True,
     process_param_names: str = "force;travel_speed",
 ) -> Path:
-    """Write a CSV file with optional process sidecars.
-
-    ABB Route:
-        N/A — test helper.
-
-    ABB Constraints:
-        No ABB controller access.
-
-    Args:
-        path: Main CSV destination path.
-        include_meta: Whether to write ``{stem}_meta.csv``.
-        include_process_params: Whether to write
-            ``{stem}_process_params.csv``.
-        include_process_param_index: Whether to include point process
-            indexes in the main CSV.
-        process_param_names: Metadata value for process parameter names.
-
-    Returns:
-        Main CSV path.
-
-    Raises:
-        OSError: If a CSV file cannot be written.
-
-    Example:
-        ::
-
-            path = _write_process_csv_set(tmp_path / "process.csv")
-    """
+    """Write a CSV file with optional process sidecars."""
     traj_data: dict[str, list[float | int]] = {
         "x": [100.0, 200.0, 300.0],
         "y": [10.0, 20.0, 30.0],
@@ -183,7 +128,7 @@ class TestExcelProcessImport:
         """A complete process workbook is imported as a process trajectory."""
         path = _write_process_workbook(tmp_path / "process.xlsx")
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
+        with pytest.warns(UserWarning, match=_PROCESS_WARNING_RE):
             traj = ExcelConverter().convert(path)
 
         assert traj.meta.name == "process_excel"
@@ -222,9 +167,11 @@ class TestExcelProcessImport:
             include_process_param_index=False,
         )
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_param_index"):
-                ExcelConverter().convert(path)
+        with (
+            pytest.warns(UserWarning, match=_PROCESS_WARNING_RE),
+            pytest.raises(ValueError, match="process_param_index"),
+        ):
+            ExcelConverter().convert(path)
 
     def test_excel_import_process_missing_param_names_fails(
         self,
@@ -236,15 +183,17 @@ class TestExcelProcessImport:
             process_param_names="",
         )
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_param_names"):
-                ExcelConverter().convert(path)
+        with (
+            pytest.warns(UserWarning, match=_PROCESS_WARNING_RE),
+            pytest.raises(ValueError, match="process_param_names"),
+        ):
+            ExcelConverter().convert(path)
 
     def test_excel_process_save_load_roundtrip(self, tmp_path: Path) -> None:
         """Imported Excel process trajectory survives .trajcenter save/load."""
         path = _write_process_workbook(tmp_path / "process.xlsx")
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
+        with pytest.warns(UserWarning, match=_PROCESS_WARNING_RE):
             traj = ExcelConverter().convert(path)
 
         archive = tmp_path / "process.trajcenter"
@@ -265,7 +214,7 @@ class TestCsvProcessImport:
         """A complete CSV process set is imported as a process trajectory."""
         path = _write_process_csv_set(tmp_path / "process.csv")
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
+        with pytest.warns(UserWarning, match=_PROCESS_WARNING_RE):
             traj = CsvConverter().convert(path)
 
         assert traj.meta.name == "process_csv"
@@ -302,9 +251,11 @@ class TestCsvProcessImport:
             include_process_params=True,
         )
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_type is 0"):
-                CsvConverter().convert(path)
+        with (
+            pytest.warns(UserWarning, match=_PROCESS_WARNING_RE),
+            pytest.raises(ValueError, match="process_type is 0"),
+        ):
+            CsvConverter().convert(path)
 
     def test_csv_import_process_missing_index_fails(self, tmp_path: Path) -> None:
         """An active CSV process without point process_param_index raises."""
@@ -313,9 +264,11 @@ class TestCsvProcessImport:
             include_process_param_index=False,
         )
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_param_index"):
-                CsvConverter().convert(path)
+        with (
+            pytest.warns(UserWarning, match=_PROCESS_WARNING_RE),
+            pytest.raises(ValueError, match="process_param_index"),
+        ):
+            CsvConverter().convert(path)
 
     def test_csv_import_process_missing_param_names_fails(
         self,
@@ -327,15 +280,17 @@ class TestCsvProcessImport:
             process_param_names="",
         )
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
-            with pytest.raises(ValueError, match="process_param_names"):
-                CsvConverter().convert(path)
+        with (
+            pytest.warns(UserWarning, match=_PROCESS_WARNING_RE),
+            pytest.raises(ValueError, match="process_param_names"),
+        ):
+            CsvConverter().convert(path)
 
     def test_csv_process_save_load_roundtrip(self, tmp_path: Path) -> None:
         """Imported CSV process trajectory survives .trajcenter save/load."""
         path = _write_process_csv_set(tmp_path / "process.csv")
 
-        with pytest.warns(UserWarning, match="force|travel_speed|Unknown|inconnue"):
+        with pytest.warns(UserWarning, match=_PROCESS_WARNING_RE):
             traj = CsvConverter().convert(path)
 
         archive = tmp_path / "process.trajcenter"

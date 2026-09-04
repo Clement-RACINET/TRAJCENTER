@@ -117,7 +117,7 @@ class TestResolveColumns:
     def test_alias_resolved(self) -> None:
         """Aliases are correctly renamed to their canonical form."""
         df = pd.DataFrame(columns=["PosX", "PosY", "PosZ"])
-        df_out, unknown = resolve_columns(df)
+        df_out, _ = resolve_columns(df)
         assert "x" in df_out.columns
         assert "y" in df_out.columns
         assert "z" in df_out.columns

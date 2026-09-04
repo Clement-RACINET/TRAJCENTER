@@ -1,0 +1,3 @@
+# Banner
+
+::: trajcenter.ui.banner

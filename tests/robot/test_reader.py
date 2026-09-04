@@ -43,26 +43,7 @@ _MODULE = "trajcenter.robot.reader"
 
 @pytest.fixture
 def client() -> MagicMock:
-    """Return a bare ``MagicMock`` acting as ``RWSClient``.
-
-    ABB Route:
-        N/A — test fixture.
-
-    ABB Constraints:
-        No controller access is performed.
-
-    Args:
-        None.
-
-    Returns:
-        Mock client.
-
-
-    Example:
-        ```python
-        client = MagicMock()
-        ```
-    """
+    """Return a bare ``MagicMock`` acting as ``RWSClient``."""
     return MagicMock()
 
 
@@ -93,16 +74,20 @@ class TestReadSelectedTrajIndex:
     @pytest.mark.asyncio
     async def test_invalid_value_raises(self, client: MagicMock) -> None:
         """A non-numeric raw value raises ``ValueError``."""
-        with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="abc")):
-            with pytest.raises(ValueError, match="selectedTrajIndex"):
-                await read_selected_traj_index(client)
+        with (
+            patch(f"{_MODULE}.get_variable", AsyncMock(return_value="abc")),
+            pytest.raises(ValueError, match="selectedTrajIndex"),
+        ):
+            await read_selected_traj_index(client)
 
     @pytest.mark.asyncio
     async def test_symbol_url_format(self, client: MagicMock) -> None:
         """The symbol URL uses the v2 WebServices module and variable name."""
         mock_get = AsyncMock(return_value="1")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_selected_traj_index(client)
+
         _, kwargs = mock_get.call_args
         assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/selectedTrajIndex"
 
@@ -131,16 +116,20 @@ class TestBoolReaders:
     @pytest.mark.asyncio
     async def test_invalid_bool_raises(self, client: MagicMock) -> None:
         """Invalid RAPID bool strings raise ``ValueError``."""
-        with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="MAYBE")):
-            with pytest.raises(ValueError, match="trajReady"):
-                await read_traj_ready(client)
+        with (
+            patch(f"{_MODULE}.get_variable", AsyncMock(return_value="MAYBE")),
+            pytest.raises(ValueError, match="trajReady"),
+        ):
+            await read_traj_ready(client)
 
     @pytest.mark.asyncio
     async def test_send_traj_request(self, client: MagicMock) -> None:
         """``sendTrajRequest`` is read from the v2 variable."""
         mock_get = AsyncMock(return_value="TRUE")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             assert await read_send_traj_request(client) is True
+
         assert (
             mock_get.call_args.kwargs["symbolurl"]
             == "RAPID/T_ROB1/TRAJCENTER/sendTrajRequest"
@@ -150,8 +139,10 @@ class TestBoolReaders:
     async def test_refresh_meta_request(self, client: MagicMock) -> None:
         """``refreshMetaRequest`` is read from the v2 variable."""
         mock_get = AsyncMock(return_value="FALSE")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             assert await read_refresh_meta_request(client) is False
+
         assert (
             mock_get.call_args.kwargs["symbolurl"]
             == "RAPID/T_ROB1/TRAJCENTER/refreshMetaRequest"
@@ -161,8 +152,10 @@ class TestBoolReaders:
     async def test_transfer_error(self, client: MagicMock) -> None:
         """``transferError`` is parsed as bool."""
         mock_get = AsyncMock(return_value="TRUE")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             assert await read_transfer_error(client) is True
+
         assert (
             mock_get.call_args.kwargs["symbolurl"]
             == "RAPID/T_ROB1/TRAJCENTER/transferError"
@@ -219,16 +212,20 @@ class TestReadNbRobtargets:
     @pytest.mark.asyncio
     async def test_invalid_raises(self, client: MagicMock) -> None:
         """A non-numeric value raises ``ValueError``."""
-        with patch(f"{_MODULE}.get_variable", AsyncMock(return_value="???")):
-            with pytest.raises(ValueError, match="nbLoadedTrajPoints"):
-                await read_nb_robtargets(client)
+        with (
+            patch(f"{_MODULE}.get_variable", AsyncMock(return_value="???")),
+            pytest.raises(ValueError, match="nbLoadedTrajPoints"),
+        ):
+            await read_nb_robtargets(client)
 
     @pytest.mark.asyncio
     async def test_symbol_url(self, client: MagicMock) -> None:
         """The v2 point count variable is used."""
         mock_get = AsyncMock(return_value="1")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_nb_robtargets(client)
+
         assert (
             mock_get.call_args.kwargs["symbolurl"]
             == "RAPID/T_ROB1/TRAJCENTER/nbLoadedTrajPoints"
@@ -254,8 +251,10 @@ class TestReadNbTrajDispo:
     async def test_symbol_url(self, client: MagicMock) -> None:
         """The v2 metadata count variable is used."""
         mock_get = AsyncMock(return_value="1")
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_nb_traj_dispo(client)
+
         assert (
             mock_get.call_args.kwargs["symbolurl"]
             == "RAPID/T_ROB1/TRAJCENTER/nbTrajAvailable"
@@ -275,8 +274,10 @@ class TestReadTrajNames:
                 '["Traj3",42,0]',
             ]
         )
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client, count=3)
+
         assert names == ["Traj1", "Traj2", "Traj3"]
 
     @pytest.mark.asyncio
@@ -289,8 +290,10 @@ class TestReadTrajNames:
                 '["Beta",20,0]',
             ]
         )
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client)
+
         assert names == ["Alpha", "Beta"]
         assert mock_get.call_count == 3
 
@@ -298,8 +301,10 @@ class TestReadTrajNames:
     async def test_empty_store(self, client: MagicMock) -> None:
         """``count=0`` returns an empty list without any RWS call."""
         mock_get = AsyncMock()
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             names = await read_traj_names(client, count=0)
+
         assert names == []
         mock_get.assert_not_called()
 
@@ -313,8 +318,10 @@ class TestReadTrajNames:
     async def test_symbol_url_array_format(self, client: MagicMock) -> None:
         """Array element URL uses encoded RAPID braces."""
         mock_get = AsyncMock(return_value='["T1",1,0]')
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_traj_names(client, count=1)
+
         _, kwargs = mock_get.call_args
         assert kwargs["symbolurl"] == "RAPID/T_ROB1/TRAJCENTER/trajectories%7B1%7D"
 
@@ -322,9 +329,12 @@ class TestReadTrajNames:
     async def test_invalid_record_raises(self, client: MagicMock) -> None:
         """A malformed metadata record raises ``ValueError``."""
         mock_get = AsyncMock(return_value="[INVALID]")
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="metadata"):
-                await read_traj_names(client, count=1)
+
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="metadata"),
+        ):
+            await read_traj_names(client, count=1)
 
 
 class TestReadRobotDefaults:
@@ -347,6 +357,7 @@ class TestReadRobotDefaults:
                 "TRUE",
             ]
         )
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             defaults = await read_robot_defaults(client)
 
@@ -382,6 +393,7 @@ class TestReadRobotDefaults:
                 "FALSE",
             ]
         )
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             defaults = await read_robot_defaults(client)
 
@@ -409,6 +421,7 @@ class TestReadRobotDefaults:
                 "TRUE",
             ]
         )
+
         with patch(f"{_MODULE}.get_variable", mock_get):
             await read_robot_defaults(client)
 
@@ -430,9 +443,12 @@ class TestReadRobotDefaults:
     async def test_invalid_default_bool_raises(self, client: MagicMock) -> None:
         """Invalid default bool values raise ``ValueError``."""
         mock_get = AsyncMock(return_value="MAYBE")
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="hasDefaultTcpSpeed"):
-                await read_robot_defaults(client)
+
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="hasDefaultTcpSpeed"),
+        ):
+            await read_robot_defaults(client)
 
 
 class TestCellConfigReaders:
@@ -515,9 +531,11 @@ class TestCellConfigReaders:
         """Malformed tool records raise ``ValueError``."""
         mock_get = AsyncMock(return_value="[INVALID]")
 
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="trajTools"):
-                await read_traj_tool_names(client, count=1)
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="trajTools"),
+        ):
+            await read_traj_tool_names(client, count=1)
 
     @pytest.mark.asyncio
     async def test_read_traj_wobj_names_with_count(self, client: MagicMock) -> None:
@@ -568,9 +586,11 @@ class TestCellConfigReaders:
         """Malformed workobject records raise ``ValueError``."""
         mock_get = AsyncMock(return_value="[INVALID]")
 
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="trajWobjs"):
-                await read_traj_wobj_names(client, count=1)
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="trajWobjs"),
+        ):
+            await read_traj_wobj_names(client, count=1)
 
 
 class TestProcessCatalogReaders:
@@ -609,9 +629,11 @@ class TestProcessCatalogReaders:
         """Invalid process count raises ``ValueError``."""
         mock_get = AsyncMock(return_value="abc")
 
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="processTypeCount"):
-                await read_process_type_count(client)
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="processTypeCount"),
+        ):
+            await read_process_type_count(client)
 
     @pytest.mark.asyncio
     async def test_read_process_types_with_count(self, client: MagicMock) -> None:
@@ -670,9 +692,11 @@ class TestProcessCatalogReaders:
         """Malformed process type records raise ``ValueError``."""
         mock_get = AsyncMock(return_value="[INVALID]")
 
-        with patch(f"{_MODULE}.get_variable", mock_get):
-            with pytest.raises(ValueError, match="trajCenterProcessType"):
-                await read_process_types(client, count=1)
+        with (
+            patch(f"{_MODULE}.get_variable", mock_get),
+            pytest.raises(ValueError, match="trajCenterProcessType"),
+        ):
+            await read_process_types(client, count=1)
 
 
 class TestReadRobotContext:

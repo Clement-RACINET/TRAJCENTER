@@ -48,13 +48,16 @@ from trajcenter.robot.constants import (
     DEFAULT_MASTERSHIP_RETRY_DELAY_S,
     DEFAULT_PROGRESS_UPDATE_STEP_PERCENT,
     DEFAULT_TASK,
+    MAX_TRAJ,
     TRAJCENTER_MODULE,
 )
-from trajcenter.robot.models import ResolvedTrajectory, TrajectoryStoreEntry
+from trajcenter.robot.models import ResolvedTrajectory
 from trajcenter.robot.reader import read_robot_context, read_selected_traj_index
 from trajcenter.robot.resolver import resolve_trajectory
-from trajcenter.robot.store import scan_trajectory_store, store_entries_to_metadata
 from trajcenter.robot.writer import write_resolved_trajectory, write_store_metadata
+from trajcenter.store.local import scan_trajectory_store
+from trajcenter.store.metadata import store_entries_to_metadata
+from trajcenter.store.models import TrajectoryStoreEntry
 
 logger = get_logger(__name__)
 
@@ -108,8 +111,11 @@ async def refresh_store_metadata(
 
             entries = await refresh_store_metadata(client, "trajectory_store")
     """
-    entries = scan_trajectory_store(store_root)
-    names, point_counts, process_types = store_entries_to_metadata(entries)
+    entries = scan_trajectory_store(store_root, max_entries=MAX_TRAJ)
+    names, point_counts, process_types = store_entries_to_metadata(
+        entries,
+        max_entries=MAX_TRAJ,
+    )
 
     logger.info(
         "Refreshing store metadata from %s: %d trajectories",
