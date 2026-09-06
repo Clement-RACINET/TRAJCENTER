@@ -102,12 +102,18 @@ nav:
           - 📄 Actions: api/trajcenter/ui/actions.md
           - 📄 App: api/trajcenter/ui/app.md
           - 📄 Config: api/trajcenter/ui/config.md
+          - 📄 Features: api/trajcenter/ui/features.md
           - 📄 Logos: api/trajcenter/ui/logos.md
           - 📄 Widgets: api/trajcenter/ui/widgets.md
           - 📂 Screens:
             - 📖 Intro screens: api/trajcenter/ui/screens/screens.md
+            - 📄 Convert: api/trajcenter/ui/screens/convert.md
+            - 📄 Export: api/trajcenter/ui/screens/export.md
             - 📄 Home: api/trajcenter/ui/screens/home.md
+            - 📄 Robot: api/trajcenter/ui/screens/robot.md
+            - 📄 Settings: api/trajcenter/ui/screens/settings.md
             - 📄 Splash: api/trajcenter/ui/screens/splash.md
+            - 📄 Store: api/trajcenter/ui/screens/store.md
       # --- AUTOGEN_API_END ---
 
   # - Qualité:

@@ -19,10 +19,10 @@ from trajcenter.ui.widgets import ActionDescription, StoreStatus, TitleBlock
 class HomeScreen(Screen[None]):
     """Main TrajCenter home screen."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str]]] = [
         ("s", "back_to_splash"),
         ("escape", "back_to_splash"),
-    )
+    ]
 
     DEFAULT_CSS = """
     HomeScreen {
@@ -124,7 +124,11 @@ class HomeScreen(Screen[None]):
                 yield Label("Menu principal", id="menu-title")
                 yield ListView(
                     *[
-                        ListItem(Label(action.label), name=action.key)
+                        ListItem(
+                            Label(self._get_action_label(action.key, action.label)),
+                            name=action.key,
+                            disabled=self._is_action_disabled(action.key),
+                        )
                         for action in HOME_ACTIONS
                     ],
                     id="menu",
@@ -143,10 +147,24 @@ class HomeScreen(Screen[None]):
         yield Footer()
 
     def on_mount(self) -> None:
-        """Initialize selected action."""
+        """Initialize selected action and focus the menu after layout."""
+        self.call_after_refresh(self._focus_menu)
+
+    def _focus_menu(self) -> None:
+        """Focus the home menu and select the first enabled item."""
         menu = self.query_one("#menu", ListView)
-        menu.index = 0
-        self._update_description(0)
+        index = self._get_first_enabled_action_index()
+        menu.index = index
+        menu.focus()
+        self._update_description(index)
+
+    def _get_first_enabled_action_index(self) -> int:
+        """Return the index of the first enabled home action."""
+        for index, action in enumerate(HOME_ACTIONS):
+            if not self._is_action_disabled(action.key):
+                return index
+
+        return 0
 
     def action_back_to_splash(self) -> None:
         """Return to splash screen."""
@@ -170,6 +188,10 @@ class HomeScreen(Screen[None]):
         action = HOME_ACTIONS[menu.index]
         action_name = action.key
 
+        if self._is_action_disabled(action_name):
+            self._show_unavailable_action(action_name)
+            return
+
         if action_name == "quit":
             self.app.exit()
             return
@@ -186,11 +208,46 @@ class HomeScreen(Screen[None]):
             self.app.switch_screen("store")
             return
 
+        if action_name == "robot":
+            self.app.switch_screen("robot")
+            return
+
         if action_name == "settings":
             self.app.switch_screen("settings")
             return
 
         self._show_placeholder(action_name)
+
+    def _is_action_disabled(self, action_name: str) -> bool:
+        """Return whether a home action is disabled."""
+        if action_name == "robot":
+            return not self.config.features.robot
+
+        return False
+
+    def _get_action_label(self, action_name: str, label: str) -> str:
+        """Return the displayed label for a home action."""
+        if action_name == "robot" and not self.config.features.robot:
+            return f"{label} [option non installée]"
+
+        return label
+
+    def _show_unavailable_action(self, action_name: str) -> None:
+        """Show a message for an unavailable optional action."""
+        if action_name == "robot":
+            self.description.update(
+                Text.from_markup(
+                    "[bold #F59C00]Supervision robot ABB[/]\n\n"
+                    "Option robot indisponible dans cet environnement.\n"
+                    "Installe ou lance TrajCenter dans un environnement Pixi "
+                    "contenant la feature robot."
+                )
+            )
+            return
+
+        self.description.update(
+            Text.from_markup(f"[bold #F59C00]Action indisponible[/]\n\n{action_name}")
+        )
 
     def _show_placeholder(self, action_name: str) -> None:
         """Show placeholder description for a selected action."""
@@ -227,7 +284,18 @@ class HomeScreen(Screen[None]):
     def _update_description(self, index: int) -> None:
         """Update action description."""
         action = HOME_ACTIONS[index]
+
         text = Text()
-        text.append(f"{action.label}\n", style="bold #F59C00")
+        text.append(
+            f"{self._get_action_label(action.key, action.label)}\n",
+            style="bold #F59C00",
+        )
         text.append(action.description, style="#F4F4F5")
+
+        if self._is_action_disabled(action.key):
+            text.append(
+                "\n\nOption non disponible dans l'environnement actuel.",
+                style="bold #EF4444",
+            )
+
         self.description.update(text)

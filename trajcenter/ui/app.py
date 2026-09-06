@@ -11,6 +11,7 @@ from trajcenter.ui.config import UIConfig
 from trajcenter.ui.screens.convert import ConvertScreen
 from trajcenter.ui.screens.export import ExportScreen
 from trajcenter.ui.screens.home import HomeScreen
+from trajcenter.ui.screens.robot import RobotScreen
 from trajcenter.ui.screens.settings import SettingsScreen
 from trajcenter.ui.screens.splash import SplashScreen
 from trajcenter.ui.screens.store import StoreScreen
@@ -35,11 +36,11 @@ class TrajCenterTUI(App[None]):
     }
     """
 
-    BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ("q", "quit", "Quitter"),
         ("r", "refresh", "Rafraîchir"),
         ("s", "show_splash", "Splash"),
-    )
+    ]
 
     TITLE = "TrajCenter"
 
@@ -59,6 +60,7 @@ class TrajCenterTUI(App[None]):
         self.install_screen(StoreScreen(self.config), name="store")
         self.install_screen(ConvertScreen(self.config), name="convert")
         self.install_screen(ExportScreen(self.config), name="export")
+        self.install_screen(RobotScreen(self.config), name="robot")
         self.install_screen(SettingsScreen(self.config), name="settings")
         self.push_screen("splash")
 

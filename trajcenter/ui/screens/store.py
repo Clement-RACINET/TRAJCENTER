@@ -21,11 +21,11 @@ if TYPE_CHECKING:
 class StoreScreen(Screen[None]):
     """Screen used to inspect the local TrajCenter trajectory store."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "refresh_entries", "Rafraîchir"),
-    )
+    ]
 
     DEFAULT_CSS = """
     StoreScreen {

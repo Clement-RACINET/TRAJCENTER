@@ -144,11 +144,11 @@ def build_settings_error_text(exc: Exception) -> Text:
 class SettingsScreen(Screen[None]):
     """Screen used to edit TrajCenter TUI session settings."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "reset_form", "Réinitialiser"),
-    )
+    ]
 
     DEFAULT_CSS = """
     SettingsScreen {
@@ -242,7 +242,6 @@ class SettingsScreen(Screen[None]):
         background: #181820;
     }
     """
-
 
     def __init__(self, config: UIConfig) -> None:
         """Initialize the settings screen.

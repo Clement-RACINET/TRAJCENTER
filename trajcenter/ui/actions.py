@@ -33,8 +33,8 @@ HOME_ACTIONS: tuple[HomeAction, ...] = (
     ),
     HomeAction(
         key="robot",
-        label="Supervision robot ABB",
-        description="Démarrer la supervision RWS pour transfert vers RAPID.",
+        label="Démarrer supervision robot ABB",
+        description="Lancer la supervision RWS pour transfert vers RAPID.",
     ),
     HomeAction(
         key="settings",

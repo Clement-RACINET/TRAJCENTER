@@ -88,11 +88,11 @@ def build_conversion_error_text(exc: Exception) -> Text:
 class ConvertScreen(Screen[None]):
     """Screen used to convert source files to ``.trajcenter`` archives."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "reset_form", "Réinitialiser"),
-    )
+    ]
 
     DEFAULT_CSS = """
     ConvertScreen {

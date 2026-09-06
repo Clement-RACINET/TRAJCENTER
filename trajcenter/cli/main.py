@@ -18,8 +18,6 @@ from typing import TYPE_CHECKING
 from trajcenter.convert.registry import infer_converter
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.export.registry import infer_exporter
-from trajcenter.ui.app import run_tui
-from trajcenter.ui.config import UIConfig
 
 if TYPE_CHECKING:
     from trajcenter.store.models import TrajectoryStoreEntry
@@ -29,6 +27,10 @@ DEFAULT_STORE = Path("trajectory_store")
 ROBOT_OPTIONAL_DEPENDENCY_MESSAGE = (
     "Robot support requires optional dependencies.\n"
     'Install with: pip install "trajcenter[robot]"'
+)
+TUI_OPTIONAL_DEPENDENCY_MESSAGE = (
+    "TUI support requires optional dependencies.\n"
+    'Install with: pip install "trajcenter[textual]"'
 )
 
 
@@ -549,6 +551,14 @@ def run_command(args: argparse.Namespace) -> int:
         return handle_export_command(args)
 
     if args.command == "tui":
+        try:
+            from trajcenter.ui.app import run_tui
+            from trajcenter.ui.config import UIConfig
+        except ImportError as exc:
+            print(TUI_OPTIONAL_DEPENDENCY_MESSAGE)
+            print(f"Import error: {exc}")
+            return 1
+
         return run_tui(UIConfig(store=args.store))
 
     if args.command == "store":

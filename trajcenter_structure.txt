@@ -3,9 +3,7 @@ trajcenter_v2
 │   ├── route3.md
 │   ├── route3.pdf
 │   ├── route4.md
-│   ├── route4.pdf
-│   ├── TRAJCENTER_V2_REORG_PLAN.txt
-│   └── TRAJCENTER_VALIDATION_MATRIX.md.md
+│   └── route4.pdf
 ├── icons
 │   ├── Image0.png
 │   ├── Image1.png
@@ -25,6 +23,7 @@ trajcenter_v2
 │   │   ├── convert_excel.py
 │   │   ├── convert_mod.py
 │   │   └── export_excel.py
+│   ├── run_best_tui.py
 │   └── run_trajcenter_supervisor.py
 ├── tests
 │   ├── cli
@@ -53,7 +52,6 @@ trajcenter_v2
 │   │   ├── test_csv_exporter.py
 │   │   ├── test_excel_exporter.py
 │   │   ├── test_process_tabular_exporter.py
-│   │   ├── test_public_api.py
 │   │   ├── test_registry.py
 │   │   └── test_tabular_exporter.py
 │   ├── robot
@@ -76,7 +74,11 @@ trajcenter_v2
 │   │   └── test_models.py
 │   ├── ui
 │   │   ├── __init__.py
-│   │   └── test_app.py
+│   │   ├── test_app.py
+│   │   ├── test_convert_screen.py
+│   │   ├── test_export_screen.py
+│   │   ├── test_settings_screen.py
+│   │   └── test_store_screen.py
 │   ├── __init__.py
 │   └── conftest.py
 ├── trajcenter
@@ -132,12 +134,18 @@ trajcenter_v2
 │   ├── ui
 │   │   ├── screens
 │   │   │   ├── __init__.py
+│   │   │   ├── convert.py
+│   │   │   ├── export.py
 │   │   │   ├── home.py
-│   │   │   └── splash.py
+│   │   │   ├── robot.py
+│   │   │   ├── settings.py
+│   │   │   ├── splash.py
+│   │   │   └── store.py
 │   │   ├── __init__.py
 │   │   ├── actions.py
 │   │   ├── app.py
 │   │   ├── config.py
+│   │   ├── features.py
 │   │   ├── logos.py
 │   │   └── widgets.py
 │   └── __init__.py

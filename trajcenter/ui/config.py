@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+
+from trajcenter.ui.features import UIFeatures, detect_ui_features
 
 
 @dataclass(slots=True)
@@ -25,3 +27,4 @@ class UIConfig:
     module: str = "TRAJCENTER"
     mastership_retries: int = 3
     log_level: str = "INFO"
+    features: UIFeatures = field(default_factory=detect_ui_features)

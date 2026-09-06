@@ -73,11 +73,11 @@ def build_export_error_text(exc: Exception) -> Text:
 class ExportScreen(Screen[None]):
     """Screen used to export ``.trajcenter`` archives to CSV or Excel."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "reset_form", "Réinitialiser"),
-    )
+    ]
 
     DEFAULT_CSS = """
     ExportScreen {

@@ -16,12 +16,12 @@ from trajcenter.ui.widgets import AMLogo, LCFCLogo
 class SplashScreen(Screen[None]):
     """Landing page with institutional logos."""
 
-    BINDINGS: ClassVar[tuple[tuple[str, str], ...]] = (
+    BINDINGS: ClassVar[list[tuple[str, str]]] = [
         ("enter", "continue_to_home"),
         ("space", "continue_to_home"),
         ("q", "quit"),
         ("escape", "quit"),
-    )
+    ]
     DEFAULT_CSS = """
     SplashScreen {
         layout: vertical;
