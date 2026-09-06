@@ -22,17 +22,17 @@ class SplashScreen(Screen[None]):
         ("q", "quit"),
         ("escape", "quit"),
     )
-
     DEFAULT_CSS = """
     SplashScreen {
+        layout: vertical;
         background: #101014;
         color: #F4F4F5;
-        align: center middle;
     }
 
     #splash-container {
-        width: 94%;
-        height: 96%;
+        width: 100%;
+        height: 1fr;
+        margin: 1 2 0 2;
         padding: 1 2;
         border: round #87196B;
         background: #181820;
@@ -40,34 +40,34 @@ class SplashScreen(Screen[None]):
 
     #logos-row {
         width: 100%;
-        height: 24;
+        height: 20;
         layout: horizontal;
         align: center middle;
     }
 
     #am-card {
         width: 1fr;
-        height: 23;
+        height: 20;
         margin-right: 1;
         align: center middle;
     }
 
     #lcfc-card {
         width: 1fr;
-        height: 23;
+        height: 20;
         margin-left: 1;
         align: center middle;
     }
 
     #am-logo {
         width: 100%;
-        height: 19;
+        height: 16;
         content-align: center middle;
     }
 
     #lcfc-logo {
         width: 100%;
-        height: 20;
+        height: 17;
         content-align: center middle;
     }
 
@@ -88,7 +88,14 @@ class SplashScreen(Screen[None]):
         color: #A1A1AA;
     }
 
-    #separator-top,
+    #separator-top {
+        width: 100%;
+        height: 1;
+        margin-top: 0;
+        margin-bottom: 1;
+        background: #87196B;
+    }
+
     #separator-bottom {
         width: 100%;
         height: 1;
@@ -117,7 +124,7 @@ class SplashScreen(Screen[None]):
     #splash-help {
         width: 100%;
         height: 1;
-        margin-top: 1;
+        margin-top: 0;
         content-align: center middle;
         color: #F59C00;
         text-style: bold;

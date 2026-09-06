@@ -103,22 +103,27 @@ class ConvertScreen(Screen[None]):
 
     #convert-container {
         height: 1fr;
-        margin: 1 2;
+        margin: 1 2 0 2;
         padding: 1;
         border: round #87196B;
         background: #181820;
     }
 
     #convert-title {
-        height: 3;
+        height: 1;
+        margin-bottom: 1;
         content-align: center middle;
         text-align: center;
         color: #F59C00;
         text-style: bold;
     }
 
+    #convert-form {
+        height: auto;
+    }
+
     .field-row {
-        height: 5;
+        height: 3;
         margin-bottom: 1;
         align: left middle;
     }
@@ -145,16 +150,18 @@ class ConvertScreen(Screen[None]):
     }
 
     #convert-button-row {
-        height: 5;
+        height: 3;
+        margin-top: 0;
         align: center middle;
     }
 
     #convert-button {
         width: 32;
+        height: 3;
     }
 
     #convert-status {
-        height: 6;
+        height: 8;
         margin-top: 1;
         padding: 1;
         border: round #3F3F46;
@@ -162,8 +169,8 @@ class ConvertScreen(Screen[None]):
     }
 
     #convert-help {
-        height: 3;
-        padding: 1;
+        height: 1;
+        padding: 0 1;
         text-align: center;
         color: #A1A1AA;
         background: #181820;
@@ -183,46 +190,47 @@ class ConvertScreen(Screen[None]):
         """Compose the conversion screen."""
         yield Header(show_clock=True)
 
-        with Container(id="convert-container"), Vertical():
+        with Container(id="convert-container"):
             yield Static("Convertir une trajectoire", id="convert-title")
 
-            with Horizontal(classes="field-row"):
-                yield Static("Fichier source", classes="field-label")
-                yield Input(
-                    placeholder="Ex: trajectory_files/test_basic.xlsx",
-                    id="source-input",
-                )
+            with Vertical(id="convert-form"):
+                with Horizontal(classes="field-row"):
+                    yield Static("Fichier source", classes="field-label")
+                    yield Input(
+                        placeholder="Ex: trajectory_files/test_basic.xlsx",
+                        id="source-input",
+                    )
 
-            with Horizontal(classes="field-row"):
-                yield Static("Dossier destination", classes="field-label")
-                yield Input(
-                    value=str(self.config.store),
-                    placeholder="Ex: trajectory_store",
-                    id="dest-input",
-                )
+                with Horizontal(classes="field-row"):
+                    yield Static("Dossier destination", classes="field-label")
+                    yield Input(
+                        value=str(self.config.store),
+                        placeholder="Ex: trajectory_store",
+                        id="dest-input",
+                    )
 
-            with Horizontal(classes="field-row"):
-                yield Static("Nom de sortie", classes="field-label")
-                yield Input(
-                    placeholder="Optionnel. Défaut : nom du fichier source",
-                    id="name-input",
-                )
+                with Horizontal(classes="field-row"):
+                    yield Static("Nom de sortie", classes="field-label")
+                    yield Input(
+                        placeholder="Optionnel. Défaut : nom du fichier source",
+                        id="name-input",
+                    )
 
-            with Horizontal(classes="field-row"):
-                yield Static("Format source", classes="field-label")
-                yield Select(
-                    CONVERT_FORMAT_OPTIONS,
-                    value="auto",
-                    allow_blank=False,
-                    id="format-select",
-                )
+                with Horizontal(classes="field-row"):
+                    yield Static("Format source", classes="field-label")
+                    yield Select(
+                        CONVERT_FORMAT_OPTIONS,
+                        value="auto",
+                        allow_blank=False,
+                        id="format-select",
+                    )
 
-            with Horizontal(id="convert-button-row"):
-                yield Button(
-                    "Convertir vers .trajcenter",
-                    variant="primary",
-                    id="convert-button",
-                )
+                with Horizontal(id="convert-button-row"):
+                    yield Button(
+                        "Convertir vers .trajcenter",
+                        variant="primary",
+                        id="convert-button",
+                    )
 
             yield Static(
                 "Status: en attente d'une conversion.",
@@ -230,7 +238,7 @@ class ConvertScreen(Screen[None]):
             )
 
         yield Static(
-            "Entrer chemins · Bouton convertir · R réinitialiser · B/Echap accueil · Q quitter",
+            "Coller: Ctrl+Shift+V · R réinitialiser · B/Echap accueil · Q quitter",
             id="convert-help",
         )
 

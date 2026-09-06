@@ -5,8 +5,7 @@ from __future__ import annotations
 
 from rich.text import Text
 
-AM_VIOLET = r"""
-                                                            
+AM_VIOLET_1 = r"""
                                                             
               llllllllll                ll                  
                llllllllll              llll                 
@@ -26,8 +25,46 @@ AM_VIOLET = r"""
                                                             
                                                             
 """
+AM_ORANGE_1 = r"""
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+        ARTSMETIERS                                          
+       ARTSMETIERS                                           
+      ARTSMETIERS                                            
+     ARTSMETIERS                                             
+                                                            
+                                                            
+                                                            
+"""
 
+AM_VIOLET = r"""
+                                                            
+              ARTSMETIERS                AM                  
+               ARTSMETIERS              ENSAM                 
+                ARTSMETIERS            SIBERSS               
+                 ARTSMETIERS          GADZ'ARTS             
+                  ARTSMETIERS        ARTSMETIERS              
+                   ARTSMETIERS        ARTSMETIERS             
+                    ARTSMETIERS        ARTSMETIERS            
+                     ARTSMETIERS        ARTSMETIERS           
+                      ARTSMETIERS        ARTSMETIERS          
+                       ARTSMETIERS        ARTSMETIERS         
+                        ARTSMETIERS        ARTSMETIERS        
+                         ARTSMETIERS        ARTSMETIERS       
+                          ARTSMETIERS        ARTSMETIERS      
+                                                            
 
+                                                            
+                                                            
+"""
 AM_ORANGE = r"""
                                                             
                                                             
@@ -39,11 +76,10 @@ AM_ORANGE = r"""
                                                             
                                                             
                                                             
-                                                            
-        kkkkkkkkkk                                          
-       kkkkkkkkkk                                           
-      kkkkkkkkkk                                            
-     kkkkkkkkkk                                             
+        11011882                                          
+       39-40208                                           
+      11011882                                            
+     39-40208                                             
                                                             
                                                             
                                                             
@@ -51,7 +87,6 @@ AM_ORANGE = r"""
 
 
 LCFC_ORANGE = r"""
-
                     oooo                  
                   oooooooo                
                  oooooooooo               
@@ -100,16 +135,24 @@ LCFC_TEXT_1 = "LCFC"
 LCFC_TEXT_2 = "Laboratoire de Conception Fabrication Commande"
 
 
-TRAJCENTER_ASCII = r"""
-  _______   _____                    _    _____   ______   _   _   _______   ______   _____  
- |__   __| |  __ \       /\         | |  / ____| |  ____| | \ | | |__   __| |  ____| |  __ \ 
-    | |    | |__) |     /  \        | | | |      | |__    |  \| |    | |    | |__    | |__) |
-    | |    |  _  /     / /\ \   _   | | | |      |  __|   | . ` |    | |    |  __|   |  _  / 
-    | |    | | \ \    / ____ \ | |__| | | |____  | |____  | |\  |    | |    | |____  | | \ \ 
-    |_|    |_|  \_\  /_/    \_\ \____/   \_____| |______| |_| \_|    |_|    |______| |_|  \_\
-                                                                            
+TRAJCENTER_ASCII_OLD = r"""
+  _____   ____       _          _    ____   _____   _   _   _____   _____   ____   
+ |_   _| |  _ \     / \        | |  / ___| | ____| | \ | | |_   _| | ____| |  _ \  
+   | |   | |_) |   / _ \    _  | | | |     |  _|   |  \| |   | |   |  _|   | |_) | 
+   | |   |  _ <   / ___ \  | |_| | | |___  | |___  | |\  |   | |   | |___  |  _ <  
+   |_|   |_| \_\ /_/   \_\  \___/   \____| |_____| |_| \_|   |_|   |_____| |_| \_\ 
+                                                                                   
 """
+TRAJCENTER_ASCII = r"""
+ #######    ######        #             #     #####     #######    #     #    #######    #######    ######     
+    #       #     #      # #            #    #     #    #          ##    #       #       #          #     #    
+    #       #     #     #   #           #    #          #          # #   #       #       #          #     #    
+    #       ######     #     #          #    #          #####      #  #  #       #       #####      ######     
+    #       #   #      #######    #     #    #          #          #   # #       #       #          #   #      
+    #       #    #     #     #    #     #    #     #    #          #    ##       #       #          #    #     
+    #       #     #    #     #     #####      #####     #######    #     #       #       #######    #     #    
 
+"""
 
 SPLASH_AUTHORS = "Développé par J. SCHUMAKER & C. RACINET"
 SPLASH_HELP = "Entrée : continuer · Q : quitter"

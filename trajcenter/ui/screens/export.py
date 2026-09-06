@@ -88,22 +88,27 @@ class ExportScreen(Screen[None]):
 
     #export-container {
         height: 1fr;
-        margin: 1 2;
+        margin: 1 2 0 2;
         padding: 1;
         border: round #87196B;
         background: #181820;
     }
 
     #export-title {
-        height: 3;
+        height: 1;
+        margin-bottom: 1;
         content-align: center middle;
         text-align: center;
         color: #F59C00;
         text-style: bold;
     }
 
+    #export-form {
+        height: auto;
+    }
+
     .field-row {
-        height: 5;
+        height: 3;
         margin-bottom: 1;
         align: left middle;
     }
@@ -130,16 +135,18 @@ class ExportScreen(Screen[None]):
     }
 
     #export-button-row {
-        height: 5;
+        height: 3;
+        margin-top: 0;
         align: center middle;
     }
 
     #export-button {
         width: 32;
+        height: 3;
     }
 
     #export-status {
-        height: 6;
+        height: 9;
         margin-top: 1;
         padding: 1;
         border: round #3F3F46;
@@ -147,8 +154,8 @@ class ExportScreen(Screen[None]):
     }
 
     #export-help {
-        height: 3;
-        padding: 1;
+        height: 1;
+        padding: 0 1;
         text-align: center;
         color: #A1A1AA;
         background: #181820;
@@ -168,39 +175,40 @@ class ExportScreen(Screen[None]):
         """Compose the export screen."""
         yield Header(show_clock=True)
 
-        with Container(id="export-container"), Vertical():
+        with Container(id="export-container"):
             yield Static("Exporter une trajectoire", id="export-title")
 
-            with Horizontal(classes="field-row"):
-                yield Static("Archive source", classes="field-label")
-                yield Input(
-                    placeholder="Ex: trajectory_store/test_basic.trajcenter",
-                    id="source-input",
-                )
+            with Vertical(id="export-form"):
+                with Horizontal(classes="field-row"):
+                    yield Static("Archive source", classes="field-label")
+                    yield Input(
+                        placeholder="Ex: trajectory_store/test_basic.trajcenter",
+                        id="source-input",
+                    )
 
-            with Horizontal(classes="field-row"):
-                yield Static("Dossier destination", classes="field-label")
-                yield Input(
-                    value="trajectory_exports",
-                    placeholder="Ex: trajectory_exports",
-                    id="dest-input",
-                )
+                with Horizontal(classes="field-row"):
+                    yield Static("Dossier destination", classes="field-label")
+                    yield Input(
+                        value="trajectory_exports",
+                        placeholder="Ex: trajectory_exports",
+                        id="dest-input",
+                    )
 
-            with Horizontal(classes="field-row"):
-                yield Static("Format export", classes="field-label")
-                yield Select(
-                    EXPORT_FORMAT_OPTIONS,
-                    value="csv",
-                    allow_blank=False,
-                    id="format-select",
-                )
+                with Horizontal(classes="field-row"):
+                    yield Static("Format export", classes="field-label")
+                    yield Select(
+                        EXPORT_FORMAT_OPTIONS,
+                        value="csv",
+                        allow_blank=False,
+                        id="format-select",
+                    )
 
-            with Horizontal(id="export-button-row"):
-                yield Button(
-                    "Exporter la trajectoire",
-                    variant="primary",
-                    id="export-button",
-                )
+                with Horizontal(id="export-button-row"):
+                    yield Button(
+                        "Exporter la trajectoire",
+                        variant="primary",
+                        id="export-button",
+                    )
 
             yield Static(
                 "Status: en attente d'un export.",

@@ -8,7 +8,7 @@ from typing import ClassVar
 
 from rich.text import Text
 from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.containers import Container, Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Input, Static
 
@@ -159,33 +159,50 @@ class SettingsScreen(Screen[None]):
 
     #settings-container {
         height: 1fr;
-        margin: 1 2;
+        margin: 1 2 0 2;
         padding: 1;
         border: round #87196B;
         background: #181820;
-        scrollbar-size: 1 1;
-        scrollbar-background: #181820;
-        scrollbar-color: #F59C00;
     }
 
     #settings-title {
-        height: 3;
+        height: 1;
+        margin-bottom: 1;
         content-align: center middle;
         text-align: center;
         color: #F59C00;
         text-style: bold;
     }
 
+    #settings-form {
+        height: auto;
+    }
+
+    .settings-two-columns {
+        height: auto;
+    }
+
+    .settings-column {
+        width: 1fr;
+        height: auto;
+    }
+
+    .settings-column-left {
+        margin-right: 1;
+    }
+
+    .settings-column-right {
+        margin-left: 1;
+    }
+
     .settings-row {
-        height: 5;
-        margin-bottom: 1;
-        align: left middle;
+        height: 4;
+        margin-bottom: 0;
     }
 
     .settings-label {
-        width: 24;
-        height: 3;
-        content-align: left middle;
+        height: 1;
+        margin-bottom: 0;
         color: #A1A1AA;
         text-style: bold;
     }
@@ -199,30 +216,33 @@ class SettingsScreen(Screen[None]):
     }
 
     #settings-button-row {
-        height: 4;
+        height: 3;
+        margin-top: 1;
         align: center middle;
     }
 
     #apply-settings-button {
-        width: 32;
+        width: 34;
+        height: 3;
     }
 
     #settings-status {
         height: 5;
-        margin-top: 1;
+        margin: 1 0 0 0;
         padding: 1;
         border: round #3F3F46;
         background: #101014;
     }
 
     #settings-help {
-        height: 3;
-        padding: 1;
+        height: 1;
+        padding: 0 1;
         text-align: center;
         color: #A1A1AA;
         background: #181820;
     }
     """
+
 
     def __init__(self, config: UIConfig) -> None:
         """Initialize the settings screen.
@@ -237,108 +257,122 @@ class SettingsScreen(Screen[None]):
         """Compose the settings screen."""
         yield Header(show_clock=True)
 
-        with VerticalScroll(id="settings-container"):
-            with Vertical():
-                yield Static("Paramètres TrajCenter", id="settings-title")
+        with Container(id="settings-container"):
+            yield Static("Paramètres TrajCenter", id="settings-title")
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Store local", classes="settings-label")
-                yield Input(
-                    value=str(self.config.store),
-                    placeholder="trajectory_store",
-                    id="store-input",
-                )
+            with Vertical(id="settings-form"):
+                with Horizontal(classes="settings-two-columns"):
+                    with Vertical(classes="settings-column settings-column-left"):
+                        with Vertical(classes="settings-row"):
+                            yield Static("Store local", classes="settings-label")
+                            yield Input(
+                                value=str(self.config.store),
+                                placeholder="trajectory_store",
+                                id="store-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Fichier .env", classes="settings-label")
-                yield Input(
-                    value=""
-                    if self.config.env_file is None
-                    else str(self.config.env_file),
-                    placeholder="Optionnel. Ex: .env",
-                    id="env-file-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Fichier .env", classes="settings-label")
+                            yield Input(
+                                value=(
+                                    ""
+                                    if self.config.env_file is None
+                                    else str(self.config.env_file)
+                                ),
+                                placeholder="Optionnel. Ex: .env",
+                                id="env-file-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Host robot", classes="settings-label")
-                yield Input(
-                    value=self.config.host or "",
-                    placeholder="Ex: 127.0.0.1 ou 192.168.125.1",
-                    id="host-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Utilisateur", classes="settings-label")
+                            yield Input(
+                                value=self.config.username or "",
+                                placeholder="Ex: Default User",
+                                id="username-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Port robot", classes="settings-label")
-                yield Input(
-                    value="" if self.config.port is None else str(self.config.port),
-                    placeholder="Ex: 80",
-                    id="port-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Timeout", classes="settings-label")
+                            yield Input(
+                                value=(
+                                    ""
+                                    if self.config.timeout is None
+                                    else str(self.config.timeout)
+                                ),
+                                placeholder="Ex: 5.0",
+                                id="timeout-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Utilisateur", classes="settings-label")
-                yield Input(
-                    value=self.config.username or "",
-                    placeholder="Ex: Default User",
-                    id="username-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Module RAPID", classes="settings-label")
+                            yield Input(
+                                value=self.config.module,
+                                placeholder="TRAJCENTER",
+                                id="module-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Password env", classes="settings-label")
-                yield Input(
-                    value=self.config.password_env or "",
-                    placeholder="Ex: TRAJCENTER_ROBOT_PASSWORD",
-                    id="password-env-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Log level", classes="settings-label")
+                            yield Input(
+                                value=self.config.log_level,
+                                placeholder="INFO",
+                                id="log-level-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Timeout", classes="settings-label")
-                yield Input(
-                    value=""
-                    if self.config.timeout is None
-                    else str(self.config.timeout),
-                    placeholder="Ex: 5.0",
-                    id="timeout-input",
-                )
+                    with Vertical(classes="settings-column settings-column-right"):
+                        with Vertical(classes="settings-row"):
+                            yield Static("Host robot", classes="settings-label")
+                            yield Input(
+                                value=self.config.host or "",
+                                placeholder="Ex: 127.0.0.1 ou 192.168.125.1",
+                                id="host-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Task RAPID", classes="settings-label")
-                yield Input(
-                    value=self.config.task,
-                    placeholder="T_ROB1",
-                    id="task-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Port robot", classes="settings-label")
+                            yield Input(
+                                value=(
+                                    ""
+                                    if self.config.port is None
+                                    else str(self.config.port)
+                                ),
+                                placeholder="Ex: 80",
+                                id="port-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Module RAPID", classes="settings-label")
-                yield Input(
-                    value=self.config.module,
-                    placeholder="TRAJCENTER",
-                    id="module-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Password env", classes="settings-label")
+                            yield Input(
+                                value=self.config.password_env or "",
+                                placeholder="Ex: TRAJCENTER_ROBOT_PASSWORD",
+                                id="password-env-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Mastership retries", classes="settings-label")
-                yield Input(
-                    value=str(self.config.mastership_retries),
-                    placeholder="3",
-                    id="mastership-retries-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static("Task RAPID", classes="settings-label")
+                            yield Input(
+                                value=self.config.task,
+                                placeholder="T_ROB1",
+                                id="task-input",
+                            )
 
-            with Horizontal(classes="settings-row"):
-                yield Static("Log level", classes="settings-label")
-                yield Input(
-                    value=self.config.log_level,
-                    placeholder="INFO",
-                    id="log-level-input",
-                )
+                        with Vertical(classes="settings-row"):
+                            yield Static(
+                                "Mastership retries",
+                                classes="settings-label",
+                            )
+                            yield Input(
+                                value=str(self.config.mastership_retries),
+                                placeholder="3",
+                                id="mastership-retries-input",
+                            )
 
-            with Horizontal(id="settings-button-row"):
-                yield Button(
-                    "Appliquer pour cette session",
-                    variant="primary",
-                    id="apply-settings-button",
-                )
+                with Horizontal(id="settings-button-row"):
+                    yield Button(
+                        "Appliquer pour cette session",
+                        variant="primary",
+                        id="apply-settings-button",
+                    )
 
             yield Static(
                 "Status: en attente de modification.",
