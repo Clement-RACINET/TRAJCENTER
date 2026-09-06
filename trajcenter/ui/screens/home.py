@@ -178,8 +178,16 @@ class HomeScreen(Screen[None]):
             self.app.switch_screen("convert")
             return
 
+        if action_name == "export":
+            self.app.switch_screen("export")
+            return
+
         if action_name == "store":
             self.app.switch_screen("store")
+            return
+
+        if action_name == "settings":
+            self.app.switch_screen("settings")
             return
 
         self._show_placeholder(action_name)

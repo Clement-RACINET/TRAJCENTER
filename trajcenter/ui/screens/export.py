@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Trajectory conversion screen for the TrajCenter TUI."""
+"""Trajectory export screen for the TrajCenter TUI."""
 
 from __future__ import annotations
 
@@ -12,51 +12,36 @@ from textual.containers import Container, Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Input, Select, Static
 
-from trajcenter.convert.registry import infer_converter
+from trajcenter.core.trajectory import Trajectory
+from trajcenter.export.registry import infer_exporter
 from trajcenter.ui.config import UIConfig
 
-CONVERT_FORMAT_OPTIONS: tuple[tuple[str, str], ...] = (
-    ("Auto-détection selon extension", "auto"),
-    ("CSV / TXT", "csv"),
-    ("Excel .xlsx / .xlsm / .xls", "excel"),
-    ("APT / APTSOURCE", "apt"),
-    ("RAPID .mod", "mod"),
+EXPORT_FORMAT_OPTIONS: tuple[tuple[str, str], ...] = (
+    ("CSV", "csv"),
+    ("Excel .xlsx", "excel"),
 )
 
 
-def normalize_convert_format(value: object) -> str | None:
-    """Normalize the selected TUI conversion format.
+def normalize_export_format(value: object) -> str:
+    """Normalize the selected TUI export format.
 
     Args:
         value: Raw Select value.
 
     Returns:
-        Format name accepted by ``infer_converter``, or ``None`` for auto mode.
+        Export format name accepted by ``infer_exporter``.
     """
-    if value in {None, Select.BLANK, "auto"}:
-        return None
+    if value in {None, Select.BLANK}:
+        return "csv"
 
     return str(value)
 
 
-def normalize_optional_stem(value: str) -> str | None:
-    """Normalize an optional output stem.
+def build_export_success_text(output: Path) -> Text:
+    """Build export success status text.
 
     Args:
-        value: Raw input value.
-
-    Returns:
-        Clean stem, or ``None`` when empty.
-    """
-    cleaned = value.strip()
-    return cleaned or None
-
-
-def build_conversion_success_text(output: Path) -> Text:
-    """Build conversion success status text.
-
-    Args:
-        output: Created archive path.
+        output: Created export file path.
 
     Returns:
         Rich status text.
@@ -64,16 +49,16 @@ def build_conversion_success_text(output: Path) -> Text:
     text = Text()
     text.append("Status: ", style="bold white")
     text.append("OK", style="bold #22C55E")
-    text.append("\nArchive créée : ", style="#F4F4F5")
+    text.append("\nFichier exporté : ", style="#F4F4F5")
     text.append(str(output), style="bold #F59C00")
     return text
 
 
-def build_conversion_error_text(exc: Exception) -> Text:
-    """Build conversion error status text.
+def build_export_error_text(exc: Exception) -> Text:
+    """Build export error status text.
 
     Args:
-        exc: Conversion exception.
+        exc: Export exception.
 
     Returns:
         Rich status text.
@@ -85,8 +70,8 @@ def build_conversion_error_text(exc: Exception) -> Text:
     return text
 
 
-class ConvertScreen(Screen[None]):
-    """Screen used to convert source files to ``.trajcenter`` archives."""
+class ExportScreen(Screen[None]):
+    """Screen used to export ``.trajcenter`` archives to CSV or Excel."""
 
     BINDINGS: ClassVar[tuple[tuple[str, str, str], ...]] = (
         ("escape", "back_to_home", "Accueil"),
@@ -95,13 +80,13 @@ class ConvertScreen(Screen[None]):
     )
 
     DEFAULT_CSS = """
-    ConvertScreen {
+    ExportScreen {
         layout: vertical;
         background: #101014;
         color: #F4F4F5;
     }
 
-    #convert-container {
+    #export-container {
         height: 1fr;
         margin: 1 2;
         padding: 1;
@@ -109,7 +94,7 @@ class ConvertScreen(Screen[None]):
         background: #181820;
     }
 
-    #convert-title {
+    #export-title {
         height: 3;
         content-align: center middle;
         text-align: center;
@@ -144,16 +129,16 @@ class ConvertScreen(Screen[None]):
         height: 3;
     }
 
-    #convert-button-row {
+    #export-button-row {
         height: 5;
         align: center middle;
     }
 
-    #convert-button {
+    #export-button {
         width: 32;
     }
 
-    #convert-status {
+    #export-status {
         height: 6;
         margin-top: 1;
         padding: 1;
@@ -161,7 +146,7 @@ class ConvertScreen(Screen[None]):
         background: #101014;
     }
 
-    #convert-help {
+    #export-help {
         height: 3;
         padding: 1;
         text-align: center;
@@ -171,7 +156,7 @@ class ConvertScreen(Screen[None]):
     """
 
     def __init__(self, config: UIConfig) -> None:
-        """Initialize the conversion screen.
+        """Initialize the export screen.
 
         Args:
             config: UI configuration.
@@ -180,99 +165,86 @@ class ConvertScreen(Screen[None]):
         self.config = config
 
     def compose(self) -> ComposeResult:
-        """Compose the conversion screen."""
+        """Compose the export screen."""
         yield Header(show_clock=True)
 
-        with Container(id="convert-container"), Vertical():
-            yield Static("Convertir une trajectoire", id="convert-title")
+        with Container(id="export-container"), Vertical():
+            yield Static("Exporter une trajectoire", id="export-title")
 
             with Horizontal(classes="field-row"):
-                yield Static("Fichier source", classes="field-label")
+                yield Static("Archive source", classes="field-label")
                 yield Input(
-                    placeholder="Ex: trajectory_files/test_basic.xlsx",
+                    placeholder="Ex: trajectory_store/test_basic.trajcenter",
                     id="source-input",
                 )
 
             with Horizontal(classes="field-row"):
                 yield Static("Dossier destination", classes="field-label")
                 yield Input(
-                    value=str(self.config.store),
-                    placeholder="Ex: trajectory_store",
+                    value="trajectory_exports",
+                    placeholder="Ex: trajectory_exports",
                     id="dest-input",
                 )
 
             with Horizontal(classes="field-row"):
-                yield Static("Nom de sortie", classes="field-label")
-                yield Input(
-                    placeholder="Optionnel. Défaut : nom du fichier source",
-                    id="name-input",
-                )
-
-            with Horizontal(classes="field-row"):
-                yield Static("Format source", classes="field-label")
+                yield Static("Format export", classes="field-label")
                 yield Select(
-                    CONVERT_FORMAT_OPTIONS,
-                    value="auto",
+                    EXPORT_FORMAT_OPTIONS,
+                    value="csv",
                     allow_blank=False,
                     id="format-select",
                 )
 
-            with Horizontal(id="convert-button-row"):
+            with Horizontal(id="export-button-row"):
                 yield Button(
-                    "Convertir vers .trajcenter",
+                    "Exporter la trajectoire",
                     variant="primary",
-                    id="convert-button",
+                    id="export-button",
                 )
 
             yield Static(
-                "Status: en attente d'une conversion.",
-                id="convert-status",
+                "Status: en attente d'un export.",
+                id="export-status",
             )
 
         yield Static(
-            "Entrer chemins · Bouton convertir · R réinitialiser · B/Echap accueil · Q quitter",
-            id="convert-help",
+            "Coller: Ctrl+Shift+V · R réinitialiser · B/Echap accueil · Q quitter",
+            id="export-help",
         )
 
         yield Footer()
 
-    def convert_file(
+    def export_file(
         self,
         source: Path,
         dest_dir: Path,
-        stem: str | None = None,
-        format_name: str | None = None,
+        format_name: str,
     ) -> Path:
-        """Convert a source file and save it as a ``.trajcenter`` archive.
+        """Export a ``.trajcenter`` archive to a tabular file.
 
         Args:
-            source: Source file path.
+            source: Source ``.trajcenter`` archive path.
             dest_dir: Destination directory.
-            stem: Optional output archive stem.
-            format_name: Optional explicit source format.
+            format_name: Export format name.
 
         Returns:
-            Created archive path.
+            Created export file path.
 
         Raises:
             FileNotFoundError: If the source does not exist.
             OSError: If output cannot be written.
-            ValueError: If the format or file content is invalid.
+            ValueError: If the source archive or format is invalid.
         """
-        converter = infer_converter(source, format_name)
-        return converter.convert_and_save(
-            source=source,
-            dest_dir=dest_dir,
-            stem=stem,
-        )
+        trajectory = Trajectory.load(source)
+        exporter = infer_exporter(format_name)
+        return exporter.export(trajectory, dest_dir)
 
     def action_reset_form(self) -> None:
-        """Reset conversion form fields."""
+        """Reset export form fields."""
         self.query_one("#source-input", Input).value = ""
-        self.query_one("#dest-input", Input).value = str(self.config.store)
-        self.query_one("#name-input", Input).value = ""
-        self.query_one("#format-select", Select).value = "auto"
-        self.query_one("#convert-status", Static).update(
+        self.query_one("#dest-input", Input).value = "trajectory_exports"
+        self.query_one("#format-select", Select).value = "csv"
+        self.query_one("#export-status", Static).update(
             "Status: formulaire réinitialisé."
         )
 
@@ -281,29 +253,28 @@ class ConvertScreen(Screen[None]):
         self.app.switch_screen("home")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle conversion button press."""
-        if event.button.id != "convert-button":
+        """Handle export button press."""
+        if event.button.id != "export-button":
             return
 
-        self.run_conversion_from_form()
+        self.run_export_from_form()
 
-    def run_conversion_from_form(self) -> None:
-        """Read the form values and run the conversion."""
+    def run_export_from_form(self) -> None:
+        """Read form values and run the export."""
         source_value = self.query_one("#source-input", Input).value.strip()
         dest_value = self.query_one("#dest-input", Input).value.strip()
-        name_value = self.query_one("#name-input", Input).value
         format_value = self.query_one("#format-select", Select).value
-        status = self.query_one("#convert-status", Static)
+        status = self.query_one("#export-status", Static)
 
         if not source_value:
             status.update(
-                build_conversion_error_text(ValueError("Source file is required."))
+                build_export_error_text(ValueError("Source archive is required."))
             )
             return
 
         if not dest_value:
             status.update(
-                build_conversion_error_text(
+                build_export_error_text(
                     ValueError("Destination directory is required.")
                 )
             )
@@ -311,18 +282,16 @@ class ConvertScreen(Screen[None]):
 
         source = Path(source_value)
         dest_dir = Path(dest_value)
-        stem = normalize_optional_stem(name_value)
-        format_name = normalize_convert_format(format_value)
+        format_name = normalize_export_format(format_value)
 
         try:
-            output = self.convert_file(
+            output = self.export_file(
                 source=source,
                 dest_dir=dest_dir,
-                stem=stem,
                 format_name=format_name,
             )
         except (FileNotFoundError, OSError, ValueError) as exc:
-            status.update(build_conversion_error_text(exc))
+            status.update(build_export_error_text(exc))
             return
 
-        status.update(build_conversion_success_text(output))
+        status.update(build_export_success_text(output))
