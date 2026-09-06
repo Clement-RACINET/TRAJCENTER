@@ -174,6 +174,10 @@ class HomeScreen(Screen[None]):
             self.app.exit()
             return
 
+        if action_name == "convert":
+            self.app.switch_screen("convert")
+            return
+
         if action_name == "store":
             self.app.switch_screen("store")
             return

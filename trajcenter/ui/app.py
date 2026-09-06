@@ -8,6 +8,7 @@ from typing import ClassVar
 from textual.app import App
 
 from trajcenter.ui.config import UIConfig
+from trajcenter.ui.screens.convert import ConvertScreen
 from trajcenter.ui.screens.home import HomeScreen
 from trajcenter.ui.screens.splash import SplashScreen
 from trajcenter.ui.screens.store import StoreScreen
@@ -54,6 +55,7 @@ class TrajCenterTUI(App[None]):
         self.install_screen(SplashScreen(), name="splash")
         self.install_screen(HomeScreen(self.config), name="home")
         self.install_screen(StoreScreen(self.config), name="store")
+        self.install_screen(ConvertScreen(self.config), name="convert")
         self.push_screen("splash")
 
     def action_refresh(self) -> None:
