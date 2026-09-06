@@ -13,9 +13,20 @@ from .csv_converter import CsvConverter
 from .defaults import ConversionDefaults
 from .excel_converter import ExcelConverter
 from .mod_converter import ModConverter
+from .registry import (
+    APT_EXTENSIONS,
+    CSV_EXTENSIONS,
+    EXCEL_EXTENSIONS,
+    RAPID_EXTENSIONS,
+    infer_converter,
+)
 
 __all__ = [
+    "APT_EXTENSIONS",
     "COLUMN_ALIASES",
+    "CSV_EXTENSIONS",
+    "EXCEL_EXTENSIONS",
+    "RAPID_EXTENSIONS",
     "AptConverter",
     "BaseConverter",
     "ConversionDefaults",
@@ -23,5 +34,6 @@ __all__ = [
     "ExcelConverter",
     "ModConverter",
     "canonical_name",
+    "infer_converter",
     "resolve_columns",
 ]

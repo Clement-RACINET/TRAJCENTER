@@ -174,6 +174,10 @@ class HomeScreen(Screen[None]):
             self.app.exit()
             return
 
+        if action_name == "store":
+            self.app.switch_screen("store")
+            return
+
         self._show_placeholder(action_name)
 
     def _show_placeholder(self, action_name: str) -> None:

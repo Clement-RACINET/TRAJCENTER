@@ -7,6 +7,7 @@ from pathlib import Path
 
 from trajcenter.ui.app import TrajCenterTUI, run_tui
 from trajcenter.ui.config import UIConfig
+from trajcenter.ui.screens.store import StoreScreen
 
 
 def test_run_tui_starts_textual_app(monkeypatch):
@@ -32,3 +33,12 @@ def test_trajcenter_tui_uses_provided_config():
     app = TrajCenterTUI(config=config)
 
     assert app.config is config
+
+
+def test_store_screen_can_be_created():
+    """StoreScreen should be constructible with a UI configuration."""
+    config = UIConfig(store=Path("trajectory_store"))
+
+    screen = StoreScreen(config)
+
+    assert screen.config is config

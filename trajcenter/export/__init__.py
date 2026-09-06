@@ -10,10 +10,12 @@ from .base import BaseExporter
 from .csv_exporter import CsvExporter
 from .excel_exporter import ExcelExporter
 from .options import ExportOptions
+from .registry import infer_exporter
 
 __all__ = [
     "BaseExporter",
     "CsvExporter",
     "ExcelExporter",
     "ExportOptions",
+    "infer_exporter",
 ]

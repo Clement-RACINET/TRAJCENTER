@@ -10,6 +10,7 @@ from textual.app import App
 from trajcenter.ui.config import UIConfig
 from trajcenter.ui.screens.home import HomeScreen
 from trajcenter.ui.screens.splash import SplashScreen
+from trajcenter.ui.screens.store import StoreScreen
 
 
 class TrajCenterTUI(App[None]):
@@ -52,6 +53,7 @@ class TrajCenterTUI(App[None]):
         """Install and open screens."""
         self.install_screen(SplashScreen(), name="splash")
         self.install_screen(HomeScreen(self.config), name="home")
+        self.install_screen(StoreScreen(self.config), name="store")
         self.push_screen("splash")
 
     def action_refresh(self) -> None:
