@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from textual.app import App
+from textual.binding import BindingType
 
 from trajcenter.ui.config import UIConfig
 from trajcenter.ui.screens.convert import ConvertScreen
@@ -36,7 +37,7 @@ class TrajCenterTUI(App[None]):
     }
     """
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("q", "quit", "Quitter"),
         ("r", "refresh", "Rafraîchir"),
         ("s", "show_splash", "Splash"),

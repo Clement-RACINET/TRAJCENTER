@@ -38,9 +38,7 @@ plugins:
 
 nav:
   - Accueil: index.md
-
-  - README: readme.md
-
+  
   # - Exemples:
   #     # --- AUTOGEN_EXAMPLES_START ---
   #     # --- AUTOGEN_EXAMPLES_END ---

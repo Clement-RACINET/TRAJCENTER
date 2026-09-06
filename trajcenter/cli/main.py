@@ -21,6 +21,8 @@ from trajcenter.export.registry import infer_exporter
 
 if TYPE_CHECKING:
     from trajcenter.store.models import TrajectoryStoreEntry
+    from trajcenter.ui.config import UIConfig
+
 
 APP_NAME = "trajcenter"
 DEFAULT_STORE = Path("trajectory_store")
@@ -351,6 +353,7 @@ def print_store_entry_details(entry: TrajectoryStoreEntry) -> None:
     print(f"File:         {entry.path.name}")
     print(f"Path:         {entry.path}")
 
+
 def handle_convert_command(args: argparse.Namespace) -> int:
     """Run the ``trajcenter convert`` command.
 
@@ -531,6 +534,25 @@ def handle_robot_command(args: argparse.Namespace) -> int:
     return 2
 
 
+def run_tui(config: UIConfig) -> int:
+    """Run the TrajCenter Textual TUI.
+
+    Args:
+        config: UI configuration.
+
+    Returns:
+        Process exit code.
+    """
+    try:
+        from trajcenter.ui.app import run_tui as run_textual_tui
+    except ImportError as exc:
+        print(TUI_OPTIONAL_DEPENDENCY_MESSAGE)
+        print(f"Import error: {exc}")
+        return 1
+
+    return run_textual_tui(config)
+
+
 def run_command(args: argparse.Namespace) -> int:
     """Run the parsed TrajCenter command.
 
@@ -552,7 +574,6 @@ def run_command(args: argparse.Namespace) -> int:
 
     if args.command == "tui":
         try:
-            from trajcenter.ui.app import run_tui
             from trajcenter.ui.config import UIConfig
         except ImportError as exc:
             print(TUI_OPTIONAL_DEPENDENCY_MESSAGE)

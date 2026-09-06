@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from rich.text import Text
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Container, Vertical
 from textual.screen import Screen
 from textual.widgets import DataTable, Footer, Header, Static
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
 class StoreScreen(Screen[None]):
     """Screen used to inspect the local TrajCenter trajectory store."""
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "refresh_entries", "Rafraîchir"),

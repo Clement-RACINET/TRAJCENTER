@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import ClassVar
 
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Container, Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Static
@@ -16,7 +17,7 @@ from trajcenter.ui.widgets import AMLogo, LCFCLogo
 class SplashScreen(Screen[None]):
     """Landing page with institutional logos."""
 
-    BINDINGS: ClassVar[list[tuple[str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("enter", "continue_to_home"),
         ("space", "continue_to_home"),
         ("q", "quit"),

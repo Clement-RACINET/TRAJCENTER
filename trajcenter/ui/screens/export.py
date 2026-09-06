@@ -8,6 +8,7 @@ from typing import ClassVar
 
 from rich.text import Text
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Container, Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Input, Select, Static
@@ -73,7 +74,7 @@ def build_export_error_text(exc: Exception) -> Text:
 class ExportScreen(Screen[None]):
     """Screen used to export ``.trajcenter`` archives to CSV or Excel."""
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("r", "reset_form", "Réinitialiser"),

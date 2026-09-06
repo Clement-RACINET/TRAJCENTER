@@ -7,6 +7,7 @@ from typing import ClassVar
 
 from rich.text import Text
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Label, ListItem, ListView
@@ -19,7 +20,7 @@ from trajcenter.ui.widgets import ActionDescription, StoreStatus, TitleBlock
 class HomeScreen(Screen[None]):
     """Main TrajCenter home screen."""
 
-    BINDINGS: ClassVar[list[tuple[str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("s", "back_to_splash"),
         ("escape", "back_to_splash"),
     ]

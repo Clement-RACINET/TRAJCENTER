@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import os
-import signal
 import subprocess
 import sys
 from collections.abc import Callable
@@ -13,6 +12,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, cast
 
 from rich.text import Text
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Container, Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, RichLog, Static
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 class RobotScreen(Screen[None]):
     """Screen used to start and stop the ABB RWS supervision process."""
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "back_to_home", "Accueil"),
         ("b", "back_to_home", "Retour"),
         ("x", "stop_supervision", "Arrêter supervision"),
@@ -368,18 +368,13 @@ class RobotScreen(Screen[None]):
             )
 
     def _terminate_process(self, process: subprocess.Popen[str]) -> None:
-        """Terminate process using the most appropriate platform strategy."""
-        if os.name == "nt":
-            process.terminate()
-            return
-
-        process_group_id = os.getpgid(process.pid)
-        os.killpg(process_group_id, signal.SIGTERM)
+        """Terminate the supervisor process."""
+        process.terminate()
 
     def _get_process_creation_flags(self) -> int:
         """Return subprocess creation flags for the current platform."""
         if os.name == "nt":
-            return subprocess.CREATE_NEW_PROCESS_GROUP
+            return getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
 
         return 0
 

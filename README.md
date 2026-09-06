@@ -1,47 +1,403 @@
-# TRAJCENTER
+# TrajCenter
 
-TrajCenter est une chaîne Python/RAPID permettant de convertir, stocker,
-résoudre et transférer des trajectoires industrielles vers un robot ABB
-RobotWare 6.x via **Robot Web Services**.
+TrajCenter is a Python/RAPID toolchain used to convert, store, resolve and
+transfer industrial trajectories to ABB RobotWare 6.x robots through
+**ABB Robot Web Services**.
 
-> Projet développé au LCFC — ENSAM  
-> Auteurs principaux : Josselin SCHUMAKER & Clément RACINET  
-> Robot cible : ABB RobotWare 6.x  
-> Transport : ABB Robot Web Services uniquement  
-> Version : 2.0
-
----
-
-## Statut
-
-TrajCenter v2 remplace l’ancien protocole TCP de la v1.
-
-Le flux v2 actuel repose sur :
-
-- des archives locales `.trajcenter` ;
-- un **module système RAPID unique** ;
-- des lectures/écritures RWS ;
-- des subscriptions RWS sur flags RAPID ;
-- des écritures protégées par Mastership.
-
-La v2 **n’utilise plus** :
-
-- serveur TCP Python ;
-- port custom type `50000` ;
-- watchdog TCP ;
-- polling nominal côté PC ;
-- protocole texte `nbtraj`, `nomtraj`, `loadtraj`, `robt`, etc.
+> Developed at LCFC — ENSAM  
+> Main authors: Josselin SCHUMAKER & Clément RACINET  
+> Target robot: ABB RobotWare 6.x  
+> Transport layer: ABB Robot Web Services only  
+> Version: 2.0
 
 ---
 
-## Architecture générale
+## Overview
+
+TrajCenter v2 replaces the legacy TCP-based protocol used in TrajCenter v1 with
+an event-driven architecture based on ABB Robot Web Services.
+
+The project provides:
+
+- conversion from industrial trajectory files to a local `.trajcenter` format;
+- storage of trajectories as local `.trajcenter` archives;
+- export from `.trajcenter` archives to tabular formats;
+- a command-line interface;
+- a keyboard-driven terminal user interface;
+- an ABB RWS supervisor;
+- transfer of resolved trajectories to a RAPID system module.
+
+---
+
+## Current status
+
+TrajCenter v2 is based on:
+
+- local `.trajcenter` archives;
+- a single RAPID system module named `TRAJCENTER`;
+- RWS reads;
+- RWS writes protected by Mastership;
+- RWS subscriptions on RAPID flags;
+- an event-driven Python supervisor;
+- an optional Textual-based terminal user interface.
+
+TrajCenter v2 no longer uses:
+
+- a Python TCP server;
+- custom TCP ports such as `50000`;
+- TCP watchdog logic;
+- nominal PC-side polling;
+- the v1 text protocol commands such as `nbtraj`, `nomtraj`, `loadtraj`, `robt`.
+
+---
+
+## Repository layout
 
 ```text
-Robot ABB RAPID
+trajcenter_v2/
+├── doc_manual/
+├── icons/
+├── rapid/
+│   ├── TRAJCENTER.sys
+│   ├── TRAJCENTER_DEMO.mod
+│   ├── TRAJCENTER_DEMO.pgf
+│   ├── TRAJCENTER_GUI_DEMO.mod
+│   └── TRAJCENTER_GUI_DEMO.pgf
+├── scripts/
+│   ├── examples/
+│   ├── run_best_tui.py
+│   └── run_trajcenter_supervisor.py
+├── tests/
+│   ├── cli/
+│   ├── convert/
+│   ├── core/
+│   ├── export/
+│   ├── robot/
+│   ├── store/
+│   └── ui/
+├── trajcenter/
+│   ├── cli/
+│   ├── convert/
+│   ├── core/
+│   ├── export/
+│   ├── robot/
+│   ├── store/
+│   └── ui/
+├── trajectory_exports/
+├── trajectory_files/
+├── trajectory_store/
+├── mkdocs.yml
+├── pixi.lock
+├── pixi.toml
+├── pyproject.toml
+└── README.md
+```
+
+---
+
+## Main Python packages
+
+| Package              | Purpose                                         |
+| -------------------- | ----------------------------------------------- |
+| `trajcenter.cli`     | Command-line interface                          |
+| `trajcenter.convert` | Conversion to `.trajcenter` archives            |
+| `trajcenter.core`    | Core `Trajectory` model                         |
+| `trajcenter.export`  | CSV / Excel export                              |
+| `trajcenter.robot`   | ABB RWS reader, resolver, writer and supervisor |
+| `trajcenter.store`   | Local `.trajcenter` store scanning and metadata |
+| `trajcenter.ui`      | Textual terminal user interface                 |
+
+---
+
+## Pixi environments
+
+The project is managed with **Pixi**.
+
+No direct `pip install` command is required for normal repository usage.
+
+| Environment | Purpose                                       |
+| ----------- | --------------------------------------------- |
+| `default`   | Minimal base environment                      |
+| `tui`       | Textual terminal user interface               |
+| `robot`     | ABB robot / RWS dependencies                  |
+| `full`      | TUI + ABB robot supervision                   |
+| `dev`       | Development, tests, linting and documentation |
+
+### Install the TUI environment
+
+```powershell
+pixi install -e tui
+```
+
+### Install the full robot environment
+
+```powershell
+pixi install -e full
+```
+
+### Install the development environment
+
+```powershell
+pixi install -e dev
+```
+
+---
+
+## Quick start
+
+### Launch the terminal UI
+
+Recommended command:
+
+```powershell
+pixi run trajcenter-tui
+```
+
+This command selects the best already-installed Pixi environment:
+
+1. `full` if available;
+2. otherwise `tui` if available;
+3. otherwise `default` if compatible.
+
+It does **not** automatically install the `full` environment.
+
+Example for TUI-only usage:
+
+```powershell
+pixi clean
+pixi install -e tui
+pixi run trajcenter-tui
+```
+
+Example with robot supervision:
+
+```powershell
+pixi clean
+pixi install -e full
+pixi run trajcenter-tui
+```
+
+### Run the robot supervisor directly
+
+```powershell
+pixi run -e full python scripts/run_trajcenter_supervisor.py --store trajectory_store
+```
+
+With common options:
+
+```powershell
+pixi run -e full python scripts/run_trajcenter_supervisor.py `
+  --store trajectory_store `
+  --task T_ROB1 `
+  --module TRAJCENTER `
+  --mastership-retries 3 `
+  --log-level INFO
+```
+
+---
+
+## Terminal user interface
+
+TrajCenter provides a keyboard-driven terminal user interface based on Textual.
+
+Launch it with:
+
+```powershell
+pixi run trajcenter-tui
+```
+
+Main keyboard shortcuts:
+
+| Key             | Action                                       |
+| --------------- | -------------------------------------------- |
+| `↑` / `↓`       | Navigate in menus                            |
+| `Enter`         | Select action                                |
+| `B` or `Escape` | Go back, depending on context                |
+| `R`             | Refresh, when available                      |
+| `S`             | Return to splash screen from home            |
+| `Q`             | Quit                                         |
+| `X`             | Stop robot supervision from the robot screen |
+
+When the home screen opens, the main menu automatically receives keyboard focus.
+
+### Available TUI actions
+
+| Action            | Purpose                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| Convert           | Convert CSV, Excel, APT/APTSOURCE or MOD files to `.trajcenter` |
+| Export            | Export `.trajcenter` archives to CSV or Excel                   |
+| Store             | Inspect local `.trajcenter` archives                            |
+| Robot supervision | Start or stop the ABB RWS supervisor                            |
+| Settings          | Display current TUI configuration                               |
+
+Robot supervision is only available in an environment containing the robot
+feature, typically `full` or `dev`.
+
+---
+
+## Command-line interface
+
+The CLI is implemented in:
+
+```text
+trajcenter/cli/main.py
+```
+
+It can be used through Pixi:
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main --help
+```
+
+Main commands:
+
+```text
+version
+convert
+export
+tui
+store
+robot
+```
+
+### Version
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main version
+```
+
+### Convert a trajectory
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main convert `
+  trajectory_files/test_basic.xlsx `
+  trajectory_store `
+  --format xlsx
+```
+
+Supported input formats:
+
+```text
+csv
+excel / xlsx
+apt / aptsource
+rapid / mod
+```
+
+### Export a trajectory
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main export `
+  trajectory_store/test_basic.trajcenter `
+  trajectory_exports `
+  --format excel
+```
+
+Supported export formats:
+
+```text
+csv
+excel / xlsx
+```
+
+### Inspect the local store
+
+List available archives:
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main store list --store trajectory_store
+```
+
+Inspect one archive:
+
+```powershell
+pixi run -e dev python -m trajcenter.cli.main store inspect test_basic --store trajectory_store
+```
+
+### Launch the TUI through the CLI
+
+```powershell
+pixi run -e full python -m trajcenter.cli.main tui --store trajectory_store
+```
+
+For everyday use, prefer:
+
+```powershell
+pixi run trajcenter-tui
+```
+
+### Robot commands
+
+Check whether the robot API is available:
+
+```powershell
+pixi run -e full python -m trajcenter.cli.main robot check
+```
+
+Run the robot supervisor:
+
+```powershell
+pixi run -e full python -m trajcenter.cli.main robot supervise --store trajectory_store
+```
+
+Useful options:
+
+```text
+--store PATH
+--env-file PATH
+--env-override
+--host HOST
+--port PORT
+--username USERNAME
+--password PASSWORD
+--password-env ENV_VAR
+--timeout SECONDS
+--task TASK
+--module MODULE
+--mastership-retries N
+--log-level DEBUG|INFO|WARNING|ERROR|CRITICAL
+```
+
+---
+
+## Robot supervision
+
+The ABB supervisor listens to the following RAPID flags:
+
+```text
+TRAJCENTER/refreshMetaRequest
+TRAJCENTER/sendTrajRequest
+```
+
+Only `TRUE` events trigger an action.
+
+| RAPID request                | Effect                                     |
+| ---------------------------- | ------------------------------------------ |
+| `refreshMetaRequest := TRUE` | Refresh the list of available trajectories |
+| `sendTrajRequest := TRUE`    | Transfer the selected trajectory to RAPID  |
+
+At startup or after reconnection, the supervisor must read the current flag
+values to process a request that may already be pending.
+
+The TUI robot screen starts the supervisor as a subprocess through:
+
+```text
+scripts/run_trajcenter_supervisor.py
+```
+
+This keeps the same runtime behavior as the direct terminal launcher while
+displaying supervisor logs inside the Textual interface.
+
+---
+
+## Communication architecture
+
+```text
+ABB RAPID robot
     |
     | RWS subscription events
     v
-PC Python TrajCenter supervisor
+Python TrajCenter supervisor
     |
     | scan / load / resolve
     v
@@ -52,101 +408,41 @@ trajectory_store/*.trajcenter
 TRAJCENTER RAPID system module
 ```
 
-Flux principaux :
+Main flows:
 
-| Flux                   | Déclencheur RAPID            | Direction  | Mécanisme              |
-| ---------------------- | ---------------------------- | ---------- | ---------------------- |
-| Refresh metadata       | `refreshMetaRequest := TRUE` | Robot → PC | RWS subscription       |
-| Envoi trajectoire      | `sendTrajRequest := TRUE`    | Robot → PC | RWS subscription       |
-| Lecture contexte robot | PC                           | Robot → PC | RWS read               |
-| Écriture trajectoire   | PC                           | PC → Robot | RWS write + Mastership |
-
----
-
-## Structure utile du dépôt
-
-```text
-trajcenter/
-├── rapid/
-│   └── TRAJCENTER.mod
-├── scripts/
-│   └── run_trajcenter_supervisor.py
-├── tests/
-│   ├── converter/
-│   ├── core/
-│   ├── exporter/
-│   └── rws/
-├── trajcenter/
-│   ├── converter/
-│   ├── core/
-│   ├── exporter/
-│   └── rws/
-│       ├── reader.py
-│       ├── resolver.py
-│       ├── writer.py
-│       ├── service.py
-│       ├── store.py
-│       └── supervisor.py
-├── trajectory_files/
-├── trajectory_store/
-├── pyproject.toml
-└── README.md
-```
+| Flow               | RAPID trigger                | Direction  | Mechanism              |
+| ------------------ | ---------------------------- | ---------- | ---------------------- |
+| Refresh metadata   | `refreshMetaRequest := TRUE` | Robot → PC | RWS subscription       |
+| Send trajectory    | `sendTrajRequest := TRUE`    | Robot → PC | RWS subscription       |
+| Read robot context | PC                           | Robot → PC | RWS read               |
+| Write trajectory   | PC                           | PC → Robot | RWS write + Mastership |
 
 ---
 
-## Module RAPID v2
+## RAPID module
 
-Le protocole robot est défini dans un **module système unique** :
+The robot-side protocol is defined in a single RAPID system module:
 
 ```rapid
 MODULE TRAJCENTER(SYSMODULE)
 ```
 
-Fichier :
+Main file:
 
 ```text
-rapid/TRAJCENTER.mod
+rapid/TRAJCENTER.sys
 ```
 
-Il n’y a plus plusieurs modules RAPID à charger dans un ordre particulier.
-
-### Sections internes du module
-
-Le module est organisé en sections de maintenance :
-
-| Section   | Rôle                     | Politique                                                        |
-| --------- | ------------------------ | ---------------------------------------------------------------- |
-| Section 1 | Types `RECORD`           | Ne pas modifier sauf évolution protocole PC/RAPID                |
-| Section 2 | Limites globales         | Ne pas modifier sauf changement volontaire des capacités         |
-| Section 3 | Codes d’état et d’erreur | Ne pas modifier sans mettre à jour le PC et la documentation     |
-| Section 4 | Types de mouvement       | Ne pas modifier sauf ajout officiel d’un type de mouvement       |
-| Section 5 | Process                  | Modifier uniquement ici pour ajouter/retirer/renommer un process |
-| Section 6 | Configuration cellule    | Section modifiable pour déclarer tools et wobjs                  |
-| Section 7 | Variables RWS            | Ne pas modifier noms/types/dimensions sans mettre à jour le PC   |
-| Section 8 | Defaults robot           | Section réglable à la mise en service                            |
-
-### Politique de déclaration RAPID
-
-| Élément                                  | Déclaration RAPID |
-| ---------------------------------------- | ----------------- |
-| Flags abonnés RWS                        | `PERS`            |
-| Tools / wobjs cellule                    | `PERS`            |
-| Maintenance tools / wobjs                | `PERS`            |
-| Runtime, metadata, trajectoire, defaults | `VAR`             |
-| Tailles fixes, codes                     | `CONST`           |
-
----
-
-## Variables RAPID principales
-
-Module RWS cible :
+The repository also contains demonstration RAPID modules:
 
 ```text
-TRAJCENTER
+rapid/TRAJCENTER_DEMO.mod
+rapid/TRAJCENTER_GUI_DEMO.mod
 ```
 
-### Requêtes
+### Main RAPID variables
+
+Requests:
 
 ```rapid
 PERS bool sendTrajRequest := FALSE;
@@ -154,14 +450,7 @@ PERS bool refreshMetaRequest := FALSE;
 VAR num selectedTrajIndex := 0;
 ```
 
-Convention :
-
-```text
-selectedTrajIndex = 0                  aucune sélection
-selectedTrajIndex = 1..nbTrajAvailable trajectoire valide
-```
-
-### État transfert
+Transfer state:
 
 ```rapid
 VAR bool trajReady := FALSE;
@@ -171,28 +460,14 @@ VAR string lastError := "";
 VAR num transferProgress := 0;
 ```
 
-| Variable           | Rôle                                          |
-| ------------------ | --------------------------------------------- |
-| `trajReady`        | trajectoire complète et utilisable côté RAPID |
-| `transferError`    | dernier refresh/transfert en erreur           |
-| `lastErrorCode`    | code état ou erreur                           |
-| `lastError`        | message court                                 |
-| `transferProgress` | progression `0..100`                          |
-
-### Metadata store
+Store metadata:
 
 ```rapid
 VAR num nbTrajAvailable := 0;
 VAR trajCenterTrajMeta trajectories{256};
 ```
 
-Entrées valides :
-
-```text
-trajectories{1..nbTrajAvailable}
-```
-
-### Trajectoire chargée
+Loaded trajectory:
 
 ```rapid
 VAR num nbLoadedTrajPoints := 0;
@@ -200,235 +475,102 @@ VAR trajCenterPointData trajData{100000};
 VAR trajCenterProcessParameter processParams{256,10};
 ```
 
-Entrées valides :
+Index convention:
 
 ```text
-trajData{1..nbLoadedTrajPoints}
-processParams{1..256,1..10}
+selectedTrajIndex = 0                  no selection
+selectedTrajIndex = 1..nbTrajAvailable valid trajectory
 ```
 
 ---
 
-## Constantes principales
+## `.trajcenter` archive format
 
-Les constantes protocole sont définies côté RAPID dans `TRAJCENTER`
-et côté Python dans `trajcenter/rws/constants.py`.
-
-| Constante                     |   Valeur | Rôle                               |
-| ----------------------------- | -------: | ---------------------------------- |
-| `maxTrajCount`                |    `256` | nombre max de trajectoires listées |
-| `maxTrajPointCount`           | `100000` | nombre max de points transférables |
-| `maxProcessParamSetCount`     |    `256` | nombre max de sets process         |
-| `maxProcessParamPerSet`       |     `10` | nombre max de paramètres par set   |
-| `processNone`                 |      `0` | aucun process                      |
-| `processAcf`                  |      `1` | process ACF                        |
-| `processAak`                  |      `2` | process AAK                        |
-| `processPushcorp`             |      `3` | process PUSHCORP                   |
-| `moveTypeL`                   |      `0` | MoveL                              |
-| `moveTypeJ`                   |      `1` | MoveJ                              |
-| `moveTypeC`                   |      `2` | MoveC                              |
-| `statusOk`                    | `200000` | OK                                 |
-| `statusMetadataRefreshed`     | `200001` | métadonnées rafraîchies            |
-| `statusTrajectoryTransferred` | `200002` | trajectoire transférée             |
-
----
-
-## Catalogue process
-
-Le catalogue process est déclaré dans le module RAPID `TRAJCENTER`.
-
-Exemple actuel :
-
-```rapid
-CONST num processNone := 0;
-CONST num processAcf := 1;
-CONST num processAak := 2;
-CONST num processPushcorp := 3;
-
-CONST num processTypeCount := 4;
-
-VAR trajCenterProcessType processTypes{processTypeCount}:=[
-    [processNone, "NONE"],
-    [processAcf, "ACF"],
-    [processAak, "AAK"],
-    [processPushcorp, "PUSHCORP"]
-];
-```
-
-Pour ajouter un process, modifier uniquement la section `PROCESS` du module RAPID :
-
-1. ajouter une constante process ;
-2. incrémenter `processTypeCount` ;
-3. ajouter l’entrée dans `processTypes`.
-
----
-
-## Configuration cellule tools / wobjs
-
-Le module RAPID expose les outils et workobjects disponibles à TrajCenter :
-
-```rapid
-PERS trajCenterTool trajTools{N};
-PERS trajCenterWobj trajWobjs{M};
-
-PERS tooldata tempTool;
-PERS wobjdata tempWobj;
-```
-
-Règles :
-
-```text
-trajTools/trajWobjs sont cellule-dépendants.
-Le PC lit uniquement les champs .name pour résoudre tool_name et wobj_name.
-Les index RAPID envoyés sont en base 1.
-0 = non défini.
-```
-
-Les fichiers `.trajcenter` ne stockent pas de `tooldata` ou `wobjdata` complets.
-Ils référencent seulement des noms logiques :
-
-```text
-tool_name
-wobj_name
-```
-
-Le PC résout ensuite ces noms dans :
-
-```text
-trajTools
-trajWobjs
-```
-
----
-
-## Defaults robot
-
-Les valeurs par défaut sont lues par le PC avant transfert :
-
-```rapid
-VAR bool hasDefaultTcpSpeed := FALSE;
-VAR num defaultTcpSpeed := 0;
-
-VAR bool hasDefaultZoneType := FALSE;
-VAR num defaultZoneType := 255;
-
-VAR bool hasDefaultToolName := FALSE;
-VAR string defaultToolName := "";
-
-VAR bool hasDefaultWobjName := FALSE;
-VAR string defaultWobjName := "";
-
-VAR num defaultMoveType := moveTypeL;
-VAR bool defaultReadConfs := TRUE;
-```
-
-Règle importante :
-
-```text
-Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
-Fallback uniquement si le hasDefault* correspondant vaut TRUE.
-```
-
-Pour `tool_name` et `wobj_name`, le fallback est un **nom** :
-
-```text
-defaultToolName -> résolution dans trajTools -> toolIndex
-defaultWobjName -> résolution dans trajWobjs -> wobjIndex
-```
-
-Ce n’est pas un `tooldata` ou un `wobjdata` directement transféré depuis le fichier `.trajcenter`.
-
----
-
-## Format `.trajcenter`
-
-Une archive `.trajcenter` est un fichier ZIP contenant au minimum :
+A `.trajcenter` archive is a ZIP file containing at least:
 
 ```text
 meta.json
 points.parquet
 ```
 
-### Colonnes géométriques obligatoires
+### Required geometric columns
 
-Pour être exportable et résoluble, une trajectoire doit contenir :
+| Column | Purpose          |
+| ------ | ---------------- |
+| `x`    | ABB X position   |
+| `y`    | ABB Y position   |
+| `z`    | ABB Z position   |
+| `q1`   | ABB quaternion w |
+| `q2`   | ABB quaternion x |
+| `q3`   | ABB quaternion y |
+| `q4`   | ABB quaternion z |
 
-| Colonne | Rôle             |
-| ------- | ---------------- |
-| `x`     | position ABB X   |
-| `y`     | position ABB Y   |
-| `z`     | position ABB Z   |
-| `q1`    | quaternion ABB w |
-| `q2`    | quaternion ABB x |
-| `q3`    | quaternion ABB y |
-| `q4`    | quaternion ABB z |
+### Robot-related columns
 
-### Colonnes envoyables vers le robot
+| Column                     | Purpose                                      |
+| -------------------------- | -------------------------------------------- |
+| `cf1`, `cf4`, `cf6`, `cfx` | ABB confdata                                 |
+| `eax_a..eax_f`             | Optional external axes                       |
+| `tcp_speed`                | TCP speed in mm/s                            |
+| `zone_type`                | ABB zone                                     |
+| `move_type`                | `MoveL`, `MoveJ`, `MoveC`                    |
+| `tool_name`                | Tool name resolved against `trajTools`       |
+| `wobj_name`                | Workobject name resolved against `trajWobjs` |
+| `readconfs`                | Whether confdata should be used              |
+| `process_type`             | Optional process type                        |
+| `process_params`           | Optional process parameters                  |
+| `process_param_index`      | Ignored on send, recomputed by the PC        |
 
-| Colonne                    | Rôle                                       |
-| -------------------------- | ------------------------------------------ |
-| `cf1`, `cf4`, `cf6`, `cfx` | confdata ABB, valeur `0` si absente        |
-| `eax_a..eax_f`             | axes externes optionnels                   |
-| `tcp_speed`                | vitesse TCP en mm/s                        |
-| `zone_type`                | zone ABB                                   |
-| `move_type`                | mouvement `MoveL`, `MoveJ`, `MoveC`        |
-| `tool_name`                | nom outil à résoudre dans `trajTools`      |
-| `wobj_name`                | nom workobject à résoudre dans `trajWobjs` |
-| `readconfs`                | prise en compte confdata                   |
-| `process_type`             | process optionnel                          |
-| `process_params`           | paramètres process optionnels              |
-| `process_param_index`      | ignoré à l’envoi, recalculé côté PC        |
-
-Important :
+Important rule:
 
 ```text
-9E+9 ne doit jamais être stocké dans les fichiers .trajcenter.
+9E+9 must never be stored inside .trajcenter archives.
 ```
 
-Les axes externes absents ou NaN sont représentés localement par une absence de
-valeur, puis sérialisés en `9E+9` uniquement au moment de l’écriture RWS.
+Missing or NaN external axes are represented locally as missing values and are
+serialized as `9E+9` only when writing to RAPID through RWS.
 
 ---
 
-## Résolution robot
+## Robot-side resolution
 
-Avant transfert, TrajCenter lit le contexte robot :
+Before a transfer, TrajCenter reads the robot context:
 
-- defaults robot ;
-- tools disponibles ;
-- wobjs disponibles ;
-- catalogue process.
+- robot defaults;
+- available tools;
+- available workobjects;
+- process catalogue.
 
-Le resolver produit ensuite une trajectoire complètement résolue :
+The resolver then builds a fully resolved trajectory:
 
-| Entrée locale | Sortie RAPID                      |
-| ------------- | --------------------------------- |
-| `tool_name`   | `toolIndex` base 1                |
-| `wobj_name`   | `wobjIndex` base 1                |
-| `move_type`   | `0`, `1`, `2`                     |
-| `zone_type`   | zone ABB autorisée                |
-| `tcp_speed`   | `tcpSpeed`                        |
-| process local | `processParamIndex` base 1 ou `0` |
+| Local value              | RAPID output                      |
+| ------------------------ | --------------------------------- |
+| `tool_name`              | base-1 `toolIndex`                |
+| `wobj_name`              | base-1 `wobjIndex`                |
+| `move_type`              | `0`, `1`, `2`                     |
+| `zone_type`              | validated ABB zone                |
+| `tcp_speed`              | `tcpSpeed`                        |
+| local process parameters | base-1 `processParamIndex` or `0` |
 
-Le PC ne doit pas inventer silencieusement :
+The PC must not silently invent:
 
-- outil ;
-- workobject ;
-- vitesse ;
+- tool;
+- workobject;
+- speed;
 - zone.
 
-Les valeurs manquantes ne peuvent être complétées que si les defaults robot
-correspondants sont explicitement activés côté RAPID.
+Missing values may only be filled when the corresponding RAPID default is
+explicitly enabled.
 
 ---
 
-## Zones autorisées
+## Supported zones
 
 ```text
 0, 1, 5, 10, 15, 20, 30, 40, 50, 60, 80, 100, 150, 200, 255
 ```
 
-Convention :
+Convention:
 
 ```text
 0   = z0
@@ -437,25 +579,23 @@ Convention :
 
 ---
 
-## Mouvements supportés
+## Supported movements
 
-| Code | Mouvement | Alias acceptés    |
-| ---: | --------- | ----------------- |
-|  `0` | `MoveL`   | `L`, `MoveL`, `0` |
-|  `1` | `MoveJ`   | `J`, `MoveJ`, `1` |
-|  `2` | `MoveC`   | `C`, `MoveC`, `2` |
+| Code | Movement | Accepted aliases  |
+| ---: | -------- | ----------------- |
+|  `0` | `MoveL`  | `L`, `MoveL`, `0` |
+|  `1` | `MoveJ`  | `J`, `MoveJ`, `1` |
+|  `2` | `MoveC`  | `C`, `MoveC`, `2` |
 
-### MoveC
-
-Encodage :
+### MoveC encoding
 
 ```text
-MoveC = deux points consécutifs C,C
-C,C,C,C valide
-C,C,C invalide
+MoveC = two consecutive C,C points
+C,C,C,C is valid
+C,C,C is invalid
 ```
 
-Pour chaque paire `C,C`, doivent être identiques :
+For each `C,C` pair, the following values must be identical:
 
 ```text
 tcpSpeed
@@ -468,206 +608,168 @@ processParamIndex
 
 ---
 
-## Pipeline refresh metadata
+## Metadata refresh pipeline
 
-Déclencheur côté RAPID :
+RAPID trigger:
 
 ```rapid
 refreshMetaRequest := TRUE;
 ```
 
-Traitement PC :
+PC-side processing:
 
 ```text
-1. Réception de refreshMetaRequest = TRUE par subscription RWS.
-2. Scan de trajectory_store/.
-3. Chargement des archives .trajcenter.
-4. Extraction metadata : nom, nombre de points, type process.
-5. Écriture de nbTrajAvailable.
-6. Écriture de trajectories{1..nbTrajAvailable}.
-7. Écriture état OK.
-8. Remise de refreshMetaRequest à FALSE.
+1. Receive refreshMetaRequest = TRUE through RWS subscription.
+2. Scan trajectory_store/.
+3. Load .trajcenter archives.
+4. Extract metadata: name, point count, process type.
+5. Write nbTrajAvailable.
+6. Write trajectories{1..nbTrajAvailable}.
+7. Write OK state.
+8. Reset refreshMetaRequest to FALSE.
 ```
 
-Les archives sont triées de manière stable côté PC. L’ordre écrit dans
-`trajectories` doit rester identique à l’ordre utilisé ensuite pour résoudre
+Archives are sorted in a stable order on the PC side. The order written to
+`trajectories` must remain identical to the order later used to resolve
 `selectedTrajIndex`.
 
 ---
 
-## Pipeline envoi trajectoire
+## Trajectory transfer pipeline
 
-Déclencheur côté RAPID :
+RAPID trigger:
 
 ```rapid
 selectedTrajIndex := k;
 sendTrajRequest := TRUE;
 ```
 
-Traitement PC :
+PC-side processing:
 
 ```text
-1. Réception de sendTrajRequest = TRUE par subscription RWS.
-2. Lecture de selectedTrajIndex.
-3. Mapping index RAPID base 1 vers archive locale.
-4. Chargement de l’archive .trajcenter.
-5. Lecture contexte robot.
-6. Résolution trajectoire.
-7. Acquisition Mastership.
-8. Écriture état initial : trajReady FALSE, transferError FALSE, progress 0.
-9. Écriture nbLoadedTrajPoints.
-10. Écriture processParams si nécessaire.
-11. Écriture trajData{1..nbLoadedTrajPoints}.
-12. Mise à jour transferProgress.
-13. Écriture état final : progress 100, lastErrorCode 200002, trajReady TRUE.
-14. Remise de sendTrajRequest à FALSE.
+1. Receive sendTrajRequest = TRUE through RWS subscription.
+2. Read selectedTrajIndex.
+3. Map base-1 RAPID index to local archive.
+4. Load the selected .trajcenter archive.
+5. Read robot context.
+6. Resolve trajectory.
+7. Acquire Mastership.
+8. Write initial state: trajReady FALSE, transferError FALSE, progress 0.
+9. Write nbLoadedTrajPoints.
+10. Write processParams if needed.
+11. Write trajData{1..nbLoadedTrajPoints}.
+12. Update transferProgress.
+13. Write final state: progress 100, lastErrorCode 200002, trajReady TRUE.
+14. Reset sendTrajRequest to FALSE.
 15. Release Mastership.
 ```
 
-En erreur :
+On error:
 
 ```text
 trajReady = FALSE
 transferError = TRUE
-lastErrorCode = code erreur
-lastError = message court
+lastErrorCode = error code
+lastError = short message
 sendTrajRequest = FALSE
-refreshMetaRequest = FALSE si erreur refresh
+refreshMetaRequest = FALSE if the error occurred during refresh
 ```
 
-Toute écriture RWS doit être faite sous Mastership avec release garanti.
+All RWS writes must be performed under Mastership with guaranteed release.
 
 ---
 
-## Supervisor RWS
+## Development workflow
 
-Le supervisor v2 est dans :
-
-```text
-trajcenter/rws/supervisor.py
-```
-
-Le script de lancement est :
-
-```text
-scripts/run_trajcenter_supervisor.py
-```
-
-Il s’abonne aux flags RAPID :
-
-```text
-TRAJCENTER/refreshMetaRequest
-TRAJCENTER/sendTrajRequest
-```
-
-Seuls les events `TRUE` déclenchent une action.
-
-Les events `FALSE` sont ignorés.
-
-Au démarrage ou après reconnexion, le PC doit relire l’état courant des flags
-afin de traiter une demande qui serait déjà pendante.
-
----
-
-## Lancement du supervisor
-
-Depuis la racine du dépôt :
+### Format generated package files
 
 ```powershell
-python scripts/run_trajcenter_supervisor.py --store trajectory_store
+pixi run -e dev pyinit-write
 ```
 
-Options principales :
+### Lint
 
 ```powershell
-python scripts/run_trajcenter_supervisor.py `
-  --store trajectory_store `
-  --task T_ROB1 `
-  --module TRAJCENTER `
-  --mastership-retries 3 `
-  --log-level INFO
+pixi run -e dev ruff check .
 ```
 
-La configuration de connexion RWS dépend de la librairie
-`abb-rws-client-python-rw6` et de son chargement d’environnement.
-
-Vérifier notamment :
-
-- adresse contrôleur ;
-- utilisateur ;
-- mot de passe ;
-- configuration réseau ;
-- droits Mastership ;
-- module système RAPID chargé ;
-- module cible `TRAJCENTER`.
-
----
-
-## Installation développeur
-
-Le projet utilise `pixi`.
-
-Commandes usuelles :
+### Type-check
 
 ```powershell
-pixi install
-pixi run ruff check .
-pixi run tests
+pixi run -e dev typecheck
 ```
 
-Correction automatique si configurée :
+### Run tests
 
 ```powershell
-pixi run pyinit-write
+pixi run -e dev tests
 ```
 
----
+Recommended validation before commit:
 
-## Validation locale actuelle
+```powershell
+pixi run -e dev pyinit-write
+pixi run -e dev ruff check .
+pixi run -e dev typecheck
+pixi run -e dev tests
+```
 
-La base de tests couvre :
-
-- conversion APT, CSV, Excel, MOD ;
-- modèle cœur `Trajectory` ;
-- export CSV/Excel ;
-- parsing et résolution RWS ;
-- writer RWS avec mocks ;
-- reader RWS avec mocks ;
-- service RWS ;
-- supervisor RWS ;
-- store local `.trajcenter` ;
-- erreurs RWS.
-
-Dernière validation locale connue :
+Latest known local validation:
 
 ```text
-792 passed
-coverage globale : 99%
+ruff check .                  OK
+mypy trajcenter/              OK
+pytest tests/                 866 passed
+global coverage               78%
 ```
+
+The global coverage includes Textual UI screens and long-running robot paths
+that are not fully exercised by automated tests.
 
 ---
 
-## Tests à faire avec accès robot
+## Test coverage
 
-Cette section liste les tests d’intégration réels à exécuter dès qu’un robot ABB
-RobotWare 6.x ou RobotStudio contrôleur virtuel sera disponible.
+The test suite covers:
 
-### 1. Préparation contrôleur
+- CLI;
+- APT, CSV, Excel and MOD conversion;
+- column mapping;
+- core `Trajectory` model;
+- CSV / Excel export;
+- local `.trajcenter` store;
+- robot context parsing;
+- robot trajectory resolution;
+- RWS reader with mocks;
+- RWS writer with mocks;
+- robot service;
+- robot supervisor;
+- robot error mapping;
+- main TUI screens.
 
-- Installer/charger le module système RAPID :
+---
+
+## Robot integration test checklist
+
+The following tests require a real ABB RobotWare 6.x controller or a RobotStudio
+virtual controller.
+
+### Controller preparation
+
+- Load the RAPID system module:
 
 ```rapid
 MODULE TRAJCENTER(SYSMODULE)
 ```
 
-- Compiler le module.
-- Vérifier que le module cible RWS est bien :
+- Compile the module.
+- Check that the RWS target module is:
 
 ```text
 TRAJCENTER
 ```
 
-- Vérifier que les symboles RWS existent :
+- Verify that the expected RWS symbols exist:
   - `sendTrajRequest`
   - `refreshMetaRequest`
   - `selectedTrajIndex`
@@ -695,55 +797,39 @@ TRAJCENTER
   - `trajWobjs`
   - `processTypes`
 
-### 2. Test connexion RWS
+### Connection and Mastership
 
-Objectif : valider l’accès HTTP RWS.
+Check:
 
-À vérifier :
+- RWS login;
+- simple symbol read;
+- clean error on invalid credentials;
+- clean timeout on unreachable controller;
+- Mastership acquisition;
+- simple write under Mastership;
+- guaranteed Mastership release;
+- retry behavior when Mastership is temporarily refused.
 
-- login OK ;
-- lecture d’un symbole simple ;
-- erreur propre si identifiants invalides ;
-- timeout propre si contrôleur indisponible ;
-- traduction correcte des erreurs RWS.
+### RWS subscriptions
 
-### 3. Test Mastership
+Check:
 
-Objectif : valider les écritures protégées.
+- subscription creation on `refreshMetaRequest`;
+- subscription creation on `sendTrajRequest`;
+- reception of `TRUE` events;
+- ignored `FALSE` events;
+- clean subscription deletion on shutdown;
+- supervisor restart after interruption.
 
-À vérifier :
+### Metadata refresh
 
-- acquisition Mastership OK ;
-- écriture d’une variable simple ;
-- release Mastership même en cas d’exception ;
-- comportement si Mastership refusé ;
-- retry Mastership ;
-- absence de Mastership résiduelle après arrêt brutal du script.
-
-### 4. Test subscription RWS
-
-Objectif : valider le fonctionnement événementiel.
-
-À vérifier :
-
-- création subscription sur `refreshMetaRequest` ;
-- création subscription sur `sendTrajRequest` ;
-- réception event `TRUE` ;
-- event `FALSE` ignoré ;
-- suppression propre du groupe subscription à l’arrêt ;
-- reconnexion ou relance supervisor après interruption.
-
-### 5. Test refresh metadata nominal
-
-Objectif : remplir la liste robot des trajectoires disponibles.
-
-Procédure :
+Procedure:
 
 ```rapid
 refreshMetaRequest := TRUE;
 ```
 
-Résultat attendu :
+Expected result:
 
 ```text
 refreshMetaRequest = FALSE
@@ -751,30 +837,19 @@ transferError = FALSE
 lastErrorCode = 200001
 lastError = ""
 nbTrajAvailable > 0
-trajectories{1..nbTrajAvailable} cohérent avec trajectory_store/
+trajectories{1..nbTrajAvailable} matches trajectory_store/
 ```
 
-À contrôler :
+### Nominal trajectory transfer
 
-- ordre des trajectoires ;
-- noms ;
-- nombres de points ;
-- process type ;
-- comportement avec store vide ;
-- comportement avec archive invalide.
-
-### 6. Test transfert trajectoire sans process
-
-Objectif : transférer une trajectoire simple.
-
-Procédure :
+Procedure:
 
 ```rapid
 selectedTrajIndex := 1;
 sendTrajRequest := TRUE;
 ```
 
-Résultat attendu :
+Expected result:
 
 ```text
 sendTrajRequest = FALSE
@@ -783,244 +858,135 @@ transferError = FALSE
 lastErrorCode = 200002
 lastError = ""
 transferProgress = 100
-nbLoadedTrajPoints = pointCount attendu
-trajData{1..nbLoadedTrajPoints} renseigné
-trajData{i}.processParamIndex = 0
+nbLoadedTrajPoints = expected point count
+trajData{1..nbLoadedTrajPoints} populated
 ```
 
-À contrôler :
+### TUI robot supervision
 
-- `moveType` ;
-- robtarget ;
-- confdata ;
-- axes externes absents écrits en `9E+9` côté RWS ;
-- `tcpSpeed` ;
-- `zoneType` ;
-- `readConfs` ;
-- `toolIndex` ;
-- `wobjIndex`.
+Check:
 
-### 7. Test transfert trajectoire avec process
+- `Start supervision` button starts the subprocess;
+- logs are visible in the TUI console;
+- button changes to `Stop supervision`;
+- stop via button;
+- stop via `X`;
+- ABB subscription is cleaned up;
+- supervisor can be started again.
 
-Objectif : valider `processParams` et `processParamIndex`.
+### Robustness
 
-À contrôler :
+Test cases:
 
-- `processType` transféré ;
-- sets process écrits en base 1 ;
-- slots inutilisés écrits avec `name=""`, `value=0` ;
-- déduplication des sets identiques ;
-- points sans process avec `processParamIndex = 0` ;
-- cohérence entre `trajData{i}.processParamIndex` et `processParams{p,*}`.
+- PC stop during metadata refresh;
+- PC stop during trajectory transfer;
+- network loss;
+- supervisor restart;
+- request already set to `TRUE` before supervisor startup;
+- temporary Mastership refusal;
+- controller restart.
 
-### 8. Test defaults robot
+Expected behavior:
 
-Objectif : valider les règles de fallback.
-
-Cas à tester :
-
-- `tcp_speed` absent avec `hasDefaultTcpSpeed = TRUE` ;
-- `tcp_speed` absent avec `hasDefaultTcpSpeed = FALSE` ;
-- `zone_type` absent avec/sans default ;
-- `tool_name` absent avec/sans default ;
-- `wobj_name` absent avec/sans default ;
-- `move_type` absent ;
-- `readconfs` absent.
-
-Résultat attendu :
-
-- fallback uniquement si `hasDefault* = TRUE` ;
-- erreur sinon ;
-- aucun outil ou wobj inventé silencieusement.
-
-### 9. Test erreurs fonctionnelles
-
-Cas à provoquer :
-
-| Cas                             | Code attendu |
-| ------------------------------- | -----------: |
-| `selectedTrajIndex` hors bornes |     `400001` |
-| archive absente                 |     `400002` |
-| archive invalide                |     `400003` |
-| trop de points                  |     `400004` |
-| zone invalide                   |     `400005` |
-| mouvement invalide              |     `400006` |
-| paire `MoveC` invalide          |     `400007` |
-| vitesse absente sans default    |     `400008` |
-| zone absente sans default       |     `400009` |
-| outil absent sans default       |     `400010` |
-| wobj absent sans default        |     `400011` |
-| outil inconnu robot             |     `400012` |
-| wobj inconnu robot              |     `400013` |
-| vitesse invalide                |     `400014` |
-| readConfs invalide              |     `400015` |
-| robtarget invalide              |     `400016` |
-| process inconnu                 |     `400017` |
-| trop de sets process            |     `400018` |
-| paramètres process invalides    |     `400019` |
-
-À vérifier pour chaque erreur :
-
-```text
-trajReady = FALSE
-transferError = TRUE
-lastErrorCode = code attendu
-lastError non vide et court
-sendTrajRequest = FALSE
-refreshMetaRequest = FALSE si erreur refresh
-```
-
-### 10. Test performance transfert
-
-Objectif : mesurer le temps réel d’écriture RWS.
-
-Jeux à tester :
-
-- 10 points ;
-- 100 points ;
-- 1 000 points ;
-- 10 000 points ;
-- trajectoire proche limite si raisonnable.
-
-Mesures :
-
-- durée totale ;
-- temps acquisition Mastership ;
-- temps écriture metadata ;
-- temps écriture `processParams` ;
-- temps écriture `trajData` ;
-- évolution `transferProgress` ;
-- comportement timeout.
-
-### 11. Test robustesse interruption
-
-Cas à tester :
-
-- arrêt PC pendant refresh ;
-- arrêt PC pendant transfert ;
-- perte réseau ;
-- redémarrage supervisor ;
-- demande déjà TRUE avant lancement supervisor ;
-- Mastership refusé temporairement ;
-- contrôleur redémarré.
-
-Résultat attendu :
-
-- pas de subscription orpheline durable ;
-- pas de Mastership bloquée ;
-- flags remis dans un état cohérent ;
-- demande pendante détectée au redémarrage si encore TRUE.
-
-### 12. Test exécution RAPID après transfert
-
-Objectif : vérifier que les données transférées sont réellement consommables.
-
-À faire côté RAPID :
-
-- parcourir `trajData{1..nbLoadedTrajPoints}` ;
-- construire les instructions `MoveL`, `MoveJ`, `MoveC` correspondantes ;
-- utiliser `trajTools{toolIndex}.value` ;
-- utiliser `trajWobjs{wobjIndex}.value` ;
-- appliquer ou ignorer confdata selon `readConfs` ;
-- appliquer le process selon `processParamIndex`.
-
-À vérifier :
-
-- trajectoire simple sans process ;
-- trajectoire avec process ;
-- trajectoire avec axes externes absents ;
-- trajectoire avec confdata ;
-- trajectoire avec `fine`.
+- no durable orphan subscription;
+- no blocked Mastership;
+- flags return to a coherent state;
+- pending requests are detected on restart when still `TRUE`.
 
 ---
 
-## Qualité et règles de contribution
+## Status and error codes
 
-Règles principales :
+|     Code | Meaning                             |
+| -------: | ----------------------------------- |
+| `200000` | OK                                  |
+| `200001` | Metadata refreshed                  |
+| `200002` | Trajectory transferred              |
+| `400001` | `selectedTrajIndex` out of range    |
+| `400002` | Trajectory file not found           |
+| `400003` | Invalid `.trajcenter` format        |
+| `400004` | Too many points                     |
+| `400005` | Invalid `zone_type`                 |
+| `400006` | Invalid `move_type`                 |
+| `400007` | Invalid `MoveC` pair                |
+| `400008` | Missing `tcp_speed` without default |
+| `400009` | Missing `zone_type` without default |
+| `400010` | Missing `tool_name` without default |
+| `400011` | Missing `wobj_name` without default |
+| `400012` | Unknown robot tool                  |
+| `400013` | Unknown robot workobject            |
+| `400014` | Invalid speed                       |
+| `400015` | Invalid `readConfs`                 |
+| `400016` | Invalid robtarget                   |
+| `400017` | Unknown process                     |
+| `400018` | Too many process sets               |
+| `400019` | Invalid process parameters          |
+| `401001` | RWS authentication refused          |
+| `403001` | Mastership refused                  |
+| `403002` | RWS write forbidden                 |
+| `404001` | RAPID symbol not found              |
+| `404002` | `trajTools` not found               |
+| `404003` | `trajWobjs` not found               |
+| `404004` | Trajectory store not found          |
+| `404005` | Robot default not found             |
+| `404006` | `processTypes` not found            |
+| `408001` | RWS request timeout                 |
+| `408002` | Transfer timeout                    |
+| `409001` | Transfer already running            |
+| `409002` | Incompatible robot state            |
+| `500001` | Internal client error               |
+| `500002` | Serialization error                 |
+| `500003` | Trajectory conversion error         |
+| `502001` | Invalid RWS response                |
+| `503001` | Controller unavailable              |
+| `504001` | Controller timeout                  |
 
-- Python >= 3.11 ;
-- code typé ;
-- `ruff` sans warning ;
-- tests obligatoires ;
-- mocks HTTP pour les appels RWS ;
-- pas de print intempestif ;
-- logging via le système projet ;
-- aucune écriture RAPID hors Mastership ;
-- aucun retour au protocole TCP v1.
+---
 
-Commandes avant commit :
+## Contribution rules
+
+Main rules:
+
+- Python >= 3.11;
+- Pixi-managed environments only;
+- typed code;
+- no Ruff warning;
+- no mypy error;
+- tests required;
+- HTTP mocks for automated RWS tests;
+- logging through the project logging system;
+- no RAPID write outside Mastership;
+- no return to the TrajCenter v1 TCP protocol.
+
+Before committing:
 
 ```powershell
-pixi run pyinit-write
-pixi run ruff check .
-pixi run tests
+pixi run -e dev pyinit-write
+pixi run -e dev ruff check .
+pixi run -e dev typecheck
+pixi run -e dev tests
 ```
 
 ---
 
-## Codes d’état et d’erreur
-
-|     Code | Signification                      |
-| -------: | ---------------------------------- |
-| `200000` | OK                                 |
-| `200001` | Metadata refreshed                 |
-| `200002` | Trajectory transferred             |
-| `400001` | `selectedTrajIndex` hors bornes    |
-| `400002` | Fichier trajectoire introuvable    |
-| `400003` | Format `.trajcenter` invalide      |
-| `400004` | Trop de points                     |
-| `400005` | `zone_type` invalide               |
-| `400006` | `move_type` invalide               |
-| `400007` | Paire `MoveC` invalide             |
-| `400008` | `tcp_speed` manquant sans default  |
-| `400009` | `zone_type` manquant sans default  |
-| `400010` | `tool_name` manquant sans default  |
-| `400011` | `wobj_name` manquant sans default  |
-| `400012` | `tool_name` introuvable côté robot |
-| `400013` | `wobj_name` introuvable côté robot |
-| `400014` | Vitesse invalide                   |
-| `400015` | `readConfs` invalide               |
-| `400016` | Robtarget invalide                 |
-| `400017` | Process inconnu                    |
-| `400018` | Trop de sets process               |
-| `400019` | Paramètres process invalides       |
-| `401001` | Authentification RWS refusée       |
-| `403001` | Mastership refusé                  |
-| `403002` | Écriture RWS interdite             |
-| `404001` | Symbole RAPID introuvable          |
-| `404002` | `trajTools` introuvable            |
-| `404003` | `trajWobjs` introuvable            |
-| `404004` | Store trajectoire introuvable      |
-| `404005` | Default robot introuvable          |
-| `404006` | `processTypes` introuvable         |
-| `408001` | Timeout requête RWS                |
-| `408002` | Timeout transfert                  |
-| `409001` | Transfert déjà en cours            |
-| `409002` | État robot incompatible            |
-| `500001` | Erreur interne client              |
-| `500002` | Erreur de sérialisation            |
-| `500003` | Erreur de conversion trajectoire   |
-| `502001` | Réponse RWS invalide               |
-| `503001` | Contrôleur indisponible            |
-| `504001` | Timeout contrôleur                 |
-
----
-
-## Historique
+## History
 
 ### v1
 
-Ancienne version TCP/IP Python où le robot ABB jouait le rôle de client TCP.
-Cette version est obsolète.
+Legacy TCP/IP version where the ABB robot acted as a TCP client.
+
+This version is obsolete.
 
 ### v2
 
-Version actuelle basée exclusivement sur ABB Robot Web Services :
+Current version based exclusively on ABB Robot Web Services:
 
-- module système RAPID unique `TRAJCENTER` ;
-- RWS subscriptions ;
-- RWS reads ;
-- RWS writes ;
-- Mastership ;
-- archives `.trajcenter` ;
-- pipeline PC événementiel.
+- single RAPID system module `TRAJCENTER`;
+- RWS subscriptions;
+- RWS reads;
+- RWS writes;
+- Mastership;
+- `.trajcenter` archives;
+- CLI;
+- Textual TUI;
+- event-driven PC pipeline.
