@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/service.py
+# trajcenter/robot/service.py
 """RWS service orchestration for TrajCenter v2 trajectory transfers.
 
 Author: Clement RACINET

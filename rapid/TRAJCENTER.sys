@@ -1504,6 +1504,10 @@ MODULE TRAJCENTER(SYSMODULE)
     FUNC num TRAJCENTER_FindToolIndex(string toolName)
         VAR num i;
 
+        IF toolName = "" THEN
+            RETURN 0;
+        ENDIF
+
         FOR i FROM 1 TO maxTrajToolCount DO
             IF trajTools{i}.name = toolName THEN
                 RETURN i;
@@ -1940,7 +1944,8 @@ MODULE TRAJCENTER(SYSMODULE)
     !       1..nbTrajAvailable
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_RequestTrajectory(num trajIndex)
-        IF trajIndex < 1 THEN
+
+        IF trajIndex < 1 OR trajIndex > nbTrajAvailable THEN
             RAISE ERR_TRAJCENTER_BAD_TRAJ_INDEX;
         ENDIF
 

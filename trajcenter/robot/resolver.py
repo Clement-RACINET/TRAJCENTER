@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/resolver.py
+# trajcenter/robot/resolver.py
 """Trajectory resolver for TrajCenter ABB RWS transfers.
 
 Author: Clement RACINET

@@ -25,7 +25,6 @@ from trajcenter.robot.models import (
 )
 from trajcenter.robot.writer import (
     MAX_PROCESS_PARAM_PER_SET,
-    MAX_PROCESS_PARAM_SET_COUNT,
     MAX_TRAJ,
     MAX_TRAJ_POINTS,
     STATUS_METADATA_REFRESHED,
@@ -521,7 +520,7 @@ class TestWriteStoreMetadata:
 
         mock_set.assert_awaited_once()
         values = mock_set.call_args.kwargs["values"]
-        assert len(values) == 1 + MAX_TRAJ + 5
+        assert len(values) == 1 + len(["Traj1", "Traj2"]) + 5
 
     @pytest.mark.asyncio
     async def test_nb_traj_available_value(self, client: MagicMock) -> None:
@@ -538,21 +537,22 @@ class TestWriteStoreMetadata:
         assert values["RAPID/T_ROB1/TRAJCENTER/nbTrajAvailable"] == "3"
 
     @pytest.mark.asyncio
-    async def test_trajectories_records_padded(self, client: MagicMock) -> None:
-        """Trajectory records are padded to ``MAX_TRAJ`` entries."""
+    async def test_trajectories_records_only_active_entries(
+        self,
+        client: MagicMock,
+    ) -> None:
+        """Only active trajectory metadata entries are written."""
         mock_set = AsyncMock()
         with patch(f"{_MODULE}.set_variables_with_mastership", mock_set):
             await write_store_metadata(client, names=["OnlyOne"], point_counts=[100])
 
         values = mock_set.call_args.kwargs["values"]
+
         assert (
             values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B1%7D"] == '["OnlyOne",100,0]'
         )
-        assert values["RAPID/T_ROB1/TRAJCENTER/trajectories%7B2%7D"] == '["",0,0]'
-        assert (
-            values[f"RAPID/T_ROB1/TRAJCENTER/trajectories%7B{MAX_TRAJ}%7D"]
-            == '["",0,0]'
-        )
+        assert "RAPID/T_ROB1/TRAJCENTER/trajectories%7B2%7D" not in values
+        assert f"RAPID/T_ROB1/TRAJCENTER/trajectories%7B{MAX_TRAJ}%7D" not in values
 
     @pytest.mark.asyncio
     async def test_process_types_written(self, client: MagicMock) -> None:
@@ -713,11 +713,11 @@ class TestWriteResolvedTrajectory:
         assert second.endswith(",500,10,TRUE,1,2,0]")
 
     @pytest.mark.asyncio
-    async def test_process_params_are_written_and_cleared(
+    async def test_only_used_process_params_are_written(
         self,
         client: MagicMock,
     ) -> None:
-        """Used process sets are written and unused sets are cleared."""
+        """Used process sets are written; unused sets are not cleared."""
         mock_set = AsyncMock()
         resolved = _make_resolved_trajectory()
 
@@ -734,7 +734,8 @@ class TestWriteResolvedTrajectory:
             values["RAPID/T_ROB1/TRAJCENTER/processParams%7B1%2C2%7D"]
             == '["speed",42.5]'
         )
-        assert values["RAPID/T_ROB1/TRAJCENTER/processParams%7B2%2C1%7D"] == '["",0]'
+
+        assert "RAPID/T_ROB1/TRAJCENTER/processParams%7B2%2C1%7D" not in values
 
     @pytest.mark.asyncio
     async def test_process_param_table_size(self, client: MagicMock) -> None:
@@ -748,7 +749,7 @@ class TestWriteResolvedTrajectory:
         values = _merged_mastership_values(mock_set)
         process_keys = [key for key in values if "processParams%7B" in key]
         assert len(process_keys) == (
-            MAX_PROCESS_PARAM_SET_COUNT * MAX_PROCESS_PARAM_PER_SET
+            len(resolved.process_param_sets) * MAX_PROCESS_PARAM_PER_SET
         )
 
     @pytest.mark.asyncio

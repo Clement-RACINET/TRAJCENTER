@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/constants.py
+# trajcenter/robot/constants.py
 """Shared constants for the TrajCenter ABB RWS integration layer.
 
 Author: Clement RACINET

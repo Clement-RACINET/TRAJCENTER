@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/writer.py
+# trajcenter/robot/writer.py
 """RWS writer — writes TrajCenter v2 data to ABB RAPID variables.
 
 Author: Clement RACINET
@@ -485,50 +485,14 @@ async def write_store_metadata(
 ) -> None:
     """Write trajectory store metadata to ``TRAJCENTER``.
 
-    ABB Route:
-        One batched call to ``POST /rw/rapid/symbol/data/{symbolurl}?action=set``
-        per symbol, under one RAPID Mastership session delegated to
-        ``set_variables_with_mastership``.
+    Only active metadata entries are written:
+        - ``nbTrajAvailable`` defines the valid range;
+        - RAPID must only consume ``trajectories{1..nbTrajAvailable}``;
+        - stale entries above ``nbTrajAvailable`` are intentionally ignored.
 
-    ABB Constraints:
-        Writes:
-            - ``nbTrajAvailable``
-            - ``trajectories{1..256}``
-            - ``refreshMetaRequest := FALSE``
-            - ``transferError := FALSE``
-            - ``lastErrorCode := 200001``
-            - ``lastError := ""``
-            - ``transferProgress := 100``
-
-        RAPID arrays are one-based and braces are percent-encoded in symbol
-        URLs.
-
-    Args:
-        client: Open RWS client.
-        names: Ordered trajectory display names.
-        point_counts: Ordered point counts matching ``names``.
-        task: RAPID task name.
-        module: RAPID module name. Defaults to ``TRAJCENTER``.
-        process_types: Optional process type codes matching ``names``.
-            If ``None``, all entries use ``0`` (NONE).
-        mastership_retries: Number of retries if Mastership is denied.
-
-    Returns:
-        None.
-
-    Raises:
-        ValueError: If input lengths mismatch or count exceeds ``MAX_TRAJ``.
-        MastershipDenied: If Mastership cannot be acquired after all retries.
-        RWSHTTPError: On unexpected controller HTTP errors.
-
-    Example:
-        ::
-
-            await write_store_metadata(
-                client,
-                names=["TrajA"],
-                point_counts=[100],
-            )
+    This avoids rewriting the full ``trajectories{1..256}`` buffer on every
+    refresh and reduces the number of RWS writes from ``MAX_TRAJ + status`` to
+    ``nbTrajAvailable + status``.
     """
     if len(names) != len(point_counts):
         raise ValueError(
@@ -556,22 +520,15 @@ async def write_store_metadata(
         module,
     )
 
-    padded_names = names + [""] * (MAX_TRAJ - nb)
-    padded_counts = point_counts + [0] * (MAX_TRAJ - nb)
-    padded_process_types = process_types + [0] * (MAX_TRAJ - nb)
-
     async def _do_write() -> None:
         values: dict[str, str] = {}
 
+        # nbTrajAvailable is the contract boundary. RAPID code must ignore
+        # trajectories above this index, so stale values do not need clearing.
         values[symbol(task, module, "nbTrajAvailable")] = _fmt_num(nb)
 
         for index, (name, count, process_type) in enumerate(
-            zip(
-                padded_names,
-                padded_counts,
-                padded_process_types,
-                strict=True,
-            ),
+            zip(names, point_counts, process_types, strict=True),
             start=1,
         ):
             values[
@@ -708,38 +665,42 @@ def _build_resolved_trajectory_payload_values(
     on_progress: Callable[[int, int], None] | None,
     progress_step_percent: int,
 ) -> dict[str, str]:
-    """Build the RWS symbol/value batch for trajectory payload only.
+    """Build the RWS symbol/value batch for the trajectory payload.
 
-    This function writes process parameters, trajectory points and finally
-    ``nbLoadedTrajPoints``.
+    Only active process parameter sets are written.
 
-    It does not write ``trajReady``.
-    It does not write ``sendTrajRequest``.
+    Contract:
+        - ``nbLoadedTrajPoints`` defines the valid point range;
+        - RAPID must only consume ``trajData{1..nbLoadedTrajPoints}``;
+        - each point references either ``processParamIndex = 0`` or one of the
+          process sets written in this payload;
+        - stale ``trajData`` entries above ``nbLoadedTrajPoints`` are ignored;
+        - stale ``processParams`` entries not referenced by the new trajectory
+          are ignored.
+
+    This avoids clearing ``trajData{1..100000}`` and
+    ``processParams{1..256,1..10}`` on every transfer.
     """
+
     values: dict[str, str] = {}
 
     total_units = resolved.point_count + (
-        MAX_PROCESS_PARAM_SET_COUNT * MAX_PROCESS_PARAM_PER_SET
+        len(resolved.process_param_sets) * MAX_PROCESS_PARAM_PER_SET
     )
     done_units = 0
     next_progress = progress_step_percent
-    empty_param = ResolvedProcessParam(name="", value=0.0)
 
-    param_sets_by_index = {
-        param_set.index: param_set for param_set in resolved.process_param_sets
-    }
-
-    for set_index in range(1, MAX_PROCESS_PARAM_SET_COUNT + 1):
-        param_set = param_sets_by_index.get(set_index)
-        params = param_set.params if param_set is not None else (empty_param,) * 10
-
-        for slot_index, param in enumerate(params, start=1):
+    # Only write process parameter sets that are actually referenced by the
+    # resolved trajectory. Unused or stale processParams slots are harmless
+    # because RAPID must only read sets referenced by trajData.processParamIndex.
+    for param_set in resolved.process_param_sets:
+        for slot_index, param in enumerate(param_set.params, start=1):
             values[
                 _symbol_2d_array_element(
                     task=task,
                     module=module,
                     variable="processParams",
-                    first_index=set_index,
+                    first_index=param_set.index,
                     second_index=slot_index,
                 )
             ] = _fmt_process_param_record(param)
@@ -753,6 +714,9 @@ def _build_resolved_trajectory_payload_values(
                 on_progress=on_progress,
             )
 
+    # Only write the active point range. Old trajData entries beyond
+    # nbLoadedTrajPoints are intentionally left untouched and must be ignored
+    # by RAPID consumers.
     for point_index, point in enumerate(resolved.points, start=1):
         values[
             symbol_array_element(
@@ -772,6 +736,7 @@ def _build_resolved_trajectory_payload_values(
             on_progress=on_progress,
         )
 
+    # This value is the authoritative boundary for RAPID trajectory execution.
     values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(resolved.point_count)
 
     return values

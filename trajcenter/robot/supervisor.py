@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/supervisor.py
+# trajcenter/robot/supervisor.py
 """RWS subscription supervisor for TrajCenter v2.
 
 Author: Clement RACINET

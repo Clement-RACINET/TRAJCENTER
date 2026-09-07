@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/models.py
+# trajcenter/robot/models.py
 """Typed models for TrajCenter ABB RWS transfer operations.
 
 Author: Clement RACINET
@@ -458,21 +458,23 @@ class ResolvedTrajectory:
     ABB Route:
         Written to:
         - ``nbLoadedTrajPoints``;
-        - ``processParams{1..256,1..10}``;
+        - ``processParams{setIndex,1..10}`` for used process sets only;
         - ``trajData{1..nbLoadedTrajPoints}``.
 
     ABB Constraints:
         ``points`` must not exceed ``maxTrajPointCount``.
-        ``process_param_sets`` contains only used sets; the writer may clear
-        unused RAPID slots depending on transfer policy.
+        ``process_param_sets`` contains only process parameter sets referenced
+        by at least one point.
+        Stale ``processParams`` slots not referenced by the new trajectory are
+        intentionally ignored and do not need to be cleared.
+        Stale ``trajData`` entries above ``nbLoadedTrajPoints`` are
+        intentionally ignored and do not need to be cleared.
 
     Args:
         name: Display name.
         process_type: Numeric process type.
         points: Resolved point sequence.
-        process_param_sets: Resolved process parameter sets.
-
-
+        process_param_sets: Used resolved process parameter sets only.
 
     Example:
         ```python

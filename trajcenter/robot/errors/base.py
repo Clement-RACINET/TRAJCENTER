@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/errors/base.py
+# trajcenter/robot/errors/base.py
 """Base exception hierarchy for the TrajCenter RWS transfer protocol.
 
 > **Author**: Clément RACINET

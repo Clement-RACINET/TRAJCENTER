@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/reader.py
+# trajcenter/robot/reader.py
 """RWS reader — reads TrajCenter v2 RAPID variables from the ABB controller.
 
 Author: Clement RACINET

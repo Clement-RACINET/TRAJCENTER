@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/errors/translate.py
+# trajcenter/robot/errors/translate.py
 """Translation of transport-layer RWS exceptions into TrajCenter errors.
 
 > **Author**: Clément RACINET

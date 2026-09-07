@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/errors/codes.py
+# trajcenter/robot/errors/codes.py
 """Concrete TrajCenter protocol error codes.
 
 > **Author**: Clément RACINET

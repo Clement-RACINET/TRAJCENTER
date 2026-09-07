@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# trajcenter/robot/abb/_utils.py
+# trajcenter/robot/_utils.py
 """Shared low-level utilities for the RWS integration layer.
 
 > **Author**: Clément RACINET
