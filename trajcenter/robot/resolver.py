@@ -13,7 +13,7 @@ robot-side context already read by ``trajcenter.robot.reader`` and produces type
 objects ready for the future RWS writer.
 
 ABB Route:
-    N/A — local resolution only. The resolved payload is later written through:
+    N/A - local resolution only. The resolved payload is later written through:
     ``POST /rw/rapid/symbol/data/RAPID/{task}/TRAJCENTER/...``.
 
 ABB Constraints:
@@ -95,7 +95,7 @@ def resolve_trajectory(
     """Resolve a local trajectory against robot-side context.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         The returned object uses RAPID-ready indexes:
@@ -155,7 +155,7 @@ def _unique_process_param_sets(
     """Return unique process parameter sets ordered by RAPID index.
 
     ABB Route:
-        N/A — local resolution helper.
+        N/A - local resolution helper.
 
     ABB Constraints:
         Multiple source ``process_param_index`` values may resolve to the same
@@ -188,7 +188,7 @@ def _validate_global_constraints(
     """Validate trajectory-level constraints before point resolution.
 
     ABB Route:
-        N/A — local validation.
+        N/A - local validation.
 
     ABB Constraints:
         The robot-side process catalog is authoritative. The PC must not
@@ -232,7 +232,7 @@ def _resolve_point(
     """Resolve one point row into a RAPID-ready point record.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         Missing speed, zone, tool and wobj may only be completed from robot
@@ -290,7 +290,7 @@ def _resolve_robtarget(row: pd.Series) -> ResolvedRobTarget:
     """Resolve robtarget coordinates, quaternion, confdata and external axes.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         ``9E+9`` is not injected here. Missing or NaN external axes are kept as
@@ -343,7 +343,7 @@ def _resolve_confdata_value(row: pd.Series, column: str) -> int:
     """Resolve one confdata value.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         Missing confdata defaults to ``0``. The ``read_confs`` flag controls
@@ -377,7 +377,7 @@ def _resolve_optional_float(row: pd.Series, column: str) -> float | None:
     """Resolve an optional floating point column.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         External inactive axes are represented as ``None`` until RWS
@@ -411,7 +411,7 @@ def _resolve_move_type(row: pd.Series, context: RobotContext) -> int:
     """Resolve the movement type code.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         TrajCenter canonical strings are ``MoveJ``, ``MoveL`` and ``MoveC``.
@@ -450,7 +450,7 @@ def _resolve_tcp_speed(row: pd.Series, context: RobotContext) -> float:
     """Resolve TCP speed.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         If missing, ``defaultTcpSpeed`` may only be used when
@@ -485,7 +485,7 @@ def _resolve_zone_type(row: pd.Series, context: RobotContext) -> int:
     """Resolve ABB zone type.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         If missing, ``defaultZoneType`` may only be used when
@@ -524,7 +524,7 @@ def _resolve_read_confs(row: pd.Series, context: RobotContext) -> bool:
     """Resolve ``readConfs`` flag.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         Missing ``readconfs`` values use the robot default.
@@ -565,7 +565,7 @@ def _resolve_tool_index(row: pd.Series, context: RobotContext) -> int:
     """Resolve tool name to RAPID base-1 index.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         ``toolIndex`` is a base-1 index in ``trajTools``. Missing tool name
@@ -606,7 +606,7 @@ def _resolve_wobj_index(row: pd.Series, context: RobotContext) -> int:
     """Resolve workobject name to RAPID base-1 index.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         ``wobjIndex`` is a base-1 index in ``trajWobjs``. Missing workobject
@@ -652,7 +652,7 @@ def _resolve_point_process_index(
     """Resolve one point process parameter index.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         ``processParamIndex = 0`` means no process parameters.
@@ -702,7 +702,7 @@ def _resolve_process_param_sets(
     """Resolve and deduplicate process parameter sets.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         - No process means no parameter sets.
@@ -779,7 +779,7 @@ def _used_process_source_indexes(points: pd.DataFrame) -> list[int]:
     """Return sorted non-zero process parameter indexes used by points.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         ``0`` means no process parameter set and is not transferred.
@@ -813,7 +813,7 @@ def _process_param_rows_by_index(
     """Build a mapping from source process index to process parameter row.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         Source indexes are stored in ``process_params.process_param_index``.
@@ -851,7 +851,7 @@ def _build_process_param_slots(
     """Build exactly ten process parameter slots.
 
     ABB Route:
-        N/A — local resolution only.
+        N/A - local resolution only.
 
     ABB Constraints:
         RAPID ``processParams`` second dimension contains exactly 10 slots.
@@ -908,7 +908,7 @@ def _to_float(value: object, *, name: str) -> float:
     """Convert a non-missing value to float.
 
     ABB Route:
-        N/A — local conversion helper.
+        N/A - local conversion helper.
 
     ABB Constraints:
         Missing values must be rejected before RAPID serialization.
@@ -941,7 +941,7 @@ def _to_int(value: object, *, name: str) -> int:
     """Convert a non-missing value to int.
 
     ABB Route:
-        N/A — local conversion helper.
+        N/A - local conversion helper.
 
     ABB Constraints:
         Missing values must be rejected before RAPID serialization.
@@ -974,7 +974,7 @@ def _is_missing(value: object) -> bool:
     """Return whether a cell value should be considered missing.
 
     ABB Route:
-        N/A — local helper.
+        N/A - local helper.
 
     ABB Constraints:
         Pandas missing values and blank strings are treated as absent fields.
@@ -1007,7 +1007,7 @@ def move_type_code_to_name(move_type: int) -> str:
     """Return a human-readable movement type name.
 
     ABB Route:
-        N/A — local helper.
+        N/A - local helper.
 
     ABB Constraints:
         Only TrajCenter v2 movement codes are supported.

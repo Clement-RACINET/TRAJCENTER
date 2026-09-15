@@ -25,7 +25,7 @@ class DummyConverter(BaseConverter):
         """Build a minimal trajectory from a dummy source path.
 
         ABB Route:
-            N/A — test-only local converter.
+            N/A - test-only local converter.
 
         ABB Constraints:
             No ABB controller access.

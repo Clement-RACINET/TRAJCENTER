@@ -221,7 +221,7 @@ def _write_parquet_table(
     """Write a PyArrow table to an in-memory Parquet buffer.
 
     ABB Route:
-        N/A — local ``.trajcenter`` archive serialization.
+        N/A - local ``.trajcenter`` archive serialization.
 
     ABB Constraints:
         The RWS inactive-axis sentinel ``9E+9`` is never written to the
@@ -252,7 +252,7 @@ def _read_parquet_table(source: io.BytesIO) -> pd.DataFrame:
     """Read a PyArrow Parquet buffer as a pandas DataFrame.
 
     ABB Route:
-        N/A — local ``.trajcenter`` archive deserialization.
+        N/A - local ``.trajcenter`` archive deserialization.
 
     ABB Constraints:
         The ``.trajcenter`` archive must not contain ``9E+9`` sentinel
@@ -318,7 +318,7 @@ class TrajectoryProcess(BaseModel):
         """Validate process parameter metadata.
 
         ABB Route:
-            N/A — local metadata validation.
+            N/A - local metadata validation.
 
         ABB Constraints:
             No ABB controller access.
@@ -379,7 +379,7 @@ class TrajectoryMeta(BaseModel):
         """Verify that external axis keys belong to ``eax_a``…``eax_f``.
 
         ABB Route:
-            N/A — local metadata validation.
+            N/A - local metadata validation.
 
         ABB Constraints:
             No ABB controller access.
@@ -441,7 +441,7 @@ class Trajectory:
         """Initialise a trajectory with schema validation.
 
         ABB Route:
-            N/A — local trajectory construction.
+            N/A - local trajectory construction.
 
         ABB Constraints:
             No ABB controller access.
@@ -476,7 +476,7 @@ class Trajectory:
         """Validate mandatory point columns and cast known dtypes.
 
         ABB Route:
-            N/A — local DataFrame validation.
+            N/A - local DataFrame validation.
 
         ABB Constraints:
             No ABB controller access.
@@ -546,7 +546,7 @@ class Trajectory:
         """Validate and cast process parameter table.
 
         ABB Route:
-            N/A — local process parameter validation.
+            N/A - local process parameter validation.
 
         ABB Constraints:
             No ABB controller access.
@@ -622,7 +622,7 @@ class Trajectory:
         """Validate consistency between metadata, points and process params.
 
         ABB Route:
-            N/A — local trajectory validation.
+            N/A - local trajectory validation.
 
         ABB Constraints:
             A non-zero process type means the process is active and must
@@ -770,7 +770,7 @@ class Trajectory:
         """Save the trajectory to a ``.trajcenter`` archive.
 
         ABB Route:
-            N/A — local ``.trajcenter`` archive write.
+            N/A - local ``.trajcenter`` archive write.
 
         ABB Constraints:
             The inactive external-axis sentinel ``9E+9`` must not be
@@ -818,7 +818,7 @@ class Trajectory:
         """Load a trajectory from a ``.trajcenter`` archive.
 
         ABB Route:
-            N/A — local ``.trajcenter`` archive read.
+            N/A - local ``.trajcenter`` archive read.
 
         ABB Constraints:
             No ABB controller access.
@@ -848,7 +848,7 @@ class Trajectory:
             missing_entries = _REQUIRED_ZIP_ENTRIES - names
             if missing_entries:
                 raise ValueError(
-                    "Invalid .trajcenter archive — missing entries "
+                    "Invalid .trajcenter archive - missing entries "
                     f"{sorted(missing_entries)}: {src}"
                 )
 

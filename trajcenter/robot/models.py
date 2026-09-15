@@ -11,7 +11,7 @@ The goal is to keep pandas DataFrames and local .trajcenter archive details out
 of the writer. The writer only receives already validated and resolved payloads.
 
 ABB Route:
-    N/A — local data models only.
+    N/A - local data models only.
 
 ABB Constraints:
     - RAPID arrays are one-based.
@@ -177,7 +177,7 @@ class RobotContext:
         """Return ``tool_name -> RAPID base-1 index`` mapping.
 
         ABB Route:
-            N/A — local lookup.
+            N/A - local lookup.
 
         ABB Constraints:
             RAPID array indexes are one-based.
@@ -199,7 +199,7 @@ class RobotContext:
         """Return ``wobj_name -> RAPID base-1 index`` mapping.
 
         ABB Route:
-            N/A — local lookup.
+            N/A - local lookup.
 
         ABB Constraints:
             RAPID array indexes are one-based.
@@ -221,7 +221,7 @@ class RobotContext:
         """Return process ids declared by the robot catalog.
 
         ABB Route:
-            N/A — local lookup.
+            N/A - local lookup.
 
         ABB Constraints:
             The robot catalog is authoritative.
@@ -378,7 +378,7 @@ class ResolvedProcessParamSet:
         """Validate process parameter set shape.
 
         ABB Route:
-            N/A — local validation.
+            N/A - local validation.
 
         ABB Constraints:
             RAPID second dimension is fixed to 10.
@@ -497,7 +497,7 @@ class ResolvedTrajectory:
         """Return number of resolved points.
 
         ABB Route:
-            N/A — local property.
+            N/A - local property.
 
         ABB Constraints:
             This value is written to ``nbLoadedTrajPoints``.

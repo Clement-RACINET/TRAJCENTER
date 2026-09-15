@@ -6,7 +6,7 @@ transfer industrial trajectories to ABB RobotWare 6.x robots through
 **ABB Robot Web Services**.
 
 > Developed at LCFC — ENSAM
-> Main authors: Josselin SCHUMAKER & Clément RACINET
+> Main authors: Josselin Schumacker & Clément RACINET
 > Target robot: ABB RobotWare 6.x
 > Transport layer: ABB Robot Web Services only
 > Version: 2.0

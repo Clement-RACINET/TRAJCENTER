@@ -43,7 +43,7 @@ def _empty_process_params() -> ProcessParamTuple:
     """Build ten empty process parameter slots.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         RAPID ``processParams`` second dimension contains exactly ten slots.
@@ -79,7 +79,7 @@ def _defaults() -> RobotDefaults:
     """Build enabled robot defaults for tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         No controller access is performed.
@@ -114,7 +114,7 @@ def _robtarget() -> ResolvedRobTarget:
     """Build a resolved robtarget for tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         External axes are represented by ``None`` before RWS serialization.
@@ -151,7 +151,7 @@ def _point() -> ResolvedPoint:
     """Build a resolved point for tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         Indexes are already RAPID base-1 indexes.

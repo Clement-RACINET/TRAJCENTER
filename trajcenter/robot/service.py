@@ -51,10 +51,15 @@ from trajcenter.robot.constants import (
     MAX_TRAJ,
     TRAJCENTER_MODULE,
 )
+from trajcenter.robot.errors.translate import from_rws_exception
 from trajcenter.robot.models import ResolvedTrajectory
 from trajcenter.robot.reader import read_robot_context, read_selected_traj_index
 from trajcenter.robot.resolver import resolve_trajectory
-from trajcenter.robot.writer import write_resolved_trajectory, write_store_metadata
+from trajcenter.robot.writer import (
+    write_resolved_trajectory,
+    write_store_metadata,
+    write_transfer_failure,
+)
 from trajcenter.store.local import scan_trajectory_store
 from trajcenter.store.metadata import store_entries_to_metadata
 from trajcenter.store.models import TrajectoryStoreEntry
@@ -144,7 +149,7 @@ def get_store_entry_by_selected_index(
     """Return the local store entry matching ``selectedTrajIndex``.
 
     ABB Route:
-        N/A — local store lookup.
+        N/A - local store lookup.
 
     ABB Constraints:
         ``selectedTrajIndex`` is a RAPID base-1 index. ``0`` means no selected
@@ -237,33 +242,86 @@ async def transfer_selected_trajectory(
 
             resolved = await transfer_selected_trajectory(client, entries)
     """
-    selected_index = await read_selected_traj_index(
-        client,
-        task=task,
-        module=module,
-    )
-    entry = get_store_entry_by_selected_index(entries, selected_index)
+    try:
+        selected_index = await read_selected_traj_index(
+            client,
+            task=task,
+            module=module,
+        )
+        entry = get_store_entry_by_selected_index(entries, selected_index)
 
-    logger.info(
-        "Selected trajectory index %d maps to local archive %s",
-        selected_index,
-        entry.path,
-    )
+        logger.info(
+            "Selected trajectory index %d maps to local archive %s",
+            selected_index,
+            entry.path,
+        )
 
-    trajectory = _load_store_entry_trajectory(entry)
-    context = await read_robot_context(client, task=task)
-    resolved = resolve_trajectory(trajectory, context)
+        trajectory = _load_store_entry_trajectory(entry)
 
-    await write_resolved_trajectory(
-        client,
-        resolved,
-        task=task,
-        module=module,
-        on_progress=on_progress,
-        mastership_retries=mastership_retries,
-        retry_delay_s=retry_delay_s,
-        progress_step_percent=progress_step_percent,
-    )
+        if trajectory.meta.name != entry.name:
+            raise ValueError(
+                "Selected trajectory name changed since metadata refresh: "
+                f"catalog={entry.name!r}, "
+                f"archive={trajectory.meta.name!r}. "
+                "Refresh store metadata before retrying the transfer."
+            )
+
+        if trajectory.point_count != entry.point_count:
+            raise ValueError(
+                "Selected trajectory point count changed since metadata refresh: "
+                f"catalog={entry.point_count}, "
+                f"archive={trajectory.point_count}. "
+                "Refresh store metadata before retrying the transfer."
+            )
+
+        archive_process_type = trajectory.meta.process.process_type
+
+        if archive_process_type != entry.process_type:
+            raise ValueError(
+                "Selected trajectory process type changed since metadata refresh: "
+                f"catalog={entry.process_type}, "
+                f"archive={archive_process_type}. "
+                "Refresh store metadata before retrying the transfer."
+            )
+
+        context = await read_robot_context(
+            client,
+            task=task,
+            module=module,
+        )
+
+        resolved = resolve_trajectory(trajectory, context)
+
+        await write_resolved_trajectory(
+            client,
+            resolved,
+            task=task,
+            module=module,
+            on_progress=on_progress,
+            mastership_retries=mastership_retries,
+            retry_delay_s=retry_delay_s,
+            progress_step_percent=progress_step_percent,
+        )
+
+    except Exception as exc:
+        logger.exception("Selected trajectory transfer failed")
+
+        protocol_error = from_rws_exception(exc)
+
+        try:
+            await write_transfer_failure(
+                client,
+                str(protocol_error),
+                task=task,
+                module=module,
+                error_code=protocol_error.code,
+                mastership_retries=mastership_retries,
+                retry_delay_s=retry_delay_s,
+            )
+        except Exception:
+            logger.exception("Could not publish the trajectory transfer failure state")
+
+        raise
 
     logger.info(
         "Selected trajectory '%s' transferred successfully from %s",
@@ -277,7 +335,7 @@ def _load_store_entry_trajectory(entry: TrajectoryStoreEntry) -> Trajectory:
     """Load the ``.trajcenter`` archive referenced by a store entry.
 
     ABB Route:
-        N/A — local archive loading.
+        N/A - local archive loading.
 
     ABB Constraints:
         The inactive external-axis sentinel ``9E+9`` is not injected while

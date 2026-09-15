@@ -19,7 +19,7 @@ def _exporter(options: ExportOptions | None = None) -> ExcelExporter:
     """Instantiate an Excel exporter for testing.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.

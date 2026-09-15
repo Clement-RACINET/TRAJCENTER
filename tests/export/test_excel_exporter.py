@@ -25,7 +25,7 @@ def _export(
     """Export a trajectory to Excel.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -53,7 +53,7 @@ def _sheets(path: Path) -> dict[str, pd.DataFrame]:
     """Read all sheets from an Excel workbook.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.

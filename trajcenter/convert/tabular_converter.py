@@ -61,7 +61,7 @@ work-object references are now carried directly by the point columns
 The ``process_params`` sheet is reserved for process parameter sets.
 
 ABB Route:
-    N/A — local file conversion, no RWS route.
+    N/A - local file conversion, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -163,7 +163,7 @@ class _TabularConverter(BaseConverter):
             :class:`~trajcenter.convert.defaults.ConversionDefaults`.
 
     ABB Route:
-        N/A — local tabular conversion.
+        N/A - local tabular conversion.
 
     ABB Constraints:
         No ABB controller access.
@@ -258,7 +258,7 @@ class _TabularConverter(BaseConverter):
         """Convert a source file to a single trajectory.
 
         ABB Route:
-            N/A — local file conversion.
+            N/A - local file conversion.
 
         ABB Constraints:
             No RAPID write and no mastership acquisition.
@@ -313,7 +313,7 @@ class _TabularConverter(BaseConverter):
         """Convert all trajectory sheets from a source file.
 
         ABB Route:
-            N/A — local file conversion.
+            N/A - local file conversion.
 
         ABB Constraints:
             No RAPID write and no mastership acquisition.
@@ -369,7 +369,7 @@ class _TabularConverter(BaseConverter):
         by TrajCenter.
 
         ABB Route:
-            N/A — local DataFrame conversion.
+            N/A - local DataFrame conversion.
 
         ABB Constraints:
             No RAPID write and no mastership acquisition.
@@ -467,7 +467,7 @@ class _TabularConverter(BaseConverter):
         """Normalise imported RAPID-like tabular values to v2 storage.
 
         ABB Route:
-            N/A — local DataFrame transformation.
+            N/A - local DataFrame transformation.
 
         ABB Constraints:
             RAPID literals are parsed but no controller access is made.
@@ -690,7 +690,7 @@ class _TabularConverter(BaseConverter):
         """Parse process type metadata.
 
         ABB Route:
-            N/A — local metadata parsing.
+            N/A - local metadata parsing.
 
         ABB Constraints:
             No ABB controller access.
@@ -724,7 +724,7 @@ class _TabularConverter(BaseConverter):
         """Parse process parameter names metadata.
 
         ABB Route:
-            N/A — local metadata parsing.
+            N/A - local metadata parsing.
 
         ABB Constraints:
             No ABB controller access.
@@ -758,7 +758,7 @@ class _TabularConverter(BaseConverter):
         """Convert a metadata cell to a clean string.
 
         ABB Route:
-            N/A — local metadata parsing.
+            N/A - local metadata parsing.
 
         ABB Constraints:
             No ABB controller access.
@@ -832,7 +832,7 @@ class _TabularConverter(BaseConverter):
         ``meta.process.process_param_names``.
 
         ABB Route:
-            N/A — local process parameter extraction.
+            N/A - local process parameter extraction.
 
         ABB Constraints:
             No ABB controller access.

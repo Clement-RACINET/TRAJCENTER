@@ -25,7 +25,7 @@ def _write_csv(path: Path, content: str) -> Path:
     """Write CSV content to disk.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -57,7 +57,7 @@ class _ReservedOnlyConverter(_TabularConverter):
         """Return dummy CSV source format.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             No ABB controller access.
@@ -78,7 +78,7 @@ class _ReservedOnlyConverter(_TabularConverter):
         """Return only reserved sheets.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             No ABB controller access.

@@ -32,7 +32,7 @@ def print_trajectory_summary(traj: Trajectory) -> None:
     """Print a compact Excel conversion summary.
 
     ABB Route:
-        N/A — local Excel conversion demonstration.
+        N/A - local Excel conversion demonstration.
 
     ABB Constraints:
         No ABB controller access.
@@ -62,7 +62,7 @@ def save_and_validate(traj: Trajectory, output_dir: Path) -> Path:
     """Save a trajectory and validate the ``.trajcenter`` roundtrip.
 
     ABB Route:
-        N/A — local archive validation.
+        N/A - local archive validation.
 
     ABB Constraints:
         No ABB controller access.
@@ -95,7 +95,7 @@ def main() -> None:
     """Run Excel conversion examples.
 
     ABB Route:
-        N/A — local Excel conversion demonstration.
+        N/A - local Excel conversion demonstration.
 
     ABB Constraints:
         No ABB controller access.
@@ -126,7 +126,7 @@ def main() -> None:
     converter = ExcelConverter()
 
     print("=" * 72)
-    print("Case 1 — Excel single-sheet conversion")
+    print("Case 1 - Excel single-sheet conversion")
     print("=" * 72)
 
     single = converter.convert(SOURCE_SINGLE)
@@ -136,7 +136,7 @@ def main() -> None:
     print()
 
     print("=" * 72)
-    print("Case 2 — Excel multi-sheet conversion")
+    print("Case 2 - Excel multi-sheet conversion")
     print("=" * 72)
 
     trajectories = converter.convert_all(SOURCE_MULTI)
@@ -149,7 +149,7 @@ def main() -> None:
         print(f"Saved and validated → {path}")
         print()
 
-    print("OK — Excel conversion scenarios validated.")
+    print("OK - Excel conversion scenarios validated.")
 
 
 if __name__ == "__main__":

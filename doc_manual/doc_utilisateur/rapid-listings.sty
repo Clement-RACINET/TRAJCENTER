@@ -1,0 +1,179 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{rapid-listings}
+  [2026/09/11 v0.3 Coloration syntaxique ABB RAPID]
+
+\RequirePackage{xcolor}
+\RequirePackage{listings}
+
+% ==================================================================
+% Palette sombre
+% ==================================================================
+
+\definecolor{rapidDarkBackground}{HTML}{1E1E1E}
+\definecolor{rapidDarkText}{HTML}{F2F2F2}
+\definecolor{rapidDarkKeyword}{HTML}{FF5CE1}
+\definecolor{rapidDarkType}{HTML}{4FC1FF}
+\definecolor{rapidDarkInstruction}{HTML}{FFD866}
+\definecolor{rapidDarkLiteral}{HTML}{FF5CE1}
+\definecolor{rapidDarkString}{HTML}{FF8A65}
+\definecolor{rapidDarkComment}{HTML}{6AAB5E}
+\definecolor{rapidDarkNumber}{HTML}{4FC1FF}
+\definecolor{rapidDarkFrame}{HTML}{404040}
+\definecolor{rapidDarkLineNumber}{HTML}{858585}
+
+% ==================================================================
+% Palette claire
+% ==================================================================
+
+\definecolor{rapidLightBackground}{HTML}{FFFFFF}
+\definecolor{rapidLightText}{HTML}{101010}
+\definecolor{rapidLightKeyword}{HTML}{D000D0}
+\definecolor{rapidLightType}{HTML}{0066CC}
+\definecolor{rapidLightInstruction}{HTML}{9A6700}
+\definecolor{rapidLightLiteral}{HTML}{D000D0}
+\definecolor{rapidLightString}{HTML}{D00000}
+\definecolor{rapidLightComment}{HTML}{178000}
+\definecolor{rapidLightNumber}{HTML}{0077AA}
+\definecolor{rapidLightFrame}{HTML}{D0D0D0}
+\definecolor{rapidLightLineNumber}{HTML}{808080}
+
+% ==================================================================
+% Définition du langage ABB RAPID
+%
+% Ne pas ajouter de ligne vide à l'intérieur des accolades.
+% ==================================================================
+
+\lstdefinelanguage{RAPID}{
+  sensitive=false,
+  morekeywords=[1]{
+    MODULE,ENDMODULE,
+    PROC,ENDPROC,
+    FUNC,ENDFUNC,
+    TRAP,ENDTRAP,
+    RECORD,ENDRECORD,
+    VAR,PERS,CONST,TASK,LOCAL,
+    IF,THEN,ELSEIF,ELSE,ENDIF,
+    FOR,FROM,TO,STEP,DO,ENDFOR,
+    WHILE,ENDWHILE,
+    TEST,CASE,DEFAULT,ENDTEST,
+    RETURN,RAISE,ERROR,UNDO,
+    EXIT,GOTO,
+    CONNECT,WITH,
+    ISAVE,IRESTORE,
+    BACKWARD
+  },
+  morekeywords=[2]{
+    num,dnum,bool,string,
+    byte,short,
+    robtarget,jointtarget,
+    tooldata,wobjdata,
+    speeddata,zonedata,
+    pose,orient,confdata,
+    extjoint,loaddata,
+    clock,
+    signaldi,signaldo,
+    signalgi,signalgo,
+    signalai,signalao,
+    intnum,errnum
+  },
+  morekeywords=[3]{
+    MoveJ,MoveL,MoveC,MoveAbsJ,
+    SearchL,SearchC,
+    WaitTime,WaitDI,WaitDO,WaitUntil,
+    Set,Reset,SetDO,SetGO,
+    TPWrite,TPReadFK,TPReadNum,
+    Stop,ExitCycle,
+    Offs,RelTool,CRobT,CJointT,
+    ConfJ,ConfL,
+    AccSet,VelSet,
+    ActUnit,DeactUnit,
+    ClearIOBuff,
+    Open,Close,Write,ReadStr,
+    StartMove,StopMove
+  },
+  morekeywords=[4]{
+    TRUE,FALSE,
+    fine,
+    empty,
+    ERR_NOERROR,
+    ERRNO
+  },
+  morecomment=[l]{!},
+  morestring=[b]",
+  showstringspaces=false
+}
+
+% ==================================================================
+% Réglages communs
+% ==================================================================
+
+\lstdefinestyle{rapid-base}{
+  language=RAPID,
+  basicstyle=\ttfamily\small,
+  numbers=none,
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=false,
+  keepspaces=true,
+  columns=fullflexible,
+  tabsize=4,
+  showstringspaces=false,
+  upquote=true,
+  captionpos=b,
+  aboveskip=0.8em,
+  belowskip=0.8em,
+  xleftmargin=0pt,
+  xrightmargin=0pt
+}
+
+% ==================================================================
+% Thème sombre
+% ==================================================================
+
+\lstdefinestyle{rapid-dark}{
+  style=rapid-base,
+  basicstyle=\ttfamily\small\color{rapidDarkText},
+  keywordstyle=[1]\color{rapidDarkKeyword},
+  keywordstyle=[2]\color{rapidDarkType},
+  keywordstyle=[3]\color{rapidDarkInstruction},
+  keywordstyle=[4]\color{rapidDarkLiteral},
+  commentstyle=\color{rapidDarkComment},
+  stringstyle=\color{rapidDarkString},
+  numberstyle=\scriptsize\color{rapidDarkLineNumber},
+  backgroundcolor=\color{rapidDarkBackground},
+  rulecolor=\color{rapidDarkFrame},
+  frame=single,
+  framerule=0.3pt,
+  framesep=6pt
+}
+
+% ==================================================================
+% Thème clair
+% ==================================================================
+
+\lstdefinestyle{rapid-light}{
+  style=rapid-base,
+  basicstyle=\ttfamily\small\color{rapidLightText},
+  keywordstyle=[1]\color{rapidLightKeyword},
+  keywordstyle=[2]\color{rapidLightType},
+  keywordstyle=[3]\color{rapidLightInstruction},
+  keywordstyle=[4]\color{rapidLightLiteral},
+  commentstyle=\color{rapidLightComment},
+  stringstyle=\color{rapidLightString},
+  numberstyle=\scriptsize\color{rapidLightLineNumber},
+  backgroundcolor=\color{rapidLightBackground},
+  rulecolor=\color{rapidLightFrame},
+  frame=single,
+  framerule=0.3pt,
+  framesep=6pt
+}
+
+% ==================================================================
+% Alias par défaut : thème clair
+% ==================================================================
+
+\lstdefinestyle{rapid}{
+  style=rapid-light
+}
+
+\endinput

@@ -30,7 +30,7 @@ def _minimal_points() -> pd.DataFrame:
     """Build a minimal valid points DataFrame.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -63,7 +63,7 @@ def _process_meta() -> TrajectoryMeta:
     """Build process metadata for validation tests.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -97,7 +97,7 @@ def _process_points() -> pd.DataFrame:
     """Build valid process-aware points.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -122,7 +122,7 @@ def _process_params() -> pd.DataFrame:
     """Build valid process parameter table.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.

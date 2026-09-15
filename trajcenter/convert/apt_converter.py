@@ -29,7 +29,7 @@ No legacy ``tools`` / ``wobjs`` tables are produced, and no
 ``tool_index`` / ``wobj_index`` columns are written.
 
 ABB Route:
-    N/A — local file conversion, no RWS route.
+    N/A - local file conversion, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -114,7 +114,7 @@ def _tool_vector_to_quaternion(
     """Convert an APT tool vector to an ABB scalar-first quaternion.
 
     ABB Route:
-        N/A — local geometric conversion.
+        N/A - local geometric conversion.
 
     ABB Constraints:
         The returned quaternion follows ABB RAPID convention
@@ -168,7 +168,7 @@ def _parse_catia_matrix(lines: Sequence[str]) -> np.ndarray | None:
     """Extract a CATIA 3x4 transformation matrix from APT comments.
 
     ABB Route:
-        N/A — local file parsing.
+        N/A - local file parsing.
 
     ABB Constraints:
         No ABB controller access.
@@ -224,7 +224,7 @@ def _apply_transform(
     """Apply a homogeneous CATIA transform to APT points.
 
     ABB Route:
-        N/A — local geometric conversion.
+        N/A - local geometric conversion.
 
     ABB Constraints:
         Translation is applied only to positions. Tool vectors receive
@@ -281,7 +281,7 @@ def _normalise_tprint_tool_name(value: str) -> str:
     and at least one whitespace before a non-empty remaining name.
 
     ABB Route:
-        N/A — local APT parsing.
+        N/A - local APT parsing.
 
     ABB Constraints:
         No ABB controller access.
@@ -311,7 +311,7 @@ class AptConverter(BaseConverter):
     """Converter for CATIA APT source files.
 
     ABB Route:
-        N/A — local file parsing.
+        N/A - local file parsing.
 
     ABB Constraints:
         No ABB controller access.
@@ -364,7 +364,7 @@ class AptConverter(BaseConverter):
         """Convert an APT source file to a TrajCenter trajectory.
 
         ABB Route:
-            N/A — local file conversion.
+            N/A - local file conversion.
 
         ABB Constraints:
             No mastership, no RAPID read/write.
@@ -399,7 +399,7 @@ class AptConverter(BaseConverter):
             if catia_matrix is None:
                 warnings.warn(
                     f"{source.name}: apply_catia_transform=True but no CATIA "
-                    "matrix found — raw coordinates preserved.",
+                    "matrix found - raw coordinates preserved.",
                     UserWarning,
                     stacklevel=2,
                 )
@@ -458,7 +458,7 @@ class AptConverter(BaseConverter):
         """Extract raw GOTO points and the optional TPRINT tool name.
 
         ABB Route:
-            N/A — local APT parsing.
+            N/A - local APT parsing.
 
         ABB Constraints:
             No ABB controller access.

@@ -42,7 +42,7 @@ def print_summary(title: str, traj: Trajectory) -> None:
     """Print a compact trajectory summary.
 
     ABB Route:
-        N/A — local conversion demonstration.
+        N/A - local conversion demonstration.
 
     ABB Constraints:
         No ABB controller access. No RAPID variable is read or written.
@@ -101,7 +101,7 @@ def assert_valid_roundtrip(traj: Trajectory, path: Path) -> None:
     """Validate save/load roundtrip for a trajectory.
 
     ABB Route:
-        N/A — local archive validation.
+        N/A - local archive validation.
 
     ABB Constraints:
         No ABB controller access.
@@ -135,7 +135,7 @@ def main() -> None:
     """Run APT conversion demonstration scenarios.
 
     ABB Route:
-        N/A — local APT parsing demonstration.
+        N/A - local APT parsing demonstration.
 
     ABB Constraints:
         No ABB controller access. Enrichment values are local file values
@@ -163,14 +163,14 @@ def main() -> None:
         raise FileNotFoundError(f"APT source not found: {SOURCE}")
 
     standard = AptConverter().convert(SOURCE)
-    print_summary("Case 1 — APT standard faithful conversion", standard)
+    print_summary("Case 1 - APT standard faithful conversion", standard)
     assert_valid_roundtrip(
         standard,
         OUTPUT_DIR / f"{standard.meta.name}.trajcenter",
     )
 
     transformed = AptConverter(apply_catia_transform=True).convert(SOURCE)
-    print_summary("Case 2 — APT with CATIA transform", transformed)
+    print_summary("Case 2 - APT with CATIA transform", transformed)
     assert_valid_roundtrip(
         transformed,
         OUTPUT_DIR / f"{transformed.meta.name}_transformed.trajcenter",
@@ -205,7 +205,7 @@ def main() -> None:
     )
 
     editable = AptConverter(defaults=editable_defaults).convert(SOURCE)
-    print_summary("Case 3 — APT with explicit editable enrichment", editable)
+    print_summary("Case 3 - APT with explicit editable enrichment", editable)
     assert_valid_roundtrip(
         editable,
         OUTPUT_DIR / f"{editable.meta.name}_editable.trajcenter",
@@ -223,7 +223,7 @@ def main() -> None:
     print("  ConversionDefaults.autocomplete_columns.")
     print()
 
-    print("OK — APT conversion scenarios validated.")
+    print("OK - APT conversion scenarios validated.")
 
 
 if __name__ == "__main__":

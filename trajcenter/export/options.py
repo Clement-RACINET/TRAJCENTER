@@ -15,7 +15,7 @@ class ExportOptions:
     """Configuration options for tabular exporters.
 
     ABB Route:
-        N/A — local file export, no RWS route.
+        N/A - local file export, no RWS route.
 
     ABB Constraints:
         No mastership is acquired. No RAPID variable is read or written.

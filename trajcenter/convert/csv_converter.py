@@ -57,7 +57,7 @@ The default encoding is ``"utf-8-sig"``, which supports UTF-8 files with
 or without a BOM. It can be overridden via the ``encoding`` parameter.
 
 ABB Route:
-    N/A — local CSV file conversion, no RWS route.
+    N/A - local CSV file conversion, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -102,7 +102,7 @@ def _detect_separator(source: Path, encoding: str = "utf-8-sig") -> str:
     separator, comma is used.
 
     ABB Route:
-        N/A — local file inspection.
+        N/A - local file inspection.
 
     ABB Constraints:
         No ABB controller access.
@@ -157,7 +157,7 @@ class CsvConverter(_TabularConverter):
     optional sidecar loading.
 
     ABB Route:
-        N/A — local CSV file conversion.
+        N/A - local CSV file conversion.
 
     ABB Constraints:
         No ABB controller access.
@@ -250,7 +250,7 @@ class CsvConverter(_TabularConverter):
         configured, and then reused for sidecars.
 
         ABB Route:
-            N/A — local CSV file read.
+            N/A - local CSV file read.
 
         ABB Constraints:
             No ABB controller access.

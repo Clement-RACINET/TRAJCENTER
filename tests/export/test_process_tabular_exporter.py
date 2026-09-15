@@ -38,7 +38,7 @@ def _make_process_trajectory() -> Trajectory:
     """Build a valid process trajectory for exporter tests.
 
     ABB Route:
-        N/A — test fixture helper.
+        N/A - test fixture helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -100,7 +100,7 @@ def _meta_as_dict(meta_df: pd.DataFrame) -> dict[str, str]:
     """Convert an exported key/value metadata DataFrame to a dictionary.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.

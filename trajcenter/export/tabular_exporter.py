@@ -51,7 +51,7 @@ default. A ``UserWarning`` is emitted so the user knows that these
 columns were seen but intentionally ignored.
 
 ABB Route:
-    N/A — local file export, no RWS route.
+    N/A - local file export, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -147,7 +147,7 @@ class _TabularExporter(BaseExporter):
     """Abstract exporter for tabular formats.
 
     ABB Route:
-        N/A — local file export.
+        N/A - local file export.
 
     ABB Constraints:
         No ABB controller access.
@@ -198,7 +198,7 @@ class _TabularExporter(BaseExporter):
         """Write output file or files from prepared DataFrames.
 
         ABB Route:
-            N/A — local file write.
+            N/A - local file write.
 
         ABB Constraints:
             No ABB controller access.
@@ -235,7 +235,7 @@ class _TabularExporter(BaseExporter):
         """Export a trajectory to a tabular file.
 
         ABB Route:
-            N/A — local file export.
+            N/A - local file export.
 
         ABB Constraints:
             No ABB controller access.
@@ -279,7 +279,7 @@ class _TabularExporter(BaseExporter):
         """Build the points DataFrame ready for export.
 
         ABB Route:
-            N/A — local DataFrame transformation.
+            N/A - local DataFrame transformation.
 
         ABB Constraints:
             No ABB controller access.
@@ -422,7 +422,7 @@ class _TabularExporter(BaseExporter):
         """Serialise trajectory metadata to a key/value DataFrame.
 
         ABB Route:
-            N/A — local metadata serialisation.
+            N/A - local metadata serialisation.
 
         ABB Constraints:
             No ABB controller access.

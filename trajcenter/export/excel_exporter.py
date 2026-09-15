@@ -17,7 +17,7 @@ work-object names are exported inline through ``tool_name`` and
 ``wobj_name`` when these columns exist in ``trajectory.points``.
 
 ABB Route:
-    N/A — local Excel export, no RWS route.
+    N/A - local Excel export, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -46,7 +46,7 @@ class ExcelExporter(_TabularExporter):
     """Export a trajectory to an Excel workbook.
 
     ABB Route:
-        N/A — local Excel export.
+        N/A - local Excel export.
 
     ABB Constraints:
         No ABB controller access.
@@ -98,7 +98,7 @@ class ExcelExporter(_TabularExporter):
         """Write the Excel workbook.
 
         ABB Route:
-            N/A — local Excel write.
+            N/A - local Excel write.
 
         ABB Constraints:
             No ABB controller access.

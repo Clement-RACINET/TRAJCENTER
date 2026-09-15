@@ -53,7 +53,7 @@ def client() -> MagicMock:
     """Return a bare ``MagicMock`` acting as ``RWSClient``.
 
     ABB Route:
-        N/A — test fixture.
+        N/A - test fixture.
 
     ABB Constraints:
         No controller access is performed.
@@ -77,7 +77,7 @@ def _make_df(n: int = 2, with_eax_a: bool = False) -> pd.DataFrame:
     """Build a minimal valid v2 points DataFrame.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No controller access is performed.
@@ -123,7 +123,7 @@ def _make_resolved_robtarget() -> ResolvedRobTarget:
     """Build one resolved robtarget for writer tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``None`` external axes are serialized as ``9E+9`` by the writer.
@@ -160,7 +160,7 @@ def _make_resolved_point(process_param_index: int = 0) -> ResolvedPoint:
     """Build one resolved point for writer tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``process_param_index`` follows RAPID base-1 convention or ``0``.
@@ -204,7 +204,7 @@ def _make_empty_process_params() -> tuple[
     """Build exactly ten empty process parameter slots.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``trajCenterProcessParameter`` second RAPID dimension is fixed to 10.
@@ -240,7 +240,7 @@ def _make_resolved_trajectory() -> ResolvedTrajectory:
     """Build one minimal resolved trajectory for writer tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         Process parameter sets contain exactly 10 slots.
@@ -279,7 +279,7 @@ def _merged_mastership_values(mock_set: AsyncMock) -> dict[str, str]:
     """Merge ``values`` dictionaries from all mocked mastership calls.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         Preserves RAPID symbol payloads produced by batched writer calls.

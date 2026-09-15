@@ -5,9 +5,9 @@
 > **Author**: Clément RACINET
 
 One class per error code documented in ``routes/TRAJCENTER.md`` section
-12 (codes ``400001``-``504001``). Status codes ``200000``/``200001``/
-``200002`` are successes, not exceptions -- they remain plain integer
-constants in :mod:`trajcenter.robot.writer`
+12 (codes ``400001``-``504001``). Status codes ``200000``/``200001``/``200002`` 
+are successes, not exceptions -- they remain plain integer constants 
+in :mod:`trajcenter.robot.constants`
 (``STATUS_OK``/``STATUS_METADATA_REFRESHED``/``STATUS_TRAJECTORY_TRANSFERRED``).
 
 Each class only declares ``code`` and ``default_message``: all behaviour

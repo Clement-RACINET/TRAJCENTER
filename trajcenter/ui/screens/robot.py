@@ -488,5 +488,5 @@ class RobotScreen(Screen[None]):
         text = Text()
         text.append("Status: ", style="bold white")
         text.append("supervision en cours", style="bold #22C55E")
-        text.append(" — bouton Arrêter ou touche X pour stopper.", style="#F4F4F5")
+        text.append(" - bouton Arrêter ou touche X pour stopper.", style="#F4F4F5")
         return text

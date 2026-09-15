@@ -27,7 +27,7 @@ from trajcenter.convert.defaults import ConversionDefaults
 from trajcenter.core.trajectory import SourceFormat, Trajectory
 
 # ---------------------------------------------------------------------------
-# Tests — _detect_separator
+# Tests - _detect_separator
 # ---------------------------------------------------------------------------
 
 
@@ -54,7 +54,7 @@ class TestDetectSeparator:
 
 
 # ---------------------------------------------------------------------------
-# Tests — CsvConverter
+# Tests - CsvConverter
 # ---------------------------------------------------------------------------
 
 

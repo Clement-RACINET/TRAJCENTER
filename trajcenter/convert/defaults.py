@@ -22,7 +22,7 @@ the trajectory to Excel and edit process values locally, selected columns
 can be added explicitly.
 
 ABB Route:
-    N/A — local conversion configuration.
+    N/A - local conversion configuration.
 
 ABB Constraints:
     No ABB controller access. Values are not written to RAPID variables.
@@ -77,7 +77,7 @@ class ConversionDefaults(BaseModel):
         wobj_name: Default inline RAPID workobject name.
 
     ABB Route:
-        N/A — local conversion configuration.
+        N/A - local conversion configuration.
 
     ABB Constraints:
         Defaults are local file values only. No controller access is made.
@@ -133,7 +133,7 @@ class ConversionDefaults(BaseModel):
         """Validate explicitly requested autocompletion columns.
 
         ABB Route:
-            N/A — local Pydantic validation.
+            N/A - local Pydantic validation.
 
         ABB Constraints:
             External axes and RWS-only sentinels cannot be requested here.

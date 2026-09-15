@@ -4,10 +4,10 @@ TrajCenter is a Python/RAPID toolchain used to convert, store, resolve and
 transfer industrial trajectories to ABB RobotWare 6.x robots through
 **ABB Robot Web Services**.
 
-> Developed at LCFC — ENSAM  
-> Main authors: Josselin SCHUMAKER & Clément RACINET  
-> Target robot: ABB RobotWare 6.x  
-> Transport layer: ABB Robot Web Services only  
+> Developed at LCFC — ENSAM
+> Main authors: Josselin Schumacker & Clément RACINET
+> Target robot: ABB RobotWare 6.x
+> Transport layer: ABB Robot Web Services only
 > Version: 2.0
 
 ---
@@ -97,15 +97,15 @@ trajcenter_v2/
 
 ## Main Python packages
 
-| Package              | Purpose                                         |
-| -------------------- | ----------------------------------------------- |
-| `trajcenter.cli`     | Command-line interface                          |
-| `trajcenter.convert` | Conversion to `.trajcenter` archives            |
-| `trajcenter.core`    | Core `Trajectory` model                         |
-| `trajcenter.export`  | CSV / Excel export                              |
-| `trajcenter.robot`   | ABB RWS reader, resolver, writer and supervisor |
-| `trajcenter.store`   | Local `.trajcenter` store scanning and metadata |
-| `trajcenter.ui`      | Textual terminal user interface                 |
+| Package                | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| `trajcenter.cli`     | Command-line interface                           |
+| `trajcenter.convert` | Conversion to`.trajcenter` archives            |
+| `trajcenter.core`    | Core`Trajectory` model                         |
+| `trajcenter.export`  | CSV / Excel export                               |
+| `trajcenter.robot`   | ABB RWS reader, resolver, writer and supervisor  |
+| `trajcenter.store`   | Local`.trajcenter` store scanning and metadata |
+| `trajcenter.ui`      | Textual terminal user interface                  |
 
 ---
 
@@ -117,11 +117,11 @@ No direct `pip install` command is required for normal repository usage.
 
 | Environment | Purpose                                       |
 | ----------- | --------------------------------------------- |
-| `default`   | Minimal base environment                      |
-| `tui`       | Textual terminal user interface               |
-| `robot`     | ABB robot / RWS dependencies                  |
-| `full`      | TUI + ABB robot supervision                   |
-| `dev`       | Development, tests, linting and documentation |
+| `default` | Minimal base environment                      |
+| `tui`     | Textual terminal user interface               |
+| `robot`   | ABB robot / RWS dependencies                  |
+| `full`    | TUI + ABB robot supervision                   |
+| `dev`     | Development, tests, linting and documentation |
 
 ### Install the TUI environment
 
@@ -208,27 +208,27 @@ pixi run trajcenter-tui
 
 Main keyboard shortcuts:
 
-| Key             | Action                                       |
-| --------------- | -------------------------------------------- |
-| `↑` / `↓`       | Navigate in menus                            |
-| `Enter`         | Select action                                |
+| Key                 | Action                                       |
+| ------------------- | -------------------------------------------- |
+| `↑` / `↓`     | Navigate in menus                            |
+| `Enter`           | Select action                                |
 | `B` or `Escape` | Go back, depending on context                |
-| `R`             | Refresh, when available                      |
-| `S`             | Return to splash screen from home            |
-| `Q`             | Quit                                         |
-| `X`             | Stop robot supervision from the robot screen |
+| `R`               | Refresh, when available                      |
+| `S`               | Return to splash screen from home            |
+| `Q`               | Quit                                         |
+| `X`               | Stop robot supervision from the robot screen |
 
 When the home screen opens, the main menu automatically receives keyboard focus.
 
 ### Available TUI actions
 
-| Action            | Purpose                                                         |
-| ----------------- | --------------------------------------------------------------- |
-| Convert           | Convert CSV, Excel, APT/APTSOURCE or MOD files to `.trajcenter` |
-| Export            | Export `.trajcenter` archives to CSV or Excel                   |
-| Store             | Inspect local `.trajcenter` archives                            |
-| Robot supervision | Start or stop the ABB RWS supervisor                            |
-| Settings          | Display current TUI configuration                               |
+| Action            | Purpose                                                          |
+| ----------------- | ---------------------------------------------------------------- |
+| Convert           | Convert CSV, Excel, APT/APTSOURCE or MOD files to`.trajcenter` |
+| Export            | Export`.trajcenter` archives to CSV or Excel                   |
+| Store             | Inspect local`.trajcenter` archives                            |
+| Robot supervision | Start or stop the ABB RWS supervisor                             |
+| Settings          | Display current TUI configuration                                |
 
 Robot supervision is only available in an environment containing the robot
 feature, typically `full` or `dev`.
@@ -371,8 +371,8 @@ TRAJCENTER/sendTrajRequest
 
 Only `TRUE` events trigger an action.
 
-| RAPID request                | Effect                                     |
-| ---------------------------- | ------------------------------------------ |
+| RAPID request                  | Effect                                     |
+| ------------------------------ | ------------------------------------------ |
 | `refreshMetaRequest := TRUE` | Refresh the list of available trajectories |
 | `sendTrajRequest := TRUE`    | Transfer the selected trajectory to RAPID  |
 
@@ -410,12 +410,12 @@ TRAJCENTER RAPID system module
 
 Main flows:
 
-| Flow               | RAPID trigger                | Direction  | Mechanism              |
-| ------------------ | ---------------------------- | ---------- | ---------------------- |
+| Flow               | RAPID trigger                  | Direction   | Mechanism              |
+| ------------------ | ------------------------------ | ----------- | ---------------------- |
 | Refresh metadata   | `refreshMetaRequest := TRUE` | Robot → PC | RWS subscription       |
 | Send trajectory    | `sendTrajRequest := TRUE`    | Robot → PC | RWS subscription       |
-| Read robot context | PC                           | Robot → PC | RWS read               |
-| Write trajectory   | PC                           | PC → Robot | RWS write + Mastership |
+| Read robot context | PC                             | Robot → PC | RWS read               |
+| Write trajectory   | PC                             | PC → Robot | RWS write + Mastership |
 
 ---
 
@@ -497,29 +497,29 @@ points.parquet
 
 | Column | Purpose          |
 | ------ | ---------------- |
-| `x`    | ABB X position   |
-| `y`    | ABB Y position   |
-| `z`    | ABB Z position   |
-| `q1`   | ABB quaternion w |
-| `q2`   | ABB quaternion x |
-| `q3`   | ABB quaternion y |
-| `q4`   | ABB quaternion z |
+| `x`  | ABB X position   |
+| `y`  | ABB Y position   |
+| `z`  | ABB Z position   |
+| `q1` | ABB quaternion w |
+| `q2` | ABB quaternion x |
+| `q3` | ABB quaternion y |
+| `q4` | ABB quaternion z |
 
 ### Robot-related columns
 
-| Column                     | Purpose                                      |
-| -------------------------- | -------------------------------------------- |
-| `cf1`, `cf4`, `cf6`, `cfx` | ABB confdata                                 |
-| `eax_a..eax_f`             | Optional external axes                       |
-| `tcp_speed`                | TCP speed in mm/s                            |
-| `zone_type`                | ABB zone                                     |
-| `move_type`                | `MoveL`, `MoveJ`, `MoveC`                    |
-| `tool_name`                | Tool name resolved against `trajTools`       |
-| `wobj_name`                | Workobject name resolved against `trajWobjs` |
-| `readconfs`                | Whether confdata should be used              |
-| `process_type`             | Optional process type                        |
-| `process_params`           | Optional process parameters                  |
-| `process_param_index`      | Ignored on send, recomputed by the PC        |
+| Column                             | Purpose                                       |
+| ---------------------------------- | --------------------------------------------- |
+| `cf1`, `cf4`, `cf6`, `cfx` | ABB confdata                                  |
+| `eax_a..eax_f`                   | Optional external axes                        |
+| `tcp_speed`                      | TCP speed in mm/s                             |
+| `zone_type`                      | ABB zone                                      |
+| `move_type`                      | `MoveL`, `MoveJ`, `MoveC`               |
+| `tool_name`                      | Tool name resolved against`trajTools`       |
+| `wobj_name`                      | Workobject name resolved against`trajWobjs` |
+| `readconfs`                      | Whether confdata should be used               |
+| `process_type`                   | Optional process type                         |
+| `process_params`                 | Optional process parameters                   |
+| `process_param_index`            | Ignored on send, recomputed by the PC         |
 
 Important rule:
 
@@ -543,14 +543,14 @@ Before a transfer, TrajCenter reads the robot context:
 
 The resolver then builds a fully resolved trajectory:
 
-| Local value              | RAPID output                      |
-| ------------------------ | --------------------------------- |
-| `tool_name`              | base-1 `toolIndex`                |
-| `wobj_name`              | base-1 `wobjIndex`                |
-| `move_type`              | `0`, `1`, `2`                     |
-| `zone_type`              | validated ABB zone                |
-| `tcp_speed`              | `tcpSpeed`                        |
-| local process parameters | base-1 `processParamIndex` or `0` |
+| Local value              | RAPID output                         |
+| ------------------------ | ------------------------------------ |
+| `tool_name`            | base-1`toolIndex`                  |
+| `wobj_name`            | base-1`wobjIndex`                  |
+| `move_type`            | `0`, `1`, `2`                  |
+| `zone_type`            | validated ABB zone                   |
+| `tcp_speed`            | `tcpSpeed`                         |
+| local process parameters | base-1`processParamIndex` or `0` |
 
 The PC must not silently invent:
 
@@ -581,11 +581,11 @@ Convention:
 
 ## Supported movements
 
-| Code | Movement | Accepted aliases  |
-| ---: | -------- | ----------------- |
-|  `0` | `MoveL`  | `L`, `MoveL`, `0` |
-|  `1` | `MoveJ`  | `J`, `MoveJ`, `1` |
-|  `2` | `MoveC`  | `C`, `MoveC`, `2` |
+|  Code | Movement  | Accepted aliases        |
+| ----: | --------- | ----------------------- |
+| `0` | `MoveL` | `L`, `MoveL`, `0` |
+| `1` | `MoveJ` | `J`, `MoveJ`, `1` |
+| `2` | `MoveC` | `C`, `MoveC`, `2` |
 
 ### MoveC encoding
 
@@ -897,49 +897,49 @@ Expected behavior:
 
 ## Status and error codes
 
-|     Code | Meaning                             |
-| -------: | ----------------------------------- |
-| `200000` | OK                                  |
-| `200001` | Metadata refreshed                  |
-| `200002` | Trajectory transferred              |
-| `400001` | `selectedTrajIndex` out of range    |
-| `400002` | Trajectory file not found           |
-| `400003` | Invalid `.trajcenter` format        |
-| `400004` | Too many points                     |
-| `400005` | Invalid `zone_type`                 |
-| `400006` | Invalid `move_type`                 |
-| `400007` | Invalid `MoveC` pair                |
-| `400008` | Missing `tcp_speed` without default |
-| `400009` | Missing `zone_type` without default |
-| `400010` | Missing `tool_name` without default |
-| `400011` | Missing `wobj_name` without default |
-| `400012` | Unknown robot tool                  |
-| `400013` | Unknown robot workobject            |
-| `400014` | Invalid speed                       |
-| `400015` | Invalid `readConfs`                 |
-| `400016` | Invalid robtarget                   |
-| `400017` | Unknown process                     |
-| `400018` | Too many process sets               |
-| `400019` | Invalid process parameters          |
-| `401001` | RWS authentication refused          |
-| `403001` | Mastership refused                  |
-| `403002` | RWS write forbidden                 |
-| `404001` | RAPID symbol not found              |
-| `404002` | `trajTools` not found               |
-| `404003` | `trajWobjs` not found               |
-| `404004` | Trajectory store not found          |
-| `404005` | Robot default not found             |
-| `404006` | `processTypes` not found            |
-| `408001` | RWS request timeout                 |
-| `408002` | Transfer timeout                    |
-| `409001` | Transfer already running            |
-| `409002` | Incompatible robot state            |
-| `500001` | Internal client error               |
-| `500002` | Serialization error                 |
-| `500003` | Trajectory conversion error         |
-| `502001` | Invalid RWS response                |
-| `503001` | Controller unavailable              |
-| `504001` | Controller timeout                  |
+|       Code | Meaning                              |
+| ---------: | ------------------------------------ |
+| `200000` | OK                                   |
+| `200001` | Metadata refreshed                   |
+| `200002` | Trajectory transferred               |
+| `400001` | `selectedTrajIndex` out of range   |
+| `400002` | Trajectory file not found            |
+| `400003` | Invalid`.trajcenter` format        |
+| `400004` | Too many points                      |
+| `400005` | Invalid`zone_type`                 |
+| `400006` | Invalid`move_type`                 |
+| `400007` | Invalid`MoveC` pair                |
+| `400008` | Missing`tcp_speed` without default |
+| `400009` | Missing`zone_type` without default |
+| `400010` | Missing`tool_name` without default |
+| `400011` | Missing`wobj_name` without default |
+| `400012` | Unknown robot tool                   |
+| `400013` | Unknown robot workobject             |
+| `400014` | Invalid speed                        |
+| `400015` | Invalid`readConfs`                 |
+| `400016` | Invalid robtarget                    |
+| `400017` | Unknown process                      |
+| `400018` | Too many process sets                |
+| `400019` | Invalid process parameters           |
+| `401001` | RWS authentication refused           |
+| `403001` | Mastership refused                   |
+| `403002` | RWS write forbidden                  |
+| `404001` | RAPID symbol not found               |
+| `404002` | `trajTools` not found              |
+| `404003` | `trajWobjs` not found              |
+| `404004` | Trajectory store not found           |
+| `404005` | Robot default not found              |
+| `404006` | `processTypes` not found           |
+| `408001` | RWS request timeout                  |
+| `408002` | Transfer timeout                     |
+| `409001` | Transfer already running             |
+| `409002` | Incompatible robot state             |
+| `500001` | Internal client error                |
+| `500002` | Serialization error                  |
+| `500003` | Trajectory conversion error          |
+| `502001` | Invalid RWS response                 |
+| `503001` | Controller unavailable               |
+| `504001` | Controller timeout                   |
 
 ---
 

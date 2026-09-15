@@ -1,0 +1,121 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{Introduction}{5}{section*.2}%
+\contentsline {section}{\numberline {1}Démarrage rapide}{5}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Conditions préalables}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Étape 1 -- Installer TrajCenter}{6}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Étape 2 -- Créer le fichier de configuration}{6}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Étape 3 -- Préparer la configuration RAPID}{7}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Étape 4 -- Convertir une trajectoire}{8}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}Étape 5 -- Vérifier le contenu du store}{8}{subsection.1.6}%
+\contentsline {subsection}{\numberline {1.7}Étape 6 -- Démarrer le superviseur}{8}{subsection.1.7}%
+\contentsline {subsection}{\numberline {1.8}Étape 7 -- Demander la trajectoire depuis RAPID}{9}{subsection.1.8}%
+\contentsline {subsection}{\numberline {1.9}Étape 8 -- Vérifier avant l'exécution}{10}{subsection.1.9}%
+\contentsline {subsection}{\numberline {1.10}Résumé du premier cycle}{10}{subsection.1.10}%
+\contentsline {section}{\numberline {2}Installation et utilisation côté PC}{11}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Installation}{11}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Prérequis}{11}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Organisation des répertoires utilisateur}{11}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Choix de l'environnement Pixi}{12}{subsubsection.2.1.3}%
+\contentsline {subsubsection}{\numberline {2.1.4}Installation d'un poste de préparation}{12}{subsubsection.2.1.4}%
+\contentsline {subsubsection}{\numberline {2.1.5}Installation d'un PC connecté au robot}{13}{subsubsection.2.1.5}%
+\contentsline {subsubsection}{\numberline {2.1.6}Installations spécialisées}{13}{subsubsection.2.1.6}%
+\contentsline {subsubsection}{\numberline {2.1.7}Vérification de l'installation}{13}{subsubsection.2.1.7}%
+\contentsline {subsection}{\numberline {2.2}Configuration du poste et du robot ciblé}{14}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Qui configure quoi ?}{14}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Priorité des paramètres}{15}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Paramètres configurables par l'utilisateur}{15}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Création du fichier de configuration}{15}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}Paramètres qui ne doivent pas être placés dans le fichier \texttt {.env}}{16}{subsubsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.3}Conversion d'une trajectoire}{17}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Formats pris en charge}{17}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Conversion avec le CLI}{17}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Portabilité et compatibilité}{18}{subsubsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.4}Gestion du store local}{18}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Lister les trajectoires}{18}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Inspecter une trajectoire}{19}{subsubsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.5}Supervision d'un robot ABB}{19}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Prérequis de communication}{19}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Rôle du robot pendant le transfert}{20}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Lancement avec un fichier de configuration}{20}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Surcharges ponctuelles}{20}{subsubsection.2.5.4}%
+\contentsline {subsubsection}{\numberline {2.5.5}Fonctionnement de la supervision}{21}{subsubsection.2.5.5}%
+\contentsline {subsubsection}{\numberline {2.5.6}Journaux et codes de retour}{21}{subsubsection.2.5.6}%
+\contentsline {subsection}{\numberline {2.6}Export d'une trajectoire}{21}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Interface terminal}{22}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}Lancement de la TUI}{22}{subsubsection.2.7.1}%
+\contentsline {subsubsection}{\numberline {2.7.2}Écran d'accueil}{23}{subsubsection.2.7.2}%
+\contentsline {subsubsection}{\numberline {2.7.3}Menu principal}{23}{subsubsection.2.7.3}%
+\contentsline {subsubsection}{\numberline {2.7.4}Navigation au clavier}{24}{subsubsection.2.7.4}%
+\contentsline {subsubsection}{\numberline {2.7.5}Écran de conversion}{25}{subsubsection.2.7.5}%
+\contentsline {subsubsection}{\numberline {2.7.6}Écran d'export}{25}{subsubsection.2.7.6}%
+\contentsline {subsubsection}{\numberline {2.7.7}Écran du store local}{26}{subsubsection.2.7.7}%
+\contentsline {subsubsection}{\numberline {2.7.8}Écran des paramètres}{26}{subsubsection.2.7.8}%
+\contentsline {subsubsection}{\numberline {2.7.9}Écran de supervision robot}{28}{subsubsection.2.7.9}%
+\contentsline {subsection}{\numberline {2.8}Référence de la ligne de commande}{28}{subsection.2.8}%
+\contentsline {section}{\numberline {3}Utilisation côté RAPID}{29}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Installation et principe de fonctionnement}{30}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Installation du module sur le contrôleur}{30}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Principe d'une requête RAPID}{30}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Conditions nécessaires au fonctionnement}{31}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}Configuration de la cellule}{31}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Initialisation de l'API}{31}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Déclaration des tools et des workobjects}{32}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Maintenance des tools et des workobjects}{33}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Configuration des valeurs par défaut}{33}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Routine de configuration recommandée}{34}{subsubsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.3}Chargement d'une trajectoire}{35}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Rafraîchissement des métadonnées}{35}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Sélection par nom}{36}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Sélection par index}{36}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Invalidation du payload précédent}{36}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}Publication du nouveau payload}{37}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}Attente de la fin du transfert}{37}{subsubsection.3.3.6}%
+\contentsline {subsubsection}{\numberline {3.3.7}Contrôle du type de process chargé}{37}{subsubsection.3.3.7}%
+\contentsline {subsubsection}{\numberline {3.3.8}États et diagnostic du transfert}{38}{subsubsection.3.3.8}%
+\contentsline {subsection}{\numberline {3.4}Inspection des données chargées}{39}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Contenu d'un point}{39}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Bornes valides}{39}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Routines d'accès}{40}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Accès aux paramètres process}{40}{subsubsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.5}Exécution d'une trajectoire}{41}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Précautions avant l'exécution}{41}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Exécution avec l'API unifiée}{42}{subsubsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.3}Mouvements circulaires}{43}{subsubsection.3.5.3}%
+\contentsline {subsubsection}{\numberline {3.5.4}Comportement des hooks process}{44}{subsubsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.6}Exemple complet d'intégration}{44}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Procédure d'utilisation courante}{48}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Diagnostic et résolution des erreurs}{49}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Méthode générale de diagnostic}{49}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Impossible de se connecter au contrôleur}{50}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Erreur d'authentification}{50}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Mastership refusée}{51}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Store local introuvable ou vide}{52}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Trajectoire inconnue}{53}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Tool ou workobject absent}{54}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Trajectoire trop grande}{55}{subsection.4.8}%
+\contentsline {subsection}{\numberline {4.9}Requête RAPID restant à \texttt {TRUE}}{56}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}Timeout RAPID}{56}{subsection.4.10}%
+\contentsline {subsection}{\numberline {4.11}Superviseur arrêté}{57}{subsection.4.11}%
+\contentsline {subsection}{\numberline {4.12}Module ou tâche RAPID incorrects}{58}{subsection.4.12}%
+\contentsline {subsection}{\numberline {4.13}Autres erreurs de validation de trajectoire}{59}{subsection.4.13}%
+\contentsline {subsection}{\numberline {4.14}Erreurs internes, de sérialisation ou de réponse RWS}{60}{subsection.4.14}%
+\contentsline {subsection}{\numberline {4.15}Reprise après une erreur}{61}{subsection.4.15}%
+\contentsline {section}{\numberline {5}Référence technique et intégration RAPID avancée}{62}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Architecture du module système}{62}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Rôle et contenu du module}{62}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Flux fonctionnel des données}{63}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Validité du payload chargé}{65}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}Compatibilité des versions}{66}{subsubsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.2}API RAPID publique}{66}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Intégration des paramètres process}{67}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Catalogue des process exécutables}{67}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Accès contrôlé aux paramètres process}{67}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Implémentation d'un process métier}{68}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Routines internes et graphe d'appels}{69}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Principales routines de support}{69}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Moteur commun de mouvement}{69}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Graphe d'appels}{70}{subsubsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.5}Règles de modification du module}{72}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Modifications propres à la cellule}{72}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Ajout ou activation d'un process}{72}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Modifications du protocole}{72}{subsubsection.5.5.3}%

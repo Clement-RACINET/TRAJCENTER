@@ -42,15 +42,18 @@ import argparse
 import asyncio
 from pathlib import Path
 
+from trajcenter.core.logger import get_logger
 from trajcenter.robot.constants import DEFAULT_TASK, TRAJCENTER_MODULE
 from trajcenter.robot.supervisor import run_rws_subscription_supervisor_app
+
+logger = get_logger("trajcenter.scripts.run_trajcenter_supervisor")
 
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments.
 
     ABB Route:
-        N/A — local CLI parser.
+        N/A - local CLI parser.
 
     ABB Constraints:
         ``task`` and ``module`` must match the RAPID module containing
@@ -76,8 +79,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--store",
         type=Path,
-        required=True,
-        help="Directory containing local .trajcenter archives.",
+        default=None,
+        help=(
+            "Directory containing local .trajcenter archives. "
+            "Overrides TRAJCENTER_STORE_ROOT. "
+            "Fallback: trajectory_store."
+        ),
     )
     parser.add_argument(
         "--env-file",
@@ -111,26 +118,30 @@ def parse_args() -> argparse.Namespace:
         type=float,
         help="ABB RWS request timeout in seconds. Overrides RWS_TIMEOUT.",
     )
-
     parser.add_argument(
         "--task",
-        default=DEFAULT_TASK,
-        help=f"RAPID task name. Default: {DEFAULT_TASK}.",
+        default=None,
+        help=(
+            f"RAPID task name. Overrides TRAJCENTER_RWS_TASK. Fallback: {DEFAULT_TASK}."
+        ),
     )
     parser.add_argument(
         "--module",
-        default=TRAJCENTER_MODULE,
-        help=f"RAPID module name. Default: {TRAJCENTER_MODULE}.",
+        default=None,
+        help=(
+            "RAPID module name. Overrides TRAJCENTER_RWS_MODULE. "
+            f"Fallback: {TRAJCENTER_MODULE}."
+        ),
     )
     parser.add_argument(
         "--mastership-retries",
         type=int,
-        default=3,
-        help="Number of Mastership retry attempts for writer operations.",
+        default=None,
+        help=("Mastership retry attempts. Overrides TRAJCENTER_MASTERSHIP_RETRIES."),
     )
     parser.add_argument(
         "--log-level",
-        default="INFO",
+        default=None,
         choices=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
         help="Logging level.",
     )
@@ -148,18 +159,12 @@ async def async_main() -> int:
         Ctrl+C requests a graceful stop. The underlying supervisor closes the
         RWS subscription generator, which deletes the ABB subscription group.
 
-    Args:
-        None.
-
     Returns:
         Process exit code.
-
-    Example:
-        ::
-
-            raise SystemExit(asyncio.run(async_main()))
     """
     args = parse_args()
+
+    logger.info("Starting TrajCenter RWS subscription supervisor")
 
     return await run_rws_subscription_supervisor_app(
         store_root=args.store,
@@ -181,7 +186,7 @@ def main() -> None:
     """Run the synchronous script wrapper.
 
     ABB Route:
-        N/A — local process entry point.
+        N/A - local process entry point.
 
     ABB Constraints:
         The process runs one asyncio event loop.

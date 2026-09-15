@@ -6,7 +6,11 @@ Author: Clement RACINET
 
 This module runs the event-driven TrajCenter RWS supervisor. It subscribes to
 RAPID persistent request flags and dispatches high-level service operations
-without polling and without using the obsolete TCP v1 protocol.
+without periodic polling and without using the obsolete TCP v1 protocol.
+
+The underlying RWS subscription library supports multiple RobotWare 6 event
+formats. When an older controller reports a changed resource without embedding
+its value in the WebSocket event, the library performs an on-demand RWS GET.
 
 ABB Route:
     Subscription setup:
@@ -31,6 +35,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import os
 import signal
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -46,7 +51,11 @@ from abb_rws_client_python_rw6.highlevel.subscription import (
 )
 
 from trajcenter.core.logger import get_logger
-from trajcenter.robot.constants import DEFAULT_TASK, TRAJCENTER_MODULE
+from trajcenter.robot.constants import (
+    DEFAULT_MASTERSHIP_RETRIES,
+    DEFAULT_TASK,
+    TRAJCENTER_MODULE,
+)
 from trajcenter.robot.service import (
     refresh_store_metadata,
     transfer_selected_trajectory,
@@ -61,7 +70,7 @@ class RWSSupervisorConfig:
     """Configuration for the TrajCenter RWS subscription supervisor.
 
     ABB Route:
-        N/A — local supervisor configuration.
+        N/A - local supervisor configuration.
 
     ABB Constraints:
         ``task`` and ``module`` must match the RAPID module declaring
@@ -85,7 +94,7 @@ class RWSSupervisorConfig:
     store_root: Path
     task: str = DEFAULT_TASK
     module: str = TRAJCENTER_MODULE
-    mastership_retries: int = 3
+    mastership_retries: int = DEFAULT_MASTERSHIP_RETRIES
     refresh_priority: SubscriptionPriority = "1"
     transfer_priority: SubscriptionPriority = "1"
 
@@ -95,7 +104,7 @@ class RWSSupervisorState:
     """Mutable state kept by the RWS subscription supervisor.
 
     ABB Route:
-        N/A — local runtime state.
+        N/A - local runtime state.
 
     ABB Constraints:
         ``entries`` must match the last metadata order written to RAPID because
@@ -121,46 +130,44 @@ class RWSSupervisorState:
 def build_trajcenter_subscription_resources(
     config: RWSSupervisorConfig,
 ) -> tuple[SubscribedResource, SubscribedResource]:
-    """Build RWS subscription resources for TrajCenter request flags.
+    """Build the RWS resources for TrajCenter request subscriptions.
 
-    ABB Route:
-        Resource URIs are consumed by ``POST /subscription``.
+    The supervisor subscribes to the two persistent RAPID request flags:
 
-    ABB Constraints:
-        The watched RAPID variables are expected to be persistent variables:
-
-        - ``refreshMetaRequest``
-        - ``sendTrajRequest``
+    - ``refreshMetaRequest`` for metadata refresh requests;
+    - ``sendTrajRequest`` for trajectory transfer requests.
 
     Args:
-        config: Supervisor configuration.
+        config: RWS supervisor configuration containing the RAPID task,
+            module and subscription priorities.
 
     Returns:
-        Tuple containing refresh and transfer subscription resources.
-
-
-    Example:
-        ::
-
-            resources = build_trajcenter_subscription_resources(config)
+        The refresh and trajectory-transfer subscription resources.
     """
+    refresh_uri = build_rapid_pers_resource_uri(
+        config.task,
+        config.module,
+        "refreshMetaRequest",
+    )
+
+    transfer_uri = build_rapid_pers_resource_uri(
+        config.task,
+        config.module,
+        "sendTrajRequest",
+    )
+
+    logger.debug("RWS refresh subscription URI: %s", refresh_uri)
+    logger.debug("RWS transfer subscription URI: %s", transfer_uri)
+
     return (
         SubscribedResource(
             name="refreshMetaRequest",
-            resource_uri=build_rapid_pers_resource_uri(
-                config.task,
-                config.module,
-                "refreshMetaRequest",
-            ),
+            resource_uri=refresh_uri,
             priority=config.refresh_priority,
         ),
         SubscribedResource(
             name="sendTrajRequest",
-            resource_uri=build_rapid_pers_resource_uri(
-                config.task,
-                config.module,
-                "sendTrajRequest",
-            ),
+            resource_uri=transfer_uri,
             priority=config.transfer_priority,
         ),
     )
@@ -301,6 +308,25 @@ async def run_rws_subscription_supervisor(
         config.module,
     )
 
+    if not supervisor_state.entries:
+        logger.info("Initializing store metadata before opening the RWS subscription")
+
+        supervisor_state.entries = await refresh_store_metadata(
+            client,
+            config.store_root,
+            task=config.task,
+            module=config.module,
+            mastership_retries=config.mastership_retries,
+        )
+        supervisor_state.refresh_count += 1
+
+    logger.debug(
+        "Subscription resources: %s",
+        [(r.name, r.resource_uri, r.priority) for r in resources],
+    )
+
+    logger.debug("Entering watch_resources()")
+
     async with contextlib.aclosing(watch_resources(client, resources)) as events:
         if stop_event is None:
             async for name, value in events:
@@ -356,11 +382,11 @@ async def run_rws_subscription_supervisor(
 
 async def run_rws_subscription_supervisor_app(
     *,
-    store_root: Path,
-    task: str = DEFAULT_TASK,
-    module: str = TRAJCENTER_MODULE,
-    mastership_retries: int = 3,
-    log_level: str = "INFO",
+    store_root: Path | None = None,
+    task: str | None = None,
+    module: str | None = None,
+    mastership_retries: int | None = None,
+    log_level: str | None = None,
     env_file: Path | None = None,
     env_override: bool = False,
     host: str | None = None,
@@ -408,7 +434,56 @@ async def run_rws_subscription_supervisor_app(
             )
     """
     load_env(env_file, override=env_override)
-    configure_logging(log_level)
+
+    resolved_store_root = (
+        store_root
+        if store_root is not None
+        else Path(os.getenv("TRAJCENTER_STORE_ROOT", "trajectory_store"))
+    )
+
+    resolved_task = task or os.getenv("TRAJCENTER_RWS_TASK") or DEFAULT_TASK
+
+    resolved_module = module or os.getenv("TRAJCENTER_RWS_MODULE") or TRAJCENTER_MODULE
+
+    resolved_log_level = log_level or os.getenv("TRAJCENTER_LOG_LEVEL") or "INFO"
+
+    resolved_log_level = resolved_log_level.upper()
+
+    allowed_log_levels = {
+        "DEBUG",
+        "INFO",
+        "WARNING",
+        "ERROR",
+        "CRITICAL",
+    }
+
+    if resolved_log_level not in allowed_log_levels:
+        raise ValueError(
+            "TRAJCENTER_LOG_LEVEL must be one of "
+            f"{sorted(allowed_log_levels)}, got {resolved_log_level!r}"
+        )
+
+    if mastership_retries is not None:
+        resolved_mastership_retries = mastership_retries
+    else:
+        retries_raw = os.getenv("TRAJCENTER_MASTERSHIP_RETRIES")
+
+        if retries_raw is None:
+            resolved_mastership_retries = DEFAULT_MASTERSHIP_RETRIES
+        else:
+            try:
+                resolved_mastership_retries = int(retries_raw)
+            except ValueError as exc:
+                raise ValueError(
+                    f"TRAJCENTER_MASTERSHIP_RETRIES must be an integer, got {retries_raw!r}"
+                ) from exc
+
+    if resolved_mastership_retries < 1:
+        raise ValueError(
+            f"Mastership retries must be >= 1, got {resolved_mastership_retries}"
+        )
+
+    configure_logging(resolved_log_level)
 
     stop_event = asyncio.Event()
 
@@ -421,10 +496,10 @@ async def run_rws_subscription_supervisor_app(
     signal.signal(signal.SIGTERM, request_stop)
 
     config = RWSSupervisorConfig(
-        store_root=store_root,
-        task=task,
-        module=module,
-        mastership_retries=mastership_retries,
+        store_root=resolved_store_root,
+        task=resolved_task,
+        module=resolved_module,
+        mastership_retries=resolved_mastership_retries,
     )
 
     try:
@@ -458,7 +533,7 @@ async def _cancel_task_safely(task: asyncio.Task[Any]) -> None:
     """Cancel an asyncio task and wait for its cancellation.
 
     ABB Route:
-        N/A — local asyncio cleanup helper.
+        N/A - local asyncio cleanup helper.
 
     ABB Constraints:
         This helper is used during supervisor shutdown to avoid leaving a
@@ -488,7 +563,7 @@ def _is_true_event(value: str) -> bool:
     """Return whether a raw subscription value represents RAPID ``TRUE``.
 
     ABB Route:
-        N/A — local event parser.
+        N/A - local event parser.
 
     ABB Constraints:
         ABB bool values are expected as ``TRUE`` or ``FALSE`` text, but this

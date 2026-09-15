@@ -33,7 +33,7 @@ def client() -> MagicMock:
     """Return a mock RWS client.
 
     ABB Route:
-        N/A — test fixture.
+        N/A - test fixture.
 
     ABB Constraints:
         No ABB controller access is performed.
@@ -58,7 +58,7 @@ def config(tmp_path: Path) -> RWSSupervisorConfig:
     """Return a default supervisor configuration.
 
     ABB Route:
-        N/A — test fixture.
+        N/A - test fixture.
 
     ABB Constraints:
         Uses the default TrajCenter task and module.
@@ -82,7 +82,7 @@ def _entry(tmp_path: Path) -> TrajectoryStoreEntry:
     """Build one local trajectory store entry.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``index`` is RAPID base-1.
@@ -115,7 +115,7 @@ class _FakeEventStream:
         """Initialize fake events.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             Events mimic ``watch_resources`` plain ``(name, value)`` tuples.
@@ -140,7 +140,7 @@ class _FakeEventStream:
         """Return the async iterator.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             None.
@@ -163,7 +163,7 @@ class _FakeEventStream:
         """Return the next fake event.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             None.
@@ -191,7 +191,7 @@ class _FakeEventStream:
         """Mark the stream as closed.
 
         ABB Route:
-            N/A — test helper.
+            N/A - test helper.
 
         ABB Constraints:
             Mimics async generator cleanup used by ``contextlib.aclosing``.

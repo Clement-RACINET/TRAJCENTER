@@ -18,7 +18,7 @@ import pytest
 from openpyxl import Workbook
 
 # ---------------------------------------------------------------------------
-# Fixtures — synthetic .mod files
+# Fixtures - synthetic .mod files
 # ---------------------------------------------------------------------------
 
 
@@ -120,7 +120,7 @@ def mod_empty(tmp_path: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Fixtures — synthetic Excel workbooks
+# Fixtures - synthetic Excel workbooks
 # ---------------------------------------------------------------------------
 
 
@@ -186,7 +186,7 @@ def xlsx_simple(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def xlsx_xyz_only(tmp_path: Path) -> Path:
-    """Workbook with XYZ columns only — identity orientation applied by default."""
+    """Workbook with XYZ columns only - identity orientation applied by default."""
     return _make_xlsx(
         tmp_path / "xyz_only.xlsx",
         {
@@ -263,7 +263,7 @@ def xlsx_with_tools_sheet(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def xlsx_missing_xyz(tmp_path: Path) -> Path:
-    """Workbook without XYZ columns — must raise ``ValueError``."""
+    """Workbook without XYZ columns - must raise ``ValueError``."""
     return _make_xlsx(
         tmp_path / "missing_xyz.xlsx",
         {
@@ -276,7 +276,7 @@ def xlsx_missing_xyz(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def xlsx_with_meta_sheet(tmp_path: Path) -> Path:
-    """Workbook with a meta sheet — must be silently ignored."""
+    """Workbook with a meta sheet - must be silently ignored."""
     return _make_xlsx(
         tmp_path / "with_meta.xlsx",
         {
@@ -306,7 +306,7 @@ def xlsx_empty_rows(tmp_path: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Helpers — synthetic CSV files
+# Helpers - synthetic CSV files
 # ---------------------------------------------------------------------------
 
 
@@ -326,7 +326,7 @@ def _write_csv(path: Path, content: str, encoding: str = "utf-8") -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Fixtures — synthetic CSV files
+# Fixtures - synthetic CSV files
 # ---------------------------------------------------------------------------
 
 
@@ -354,7 +354,7 @@ def csv_semicolon(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def csv_xyz_only(tmp_path: Path) -> Path:
-    """CSV with XYZ columns only — identity orientation applied by default."""
+    """CSV with XYZ columns only - identity orientation applied by default."""
     return _write_csv(
         tmp_path / "xyz_only.csv",
         "x,y,z\n10.0,20.0,30.0\n40.0,50.0,60.0\n",
@@ -381,7 +381,7 @@ def csv_with_tools(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def csv_missing_xyz(tmp_path: Path) -> Path:
-    """CSV without XYZ columns — must raise ``ValueError``."""
+    """CSV without XYZ columns - must raise ``ValueError``."""
     return _write_csv(
         tmp_path / "missing_xyz.csv",
         "tcp_speed,zone_type\n500.0,0\n",

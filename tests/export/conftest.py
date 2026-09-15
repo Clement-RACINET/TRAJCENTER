@@ -28,7 +28,7 @@ def _make_traj(
     """Build a test Trajectory directly from row dictionaries.
 
     ABB Route:
-        N/A — test fixture only.
+        N/A - test fixture only.
 
     ABB Constraints:
         No ABB controller access.

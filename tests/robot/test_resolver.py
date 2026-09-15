@@ -59,7 +59,7 @@ def _defaults(
     """Build robot defaults for resolver tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         No controller access is performed.
@@ -103,7 +103,7 @@ def _context(defaults: RobotDefaults | None = None) -> RobotContext:
     """Build robot context for resolver tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         Tool and workobject lists are ordered like RAPID arrays.
@@ -137,7 +137,7 @@ def _base_points(**extra: object) -> pd.DataFrame:
     """Build a minimal point table.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         The mandatory robtarget geometry columns are always present.
@@ -171,7 +171,7 @@ def _resolved_process_set(index: int) -> ResolvedProcessParamSet:
     """Build one resolved process parameter set.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         The returned index mimics the RAPID base-1 process parameter index.
@@ -198,7 +198,7 @@ def _trajectory(points: pd.DataFrame) -> Trajectory:
     """Build a no-process trajectory.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         No process parameter table is attached.
@@ -230,7 +230,7 @@ def _process_trajectory(
     """Build a process trajectory.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``process_type`` must exist in the test robot process catalog unless
@@ -857,7 +857,7 @@ class TestResolverPrivateHelpers:
                 """Raise to exercise the defensive resolver branch.
 
                 ABB Route:
-                    N/A — local test helper.
+                    N/A - local test helper.
 
                 ABB Constraints:
                     No controller access is performed.

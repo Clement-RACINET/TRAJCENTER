@@ -25,7 +25,7 @@ def _export(
     """Export a trajectory to CSV.
 
     ABB Route:
-        N/A — test helper.
+        N/A - test helper.
 
     ABB Constraints:
         No ABB controller access.

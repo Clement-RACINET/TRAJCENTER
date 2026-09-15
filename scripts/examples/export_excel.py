@@ -39,7 +39,7 @@ def export_and_validate(traj: Trajectory, output_dir: Path) -> Path:
     """Export a trajectory to Excel and validate it can be read again.
 
     ABB Route:
-        N/A — local Excel export validation.
+        N/A - local Excel export validation.
 
     ABB Constraints:
         No ABB controller access.
@@ -73,7 +73,7 @@ def print_summary(title: str, traj: Trajectory) -> None:
     """Print an export demonstration summary.
 
     ABB Route:
-        N/A — local export demonstration.
+        N/A - local export demonstration.
 
     ABB Constraints:
         No ABB controller access.
@@ -107,7 +107,7 @@ def main() -> None:
     """Run Excel export demonstrations.
 
     ABB Route:
-        N/A — local Excel export demonstration.
+        N/A - local Excel export demonstration.
 
     ABB Constraints:
         No ABB controller access.
@@ -136,20 +136,20 @@ def main() -> None:
         raise FileNotFoundError(f"Excel source not found: {SOURCE_XLSX}")
 
     from_archive = Trajectory.load(SOURCE_TRAJCENTER)
-    print_summary("Case 1 — loaded .trajcenter archive", from_archive)
+    print_summary("Case 1 - loaded .trajcenter archive", from_archive)
 
     exported_from_archive = export_and_validate(from_archive, OUTPUT_DIR)
     print(f"Exported and validated → {exported_from_archive}")
     print()
 
     from_excel = ExcelConverter().convert(SOURCE_XLSX)
-    print_summary("Case 2 — converted Excel source", from_excel)
+    print_summary("Case 2 - converted Excel source", from_excel)
 
     reexported = export_and_validate(from_excel, OUTPUT_DIR)
     print(f"Re-exported and validated → {reexported}")
     print()
 
-    print("OK — Excel export scenarios validated.")
+    print("OK - Excel export scenarios validated.")
 
 
 if __name__ == "__main__":

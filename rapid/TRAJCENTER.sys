@@ -393,7 +393,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     ! FR: Nombre maximal de points transferables dans trajData.
     ! EN: Maximum number of trajectory points transferable into trajData.
-    CONST num maxTrajPointCount := 100000;
+    CONST num maxTrajPointCount := 10000;
 
     ! FR: Nombre maximal de jeux distincts de parametres process.
     ! EN: Maximum number of distinct process parameter sets.
@@ -563,6 +563,10 @@ MODULE TRAJCENTER(SYSMODULE)
     VAR errnum ERR_TRAJCENTER_WOBJ_NOT_FOUND := -1;
     VAR errnum ERR_TRAJCENTER_TRAJ_NOT_FOUND := -1;
     VAR errnum ERR_TRAJCENTER_EMPTY_NAME := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_TYPE := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED := -1;
+
     VAR bool trajCenterErrorsInitialized := FALSE;
 
 
@@ -1040,7 +1044,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !       trajectories{i}.pointCount  = number of points
     !       trajectories{i}.processType = process type
     !--------------------------------------------------------------------------
-    VAR trajCenterTrajMeta trajectories{256};
+    VAR trajCenterTrajMeta trajectories{maxTrajCount};
 
 
 !------------------------------------------------------------------------------
@@ -1080,7 +1084,7 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Valid entries:
     !       trajData{1..nbLoadedTrajPoints}
     !--------------------------------------------------------------------------
-    VAR trajCenterPointData trajData{100000};
+    VAR trajCenterPointData trajData{maxTrajPointCount};
 
 
     !--------------------------------------------------------------------------
@@ -1122,8 +1126,13 @@ MODULE TRAJCENTER(SYSMODULE)
     !       trajData{k}.processParamIndex = p
     !           process parameters are processParams{p,1..10}.
     !--------------------------------------------------------------------------
-    VAR trajCenterProcessParameter processParams{256,10};
+    VAR trajCenterProcessParameter processParams{maxProcessParamSetCount, maxProcessParamPerSet};
 
+    !--------------------------------------------------------------------------
+    ! FR: Type de process de la trajectoire actuellement chargee.
+    ! EN: Process type of the currently loaded trajectory.
+    !--------------------------------------------------------------------------
+    VAR num loadedProcessType := processNone;
 
 !==============================================================================
 ! SECTION 8 - VARIABLES PAR DEFAUT DU ROBOT / ROBOT DEFAULTS
@@ -1430,6 +1439,9 @@ MODULE TRAJCENTER(SYSMODULE)
         BookErrNo ERR_TRAJCENTER_WOBJ_NOT_FOUND;
         BookErrNo ERR_TRAJCENTER_TRAJ_NOT_FOUND;
         BookErrNo ERR_TRAJCENTER_EMPTY_NAME;
+        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
+        BookErrNo ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
 
         trajCenterErrorsInitialized := TRUE;
 
@@ -2098,6 +2110,10 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Copies one loaded trajectory point into pointData.
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_GetPoint(num pointIndex, VAR trajCenterPointData pointData)
+        IF nbLoadedTrajPoints < 0 OR nbLoadedTrajPoints > maxTrajPointCount THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
         IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
             RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
         ENDIF

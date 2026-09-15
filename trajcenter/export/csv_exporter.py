@@ -18,7 +18,7 @@ Tool and work-object names are exported inline through ``tool_name`` and
 ``wobj_name`` when these columns exist in ``trajectory.points``.
 
 ABB Route:
-    N/A — local CSV export, no RWS route.
+    N/A - local CSV export, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -47,7 +47,7 @@ class CsvExporter(_TabularExporter):
     """Export a trajectory to CSV files.
 
     ABB Route:
-        N/A — local CSV export.
+        N/A - local CSV export.
 
     ABB Constraints:
         No ABB controller access.
@@ -99,7 +99,7 @@ class CsvExporter(_TabularExporter):
         """Write trajectory CSV and optional sidecar files.
 
         ABB Route:
-            N/A — local CSV write.
+            N/A - local CSV write.
 
         ABB Constraints:
             No ABB controller access.

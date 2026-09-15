@@ -154,7 +154,7 @@ TRAJCENTER_ASCII = r"""
 
 """
 
-SPLASH_AUTHORS = "Développé par J. SCHUMAKER & C. RACINET"
+SPLASH_AUTHORS = "Développé par J. SCHUMACKER & C. RACINET"
 SPLASH_HELP = "Entrée : continuer · Q : quitter"
 
 

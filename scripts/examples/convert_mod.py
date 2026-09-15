@@ -29,7 +29,7 @@ def main() -> None:
     """Run RAPID MOD conversion demonstration.
 
     ABB Route:
-        N/A — local RAPID module parsing demonstration.
+        N/A - local RAPID module parsing demonstration.
 
     ABB Constraints:
         No ABB controller access. Inactive external axes encoded as RAPID
@@ -59,7 +59,7 @@ def main() -> None:
     traj = ModConverter().convert(SOURCE_FILE)
 
     print("=" * 72)
-    print("TrajCenter v2.4 — RAPID MOD conversion")
+    print("TrajCenter v2.4 - RAPID MOD conversion")
     print("=" * 72)
     print(traj)
     print(f"  name          : {traj.meta.name}")
@@ -77,7 +77,7 @@ def main() -> None:
     assert_same_geometry(traj, loaded)
 
     print(f"Saved and validated → {saved}")
-    print("OK — RAPID MOD conversion validated.")
+    print("OK - RAPID MOD conversion validated.")
 
 
 if __name__ == "__main__":

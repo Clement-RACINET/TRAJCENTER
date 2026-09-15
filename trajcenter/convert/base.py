@@ -22,7 +22,7 @@ This enables two workflows:
    Excel, edit locally, then re-import.
 
 ABB Route:
-    N/A — local file conversion, no RWS route.
+    N/A - local file conversion, no RWS route.
 
 ABB Constraints:
     No mastership is acquired here. No RAPID variable is read or written.
@@ -64,7 +64,7 @@ class BaseConverter(ABC):
         defaults: Default values used for explicit autocompletion.
 
     ABB Route:
-        N/A — local conversion helper.
+        N/A - local conversion helper.
 
     ABB Constraints:
         This class does not communicate with ABB RWS.
@@ -106,7 +106,7 @@ class BaseConverter(ABC):
         """Convert a source file into a trajectory.
 
         ABB Route:
-            N/A — local file conversion, no RWS route.
+            N/A - local file conversion, no RWS route.
 
         ABB Constraints:
             No RAPID write and no mastership acquisition.
@@ -152,7 +152,7 @@ class BaseConverter(ABC):
         here.
 
         ABB Route:
-            N/A — local DataFrame transformation.
+            N/A - local DataFrame transformation.
 
         ABB Constraints:
             The method must not infer cell-specific values unless they
@@ -224,7 +224,7 @@ class BaseConverter(ABC):
         """Convert a source file and save it as ``.trajcenter``.
 
         ABB Route:
-            N/A — local conversion and archive serialisation.
+            N/A - local conversion and archive serialisation.
 
         ABB Constraints:
             No RAPID write and no mastership acquisition.

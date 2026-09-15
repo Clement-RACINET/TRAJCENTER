@@ -18,7 +18,7 @@ canonical names:
 - ``wobj`` / ``repere`` -> ``wobj_name``
 
 ABB Route:
-    N/A — local column mapping, no RWS route.
+    N/A - local column mapping, no RWS route.
 
 ABB Constraints:
     This module does not read or write RAPID data. It only normalises
@@ -319,7 +319,7 @@ def resolve_columns(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
     kept and a :class:`UserWarning` is emitted.
 
     ABB Route:
-        N/A — local DataFrame header mapping.
+        N/A - local DataFrame header mapping.
 
     ABB Constraints:
         No ABB controller access.

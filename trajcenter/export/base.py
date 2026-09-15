@@ -27,7 +27,7 @@ class BaseExporter(ABC):
     """Abstract base class for all exporters.
 
     ABB Route:
-        N/A — local file export, no RWS route.
+        N/A - local file export, no RWS route.
 
     ABB Constraints:
         No mastership is acquired. No RAPID variable is read or written.
@@ -70,7 +70,7 @@ class BaseExporter(ABC):
         """Export a trajectory to a file.
 
         ABB Route:
-            N/A — local file export.
+            N/A - local file export.
 
         ABB Constraints:
             No ABB controller access.

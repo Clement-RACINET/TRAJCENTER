@@ -189,8 +189,12 @@ def build_parser() -> argparse.ArgumentParser:
     robot_supervise_parser.add_argument(
         "--store",
         type=Path,
-        default=DEFAULT_STORE,
-        help=f"Trajectory store directory. Default: {DEFAULT_STORE}.",
+        default=None,
+        help=(
+            "Trajectory store directory. "
+            "Overrides TRAJCENTER_STORE_ROOT. "
+            f"Fallback: {DEFAULT_STORE}."
+        ),
     )
     robot_supervise_parser.add_argument(
         "--env-file",
@@ -230,23 +234,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     robot_supervise_parser.add_argument(
         "--task",
-        default="T_ROB1",
-        help="RAPID task name. Default: T_ROB1.",
+        default=None,
+        help=("RAPID task name. Overrides TRAJCENTER_RWS_TASK. Fallback: T_ROB1."),
     )
     robot_supervise_parser.add_argument(
         "--module",
-        default="TRAJCENTER",
-        help="RAPID module name. Default: TRAJCENTER.",
+        default=None,
+        help=(
+            "RAPID module name. Overrides TRAJCENTER_RWS_MODULE. Fallback: TRAJCENTER."
+        ),
     )
     robot_supervise_parser.add_argument(
         "--mastership-retries",
         type=int,
-        default=3,
+        default=None,
         help="Number of Mastership retry attempts for writer operations.",
     )
     robot_supervise_parser.add_argument(
         "--log-level",
-        default="INFO",
+        default=None,
         choices=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
         help="Logging level. Default: INFO.",
     )

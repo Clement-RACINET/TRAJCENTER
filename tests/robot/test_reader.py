@@ -4,7 +4,7 @@
 
 Author: Clement RACINET
 
-All RWS calls are mocked — no HTTP traffic.
+All RWS calls are mocked - no HTTP traffic.
 Mock target: ``trajcenter.robot.reader.get_variable``.
 """
 

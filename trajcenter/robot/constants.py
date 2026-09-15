@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # trajcenter/robot/constants.py
-"""Shared constants for the TrajCenter ABB RWS integration layer.
+"""Python-side defaults and expected TrajCenter ABB protocol constants.
 
 Author: Clement RACINET
 
-This module centralizes the RAPID module names, protocol limits, status codes,
-validation sets and default transfer settings used by the RWS reader, writer,
-resolver, store scanner and service orchestrator.
+The live RAPID controller remains authoritative for deployed array capacities
+and cell configuration. Constants in this module define the protocol profile
+supported by this Python package and provide offline defaults.
 
 ABB Route:
     N/A - local constants only.

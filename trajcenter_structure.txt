@@ -1,5 +1,56 @@
 trajcenter_v2
 ├── doc_manual
+│   ├── doc_utilisateur
+│   │   ├── Appendix
+│   │   │   └── appendix.tex
+│   │   ├── bibs
+│   │   │   └── export.bib
+│   │   ├── Conclusion
+│   │   │   └── Conclusion.tex
+│   │   ├── figures
+│   │   │   ├── rapid_api_call_graph
+│   │   │   │   ├── rapid_api_call_graph.aux
+│   │   │   │   ├── rapid_api_call_graph.fdb_latexmk
+│   │   │   │   ├── rapid_api_call_graph.fls
+│   │   │   │   ├── rapid_api_call_graph.pdf
+│   │   │   │   ├── rapid_api_call_graph.synctex.gz
+│   │   │   │   ├── rapid_api_call_graph.tex
+│   │   │   │   └── rapid_api_call_graph_unzipped.synctex
+│   │   │   ├── rapid_module_architecture
+│   │   │   │   ├── rapid_module_architecture.aux
+│   │   │   │   ├── rapid_module_architecture.fdb_latexmk
+│   │   │   │   ├── rapid_module_architecture.fls
+│   │   │   │   ├── rapid_module_architecture.pdf
+│   │   │   │   ├── rapid_module_architecture.synctex.gz
+│   │   │   │   ├── rapid_module_architecture.tex
+│   │   │   │   └── rapid_module_architecture_unzipped.synctex
+│   │   │   └── screenshot
+│   │   │       ├── tui_convert.png
+│   │   │       ├── tui_export.png
+│   │   │       ├── tui_home.png
+│   │   │       ├── tui_robot.png
+│   │   │       ├── tui_settings.png
+│   │   │       ├── tui_splash.png
+│   │   │       └── tui_store.png
+│   │   ├── Introduction
+│   │   │   └── Intro.tex
+│   │   ├── latex
+│   │   │   └── rapid-listings.sty
+│   │   ├── logos
+│   │   │   ├── fond.png
+│   │   │   ├── logo-arts-et-metiers.jpg
+│   │   │   └── logo-arts-et-metiers2.png
+│   │   ├── CoursENSAM.cls
+│   │   ├── main.aux
+│   │   ├── main.fdb_latexmk
+│   │   ├── main.fls
+│   │   ├── main.lol
+│   │   ├── main.nlo
+│   │   ├── main.out
+│   │   ├── main.pdf
+│   │   ├── main.synctex.gz
+│   │   ├── main.tex
+│   │   └── main.toc
 │   ├── route3.md
 │   ├── route3.pdf
 │   ├── route4.md
@@ -19,6 +70,7 @@ trajcenter_v2
 │   ├── examples
 │   │   ├── _demo_utils.py
 │   │   ├── basic_usage.py
+│   │   ├── benchmark_rws_writer.py
 │   │   ├── convert_apt_example.py
 │   │   ├── convert_excel.py
 │   │   ├── convert_mod.py
@@ -157,6 +209,7 @@ trajcenter_v2
 │   ├── 0.2.xlsx
 │   ├── 0.5.xlsx
 │   ├── 000_trajectory_demo.xlsx
+│   ├── 001_trajectory_demo.xlsx
 │   ├── 1.xlsx
 │   ├── mod_exemple.mod
 │   ├── Mod_Traj_sphere05mm.mod
@@ -169,16 +222,8 @@ trajcenter_v2
 │   └── TrajGeo1Reel.txt
 ├── trajectory_store
 │   ├── 000_trajectory_demo.trajcenter
-│   ├── demo_basic_usage.trajcenter
-│   ├── mod_exemple.trajcenter
-│   ├── PrepaFlans_Pointage.trajcenter
-│   ├── PrepaFlans_Pointage_custom_defaults.trajcenter
-│   ├── PrepaFlans_Pointage_editable.trajcenter
-│   ├── PrepaFlans_Pointage_transformed.trajcenter
-│   ├── test_basic.trajcenter
-│   ├── trajectoires_mono.trajcenter
-│   ├── trajectoires_multi.trajcenter
-│   └── trajectoires_multi_Traj2.trajcenter
+│   ├── 001_trajectory_demo.trajcenter
+│   └── demo_basic_usage.trajcenter
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pixi.toml

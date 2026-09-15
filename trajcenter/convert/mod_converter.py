@@ -23,7 +23,7 @@ converter defaults may still add ``tcp_speed`` or ``zone_type`` through
 :class:`trajcenter.convert.defaults.ConversionDefaults`.
 
 ABB Route:
-    N/A — local RAPID module parsing, no RWS route.
+    N/A - local RAPID module parsing, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -109,7 +109,7 @@ class ModConverter(BaseConverter):
             :class:`trajcenter.convert.base.BaseConverter`.
 
     ABB Route:
-        N/A — local file parsing.
+        N/A - local file parsing.
 
     ABB Constraints:
         No ABB controller access.
@@ -149,7 +149,7 @@ class ModConverter(BaseConverter):
         """Convert a RAPID ``.mod`` file to a trajectory.
 
         ABB Route:
-            N/A — local file conversion.
+            N/A - local file conversion.
 
         ABB Constraints:
             No mastership, no RAPID write.
@@ -289,7 +289,7 @@ class ModConverter(BaseConverter):
                 row = self._parse_single_move(line, line_no)
             except ValueError as exc:
                 raise ValueError(
-                    f"{source.name} — Move line #{line_no}: {exc}\n"
+                    f"{source.name} - Move line #{line_no}: {exc}\n"
                     f"  Content: {line[:120]!r}"
                 ) from exc
             rows.append(row)
@@ -338,7 +338,7 @@ class ModConverter(BaseConverter):
         sublists = re.findall(r"\[([^\[\]]+)\]", m_robt.group(1))
         if len(sublists) < 4:
             raise ValueError(
-                f"Malformed robtarget — {len(sublists)} sub-list(s) found, 4 expected."
+                f"Malformed robtarget - {len(sublists)} sub-list(s) found, 4 expected."
             )
 
         try:

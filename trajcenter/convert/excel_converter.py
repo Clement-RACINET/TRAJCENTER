@@ -56,7 +56,7 @@ when explicit :class:`~trajcenter.convert.defaults.ConversionDefaults`
 values are provided.
 
 ABB Route:
-    N/A — local Excel file conversion, no RWS route.
+    N/A - local Excel file conversion, no RWS route.
 
 ABB Constraints:
     No mastership is acquired. No RAPID variable is read or written.
@@ -90,7 +90,7 @@ class ExcelConverter(_TabularConverter):
     only implements Excel sheet loading.
 
     ABB Route:
-        N/A — local Excel file conversion.
+        N/A - local Excel file conversion.
 
     ABB Constraints:
         No ABB controller access.
@@ -160,7 +160,7 @@ class ExcelConverter(_TabularConverter):
         """Read all sheets from an Excel workbook.
 
         ABB Route:
-            N/A — local Excel file read.
+            N/A - local Excel file read.
 
         ABB Constraints:
             No ABB controller access.

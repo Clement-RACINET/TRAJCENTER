@@ -29,7 +29,7 @@ def build_demo_trajectory() -> Trajectory:
     """Build a minimal demonstration trajectory.
 
     ABB Route:
-        N/A — local TrajCenter v2.4 archive generation.
+        N/A - local TrajCenter v2.4 archive generation.
 
     ABB Constraints:
         No ABB controller access. External axis inactivity sentinel ``9E9`` is
@@ -81,7 +81,7 @@ def main() -> None:
     """Run the basic save/load roundtrip demonstration.
 
     ABB Route:
-        N/A — local file demonstration.
+        N/A - local file demonstration.
 
     ABB Constraints:
         No ABB controller access.
@@ -113,7 +113,7 @@ def main() -> None:
     assert list(loaded.points.columns) == list(traj.points.columns)
 
     print("=" * 72)
-    print("TrajCenter v2.4 — basic save/load roundtrip")
+    print("TrajCenter v2.4 - basic save/load roundtrip")
     print("=" * 72)
     print(loaded)
     print()
@@ -124,7 +124,7 @@ def main() -> None:
     print()
     print(loaded.points.to_string(index=False))
     print()
-    print("OK — roundtrip validated.")
+    print("OK - roundtrip validated.")
 
 
 if __name__ == "__main__":

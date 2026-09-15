@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # trajcenter/robot/reader.py
-"""RWS reader — reads TrajCenter v2 RAPID variables from the ABB controller.
+"""RWS reader - reads TrajCenter v2 RAPID variables from the ABB controller.
 
 Author: Clement RACINET
 
@@ -37,6 +37,7 @@ Example:
 from __future__ import annotations
 
 import re
+from html import unescape
 from typing import Final
 
 from abb_rws_client_python_rw6 import RWSClient
@@ -64,7 +65,7 @@ def _parse_bool(raw: str, *, name: str) -> bool:
     """Parse a RAPID bool returned by RWS.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         RAPID bool values are expected as ``TRUE`` or ``FALSE``.
@@ -96,7 +97,7 @@ def _parse_int(raw: str, *, name: str) -> int:
     """Parse a RAPID ``num`` as an integer.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         RAPID ``num`` may be returned as ``"3"`` or ``"3.0"``.
@@ -126,7 +127,7 @@ def _parse_float(raw: str, *, name: str) -> float:
     """Parse a RAPID ``num`` as a float.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         RAPID ``num`` values are decimal strings.
@@ -156,7 +157,7 @@ def _parse_rapid_string(raw: str) -> str:
     """Parse a RAPID string literal returned by RWS.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         RAPID strings are commonly returned with surrounding double quotes.
@@ -183,7 +184,7 @@ def _parse_traj_meta_name(raw: str) -> str:
     """Extract a trajectory name from a ``trajCenterTrajMeta`` record.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         Expected record layout is ``["name", pointCount, processType]``.
@@ -212,7 +213,7 @@ def _parse_leading_string_field(raw: str, *, name: str) -> str:
     """Extract the leading string field of a name-first RAPID record.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         Applies to ``trajCenterTool`` and ``trajCenterWobj`` records.
@@ -242,7 +243,7 @@ def _parse_process_type_record(raw: str) -> ProcessTypeEntry:
     """Parse a ``trajCenterProcessType`` record value.
 
     ABB Route:
-        N/A — local parsing helper.
+        N/A - local parsing helper.
 
     ABB Constraints:
         Expected RAPID record layout is ``[num id, string name]``.
@@ -268,6 +269,49 @@ def _parse_process_type_record(raw: str) -> ProcessTypeEntry:
     return ProcessTypeEntry(id=int(float(match.group(1))), name=match.group(2))
 
 
+async def _get_variable_decoded(
+    client: RWSClient,
+    *,
+    symbolurl: str,
+) -> str:
+    """Read and XHTML-decode one RAPID variable value.
+
+    ABB Route:
+        ``GET /rw/rapid/symbol/data/{symbolurl}``.
+
+    ABB Constraints:
+        Some older RobotWare 6 versions, notably RW 6.08, may return RAPID
+        string delimiters as XHTML entities such as ``&quot;``. Newer
+        versions may return the double quotes directly.
+
+        Exactly one XHTML-decoding pass is applied so both response formats
+        are normalized before RAPID-specific parsing.
+
+    Args:
+        client: Open RWS client.
+        symbolurl: RAPID symbol URL passed to ``get_variable``.
+
+    Returns:
+        Raw RAPID value with XHTML entities decoded.
+
+    Raises:
+        RWSHTTPError: On controller HTTP errors.
+        ValueError: If the response cannot be parsed by the RWS client.
+    """
+    raw = await get_variable(client, symbolurl=symbolurl)
+    decoded = unescape(raw)
+
+    if decoded != raw:
+        logger.debug(
+            "Decoded XHTML entities in RWS value for %s: %r -> %r",
+            symbolurl,
+            raw,
+            decoded,
+        )
+
+    return decoded
+
+
 async def _read_raw(
     client: RWSClient,
     *,
@@ -275,13 +319,14 @@ async def _read_raw(
     module: str,
     variable: str,
 ) -> str:
-    """Read a simple RAPID variable and return its raw value.
+    """Read a simple RAPID variable and return its normalized raw value.
 
     ABB Route:
         ``GET /rw/rapid/symbol/data/{symbolurl}``.
 
     ABB Constraints:
-        No Mastership is required for reads.
+        No Mastership is required for reads. XHTML entities returned by older
+        RobotWare versions are decoded before the value is returned.
 
     Args:
         client: Open RWS client.
@@ -290,24 +335,14 @@ async def _read_raw(
         variable: Simple RAPID variable name.
 
     Returns:
-        Raw RAPID value returned by RWS.
+        RAPID value with XHTML entities decoded.
 
     Raises:
         RWSHTTPError: On controller HTTP errors.
         ValueError: If the response cannot be parsed by the client library.
-
-    Example:
-        ```python
-        raw = await _read_raw(
-            client,
-            task="T_ROB1",
-            module="TRAJCENTER",
-            variable="trajReady",
-        )
-        ```
     """
     symbolurl = symbol(task, module, variable)
-    raw = await get_variable(client, symbolurl=symbolurl)
+    raw = await _get_variable_decoded(client, symbolurl=symbolurl)
     logger.debug("%s = %r", variable, raw)
     return raw
 
@@ -727,7 +762,7 @@ async def read_traj_names(
             variable="trajectories",
             index=index,
         )
-        raw = await get_variable(client, symbolurl=symbolurl)
+        raw = await _get_variable_decoded(client, symbolurl=symbolurl)
         names.append(_parse_traj_meta_name(raw))
 
     logger.debug("Read %d trajectory names from controller", len(names))
@@ -982,7 +1017,7 @@ async def read_traj_tool_names(
             variable="trajTools",
             index=index,
         )
-        raw = await get_variable(client, symbolurl=symbolurl)
+        raw = await _get_variable_decoded(client, symbolurl=symbolurl)
         names.append(_parse_leading_string_field(raw, name="trajTools"))
 
     logger.debug("Read %d tool names from controller", len(names))
@@ -1033,7 +1068,7 @@ async def read_traj_wobj_names(
             variable="trajWobjs",
             index=index,
         )
-        raw = await get_variable(client, symbolurl=symbolurl)
+        raw = await _get_variable_decoded(client, symbolurl=symbolurl)
         names.append(_parse_leading_string_field(raw, name="trajWobjs"))
 
     logger.debug("Read %d workobject names from controller", len(names))
@@ -1122,7 +1157,7 @@ async def read_process_types(
             variable="processTypes",
             index=index,
         )
-        raw = await get_variable(client, symbolurl=symbolurl)
+        raw = await _get_variable_decoded(client, symbolurl=symbolurl)
         entries.append(_parse_process_type_record(raw))
 
     logger.debug("Read %d process type entries from controller", len(entries))
@@ -1133,6 +1168,7 @@ async def read_robot_context(
     client: RWSClient,
     *,
     task: str = DEFAULT_TASK,
+    module: str = TRAJCENTER_MODULE,
 ) -> RobotContext:
     """Read all robot-side context required by the resolver.
 
@@ -1163,10 +1199,26 @@ async def read_robot_context(
         context = await read_robot_context(client)
         ```
     """
-    defaults = await read_robot_defaults(client, task=task)
-    tool_names = await read_traj_tool_names(client, task=task)
-    wobj_names = await read_traj_wobj_names(client, task=task)
-    process_types = await read_process_types(client, task=task)
+    defaults = await read_robot_defaults(
+        client,
+        task=task,
+        module=module,
+    )
+    tool_names = await read_traj_tool_names(
+        client,
+        task=task,
+        module=module,
+    )
+    wobj_names = await read_traj_wobj_names(
+        client,
+        task=task,
+        module=module,
+    )
+    process_types = await read_process_types(
+        client,
+        task=task,
+        module=module,
+    )
 
     return RobotContext(
         defaults=defaults,

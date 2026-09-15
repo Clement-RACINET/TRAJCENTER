@@ -1,0 +1,3209 @@
+MODULE TRAJCENTER(SYSMODULE)
+
+!------------------------------------------------------------------------------
+! AUTHORS:       J. SCHUMACKER, C. RACINET
+! VERSION:       TrajCenter v2.0
+! ROBOTWARE:     6.x
+! TRANSPORT:     ABB Robot Web Services only
+!
+! DESCRIPTION FR:
+!   Module systeme unique TrajCenter v2.0.
+!
+!   Il definit l'ensemble du protocole robot cete ABB :
+!       - les types RECORD utilises pour les echanges ;
+!       - les limites globales du protocole ;
+!       - les codes d'etat et d'erreur ;
+!       - les types de mouvements supportes ;
+!       - le catalogue des process disponibles ;
+!       - les tools et workobjects disponibles pour TrajCenter ;
+!       - les variables d'echange RWS ;
+!       - les valeurs par defaut robot lues par le PC.
+!
+!   Le PC communique avec le robot uniquement via ABB Robot Web Services.
+!   Les requetes robot -> PC sont declenchees par des flags PERS.
+!   Les ecritures PC -> robot doivent etre realisees sous Mastership.
+!
+! DESCRIPTION EN:
+!   Single TrajCenter v2.0 system module.
+!
+!   It defines the complete ABB robot-side protocol:
+!       - RECORD types used for data exchange;
+!       - global protocol limits;
+!       - status and error codes;
+!       - supported motion types;
+!       - available process catalog;
+!       - tools and workobjects available to TrajCenter;
+!       - RWS exchange variables;
+!       - robot defaults read by the PC.
+!
+!   The PC communicates with the robot only through ABB Robot Web Services.
+!   Robot -> PC requests are triggered by PERS flags.
+!   PC -> robot writes must be performed under Mastership.
+!
+! ENCODING FR:
+!   Ce fichier doit etre enregistre en ISO-8859-1, pas en UTF-8.
+!   Pour simplifier les choses il a ete redige en ASCII pure.
+!
+! ENCODING EN:
+!   This file must be saved as ISO-8859-1, not UTF-8.
+!   To simplify things, it was written in pure ASCII.
+!------------------------------------------------------------------------------
+
+
+!==============================================================================
+! POLITIQUE DE MODIFICATION / EDIT POLICY
+!==============================================================================
+!
+! FR:
+!   Ce module est volontairement decoupe en sections de maintenance.
+!   L'objectif est d'eviter de modifier plusieurs zones du fichier pour une
+!   meme evolution fonctionnelle.
+!
+!   SECTION 1 - TYPES RECORD
+!       Ne pas modifier sauf evolution coordonnee du protocole PC/RAPID.
+!       Modifier un RECORD peut casser la serialisation RWS.
+!
+!   SECTION 2 - LIMITES GLOBALES
+!       Ne pas modifier sauf changement volontaire des capacites du protocole.
+!       Cette section inclut les tailles maximales des trajectoires, parametres
+!       process, tools et workobjects exposes e TrajCenter.
+!
+!   SECTION 3 - CODES D'ETAT ET D'ERREUR
+!       Ne pas modifier sans mettre e jour le client PC, la documentation et les
+!       programmes RAPID utilisateurs si necessaire.
+!
+!       Cette section contient deux familles distinctes :
+!           3.1 Codes PC/RWS ecrits dans lastErrorCode.
+!           3.2 Erreurs locales RAPID levees par l'API TRAJCENTER_*.
+!
+!   SECTION 4 - TYPES DE MOUVEMENT
+!       Ne pas modifier sauf ajout officiel d'un type de mouvement supporte.
+!
+!   SECTION 5 - PROCESS
+!       Modifier uniquement cette section pour ajouter, retirer ou renommer un
+!       process supporte par la cellule.
+!       Les routines d'application process ne sont pas encore implementees.
+!
+!   SECTION 6 - CONFIGURATION CELLULE
+!       Section modifiable par le programmeur robot pour declarer les tools et
+!       workobjects disponibles.
+!       Les tools/wobjs peuvent aussi etre ajoutes ou mis e jour depuis un
+!       programme RAPID classique via l'API TRAJCENTER_Upsert*.
+!
+!   SECTION 7 - VARIABLES RWS
+!       Ne pas modifier les noms, types ou dimensions sans mettre e jour le
+!       client PC TrajCenter.
+!
+!   SECTION 8 - VARIABLES PAR DEFAUT DU ROBOT
+!       Section reglable e la mise en service.
+!       Ces variables font partie du protocole RWS mais sont isolees pour
+!       faciliter la configuration cellule.
+!
+!   SECTION 9 - API RAPID TRAJCENTER
+!       Section destinee aux programmes RAPID utilisateurs.
+!       Elle fournit les routines de configuration, de requete, d'attente,
+!       d'acces aux donnees chargees et d'execution sans process.
+!
+!       Les sous-sections process sont volontairement presentes mais non
+!       implementees pour documenter l'intention de conception future.
+!
+! EN:
+!   This module is intentionally split into maintenance sections.
+!   The goal is to avoid modifying several unrelated locations for one
+!   functional change.
+!
+!   SECTION 1 - RECORD TYPES
+!       Do not modify unless the PC/RAPID protocol is updated consistently.
+!       Changing a RECORD may break RWS serialization.
+!
+!   SECTION 2 - GLOBAL LIMITS
+!       Do not modify unless protocol capacities are intentionally changed.
+!       This section includes maximum sizes for trajectories, process
+!       parameters, tools and workobjects exposed to TrajCenter.
+!
+!   SECTION 3 - STATUS AND ERROR CODES
+!       Do not modify without updating the PC client, documentation and RAPID
+!       user programs if necessary.
+!
+!       This section contains two distinct families:
+!           3.1 PC/RWS codes written into lastErrorCode.
+!           3.2 Local RAPID errors raised by the TRAJCENTER_* API.
+!
+!   SECTION 4 - MOTION TYPES
+!       Do not modify unless a new supported motion type is officially added.
+!
+!   SECTION 5 - PROCESS
+!       Modify this section only to add, remove or rename a process supported
+!       by the cell.
+!       Process application routines are not implemented yet.
+!
+!   SECTION 6 - CELL CONFIGURATION
+!       Editable by the robot programmer to declare available tools and
+!       workobjects.
+!       Tools/wobjs may also be added or updated from a regular RAPID program
+!       through the TRAJCENTER_Upsert* API.
+!
+!   SECTION 7 - RWS VARIABLES
+!       Do not modify names, types or dimensions without updating the
+!       TrajCenter PC client.
+!
+!   SECTION 8 - ROBOT DEFAULTS
+!       Adjustable during commissioning.
+!       These variables are part of the RWS protocol but are isolated to make
+!       cell configuration easier.
+!
+!   SECTION 9 - TRAJCENTER RAPID API
+!       Section intended for RAPID user programs.
+!       It provides configuration, request, wait, loaded data access and
+!       motion-only execution routines.
+!
+!       Process subsections are intentionally present but not implemented to
+!       document the intended future design.
+!==============================================================================
+
+
+!==============================================================================
+! SECTION 1 - TYPES RECORD / RECORD TYPES
+!==============================================================================
+!
+! FR:
+!   Cette section contient uniquement les types RECORD.
+!   L'ordre des champs dans les RECORD doit rester stable.
+!   Le PC ecrit certains RECORD complets via RWS : l'ordre des champs est donc
+!   une partie du contrat de serialisation.
+!
+! EN:
+!   This section contains RECORD types only.
+!   Field order inside RECORD definitions must remain stable.
+!   The PC writes some complete RECORD values through RWS, therefore field order
+!   is part of the serialization contract.
+!==============================================================================
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Donnees completes d'un point trajectoire.
+    !
+    !   Chaque entree trajData{i} contient les informations necessaires au robot
+    !   pour executer un point :
+    !       - type de mouvement ;
+    !       - robtarget ABB ;
+    !       - vitesse TCP ;
+    !       - zone ;
+    !       - prise en compte de la configuration axe ;
+    !       - index tool ;
+    !       - index workobject ;
+    !       - index du jeu de parametres process.
+    !
+    ! EN:
+    !   Complete data for one trajectory point.
+    !
+    !   Each trajData{i} entry contains the information required by the robot
+    !   to execute one point:
+    !       - motion type;
+    !       - ABB robtarget;
+    !       - TCP speed;
+    !       - zone;
+    !       - axis configuration usage;
+    !       - tool index;
+    !       - workobject index;
+    !       - process parameter set index.
+    !
+    ! Conventions:
+    !   moveType:
+    !       0 = MoveL
+    !       1 = MoveJ
+    !       2 = MoveC
+    !
+    !   tcpSpeed:
+    !       FR: vitesse TCP en mm/s, strictement positive.
+    !       EN: TCP speed in mm/s, strictly positive.
+    !
+    !   zoneType:
+    !       FR: zone ABB codee numeriquement.
+    !       EN: ABB zone encoded as numeric value.
+    !
+    !   toolIndex:
+    !       FR: index base 1 dans trajTools. 0 = non defini.
+    !       EN: 1-based index in trajTools. 0 = undefined.
+    !
+    !   wobjIndex:
+    !       FR: index base 1 dans trajWobjs. 0 = non defini.
+    !       EN: 1-based index in trajWobjs. 0 = undefined.
+    !
+    !   processParamIndex:
+    !       FR: 0 = aucun parametre process.
+    !           1..256 = index de ligne dans processParams.
+    !       EN: 0 = no process parameters.
+    !           1..256 = row index in processParams.
+    !--------------------------------------------------------------------------
+    RECORD trajCenterPointData
+        num moveType;
+        robtarget point;
+        num tcpSpeed;
+        num zoneType;
+        bool readConfs;
+        num toolIndex;
+        num wobjIndex;
+        num processParamIndex;
+    ENDRECORD
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Metadonnees d'une trajectoire disponible dans le store PC.
+    !   Le PC ecrit le tableau trajectories lors d'un refresh metadata.
+    !
+    ! EN:
+    !   Metadata for one trajectory available in the PC store.
+    !   The PC writes the trajectories array during metadata refresh.
+    !
+    ! Fields / Champs:
+    !   name:
+    !       FR: nom affichable de la trajectoire.
+    !       EN: human-readable trajectory name.
+    !
+    !   pointCount:
+    !       FR: nombre de points dans la trajectoire.
+    !       EN: number of points in the trajectory.
+    !
+    !   processType:
+    !       0 = NONE
+    !       1 = ACF
+    !       2 = AAK
+    !       3 = PUSHCORP
+    !       4..255 = RESERVED
+    !--------------------------------------------------------------------------
+    RECORD trajCenterTrajMeta
+        string name;
+        num pointCount;
+        num processType;
+    ENDRECORD
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Entree workobject exposee e TrajCenter.
+    !
+    !   Le PC lit trajWobjs via RWS.
+    !   Il compare les wobj_name des fichiers .trajcenter aux champs name, puis
+    !   ecrit l'index base 1 correspondant dans trajData{i}.wobjIndex.
+    !
+    ! EN:
+    !   Workobject entry exposed to TrajCenter.
+    !
+    !   The PC reads trajWobjs through RWS.
+    !   It matches .trajcenter wobj_name values against name fields, then writes
+    !   the corresponding 1-based index into trajData{i}.wobjIndex.
+    !--------------------------------------------------------------------------
+    RECORD trajCenterWobj
+        string name;
+        wobjdata value;
+    ENDRECORD
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Entree tool exposee e TrajCenter.
+    !
+    !   Le PC lit trajTools via RWS.
+    !   Il compare les tool_name des fichiers .trajcenter aux champs name, puis
+    !   ecrit l'index base 1 correspondant dans trajData{i}.toolIndex.
+    !
+    ! EN:
+    !   Tool entry exposed to TrajCenter.
+    !
+    !   The PC reads trajTools through RWS.
+    !   It matches .trajcenter tool_name values against name fields, then writes
+    !   the corresponding 1-based index into trajData{i}.toolIndex.
+    !--------------------------------------------------------------------------
+    RECORD trajCenterTool
+        string name;
+        tooldata value;
+    ENDRECORD
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Parametre process numerique.
+    !
+    !   Convention :
+    !       name = "" signifie slot inutilise.
+    !       value est numerique uniquement.
+    !
+    ! EN:
+    !   Numeric process parameter.
+    !
+    !   Convention:
+    !       name = "" means unused slot.
+    !       value is numeric only.
+    !--------------------------------------------------------------------------
+    RECORD trajCenterProcessParameter
+        string name;
+        num value;
+    ENDRECORD
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Type process connu cete robot.
+    !
+    !   Le PC lit processTypes via RWS pour valider que le process demande par
+    !   une trajectoire existe sur le contreleur.
+    !
+    ! EN:
+    !   Process type known on the robot side.
+    !
+    !   The PC reads processTypes through RWS to validate that the process
+    !   requested by a trajectory exists on the controller.
+    !
+    ! Fields / Champs:
+    !   id:
+    !       FR: identifiant numerique du process.
+    !       EN: numeric process identifier.
+    !
+    !   name:
+    !       FR: nom lisible du process.
+    !       EN: human-readable process name.
+    !--------------------------------------------------------------------------
+    RECORD trajCenterProcessType
+        num id;
+        string name;
+    ENDRECORD
+
+
+!==============================================================================
+! SECTION 2 - LIMITES GLOBALES / GLOBAL LIMITS
+!==============================================================================
+!
+! FR:
+!   Limites dimensionnelles globales du protocole.
+!   Elles doivent rester coherentes avec les dimensions des tableaux RWS et avec
+!   les validations cete PC.
+!
+! EN:
+!   Global dimensional limits of the protocol.
+!   They must remain consistent with RWS array dimensions and PC-side
+!   validations.
+!==============================================================================
+
+    ! FR: Nombre maximal de trajectoires listees par le PC.
+    ! EN: Maximum number of trajectories listed by the PC.
+    CONST num maxTrajCount := 256;
+
+    ! FR: Nombre maximal de points transferables dans trajData.
+    ! EN: Maximum number of trajectory points transferable into trajData.
+    CONST num maxTrajPointCount := 10000;
+
+    ! FR: Nombre maximal de jeux distincts de parametres process.
+    ! EN: Maximum number of distinct process parameter sets.
+    CONST num maxProcessParamSetCount := 256;
+
+    ! FR: Nombre maximal de parametres par jeu process.
+    ! EN: Maximum number of parameters per process parameter set.
+    CONST num maxProcessParamPerSet := 10;
+
+    ! FR: Nombre maximal de tools exposes e TrajCenter.
+    ! EN: Maximum number of tools exposed to TrajCenter.
+    CONST num maxTrajToolCount := 256;
+
+    ! FR: Nombre maximal de workobjects exposes e TrajCenter.
+    ! EN: Maximum number of workobjects exposed to TrajCenter.
+    CONST num maxTrajWobjCount := 256;
+
+!==============================================================================
+! SECTION 3 - CODES D'ETAT ET D'ERREUR / STATUS AND ERROR CODES
+!==============================================================================
+!
+! FR:
+!   Cette section regroupe deux familles d'erreurs distinctes :
+!
+!   3.1 Codes PC/RWS :
+!       Codes numeriques ecrits par le PC dans lastErrorCode.
+!       Ils decrivent l'etat du protocole PC <-> robot.
+!
+!   3.2 Erreurs locales RAPID :
+!       Erreurs errnum levees par les routines RAPID TrajCenter avec RAISE.
+!       Elles decrivent une mauvaise utilisation locale de l'API RAPID ou un
+!       etat incoherent detecte cete robot.
+!
+! EN:
+!   This section groups two distinct error families:
+!
+!   3.1 PC/RWS codes:
+!       Numeric codes written by the PC into lastErrorCode.
+!       They describe the PC <-> robot protocol state.
+!
+!   3.2 Local RAPID errors:
+!       errnum errors raised by TrajCenter RAPID routines through RAISE.
+!       They describe local RAPID API misuse or an inconsistent state detected
+!       on the robot side.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 3.1 - CODES PC/RWS ECRITS DANS lastErrorCode
+!               PC/RWS CODES WRITTEN INTO lastErrorCode
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Les codes 200xxx indiquent des etats de succes.
+!   Les codes 400xxx indiquent des erreurs de validation trajectoire.
+!   Les codes 401/403/404/408/409 indiquent des erreurs d'acces, de ressource,
+!   de timeout ou d'etat.
+!   Les codes 500xxx et plus indiquent des erreurs client, contreleur ou
+!   infrastructure.
+!
+! EN:
+!   200xxx codes indicate successful states.
+!   400xxx codes indicate trajectory validation errors.
+!   401/403/404/408/409 codes indicate access, resource, timeout or state
+!   errors.
+!   500xxx and above indicate client, controller or infrastructure errors.
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! Success / Succes
+    !--------------------------------------------------------------------------
+    CONST num statusOk := 200000;
+    CONST num statusMetadataRefreshed := 200001;
+    CONST num statusTrajectoryTransferred := 200002;
+
+
+    !--------------------------------------------------------------------------
+    ! Trajectory validation errors / Erreurs de validation trajectoire
+    !--------------------------------------------------------------------------
+    CONST num errSelTrajIdxOutOfRange := 400001;
+    CONST num errorTrajectoryFileNotFound := 400002;
+    CONST num errorInvalidTrajcenterFormat := 400003;
+    CONST num errorTooManyPoints := 400004;
+    CONST num errorInvalidZoneType := 400005;
+    CONST num errorInvalidMoveType := 400006;
+    CONST num errorInvalidMoveCPair := 400007;
+    CONST num errMissingTcpSpeedNoDef := 400008;
+    CONST num errMissingZoneTypeNoDef := 400009;
+    CONST num errMissingToolNameNoDef := 400010;
+    CONST num errMissingWobjNameNoDef := 400011;
+    CONST num errorToolNameNotFound := 400012;
+    CONST num errorWobjNameNotFound := 400013;
+    CONST num errorInvalidTcpSpeed := 400014;
+    CONST num errorInvalidReadConfs := 400015;
+    CONST num errorInvalidRobtarget := 400016;
+    CONST num errorUnknownProcess := 400017;
+    CONST num errorTooManyProcessParamSets := 400018;
+    CONST num errorInvalidProcessParams := 400019;
+
+
+    !--------------------------------------------------------------------------
+    ! RWS access and resources / Acces RWS et ressources
+    !--------------------------------------------------------------------------
+    CONST num errorRwsAuthenticationRefused := 401001;
+    CONST num errorMastershipRefused := 403001;
+    CONST num errorRwsWriteForbidden := 403002;
+    CONST num errorRapidSymbolNotFound := 404001;
+    CONST num errorTrajToolsNotFound := 404002;
+    CONST num errorTrajWobjsNotFound := 404003;
+    CONST num errorTrajectoryStoreNotFound := 404004;
+    CONST num errorRobotDefaultNotFound := 404005;
+    CONST num errorProcessTypesNotFound := 404006;
+
+
+    !--------------------------------------------------------------------------
+    ! Timeouts and state conflicts / Timeouts et conflits d'etat
+    !--------------------------------------------------------------------------
+    CONST num errorRwsRequestTimeout := 408001;
+    CONST num errorTransferTimeout := 408002;
+    CONST num errorTransferAlreadyInProgress := 409001;
+    CONST num errorIncompatibleRobotState := 409002;
+
+
+    !--------------------------------------------------------------------------
+    ! Internal, serialization and controller errors
+    ! Erreurs internes, serialisation et contreleur
+    !--------------------------------------------------------------------------
+    CONST num errorInternalClient := 500001;
+    CONST num errorSerialization := 500002;
+    CONST num errorTrajectoryConversion := 500003;
+    CONST num errorInvalidRwsResponse := 502001;
+    CONST num errorControllerUnavailable := 503001;
+    CONST num errorControllerTimeout := 504001;
+
+
+!------------------------------------------------------------------------------
+! SECTION 3.2 - ERREURS LOCALES API RAPID / LOCAL RAPID API ERRORS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Ces erreurs sont levees cete RAPID par les routines TRAJCENTER_*.
+!   Elles ne sont pas ecrites par le PC dans lastErrorCode.
+!
+!   Elles doivent etre initialisees une fois par TRAJCENTER_InitErrors avant
+!   utilisation des routines susceptibles de faire RAISE.
+!
+! EN:
+!   These errors are raised on the RAPID side by TRAJCENTER_* routines.
+!   They are not written by the PC into lastErrorCode.
+!
+!   They must be initialized once by TRAJCENTER_InitErrors before using routines
+!   that may execute RAISE.
+!------------------------------------------------------------------------------
+
+    VAR errnum ERR_TRAJCENTER_NOT_READY := -1;
+    VAR errnum ERR_TRAJCENTER_TIMEOUT := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_TRAJ_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_POINT_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_TOOL_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_WOBJ_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_MOVE_TYPE := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_ZONE_TYPE := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_MOVEC_PAIR := -1;
+    VAR errnum ERR_TRAJCENTER_TOOL_TABLE_FULL := -1;
+    VAR errnum ERR_TRAJCENTER_WOBJ_TABLE_FULL := -1;
+    VAR errnum ERR_TRAJCENTER_TOOL_NOT_FOUND := -1;
+    VAR errnum ERR_TRAJCENTER_WOBJ_NOT_FOUND := -1;
+    VAR errnum ERR_TRAJCENTER_TRAJ_NOT_FOUND := -1;
+    VAR errnum ERR_TRAJCENTER_EMPTY_NAME := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_TYPE := -1;
+    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX := -1;
+    VAR errnum ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED := -1;
+
+    VAR bool trajCenterErrorsInitialized := FALSE;
+
+
+!==============================================================================
+! SECTION 4 - TYPES DE MOUVEMENT / MOTION TYPES
+!==============================================================================
+!
+! FR:
+!   Constantes de type de mouvement utilisees dans trajData{i}.moveType.
+!   Ne pas modifier sans mettre e jour le PC et les routines d'execution RAPID.
+!
+! EN:
+!   Motion type constants used in trajData{i}.moveType.
+!   Do not modify without updating the PC and RAPID execution routines.
+!==============================================================================
+
+    CONST num moveTypeL := 0;
+    CONST num moveTypeJ := 1;
+    CONST num moveTypeC := 2;
+
+
+!==============================================================================
+! SECTION 5 - PROCESS / PROCESS TYPES AND CATALOG
+!==============================================================================
+!
+! FR:
+!   Cette section regroupe les identifiants process et le catalogue des
+!   process executables par ce controleur.
+!
+!   Pour ajouter un process :
+!       1. Ajouter une constante process dans cette section.
+!       2. Implementer les routines process dans la section 9.10.
+!       3. Ajouter les CASE correspondants dans la section 9.11.
+!       4. Incrementer processTypeCount.
+!       5. Ajouter l'entree correspondante a processTypes.
+!       6. Mettre a jour le client PC, les tests et la documentation.
+!
+!   Un process ne doit etre ajoute a processTypes que lorsque son
+!   implementation RAPID est operationnelle.
+!
+! EN:
+!   This section groups process identifiers and the catalog of processes
+!   executable by this controller.
+!
+!   To add a process:
+!       1. Add a process constant in this section.
+!       2. Implement the process routines in section 9.10.
+!       3. Add the corresponding CASE statements in section 9.11.
+!       4. Increment processTypeCount.
+!       5. Add the corresponding processTypes entry.
+!       6. Update the PC client, tests and documentation.
+!
+!   A process must only be added to processTypes when its RAPID
+!   implementation is operational.
+!
+! Convention:
+!   0 = NONE
+!   1 = ACF
+!   2 = AAK
+!   3 = PUSHCORP
+!   4..255 = RESERVED
+!==============================================================================
+
+
+    !--------------------------------------------------------------------------
+    ! Process identifiers / Identifiants process
+    !--------------------------------------------------------------------------
+    CONST num processNone := 0;
+    CONST num processAcf := 1;
+    CONST num processAak := 2;
+    CONST num processPushcorp := 3;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Nombre d'entrees valides dans processTypes.
+    !
+    ! EN:
+    !   Number of valid entries in processTypes.
+    !--------------------------------------------------------------------------
+
+    ! FR: Ajouter les process au catalogue lorsqu'ils sont operationnels.
+    ! EN: Add processes to the catalog when they become operational.
+    CONST num processTypeCount := 1;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Catalogue process connu cete robot.
+    !
+    !   Le PC lit ce tableau via RWS avant transfert trajectoire.
+    !   Les valeurs runtime des parametres process ne sont pas stockees ici.
+    !   Elles sont ecrites par le PC dans processParams.
+    !
+    !   Entrees valides :
+    !       processTypes{1..processTypeCount}
+    !
+    ! EN:
+    !   Process catalog known on the robot side.
+    !
+    !   The PC reads this array through RWS before trajectory transfer.
+    !   Runtime process parameter values are not stored here.
+    !   They are written by the PC into processParams.
+    !
+    !   Valid entries:
+    !       processTypes{1..processTypeCount}
+    !--------------------------------------------------------------------------
+
+    ! FR: Ajouter les process au catalogue lorsqu'ils sont operationnels.
+    ! EN: Add processes to the catalog when they become operational.
+    VAR trajCenterProcessType processTypes{processTypeCount}:=[
+        [processNone, "NONE"]
+    ];
+
+
+!==============================================================================
+! SECTION 6 - CONFIGURATION CELLULE / CELL CONFIGURATION
+!==============================================================================
+!
+! FR:
+!   Section cellule modifiable par le programmeur robot.
+!
+!   Cette section expose e TrajCenter les tools et workobjects disponibles dans
+!   la cellule.
+!
+!   Le PC ne stocke pas les tooldata/wobjdata complets dans les fichiers
+!   .trajcenter. Il stocke ou reeoit seulement des noms logiques :
+!       - tool_name
+!       - wobj_name
+!
+!   Le PC lit trajTools et trajWobjs via RWS, resout ces noms en index RAPID
+!   base 1, puis ecrit ces index dans trajData.
+!
+!   Convention slot libre :
+!       trajTools{i}.name = ""  => slot tool libre
+!       trajWobjs{i}.name = ""  => slot wobj libre
+!
+!   Les routines TRAJCENTER_UpsertTool et TRAJCENTER_UpsertWobj permettent de
+!   mettre e jour cette configuration depuis un programme RAPID classique.
+!
+! EN:
+!   Cell section editable by the robot programmer.
+!
+!   This section exposes the tools and workobjects available in the cell to
+!   TrajCenter.
+!
+!   The PC does not store complete tooldata/wobjdata values in .trajcenter
+!   files. It stores or receives logical names only:
+!       - tool_name
+!       - wobj_name
+!
+!   The PC reads trajTools and trajWobjs through RWS, resolves these names to
+!   RAPID 1-based indexes, then writes those indexes into trajData.
+!
+!   Free slot convention:
+!       trajTools{i}.name = ""  => free tool slot
+!       trajWobjs{i}.name = ""  => free wobj slot
+!
+!   TRAJCENTER_UpsertTool and TRAJCENTER_UpsertWobj allow this configuration to
+!   be updated from a regular RAPID program.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 6.1 - WORKOBJECTS CELLULE / CELL WORKOBJECTS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Workobjects disponibles pour TrajCenter.
+    !
+    !   Taille fixe protocole : maxTrajWobjCount.
+    !   Les slots dont name = "" sont consideres libres.
+    !
+    !   Recommandation :
+    !       appeler TRAJCENTER_InitCellConfig au demarrage ou en mise en service
+    !       pour creer au minimum l'entree "wobj0".
+    !
+    ! EN:
+    !   Workobjects available for TrajCenter.
+    !
+    !   Fixed protocol size: maxTrajWobjCount.
+    !   Slots with name = "" are considered free.
+    !
+    !   Recommendation:
+    !       call TRAJCENTER_InitCellConfig at startup or during commissioning
+    !       to create at least the "wobj0" entry.
+    !--------------------------------------------------------------------------
+    PERS trajCenterWobj trajWobjs{maxTrajWobjCount};
+
+
+!------------------------------------------------------------------------------
+! SECTION 6.2 - TOOLS CELLULE / CELL TOOLS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Tools disponibles pour TrajCenter.
+    !
+    !   Taille fixe protocole : maxTrajToolCount.
+    !   Les slots dont name = "" sont consideres libres.
+    !
+    !   Recommandation :
+    !       appeler TRAJCENTER_InitCellConfig au demarrage ou en mise en service
+    !       pour creer au minimum l'entree "tool0".
+    !
+    ! EN:
+    !   Tools available for TrajCenter.
+    !
+    !   Fixed protocol size: maxTrajToolCount.
+    !   Slots with name = "" are considered free.
+    !
+    !   Recommendation:
+    !       call TRAJCENTER_InitCellConfig at startup or during commissioning
+    !       to create at least the "tool0" entry.
+    !--------------------------------------------------------------------------
+    PERS trajCenterTool trajTools{maxTrajToolCount};
+
+
+!------------------------------------------------------------------------------
+! SECTION 6.3 - VARIABLES DE MAINTENANCE / MAINTENANCE VARIABLES
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Tooldata temporaire utilise par les routines de maintenance.
+    !   Cette variable n'est pas utilisee directement par le protocole de
+    !   transfert PC <-> robot.
+    !
+    ! EN:
+    !   Temporary tooldata used by maintenance routines.
+    !   This variable is not directly used by the PC <-> robot transfer
+    !   protocol.
+    !--------------------------------------------------------------------------
+    PERS tooldata tempTool := [
+        TRUE,
+        [[0, 0, 0], [1, 0, 0, 0]],
+        [1, [0, 0, 50], [1, 0, 0, 0], 0.01, 0.01, 0.01]
+    ];
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Wobjdata temporaire utilise par les routines de maintenance.
+    !   Cette variable n'est pas utilisee directement par le protocole de
+    !   transfert PC <-> robot.
+    !
+    ! EN:
+    !   Temporary wobjdata used by maintenance routines.
+    !   This variable is not directly used by the PC <-> robot transfer
+    !   protocol.
+    !--------------------------------------------------------------------------
+    PERS wobjdata tempWobj := [
+        FALSE,
+        TRUE,
+        "",
+        [[0, 0, 0], [1, 0, 0, 0]],
+        [[0, 0, 0], [1, 0, 0, 0]]
+    ];
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Tooldata persistant utilise par les instructions de mouvement.
+    !
+    !   Les instructions MoveL/MoveJ/MoveC exigent un tool PERS.
+    !   Cette variable sert donc de cache d'execution.
+    !
+    ! EN:
+    !   Persistent tooldata used by motion instructions.
+    !
+    !   MoveL/MoveJ/MoveC require a PERS tool.
+    !   This variable is used as an execution cache.
+    !--------------------------------------------------------------------------
+    PERS tooldata trajExecTool := [
+        TRUE,
+        [[0, 0, 0], [1, 0, 0, 0]],
+        [1, [0, 0, 50], [1, 0, 0, 0], 0.01, 0.01, 0.01]
+
+    ];
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Wobjdata persistant utilise par les instructions de mouvement.
+    !
+    !   Les instructions MoveL/MoveJ/MoveC exigent un wobj PERS.
+    !   Cette variable sert donc de cache d'execution.
+    !
+    ! EN:
+    !   Persistent wobjdata used by motion instructions.
+    !
+    !   MoveL/MoveJ/MoveC require a PERS wobj.
+    !   This variable is used as an execution cache.
+    !--------------------------------------------------------------------------
+    PERS wobjdata trajExecWobj := [
+        FALSE,
+        TRUE,
+        "",
+        [[0, 0, 0], [1, 0, 0, 0]],
+        [[0, 0, 0], [1, 0, 0, 0]]
+    ];
+
+
+!==============================================================================
+! SECTION 7 - VARIABLES RWS / RWS EXCHANGE VARIABLES
+!==============================================================================
+!
+! FR:
+!   Variables d'echange ABB Robot Web Services.
+!
+!   Les flags de requete sont PERS afin de permettre l'abonnement RWS cete PC.
+!   Les autres variables sont VAR car elles representent un etat runtime.
+!
+!   Le PC doit ecrire ces variables sous Mastership.
+!   Les evenements FALSE sur les flags de requete doivent etre ignores cete PC.
+!
+! EN:
+!   ABB Robot Web Services exchange variables.
+!
+!   Request flags are PERS to allow PC-side RWS subscription.
+!   Other variables are VAR because they represent runtime state.
+!
+!   The PC must write these variables under Mastership.
+!   FALSE events on request flags must be ignored by the PC.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 7.1 - FLAGS DE REQUETE / REQUEST FLAGS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande de chargement trajectoire depuis le PC.
+    !
+    !   Sequence cote robot :
+    !       selectedTrajIndex := k;
+    !       sendTrajRequest := TRUE;
+    !
+    !   Comportement cete PC :
+    !       1. Recevoir l'evenement TRUE via abonnement RWS.
+    !       2. Lire selectedTrajIndex.
+    !       3. Charger le fichier .trajcenter correspondant.
+    !       4. Lire les variables par defaut, tools, wobjs et processTypes.
+    !       5. Resoudre les champs robot.
+    !       6. Mettre trajReady a FALSE et invalider l'ancien payload.
+    !       7. Ecrire processParams, trajData, loadedProcessType et
+    !          nbLoadedTrajPoints.
+    !       8. Mettre trajReady a TRUE uniquement apres l'ecriture complete.
+    !       9. Remettre sendTrajRequest a FALSE.
+    !
+    ! EN:
+    !   Request trajectory loading from the PC.
+    !
+    !   Robot-side sequence:
+    !       selectedTrajIndex := k;
+    !       sendTrajRequest := TRUE;
+    !
+    !   PC-side behavior:
+    !       1. Receive the TRUE event through RWS subscription.
+    !       2. Read selectedTrajIndex.
+    !       3. Load the corresponding .trajcenter file.
+    !       4. Read defaults, tools, wobjs and processTypes.
+    !       5. Resolve robot-side fields.
+    !       6. Set trajReady to FALSE and invalidate the previous payload.
+    !       7. Write processParams, trajData, loadedProcessType and
+    !          nbLoadedTrajPoints.
+    !       8. Set trajReady to TRUE only after the complete payload is written.
+    !       9. Reset sendTrajRequest to FALSE.
+    !--------------------------------------------------------------------------
+    PERS bool sendTrajRequest := FALSE;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande de rafraechissement metadata depuis le PC.
+    !
+    !   Sequence cete robot :
+    !       refreshMetaRequest := TRUE;
+    !
+    !   Comportement cete PC :
+    !       1. Recevoir l'evenement TRUE via abonnement RWS.
+    !       2. Scanner le store trajectoire PC.
+    !       3. Lister les fichiers .trajcenter exportables.
+    !       4. ecrire nbTrajAvailable et trajectories.
+    !       5. ecrire les variables d'etat.
+    !       6. Remettre refreshMetaRequest e FALSE.
+    !
+    ! EN:
+    !   Request metadata refresh from the PC.
+    !
+    !   Robot-side sequence:
+    !       refreshMetaRequest := TRUE;
+    !
+    !   PC-side behavior:
+    !       1. Receive the TRUE event through RWS subscription.
+    !       2. Scan the PC trajectory store.
+    !       3. List exportable .trajcenter files.
+    !       4. Write nbTrajAvailable and trajectories.
+    !       5. Write status variables.
+    !       6. Reset refreshMetaRequest to FALSE.
+    !--------------------------------------------------------------------------
+    PERS bool refreshMetaRequest := FALSE;
+
+
+!------------------------------------------------------------------------------
+! SECTION 7.2 - CONTEXTE DE REQUETE / REQUEST CONTEXT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Index de la trajectoire selectionnee.
+    !
+    !   Convention :
+    !       0 = aucune trajectoire selectionnee.
+    !       1..nbTrajAvailable = index valide dans trajectories.
+    !
+    ! EN:
+    !   Selected trajectory index.
+    !
+    !   Convention:
+    !       0 = no selected trajectory.
+    !       1..nbTrajAvailable = valid index in trajectories.
+    !--------------------------------------------------------------------------
+    VAR num selectedTrajIndex := 0;
+
+
+!------------------------------------------------------------------------------
+! SECTION 7.3 - ETAT OPERATIONNEL / OPERATION STATUS
+!------------------------------------------------------------------------------
+
+    ! FR: TRUE uniquement lorsque trajData est complet et executable.
+    ! EN: TRUE only when trajData is complete and executable.
+    VAR bool trajReady := FALSE;
+
+    ! FR: TRUE lorsque le dernier refresh ou transfert a echoue.
+    ! EN: TRUE when the latest refresh or transfer failed.
+    VAR bool transferError := FALSE;
+
+    ! FR: Dernier code d'etat ou d'erreur ecrit par le PC.
+    ! EN: Last status or error code written by the PC.
+    VAR num lastErrorCode := statusOk;
+
+    ! FR: Message court associe au dernier etat ou e la derniere erreur.
+    ! EN: Short message associated with the latest status or error.
+    VAR string lastError := "";
+
+    ! FR: Progression transfert en pourcentage, de 0 e 100.
+    ! EN: Transfer progress in percent, from 0 to 100.
+    VAR num transferProgress := 0;
+
+
+!------------------------------------------------------------------------------
+! SECTION 7.4 - METADONNEES TRAJECTOIRES / TRAJECTORY METADATA
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Nombre d'entrees valides dans trajectories.
+    !
+    !   Plage valide :
+    !       0..256
+    !
+    !   Entrees valides :
+    !       trajectories{1..nbTrajAvailable}
+    !
+    ! EN:
+    !   Number of valid entries in trajectories.
+    !
+    !   Valid range:
+    !       0..256
+    !
+    !   Valid entries:
+    !       trajectories{1..nbTrajAvailable}
+    !--------------------------------------------------------------------------
+    VAR num nbTrajAvailable := 0;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Metadonnees des trajectoires disponibles dans le store PC.
+    !
+    !   Champs :
+    !       trajectories{i}.name        = nom affichable
+    !       trajectories{i}.pointCount  = nombre de points
+    !       trajectories{i}.processType = type process
+    !
+    ! EN:
+    !   Metadata of trajectories available in the PC store.
+    !
+    !   Fields:
+    !       trajectories{i}.name        = display name
+    !       trajectories{i}.pointCount  = number of points
+    !       trajectories{i}.processType = process type
+    !--------------------------------------------------------------------------
+    VAR trajCenterTrajMeta trajectories{maxTrajCount};
+
+
+!------------------------------------------------------------------------------
+! SECTION 7.5 - TRAJECTOIRE CHARGEE / LOADED TRAJECTORY
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Nombre d'entrees valides dans trajData pour la trajectoire chargee.
+    !
+    !   Les routines d'execution RAPID doivent parcourir :
+    !       FOR i FROM 1 TO nbLoadedTrajPoints DO
+    !           ...
+    !       ENDFOR
+    !
+    ! EN:
+    !   Number of valid entries in trajData for the loaded trajectory.
+    !
+    !   RAPID execution routines must iterate over:
+    !       FOR i FROM 1 TO nbLoadedTrajPoints DO
+    !           ...
+    !       ENDFOR
+    !--------------------------------------------------------------------------
+    VAR num nbLoadedTrajPoints := 0;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Donnees de la trajectoire chargee par le PC.
+    !
+    !   Entrees valides :
+    !       trajData{1..nbLoadedTrajPoints}
+    !
+    ! EN:
+    !   Trajectory data loaded by the PC.
+    !
+    !   Valid entries:
+    !       trajData{1..nbLoadedTrajPoints}
+    !--------------------------------------------------------------------------
+    VAR trajCenterPointData trajData{maxTrajPointCount};
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Table des parametres process ecrite par le PC.
+    !
+    !   Premiere dimension :
+    !       index du jeu de parametres process, 1..256.
+    !
+    !   Deuxieme dimension :
+    !       slot de parametre, 1..10.
+    !
+    !   Convention :
+    !       processParams{i,j}.name = "" signifie slot inutilise.
+    !
+    !   Mapping point :
+    !       trajData{k}.processParamIndex = 0
+    !           aucun parametre process pour le point k.
+    !
+    !       trajData{k}.processParamIndex = p
+    !           les parametres process sont processParams{p,1..10}.
+    !
+    ! EN:
+    !   Process parameter table written by the PC.
+    !
+    !   First dimension:
+    !       process parameter set index, 1..256.
+    !
+    !   Second dimension:
+    !       parameter slot, 1..10.
+    !
+    !   Convention:
+    !       processParams{i,j}.name = "" means unused slot.
+    !
+    !   Point mapping:
+    !       trajData{k}.processParamIndex = 0
+    !           no process parameters for point k.
+    !
+    !       trajData{k}.processParamIndex = p
+    !           process parameters are processParams{p,1..10}.
+    !--------------------------------------------------------------------------
+    VAR trajCenterProcessParameter processParams{maxProcessParamSetCount, maxProcessParamPerSet};
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Type de process associe au payload actuellement charge.
+    !
+    !   Cette valeur est ecrite par le superviseur Python pendant le transfert.
+    !   Elle provient du fichier .trajcenter effectivement charge et valide.
+    !
+    !   La valeur n'est exploitable que lorsque trajReady = TRUE.
+    !
+    ! EN:
+    !   Process type associated with the currently loaded payload.
+    !
+    !   This value is written by the Python supervisor during transfer.
+    !   It comes from the .trajcenter file that was actually loaded and validated.
+    !
+    !   The value is only valid when trajReady = TRUE.
+    !--------------------------------------------------------------------------
+    VAR num loadedProcessType := processNone;
+
+
+
+!==============================================================================
+! SECTION 8 - VARIABLES PAR DEFAUT DU ROBOT / ROBOT DEFAULTS
+!==============================================================================
+!
+! FR:
+!   Valeurs par defaut lues par le PC avant transfert trajectoire.
+!
+!   Ces variables font partie du protocole RWS, mais sont isolees ici car elles
+!   sont typiquement reglees e la mise en service cellule.
+!
+!   Le PC ne doit jamais inventer silencieusement tool, wobj, speed ou zone.
+!   Un fallback n'est autorise que si le flag hasDefault* correspondant vaut
+!   TRUE.
+!
+! EN:
+!   Default values read by the PC before trajectory transfer.
+!
+!   These variables are part of the RWS protocol, but are isolated here because
+!   they are typically configured during cell commissioning.
+!
+!   The PC must never silently invent tool, wobj, speed or zone values.
+!   A fallback is allowed only if the corresponding hasDefault* flag is TRUE.
+!==============================================================================
+
+
+!------------------------------------------------------------------------------
+! SECTION 8.1 - DEFAULT TCP SPEED / VITESSE TCP PAR DEFAUT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si une vitesse TCP par defaut est disponible cete robot.
+    !
+    !   Si hasDefaultTcpSpeed = FALSE et que tcp_speed est absent du fichier
+    !   .trajcenter, le PC doit refuser le transfert.
+    !
+    ! EN:
+    !   Indicates whether a default TCP speed is available on the robot side.
+    !
+    !   If hasDefaultTcpSpeed = FALSE and tcp_speed is missing from the
+    !   .trajcenter file, the PC must refuse the transfer.
+    !--------------------------------------------------------------------------
+    VAR bool hasDefaultTcpSpeed := FALSE;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vitesse TCP par defaut en mm/s.
+    !   Utilisee uniquement si hasDefaultTcpSpeed = TRUE.
+    !
+    ! EN:
+    !   Default TCP speed in mm/s.
+    !   Used only if hasDefaultTcpSpeed = TRUE.
+    !--------------------------------------------------------------------------
+    VAR num defaultTcpSpeed := 0;
+
+
+!------------------------------------------------------------------------------
+! SECTION 8.2 - DEFAULT ZONE / ZONE PAR DEFAUT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si une zone par defaut est disponible cete robot.
+    !
+    !   Si hasDefaultZoneType = FALSE et que zone_type est absent du fichier
+    !   .trajcenter, le PC doit refuser le transfert.
+    !
+    ! EN:
+    !   Indicates whether a default zone is available on the robot side.
+    !
+    !   If hasDefaultZoneType = FALSE and zone_type is missing from the
+    !   .trajcenter file, the PC must refuse the transfer.
+    !--------------------------------------------------------------------------
+    VAR bool hasDefaultZoneType := FALSE;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Zone par defaut.
+    !
+    !   Utilisee uniquement si hasDefaultZoneType = TRUE.
+    !
+    !   Valeurs autorisees :
+    !       0, 1, 5, 10, 15, 20, 30, 40, 50, 60,
+    !       80, 100, 150, 200, 255.
+    !
+    ! EN:
+    !   Default zone.
+    !
+    !   Used only if hasDefaultZoneType = TRUE.
+    !
+    !   Allowed values:
+    !       0, 1, 5, 10, 15, 20, 30, 40, 50, 60,
+    !       80, 100, 150, 200, 255.
+    !--------------------------------------------------------------------------
+    VAR num defaultZoneType := 255;
+
+
+!------------------------------------------------------------------------------
+! SECTION 8.3 - DEFAULT TOOL / TOOL PAR DEFAUT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si un nom de tool par defaut est disponible cete robot.
+    !
+    !   Si hasDefaultToolName = FALSE et que tool_name est absent du fichier
+    !   .trajcenter, le PC doit refuser le transfert.
+    !
+    !   Si hasDefaultToolName = TRUE, defaultToolName doit exister dans
+    !   trajTools.
+    !
+    ! EN:
+    !   Indicates whether a default tool name is available on the robot side.
+    !
+    !   If hasDefaultToolName = FALSE and tool_name is missing from the
+    !   .trajcenter file, the PC must refuse the transfer.
+    !
+    !   If hasDefaultToolName = TRUE, defaultToolName must exist in trajTools.
+    !--------------------------------------------------------------------------
+    VAR bool hasDefaultToolName := FALSE;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Nom du tool par defaut.
+    !
+    !   Ce n'est pas un tooldata.
+    !   Le PC resout ce nom dans trajTools pour obtenir un toolIndex.
+    !
+    ! EN:
+    !   Default tool name.
+    !
+    !   This is not a tooldata.
+    !   The PC resolves this name in trajTools to obtain a toolIndex.
+    !--------------------------------------------------------------------------
+    VAR string defaultToolName := "";
+
+
+!------------------------------------------------------------------------------
+! SECTION 8.4 - DEFAULT WORKOBJECT / WORKOBJECT PAR DEFAUT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si un nom de workobject par defaut est disponible cete robot.
+    !
+    !   Si hasDefaultWobjName = FALSE et que wobj_name est absent du fichier
+    !   .trajcenter, le PC doit refuser le transfert.
+    !
+    !   Si hasDefaultWobjName = TRUE, defaultWobjName doit exister dans
+    !   trajWobjs.
+    !
+    ! EN:
+    !   Indicates whether a default workobject name is available on the robot
+    !   side.
+    !
+    !   If hasDefaultWobjName = FALSE and wobj_name is missing from the
+    !   .trajcenter file, the PC must refuse the transfer.
+    !
+    !   If hasDefaultWobjName = TRUE, defaultWobjName must exist in trajWobjs.
+    !--------------------------------------------------------------------------
+    VAR bool hasDefaultWobjName := FALSE;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Nom du workobject par defaut.
+    !
+    !   Ce n'est pas un wobjdata.
+    !   Le PC resout ce nom dans trajWobjs pour obtenir un wobjIndex.
+    !
+    ! EN:
+    !   Default workobject name.
+    !
+    !   This is not a wobjdata.
+    !   The PC resolves this name in trajWobjs to obtain a wobjIndex.
+    !--------------------------------------------------------------------------
+    VAR string defaultWobjName := "";
+
+
+!------------------------------------------------------------------------------
+! SECTION 8.5 - DEFAULT MOTION AND CONFIGURATION
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Type de mouvement par defaut.
+    !
+    !   Convention :
+    !       moveTypeL = MoveL
+    !       moveTypeJ = MoveJ
+    !       moveTypeC = MoveC
+    !
+    !   Recommande :
+    !       moveTypeL
+    !
+    ! EN:
+    !   Default movement type.
+    !
+    !   Convention:
+    !       moveTypeL = MoveL
+    !       moveTypeJ = MoveJ
+    !       moveTypeC = MoveC
+    !
+    !   Recommended:
+    !       moveTypeL
+    !--------------------------------------------------------------------------
+    VAR num defaultMoveType := moveTypeL;
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Valeur par defaut pour readConfs.
+    !
+    !   Le PC peut appliquer une regle d'import plus specifique :
+    !       - si confdata est present et readconfs absent : TRUE ;
+    !       - si confdata est absent et readconfs absent : FALSE.
+    !
+    ! EN:
+    !   Default value for readConfs.
+    !
+    !   The PC may apply a more specific import rule:
+    !       - if confdata is present and readconfs is missing: TRUE;
+    !       - if confdata is missing and readconfs is missing: FALSE.
+    !--------------------------------------------------------------------------
+    VAR bool defaultReadConfs := TRUE;
+
+
+!==============================================================================
+! SECTION 9 - API RAPID TRAJCENTER / TRAJCENTER RAPID API
+!==============================================================================
+!
+! FR:
+!   API RAPID destinee aux programmes utilisateurs classiques.
+!
+!   Elle permet de :
+!       - initialiser les erreurs locales RAPID ;
+!       - gerer la validite du payload charge ;
+!       - initialiser une configuration cellule minimale ;
+!       - ajouter ou mettre a jour des tools/wobjs exposes a TrajCenter ;
+!       - declencher les requetes PC via RWS ;
+!       - attendre la fin d'un refresh ou d'un transfert ;
+!       - acceder aux points et parametres process charges ;
+!       - executer une trajectoire avec ou sans process metier.
+!
+!   TRAJCENTER_ExecuteLoaded constitue l'unique point d'entree recommande
+!   pour l'execution.
+!
+!   Les interfaces process et le dispatcher sont implementes. Les routines
+!   propres a ACF, AAK et PUSHCORP restent a completer avant d'ajouter ces
+!   process au catalogue processTypes.
+!
+! EN:
+!   RAPID API intended for regular user programs.
+!
+!   It allows users to:
+!       - initialize local RAPID errors;
+!       - manage loaded payload validity;
+!       - initialize a minimal cell configuration;
+!       - add or update tools/wobjs exposed to TrajCenter;
+!       - trigger PC requests through RWS;
+!       - wait for refresh or transfer completion;
+!       - access loaded points and process parameters;
+!       - execute a trajectory with or without a business process.
+!
+!   TRAJCENTER_ExecuteLoaded is the single recommended execution entry point.
+!
+!   Process interfaces and dispatching are implemented. ACF, AAK and PUSHCORP
+!   routines must be completed before adding these processes to processTypes.
+!==============================================================================
+
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.1 - INITIALISATION ERREURS / ERROR INITIALIZATION
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Initialise les erreurs locales RAPID utilisees par l'API TrajCenter.
+    !
+    !   Cette routine doit etre appelee une fois avant d'utiliser les routines
+    !   pouvant lever une erreur par RAISE.
+    !
+    ! EN:
+    !   Initializes local RAPID errors used by the TrajCenter API.
+    !
+    !   This routine must be called once before using routines that may raise
+    !   an error through RAISE.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_InitErrors()
+        IF trajCenterErrorsInitialized = TRUE THEN
+            RETURN;
+        ENDIF
+
+        BookErrNo ERR_TRAJCENTER_NOT_READY;
+        BookErrNo ERR_TRAJCENTER_TIMEOUT;
+        BookErrNo ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_POINT_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        BookErrNo ERR_TRAJCENTER_BAD_MOVE_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_ZONE_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+        BookErrNo ERR_TRAJCENTER_TOOL_TABLE_FULL;
+        BookErrNo ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+        BookErrNo ERR_TRAJCENTER_TOOL_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_TRAJ_NOT_FOUND;
+        BookErrNo ERR_TRAJCENTER_EMPTY_NAME;
+        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
+        BookErrNo ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
+
+        trajCenterErrorsInitialized := TRUE;
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.2 - GESTION ETAT TRAJECTOIRE CHARGEE
+!               LOADED TRAJECTORY STATE MANAGEMENT
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section contient les helpers internes gerant la validite du payload
+!   trajectoire charge.
+!
+!   Une trajectoire doit etre invalidee :
+!       - avant le chargement d'un nouveau payload ;
+!       - apres modification d'un tool ou d'un workobject reference ;
+!       - apres suppression ou vidage de la configuration cellule ;
+!       - lorsqu'une routine RAPID invalide explicitement le payload.
+!
+!   En cas d'echec de transfert, le superviseur PC applique directement le
+!   meme etat d'invalidation via RWS.
+
+!
+! EN:
+!   This section contains internal helpers managing the validity of the loaded
+!   trajectory payload.
+!
+!   A trajectory must be invalidated:
+!       - before loading a new payload;
+!       - after changing a referenced tool or workobject;
+!       - after deleting or clearing cell configuration;
+!       - when a RAPID routine explicitly invalidates the payload.
+!
+!   On transfer failure, the PC supervisor directly applies the same
+!   invalidation state through RWS.
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Invalide le payload trajectoire actuellement charge.
+    !
+    !   Les anciennes valeurs de trajData et processParams ne sont pas effacees.
+    !   Elles sont rendues inaccessibles par :
+    !       - trajReady = FALSE ;
+    !       - nbLoadedTrajPoints = 0 ;
+    !       - loadedProcessType = processNone.
+    !
+    ! EN:
+    !   Invalidates the currently loaded trajectory payload.
+    !
+    !   Previous trajData and processParams values are not cleared.
+    !   They are made inaccessible through:
+    !       - trajReady = FALSE;
+    !       - nbLoadedTrajPoints = 0;
+    !       - loadedProcessType = processNone.
+    !--------------------------------------------------------------------------
+    LOCAL PROC TRAJCENTER_InvalidateLoaded()
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+        loadedProcessType := processNone;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.3 - INITIALISATION CONFIG CELLULE / CELL CONFIG INITIALIZATION
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Initialise une configuration cellule minimale avec :
+    !       - tool0
+    !       - wobj0
+    !
+    !   Cette routine ne vide pas tous les tableaux.
+    !   Elle ajoute ou met e jour seulement les entrees "tool0" et "wobj0".
+    !
+    ! EN:
+    !   Initializes a minimal cell configuration with:
+    !       - tool0
+    !       - wobj0
+    !
+    !   This routine does not clear all arrays.
+    !   It only adds or updates "tool0" and "wobj0" entries.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_InitCellConfig()
+        VAR tooldata localTool0;
+        VAR wobjdata localWobj0;
+
+        localTool0 := [
+            TRUE,
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [1, [0, 0, 50], [1, 0, 0, 0], 0.01, 0.01, 0.01]
+        ];
+
+        localWobj0 := [
+            FALSE,
+            TRUE,
+            "",
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [[0, 0, 0], [1, 0, 0, 0]]
+        ];
+
+        TRAJCENTER_UpsertTool "tool0", localTool0;
+        TRAJCENTER_UpsertWobj "wobj0", localWobj0;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.4 - GESTION TOOLS/WOBJS / TOOL AND WOBJ MANAGEMENT
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un tool par nom dans trajTools.
+    !
+    !   Retour :
+    !       0  = non trouve
+    !       >0 = index base 1 dans trajTools
+    !
+    ! EN:
+    !   Searches a tool by name in trajTools.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajTools
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindToolIndex(string toolName)
+        VAR num i;
+
+        IF toolName = "" THEN
+            RETURN 0;
+        ENDIF
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            IF trajTools{i}.name = toolName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un workobject par nom dans trajWobjs.
+    !
+    !   Retour :
+    !       0  = non trouve
+    !       >0 = index base 1 dans trajWobjs
+    !
+    ! EN:
+    !   Searches a workobject by name in trajWobjs.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajWobjs
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindWobjIndex(string wobjName)
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            IF trajWobjs{i}.name = wobjName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met e jour un tool expose e TrajCenter.
+    !
+    !   Regle :
+    !       - si le nom existe deje, sa valeur est remplacee ;
+    !       - sinon, le premier slot libre name="" est utilise ;
+    !       - si aucun slot n'est libre, une erreur RAPID est levee.
+    !
+    !   Toute modification de tool invalide la trajectoire chargee, car les
+    !   mouvements deje transferes peuvent referencer une configuration devenue
+    !   obsolete.
+    !
+    ! EN:
+    !   Adds or updates a tool exposed to TrajCenter.
+    !
+    !   Rule:
+    !       - if the name already exists, its value is replaced;
+    !       - otherwise, the first free slot name="" is used;
+    !       - if no slot is free, a RAPID error is raised.
+    !
+    !   Any tool modification invalidates the loaded trajectory because already
+    !   transferred motions may reference an obsolete configuration.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTool(string toolName, tooldata toolValue)
+        VAR num i;
+        VAR num existingIndex;
+
+        IF toolName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        existingIndex := TRAJCENTER_FindToolIndex(toolName);
+
+        IF existingIndex > 0 THEN
+            trajTools{existingIndex}.value := toolValue;
+            TRAJCENTER_InvalidateLoaded;
+            RETURN;
+        ENDIF
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            IF trajTools{i}.name = "" THEN
+                trajTools{i}.name := toolName;
+                trajTools{i}.value := toolValue;
+                TRAJCENTER_InvalidateLoaded;
+                RETURN;
+            ENDIF
+        ENDFOR
+
+        RAISE ERR_TRAJCENTER_TOOL_TABLE_FULL;
+    ENDPROC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met a jour un workobject expose TrajCenter.
+    !
+    !   Regle :
+    !       - si le nom existe deje, sa valeur est remplacee ;
+    !       - sinon, le premier slot libre name="" est utilise ;
+    !       - si aucun slot n'est libre, une erreur RAPID est levee.
+    !
+    !   Toute modification de workobject invalide la trajectoire chargee, car
+    !   les mouvements deje transferes peuvent referencer une configuration
+    !   devenue obsolete.
+    !
+    ! EN:
+    !   Adds or updates a workobject exposed to TrajCenter.
+    !
+    !   Rule:
+    !       - if the name already exists, its value is replaced;
+    !       - otherwise, the first free slot name="" is used;
+    !       - if no slot is free, a RAPID error is raised.
+    !
+    !   Any workobject modification invalidates the loaded trajectory because
+    !   already transferred motions may reference an obsolete configuration.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertWobj(string wobjName, wobjdata wobjValue)
+        VAR num i;
+        VAR num existingIndex;
+
+        IF wobjName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        existingIndex := TRAJCENTER_FindWobjIndex(wobjName);
+
+        IF existingIndex > 0 THEN
+            trajWobjs{existingIndex}.value := wobjValue;
+            TRAJCENTER_InvalidateLoaded;
+            RETURN;
+        ENDIF
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            IF trajWobjs{i}.name = "" THEN
+                trajWobjs{i}.name := wobjName;
+                trajWobjs{i}.value := wobjValue;
+                TRAJCENTER_InvalidateLoaded;
+                RETURN;
+            ENDIF
+        ENDFOR
+
+        RAISE ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+    ENDPROC
+
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Supprime un tool expose de TrajCenter.
+    !
+    !   La suppression libere le slot en mettant name e "" et remet une valeur
+    !   tooldata neutre.
+    !
+    !   La trajectoire chargee est invalidee, car les index tool deje presents
+    !   dans trajData peuvent devenir incoherents.
+    !
+    ! EN:
+    !   Deletes a tool exposed to TrajCenter.
+    !
+    !   Deletion frees the slot by setting name to "" and resets a neutral
+    !   tooldata value.
+    !
+    !   The loaded trajectory is invalidated because tool indexes already stored
+    !   in trajData may become inconsistent.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_DeleteTool(string toolName)
+        VAR num idx;
+
+        IF toolName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        idx := TRAJCENTER_FindToolIndex(toolName);
+
+        IF idx = 0 THEN
+            RAISE ERR_TRAJCENTER_TOOL_NOT_FOUND;
+        ENDIF
+
+        trajTools{idx}.name := "";
+        trajTools{idx}.value := [
+            TRUE,
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+        ];
+
+        TRAJCENTER_InvalidateLoaded;
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Supprime un workobject expose TrajCenter.
+    !
+    !   La suppression libere le slot en mettant name e "" et remet une valeur
+    !   wobjdata neutre.
+    !
+    !   La trajectoire chargee est invalidee, car les index wobj deje presents
+    !   dans trajData peuvent devenir incoherents.
+    !
+    ! EN:
+    !   Deletes a workobject exposed to TrajCenter.
+    !
+    !   Deletion frees the slot by setting name to "" and resets a neutral
+    !   wobjdata value.
+    !
+    !   The loaded trajectory is invalidated because wobj indexes already stored
+    !   in trajData may become inconsistent.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_DeleteWobj(string wobjName)
+        VAR num idx;
+
+        IF wobjName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        idx := TRAJCENTER_FindWobjIndex(wobjName);
+
+        IF idx = 0 THEN
+            RAISE ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+        ENDIF
+
+        trajWobjs{idx}.name := "";
+        trajWobjs{idx}.value := [
+            FALSE,
+            TRUE,
+            "",
+            [[0, 0, 0], [1, 0, 0, 0]],
+            [[0, 0, 0], [1, 0, 0, 0]]
+        ];
+
+        TRAJCENTER_InvalidateLoaded;
+
+    ENDPROC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide tous les tools exposes e TrajCenter.
+    !
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer au minimum tool0.
+    !
+    !   La trajectoire chargee est invalidee.
+    !
+    ! EN:
+    !   Clears all tools exposed to TrajCenter.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate at least tool0.
+    !
+    !   The loaded trajectory is invalidated.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearTools()
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajToolCount DO
+            trajTools{i}.name := "";
+            trajTools{i}.value := [
+                TRUE,
+                [[0, 0, 0], [1, 0, 0, 0]],
+                [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
+            ];
+        ENDFOR
+
+        TRAJCENTER_InvalidateLoaded;
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide tous les workobjects exposes e TrajCenter.
+    !
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer au minimum wobj0.
+    !
+    !   La trajectoire chargee est invalidee.
+    !
+    ! EN:
+    !   Clears all workobjects exposed to TrajCenter.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate at least wobj0.
+    !
+    !   The loaded trajectory is invalidated.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearWobjs()
+        VAR num i;
+
+        FOR i FROM 1 TO maxTrajWobjCount DO
+            trajWobjs{i}.name := "";
+            trajWobjs{i}.value := [
+                FALSE,
+                TRUE,
+                "",
+                [[0, 0, 0], [1, 0, 0, 0]],
+                [[0, 0, 0], [1, 0, 0, 0]]
+            ];
+        ENDFOR
+
+        TRAJCENTER_InvalidateLoaded;
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Vide toute la configuration cellule TrajCenter : tools et workobjects.
+    !
+    !   Apres appel, il est recommande d'appeler TRAJCENTER_InitCellConfig pour
+    !   recreer tool0 et wobj0.
+    !
+    ! EN:
+    !   Clears the whole TrajCenter cell configuration: tools and workobjects.
+    !
+    !   After calling this routine, it is recommended to call
+    !   TRAJCENTER_InitCellConfig to recreate tool0 and wobj0.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ClearCellConfig()
+        TRAJCENTER_ClearTools;
+        TRAJCENTER_ClearWobjs;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met e jour un tool depuis tempTool.
+    !
+    ! EN:
+    !   Adds or updates a tool from tempTool.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTempTool(string toolName)
+        TRAJCENTER_UpsertTool toolName, tempTool;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Ajoute ou met e jour un workobject depuis tempWobj.
+    !
+    ! EN:
+    !   Adds or updates a workobject from tempWobj.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_UpsertTempWobj(string wobjName)
+        TRAJCENTER_UpsertWobj wobjName, tempWobj;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.5 - REQUETES PC / PC REQUESTS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche une trajectoire par nom dans les metadonnees chargees.
+    !
+    !   Prerequis :
+    !       Les metadonnees doivent avoir ete rafraechies avec
+    !       TRAJCENTER_RequestMetaRefresh et TRAJCENTER_WaitRequestDone.
+    !
+    !   Retour :
+    !       0  = non trouvee
+    !       >0 = index base 1 dans trajectories
+    !
+    !   La comparaison est exacte et sensible au contenu de la chaene ecrite
+    !   par le PC dans trajectories{i}.name.
+    !
+    ! EN:
+    !   Searches a trajectory by name in the loaded metadata.
+    !
+    !   Prerequisite:
+    !       Metadata must have been refreshed with TRAJCENTER_RequestMetaRefresh
+    !       and TRAJCENTER_WaitRequestDone.
+    !
+    !   Return:
+    !       0  = not found
+    !       >0 = 1-based index in trajectories
+    !
+    !   The comparison is exact and depends on the string written by the PC into
+    !   trajectories{i}.name.
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_FindTrajectoryIndex(string trajName)
+        VAR num i;
+
+        IF trajName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        FOR i FROM 1 TO nbTrajAvailable DO
+            IF trajectories{i}.name = trajName THEN
+                RETURN i;
+            ENDIF
+        ENDFOR
+
+        RETURN 0;
+    ENDFUNC
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de rafraechir les metadonnees des trajectoires.
+    !
+    ! EN:
+    !   Requests the PC to refresh trajectory metadata.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestMetaRefresh()
+        transferError := FALSE;
+        lastErrorCode := statusOk;
+        lastError := "";
+        transferProgress := 0;
+
+        refreshMetaRequest := TRUE;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de charger une trajectoire.
+    !
+    !   trajIndex :
+    !       1..nbTrajAvailable
+    !
+    ! EN:
+    !   Requests the PC to load a trajectory.
+    !
+    !   trajIndex:
+    !       1..nbTrajAvailable
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestTrajectory(num trajIndex)
+
+        IF trajIndex < 1 OR trajIndex > nbTrajAvailable THEN
+            RAISE ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+        ENDIF
+
+        selectedTrajIndex := trajIndex;
+
+        TRAJCENTER_InvalidateLoaded;
+
+        transferError := FALSE;
+        lastErrorCode := statusOk;
+        lastError := "";
+        transferProgress := 0;
+
+        sendTrajRequest := TRUE;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Demande au PC de charger une trajectoire en utilisant son nom.
+    !
+    !   Cette routine est une surcouche de TRAJCENTER_RequestTrajectory :
+    !       1. cherche trajName dans trajectories ;
+    !       2. recupere l'index correspondant ;
+    !       3. appelle TRAJCENTER_RequestTrajectory avec cet index.
+    !
+    !   Prerequis :
+    !       Les metadonnees doivent avoir ete rafraechies avant l'appel.
+    !
+    !   trajName :
+    !       Nom exact de la trajectoire dans trajectories{i}.name.
+    !
+    ! EN:
+    !   Requests the PC to load a trajectory using its name.
+    !
+    !   This routine is a wrapper around TRAJCENTER_RequestTrajectory:
+    !       1. searches trajName in trajectories;
+    !       2. retrieves the corresponding index;
+    !       3. calls TRAJCENTER_RequestTrajectory with that index.
+    !
+    !   Prerequisite:
+    !       Metadata must have been refreshed before calling this routine.
+    !
+    !   trajName:
+    !       Exact trajectory name in trajectories{i}.name.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_RequestTrajByName(string trajName)
+        VAR num trajIndex;
+
+        trajIndex := TRAJCENTER_FindTrajectoryIndex(trajName);
+
+        IF trajIndex = 0 THEN
+            RAISE ERR_TRAJCENTER_TRAJ_NOT_FOUND;
+        ENDIF
+
+        TRAJCENTER_RequestTrajectory trajIndex;
+    ENDPROC
+
+!------------------------------------------------------------------------------
+! SECTION 9.6 - ATTENTES / WAIT HELPERS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Attend que les flags de requete soient remis e FALSE par le PC.
+    !
+    !   Cette routine est utile apres un refresh metadata.
+    !
+    ! EN:
+    !   Waits until request flags are reset to FALSE by the PC.
+    !
+    !   This routine is useful after metadata refresh.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_WaitRequestDone(num timeoutSec)
+        VAR num elapsed;
+
+        elapsed := 0;
+
+        WHILE (sendTrajRequest = TRUE) OR (refreshMetaRequest = TRUE) DO
+            IF transferError = TRUE THEN
+                RETURN;
+            ENDIF
+
+            IF elapsed >= timeoutSec THEN
+                RAISE ERR_TRAJCENTER_TIMEOUT;
+            ENDIF
+
+            WaitTime 0.1;
+            elapsed := elapsed + 0.1;
+        ENDWHILE
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Attend que la trajectoire soit prete ou qu'une erreur soit signalee.
+    !
+    !   Si transferError devient TRUE, la routine leve ERR_TRAJCENTER_NOT_READY.
+    !   Le detail de l'erreur PC est disponible dans lastErrorCode/lastError.
+    !
+    ! EN:
+    !   Waits until the trajectory is ready or an error is reported.
+    !
+    !   If transferError becomes TRUE, the routine raises
+    !   ERR_TRAJCENTER_NOT_READY.
+    !   PC error details are available in lastErrorCode/lastError.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_WaitTrajectoryReady(num timeoutSec)
+        VAR num elapsed;
+
+        elapsed := 0;
+
+        WHILE (sendTrajRequest = TRUE) OR (trajReady = FALSE) DO
+            IF transferError = TRUE THEN
+                RAISE ERR_TRAJCENTER_NOT_READY;
+            ENDIF
+
+            IF elapsed >= timeoutSec THEN
+                RAISE ERR_TRAJCENTER_TIMEOUT;
+            ENDIF
+
+            WaitTime 0.1;
+            elapsed := elapsed + 0.1;
+        ENDWHILE
+
+        IF nbLoadedTrajPoints < 1 THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.7 - ACCES DONNEES / DATA ACCESS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Retourne le nombre de points charges.
+    !
+    ! EN:
+    !   Returns the number of loaded points.
+    !--------------------------------------------------------------------------
+    FUNC num TRAJCENTER_GetLoadedPointCount()
+        RETURN nbLoadedTrajPoints;
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un point trajectoire charge dans pointData.
+    !
+    ! EN:
+    !   Copies one loaded trajectory point into pointData.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetPoint(num pointIndex, VAR trajCenterPointData pointData)
+        IF nbLoadedTrajPoints < 0 OR nbLoadedTrajPoints > maxTrajPointCount THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+        ENDIF
+
+        pointData := trajData{pointIndex};
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un tooldata depuis trajTools.
+    !
+    ! EN:
+    !   Copies a tooldata from trajTools.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetTool(num toolIndex, VAR tooldata toolValue)
+        IF toolIndex < 1 OR toolIndex > maxTrajToolCount THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        IF trajTools{toolIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        toolValue := trajTools{toolIndex}.value;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Copie un wobjdata depuis trajWobjs.
+    !
+    ! EN:
+    !   Copies a wobjdata from trajWobjs.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetWobj(num wobjIndex, VAR wobjdata wobjValue)
+        IF wobjIndex < 1 OR wobjIndex > maxTrajWobjCount THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        IF trajWobjs{wobjIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        wobjValue := trajWobjs{wobjIndex}.value;
+    ENDPROC
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Charge dans trajExecTool le tool utilise pour l'execution mouvement.
+    !
+    !   Cette routine evite de passer un PERS a un parametre VAR.
+    !   Les instructions MoveL/MoveJ/MoveC exigent ensuite un tool PERS.
+    !
+    ! EN:
+    !   Loads into trajExecTool the tool used for motion execution.
+    !
+    !   This routine avoids passing a PERS to a VAR parameter.
+    !   MoveL/MoveJ/MoveC then require a PERS tool.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_LoadExecTool(num toolIndex)
+        IF toolIndex < 1 OR toolIndex > maxTrajToolCount THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        IF trajTools{toolIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+        ENDIF
+
+        trajExecTool := trajTools{toolIndex}.value;
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Charge dans trajExecWobj le workobject utilise pour l'execution mouvement.
+    !
+    !   Cette routine evite de passer un PERS a un parametre VAR.
+    !   Les instructions MoveL/MoveJ/MoveC exigent ensuite un wobj PERS.
+    !
+    ! EN:
+    !   Loads into trajExecWobj the workobject used for motion execution.
+    !
+    !   This routine avoids passing a PERS to a VAR parameter.
+    !   MoveL/MoveJ/MoveC then require a PERS wobj.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_LoadExecWobj(num wobjIndex)
+        IF wobjIndex < 1 OR wobjIndex > maxTrajWobjCount THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        IF trajWobjs{wobjIndex}.name = "" THEN
+            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+        ENDIF
+
+        trajExecWobj := trajWobjs{wobjIndex}.value;
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.8 - HELPERS MOUVEMENT / MOTION HELPERS
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Construit un speeddata e partir de la vitesse TCP transferee et des
+    !   vitesses complementaires fournies par le programme utilisateur.
+    !
+    ! EN:
+    !   Builds a speeddata from the transferred TCP speed and complementary
+    !   speeds provided by the user program.
+    !--------------------------------------------------------------------------
+    FUNC speeddata TRAJCENTER_MakeSpeed(
+        num tcpSpeed,
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        RETURN [tcpSpeed, oriSpeed, leaxSpeed, reaxSpeed];
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Convertit le zoneType numerique TrajCenter en zonedata ABB.
+    !
+    !   255 est interprete comme fine.
+    !
+    ! EN:
+    !   Converts the numeric TrajCenter zoneType into ABB zonedata.
+    !
+    !   255 is interpreted as fine.
+    !--------------------------------------------------------------------------
+    FUNC zonedata TRAJCENTER_MakeZone(num zoneType)
+        TEST zoneType
+        CASE 0:
+            RETURN z0;
+        CASE 1:
+            RETURN z1;
+        CASE 5:
+            RETURN z5;
+        CASE 10:
+            RETURN z10;
+        CASE 15:
+            RETURN z15;
+        CASE 20:
+            RETURN z20;
+        CASE 30:
+            RETURN z30;
+        CASE 40:
+            RETURN z40;
+        CASE 50:
+            RETURN z50;
+        CASE 60:
+            RETURN z60;
+        CASE 80:
+            RETURN z80;
+        CASE 100:
+            RETURN z100;
+        CASE 150:
+            RETURN z150;
+        CASE 200:
+            RETURN z200;
+        CASE 255:
+            RETURN fine;
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_ZONE_TYPE;
+        ENDTEST
+
+        RETURN fine;
+    ENDFUNC
+
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Applique la politique readConfs du point courant.
+    !
+    ! EN:
+    !   Applies the readConfs policy for the current point.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ApplyReadConfs(bool useConfs)
+        IF useConfs THEN
+            ConfL \On;
+            ConfJ \On;
+        ELSE
+            ConfL \Off;
+            ConfJ \Off;
+        ENDIF
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.9 - ACCES PARAMETRES PROCESS / PROCESS PARAMETER ACCESS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section fournit un acces controle aux parametres process associes
+!   aux points de la trajectoire chargee.
+!
+!   Chaque point contient un processParamIndex :
+!       0       = aucun jeu de parametres process ;
+!       1..256  = ligne correspondante dans processParams.
+!
+!   Les routines process doivent utiliser cette API plutot que lire directement
+!   les tableaux internes. Cela centralise les controles d'index et preserve le
+!   contrat interne du module.
+!
+! EN:
+!   This section provides controlled access to process parameters associated
+!   with loaded trajectory points.
+!
+!   Each point contains a processParamIndex:
+!       0       = no process parameter set;
+!       1..256  = corresponding row in processParams.
+!
+!   Process routines should use this API instead of directly reading internal
+!   arrays. This centralizes index checks and preserves the module contract.
+!------------------------------------------------------------------------------
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si un point reference un jeu de parametres process.
+    !
+    ! EN:
+    !   Indicates whether a point references a process parameter set.
+    !--------------------------------------------------------------------------
+    FUNC bool TRAJCENTER_PointHasProcessParams(num pointIndex)
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+        ENDIF
+
+        RETURN trajData{pointIndex}.processParamIndex > 0;
+
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un parametre process par son nom pour un point donne.
+    !
+    !   Sorties :
+    !       found = TRUE si le parametre a ete trouve ;
+    !       value = valeur numerique du parametre.
+    !
+    !   Si le point ne reference aucun jeu de parametres, found reste FALSE.
+    !
+    ! EN:
+    !   Searches a process parameter by name for a given point.
+    !
+    !   Outputs:
+    !       found = TRUE if the parameter was found;
+    !       value = numeric parameter value.
+    !
+    !   If the point references no parameter set, found remains FALSE.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetProcessParam(
+        num pointIndex,
+        string paramName,
+        VAR bool found,
+        VAR num value
+    )
+        VAR num setIndex;
+        VAR num paramIndex;
+
+        found := FALSE;
+        value := 0;
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+        ENDIF
+
+        IF paramName = "" THEN
+            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+        ENDIF
+
+        setIndex := trajData{pointIndex}.processParamIndex;
+
+        IF setIndex = 0 THEN
+            RETURN;
+        ENDIF
+
+        IF setIndex < 1 OR setIndex > maxProcessParamSetCount THEN
+            RAISE ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
+        ENDIF
+
+        FOR paramIndex FROM 1 TO maxProcessParamPerSet DO
+
+            IF processParams{setIndex, paramIndex}.name = paramName THEN
+                found := TRUE;
+                value := processParams{setIndex, paramIndex}.value;
+                RETURN;
+            ENDIF
+
+        ENDFOR
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10 - IMPLEMENTATIONS PROCESS / PROCESS IMPLEMENTATIONS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Chaque process fournit cinq points d'extension :
+!
+!       Begin:
+!           initialise le process avant le premier mouvement.
+!
+!       BeforeMotion:
+!           applique les parametres avant un mouvement.
+!
+!       AfterMotion:
+!           realise les actions necessaires apres l'instruction de mouvement.
+!
+!       End:
+!           termine normalement le process apres le dernier mouvement.
+!
+!       Abort:
+!           remet le process dans un etat sur lorsqu'une erreur survient.
+!
+!   L'index transmis correspond au premier point du mouvement courant.
+!   Pour MoveC, il correspond au point de passage. Le point d'arrivee se trouve
+!   a l'index pointIndex + 1.
+!
+!   Les fonctions BeforeMotion et AfterMotion sont appelees une fois par
+!   instruction de mouvement, et non une fois par entree trajData.
+!
+!   IMPORTANT:
+!   Une action executee dans AfterMotion n'est pas necessairement synchronisee
+!   avec le passage physique exact au point si une zone non fine est utilisee.
+!   Un process exigeant une synchronisation precise doit employer une strategie
+!   ABB adaptee : triggers, instructions process specialisees ou executeur
+!   dedie.
+!
+! EN:
+!   Each process provides five extension points:
+!
+!       Begin:
+!           initializes the process before the first motion.
+!
+!       BeforeMotion:
+!           applies parameters before a motion.
+!
+!       AfterMotion:
+!           performs required actions after the motion instruction.
+!
+!       End:
+!           normally terminates the process after the final motion.
+!
+!       Abort:
+!           returns the process to a safe state when an error occurs.
+!
+!   The provided index corresponds to the first point of the current motion.
+!   For MoveC, it corresponds to the circular point. The destination point is
+!   stored at pointIndex + 1.
+!
+!   BeforeMotion and AfterMotion are called once per motion instruction, not
+!   once per trajData entry.
+!
+!   IMPORTANT:
+!   An action executed in AfterMotion is not necessarily synchronized with the
+!   exact physical passage through the point when a non-fine zone is used.
+!   A process requiring accurate synchronization must use a suitable ABB
+!   strategy: triggers, specialized process instructions or a dedicated
+!   executor.
+!------------------------------------------------------------------------------
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.1 - PROCESS ACF
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Initialise le process ACF.
+    !
+    !   Etat initial :
+    !       non implemente.
+    !
+    !   Remplacer le RAISE par l'initialisation reelle du process avant de
+    !   declarer ACF utilisable en production.
+    !
+    ! EN:
+    !   Initializes the ACF process.
+    !
+    !   Initial state:
+    !       not implemented.
+    !
+    !   Replace the RAISE with the actual process initialization before
+    !   declaring ACF usable in production.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfBegin()
+
+        RAISE ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Applique les parametres ACF avant le mouvement courant.
+    !
+    !   Exemple d'implementation :
+    !       1. appeler TRAJCENTER_GetProcessParam ;
+    !       2. verifier les parametres obligatoires ;
+    !       3. configurer les sorties ou instructions ACF.
+    !
+    ! EN:
+    !   Applies ACF parameters before the current motion.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Example:
+        !
+        ! TRAJCENTER_GetProcessParam
+        !     pointIndex,
+        !     "example_parameter",
+        !     found,
+        !     processValue;
+        !
+        ! IF found = FALSE THEN
+        !     RAISE ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
+        ! ENDIF
+        !
+        ! Apply the ACF value here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Actions ACF apres le mouvement courant.
+    !
+    ! EN:
+    !   ACF actions after the current motion.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfAfterMotion(num pointIndex)
+
+        ! Add post-motion ACF actions here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Termine normalement le process ACF.
+    !
+    ! EN:
+    !   Normally terminates the ACF process.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfEnd()
+
+        ! Stop or finalize ACF here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Met le process ACF dans un etat sur apres une erreur.
+    !
+    !   Cette routine ne doit normalement pas lever de nouvelle erreur.
+    !
+    ! EN:
+    !   Returns the ACF process to a safe state after an error.
+    !
+    !   This routine should normally not raise another error.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfAbort()
+
+        ! Disable ACF outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.2 - PROCESS AAK
+!------------------------------------------------------------------------------
+
+    PROC TRAJCENTER_AakBegin()
+
+        RAISE ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Read and apply AAK parameters here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakAfterMotion(num pointIndex)
+
+        ! Add post-motion AAK actions here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakEnd()
+
+        ! Stop or finalize AAK here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakAbort()
+
+        ! Disable AAK outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.3 - PROCESS PUSHCORP
+!------------------------------------------------------------------------------
+
+    PROC TRAJCENTER_PushcorpBegin()
+
+        RAISE ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Read and apply PUSHCORP parameters here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpAfterMotion(num pointIndex)
+
+        ! Add post-motion PUSHCORP actions here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpEnd()
+
+        ! Stop or finalize PUSHCORP here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpAbort()
+
+        ! Disable PUSHCORP outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.11 - DISPATCHER PROCESS / PROCESS DISPATCHER
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Le dispatcher constitue l'unique point de correspondance entre un
+!   identifiant process et son implementation RAPID.
+!
+!   Pour ajouter un process :
+!
+!       1. ajouter sa constante dans la section 5 ;
+!       2. l'ajouter au tableau processTypes ;
+!       3. creer ses routines Begin, BeforeMotion, AfterMotion, End et Abort ;
+!       4. ajouter un CASE dans chacun des dispatchers ci-dessous ;
+!       5. mettre a jour le client Python, les tests et la documentation.
+!
+!   Le process NONE est un cas normal. Ses hooks ne realisent aucune action.
+!
+! EN:
+!   The dispatcher is the single mapping point between a process identifier
+!   and its RAPID implementation.
+!
+!   To add a process:
+!
+!       1. add its constant in section 5;
+!       2. add it to the processTypes array;
+!       3. create its Begin, BeforeMotion, AfterMotion, End and Abort routines;
+!       4. add a CASE to each dispatcher below;
+!       5. update the Python client, tests and documentation.
+!
+!   The NONE process is a normal case. Its hooks perform no action.
+!------------------------------------------------------------------------------
+
+
+    PROC TRAJCENTER_ProcessBegin(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfBegin;
+
+        CASE processAak:
+            TRAJCENTER_AakBegin;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpBegin;
+
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessBeforeMotion(
+        num processType,
+        num pointIndex
+    )
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfBeforeMotion pointIndex;
+
+        CASE processAak:
+            TRAJCENTER_AakBeforeMotion pointIndex;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpBeforeMotion pointIndex;
+
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessAfterMotion(
+        num processType,
+        num pointIndex
+    )
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfAfterMotion pointIndex;
+
+        CASE processAak:
+            TRAJCENTER_AakAfterMotion pointIndex;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpAfterMotion pointIndex;
+
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessEnd(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfEnd;
+
+        CASE processAak:
+            TRAJCENTER_AakEnd;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpEnd;
+
+        DEFAULT:
+            RAISE ERR_TRAJCENTER_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Tente de remettre le process dans un etat sur.
+    !
+    !   Les routines appelees ici doivent eviter de lever une erreur afin de ne
+    !   pas masquer l'erreur d'execution originale.
+    !
+    ! EN:
+    !   Attempts to return the process to a safe state.
+    !
+    !   Routines called here should avoid raising an error so that the original
+    !   execution error is not hidden.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ProcessAbort(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfAbort;
+
+        CASE processAak:
+            TRAJCENTER_AakAbort;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpAbort;
+
+        DEFAULT:
+            RETURN;
+
+        ENDTEST
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.12 - MOTEUR DE MOUVEMENT COMMUN / COMMON MOTION ENGINE
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section contient l'unique implementation generique des mouvements.
+!
+!   Elle prend en charge :
+!       - la lecture des points ;
+!       - la construction du speeddata ;
+!       - la conversion de la zone ;
+!       - le chargement du tool et du workobject ;
+!       - l'application de readConfs ;
+!       - la validation des paires MoveC ;
+!       - les appels process avant et apres chaque mouvement ;
+!       - l'increment de l'index de parcours.
+!
+!   L'index pointIndex est passe par reference et est avance :
+!       - de 1 apres MoveL ou MoveJ ;
+!       - de 2 apres MoveC.
+!
+! EN:
+!   This section contains the single generic motion implementation.
+!
+!   It handles:
+!       - point reading;
+!       - speeddata construction;
+!       - zone conversion;
+!       - tool and workobject loading;
+!       - readConfs application;
+!       - MoveC pair validation;
+!       - process calls before and after each motion;
+!       - traversal index update.
+!
+!   pointIndex is passed by reference and advanced:
+!       - by 1 after MoveL or MoveJ;
+!       - by 2 after MoveC.
+!------------------------------------------------------------------------------
+
+
+    PROC TRAJCENTER_ExecuteOneMotion(
+        VAR num pointIndex,
+        num processType,
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        VAR num currentIndex;
+        VAR trajCenterPointData p;
+        VAR trajCenterPointData p2;
+        VAR speeddata v;
+        VAR zonedata z;
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+        ENDIF
+
+        currentIndex := pointIndex;
+        p := trajData{currentIndex};
+
+        v := TRAJCENTER_MakeSpeed(
+            p.tcpSpeed,
+            oriSpeed,
+            leaxSpeed,
+            reaxSpeed
+        );
+
+        z := TRAJCENTER_MakeZone(p.zoneType);
+
+        TRAJCENTER_LoadExecTool p.toolIndex;
+        TRAJCENTER_LoadExecWobj p.wobjIndex;
+        TRAJCENTER_ApplyReadConfs p.readConfs;
+
+
+        IF p.moveType = moveTypeL THEN
+
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
+
+            MoveL
+                p.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
+
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
+
+            pointIndex := currentIndex + 1;
+
+
+        ELSEIF p.moveType = moveTypeJ THEN
+
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
+
+            MoveJ
+                p.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
+
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
+
+            pointIndex := currentIndex + 1;
+
+
+        ELSEIF p.moveType = moveTypeC THEN
+
+            IF currentIndex + 1 > nbLoadedTrajPoints THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            p2 := trajData{currentIndex + 1};
+
+            IF p2.moveType <> moveTypeC THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.tcpSpeed <> p.tcpSpeed THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.toolIndex <> p.toolIndex THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.wobjIndex <> p.wobjIndex THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.zoneType <> p.zoneType THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.readConfs <> p.readConfs THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.processParamIndex <> p.processParamIndex THEN
+                RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
+            ENDIF
+
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
+
+            MoveC
+                p.point,
+                p2.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
+
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
+
+            pointIndex := currentIndex + 2;
+
+
+        ELSE
+
+            RAISE ERR_TRAJCENTER_BAD_MOVE_TYPE;
+
+        ENDIF
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.13 - API PUBLIQUE D'EXECUTION / PUBLIC EXECUTION API
+!------------------------------------------------------------------------------
+!
+! FR:
+!   TRAJCENTER_ExecuteLoaded est l'unique point d'entree public recommande pour
+!   executer une trajectoire chargee.
+!
+!   Le process NONE n'utilise aucune action process. Il passe neanmoins par le
+!   meme moteur de mouvement que les autres process.
+!
+!   En cas d'erreur :
+!       - le process est arrete par ProcessAbort ;
+!       - ConfL et ConfJ sont remis a On ;
+!       - l'erreur originale est propagee au programme appelant.
+!
+! EN:
+!   TRAJCENTER_ExecuteLoaded is the single recommended public entry point for
+!   executing a loaded trajectory.
+!
+!   The NONE process performs no process action. It still uses the same motion
+!   engine as all other processes.
+!
+!   On error:
+!       - the process is stopped through ProcessAbort;
+!       - ConfL and ConfJ are restored to On;
+!       - the original error is propagated to the calling program.
+!------------------------------------------------------------------------------
+
+
+    PROC TRAJCENTER_ExecuteLoaded(
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        VAR num pointIndex;
+        VAR num activeProcessType;
+
+        activeProcessType := processNone;
+        pointIndex := 1;
+
+        IF trajReady = FALSE THEN
+            RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
+        IF nbLoadedTrajPoints < 1 OR
+            nbLoadedTrajPoints > maxTrajPointCount THEN
+                RAISE ERR_TRAJCENTER_NOT_READY;
+        ENDIF
+
+        activeProcessType := loadedProcessType;
+
+        TRAJCENTER_ProcessBegin activeProcessType;
+
+        WHILE pointIndex <= nbLoadedTrajPoints DO
+
+            TRAJCENTER_ExecuteOneMotion
+                pointIndex,
+                activeProcessType,
+                oriSpeed,
+                leaxSpeed,
+                reaxSpeed;
+
+        ENDWHILE
+
+        TRAJCENTER_ProcessEnd activeProcessType;
+
+        ConfL \On;
+        ConfJ \On;
+
+        RETURN;
+
+
+    ERROR
+
+        TRAJCENTER_ProcessAbort activeProcessType;
+
+        ConfL \On;
+        ConfJ \On;
+
+        RAISE;
+
+    ENDPROC
+
+
+ENDMODULE
+

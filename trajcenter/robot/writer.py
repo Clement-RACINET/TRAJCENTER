@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # trajcenter/robot/writer.py
-"""RWS writer — writes TrajCenter v2 data to ABB RAPID variables.
+"""RWS writer - writes TrajCenter v2 data to ABB RAPID variables.
 
 Author: Clement RACINET
 
@@ -43,6 +43,19 @@ from abb_rws_client_python_rw6.highlevel.variables import set_variables_with_mas
 from trajcenter.core.logger import get_logger
 from trajcenter.core.trajectory import Trajectory
 from trajcenter.robot._utils import symbol, symbol_array_element
+from trajcenter.robot.constants import (
+    DEFAULT_TASK,
+    MAX_PROCESS_PARAM_PER_SET,
+    MAX_PROCESS_PARAM_SET_COUNT,
+    MAX_TRAJ,
+    MAX_TRAJ_POINTS,
+    PROCESS_NONE,
+    STATUS_METADATA_REFRESHED,
+    STATUS_OK,
+    STATUS_TRAJECTORY_TRANSFERRED,
+    TRAJCENTER_MODULE,
+)
+from trajcenter.robot.errors.codes import InternalClientError
 from trajcenter.robot.models import (
     ResolvedPoint,
     ResolvedProcessParam,
@@ -51,18 +64,6 @@ from trajcenter.robot.models import (
 )
 
 logger = get_logger(__name__)
-
-DEFAULT_TASK: Final[str] = "T_ROB1"
-TRAJCENTER_MODULE: Final[str] = "TRAJCENTER"
-
-STATUS_OK: Final[int] = 200000
-STATUS_METADATA_REFRESHED: Final[int] = 200001
-STATUS_TRAJECTORY_TRANSFERRED: Final[int] = 200002
-
-MAX_TRAJ: Final[int] = 256
-MAX_TRAJ_POINTS: Final[int] = 100000
-MAX_PROCESS_PARAM_SET_COUNT: Final[int] = 256
-MAX_PROCESS_PARAM_PER_SET: Final[int] = 10
 
 DEFAULT_MASTERSHIP_RETRY_DELAY_S: Final[float] = 1.0
 DEFAULT_PROGRESS_UPDATE_STEP_PERCENT: Final[int] = 5
@@ -83,7 +84,7 @@ def _fmt_num(value: float) -> str:
     """Format a number for a RAPID ``num`` variable.
 
     ABB Route:
-        N/A — local formatting helper.
+        N/A - local formatting helper.
 
     ABB Constraints:
         RAPID ``num`` accepts integer-looking values without a decimal suffix.
@@ -109,7 +110,7 @@ def _fmt_bool(value: bool) -> str:
     """Format a Python bool as a RAPID boolean literal.
 
     ABB Route:
-        N/A — local formatting helper.
+        N/A - local formatting helper.
 
     ABB Constraints:
         RAPID bool literals are uppercase ``TRUE`` and ``FALSE``.
@@ -133,7 +134,7 @@ def _fmt_string(value: str) -> str:
     """Wrap a string in RAPID double quotes.
 
     ABB Route:
-        N/A — local formatting helper.
+        N/A - local formatting helper.
 
     ABB Constraints:
         Embedded double quotes are escaped for RAPID string literals.
@@ -389,7 +390,7 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
     """Detect which external axis columns are present in a DataFrame.
 
     ABB Route:
-        N/A — local schema helper.
+        N/A - local schema helper.
 
     ABB Constraints:
         Missing external axes are serialized as ``9E+9`` at RWS write time.
@@ -412,65 +413,218 @@ def _eax_presence(df: pd.DataFrame) -> tuple[bool, ...]:
 
 
 def _validate_resolved_trajectory(resolved: ResolvedTrajectory) -> None:
-    """Validate a resolved trajectory before building RWS write values.
+    """Validate a resolved trajectory before generating RAPID RWS writes.
+
+    This function is the writer's final defensive validation boundary.
+    The resolver is responsible for resolving trajectory fields against the
+    connected robot context. This function verifies that the resulting payload
+    is structurally safe to serialize into RAPID variables.
 
     ABB Route:
-        N/A — local defensive validation before RWS writes.
+        N/A - local validation only. No controller request is performed.
 
     ABB Constraints:
-        - ``trajData`` supports at most ``100000`` entries.
-        - ``processParams`` supports at most ``256`` parameter sets.
-        - process parameter set indexes are RAPID base-1 indexes.
-        - point process indexes must be ``0`` or reference an existing set.
+        - ``trajData`` contains at most ``MAX_TRAJ_POINTS`` entries.
+        - ``processParams`` contains at most
+          ``MAX_PROCESS_PARAM_SET_COUNT`` parameter sets.
+        - RAPID process parameter set indexes are one-based.
+        - ``processParamIndex = 0`` means that a point has no process
+          parameter set.
+        - ``processType = PROCESS_NONE`` requires every point to use
+          ``processParamIndex = 0`` and requires no process parameter set.
+        - A non-zero point process index must reference a parameter set present
+          in this exact payload.
+        - Each process parameter set contains exactly
+          ``MAX_PROCESS_PARAM_PER_SET`` slots.
+        - Empty parameter names identify unused trailing slots.
+        - The robot-side process catalog is authoritative. This function does
+          not hardcode ACF, AAK, PUSHCORP or future process identifiers.
+          Catalog membership must already have been checked by the resolver.
 
     Args:
-        resolved: Resolved trajectory payload.
+        resolved: Fully resolved trajectory payload to validate before RWS
+            serialization.
 
     Returns:
         None.
 
     Raises:
-        ValueError: If the resolved payload exceeds RAPID protocol limits.
+        TypeError: If a process type or process parameter index has an invalid
+            Python type.
+        ValueError: If the trajectory is empty, exceeds RAPID capacities,
+            contains an out-of-range process value, contains malformed process
+            parameter sets, or contains inconsistent point-to-parameter-set
+            references.
 
     Example:
         ::
 
+            resolved = resolve_trajectory(trajectory, robot_context)
             _validate_resolved_trajectory(resolved)
     """
+    if resolved.point_count < 1:
+        raise ValueError("Resolved trajectory must contain at least one point")
+
     if resolved.point_count > MAX_TRAJ_POINTS:
         raise ValueError(
             "Resolved trajectory has "
-            f"{resolved.point_count} points but MAX_TRAJ_POINTS={MAX_TRAJ_POINTS}"
+            f"{resolved.point_count} points but "
+            f"MAX_TRAJ_POINTS={MAX_TRAJ_POINTS}"
+        )
+
+    if isinstance(resolved.process_type, bool) or not isinstance(
+        resolved.process_type,
+        int,
+    ):
+        raise TypeError(
+            "Resolved process type must be an integer, "
+            f"got {type(resolved.process_type).__name__}: "
+            f"{resolved.process_type!r}"
+        )
+
+    if resolved.process_type < 0 or resolved.process_type > 255:
+        raise ValueError(
+            f"Resolved process type must be in 0..255, got {resolved.process_type}"
         )
 
     if len(resolved.process_param_sets) > MAX_PROCESS_PARAM_SET_COUNT:
         raise ValueError(
             "Resolved trajectory has "
             f"{len(resolved.process_param_sets)} process parameter sets but "
-            f"MAX_PROCESS_PARAM_SET_COUNT={MAX_PROCESS_PARAM_SET_COUNT}"
+            "MAX_PROCESS_PARAM_SET_COUNT="
+            f"{MAX_PROCESS_PARAM_SET_COUNT}"
         )
 
-    process_set_indexes = {param_set.index for param_set in resolved.process_param_sets}
+    process_set_indexes: set[int] = set()
 
-    if len(process_set_indexes) != len(resolved.process_param_sets):
-        raise ValueError("Duplicate process parameter set indexes are not allowed")
-
-    for index in process_set_indexes:
-        if index < 1 or index > MAX_PROCESS_PARAM_SET_COUNT:
-            raise ValueError(
-                "Process parameter set index must be in "
-                f"1..{MAX_PROCESS_PARAM_SET_COUNT}, got {index}"
+    for param_set in resolved.process_param_sets:
+        if isinstance(param_set.index, bool) or not isinstance(
+            param_set.index,
+            int,
+        ):
+            raise TypeError(
+                "Process parameter set index must be an integer, "
+                f"got {type(param_set.index).__name__}: "
+                f"{param_set.index!r}"
             )
 
+        if param_set.index < 1 or param_set.index > MAX_PROCESS_PARAM_SET_COUNT:
+            raise ValueError(
+                "Process parameter set index must be in "
+                f"1..{MAX_PROCESS_PARAM_SET_COUNT}, "
+                f"got {param_set.index}"
+            )
+
+        if param_set.index in process_set_indexes:
+            raise ValueError(f"Duplicate process parameter set index {param_set.index}")
+
+        process_set_indexes.add(param_set.index)
+
+        if len(param_set.params) != MAX_PROCESS_PARAM_PER_SET:
+            raise ValueError(
+                "Process parameter set "
+                f"{param_set.index} contains {len(param_set.params)} slots but "
+                f"exactly {MAX_PROCESS_PARAM_PER_SET} are required"
+            )
+
+        parameter_names: set[str] = set()
+        unused_slot_seen = False
+
+        for slot_index, param in enumerate(param_set.params, start=1):
+            if not isinstance(param.name, str):
+                raise TypeError(
+                    "Process parameter name must be a string, "
+                    f"got {type(param.name).__name__} in set "
+                    f"{param_set.index}, slot {slot_index}"
+                )
+
+            parameter_name = param.name.strip()
+
+            if parameter_name == "":
+                unused_slot_seen = True
+                continue
+
+            if unused_slot_seen:
+                raise ValueError(
+                    "Process parameter set "
+                    f"{param_set.index} contains a named parameter in slot "
+                    f"{slot_index} after an unused slot"
+                )
+
+            if parameter_name in parameter_names:
+                raise ValueError(
+                    "Process parameter set "
+                    f"{param_set.index} contains duplicate parameter name "
+                    f"{parameter_name!r}"
+                )
+
+            parameter_names.add(parameter_name)
+
+    referenced_set_indexes: set[int] = set()
+
     for point_index, point in enumerate(resolved.points, start=1):
-        if point.process_param_index == 0:
+        process_param_index = point.process_param_index
+
+        if isinstance(process_param_index, bool) or not isinstance(
+            process_param_index,
+            int,
+        ):
+            raise TypeError(
+                "Point "
+                f"{point_index} process_param_index must be an integer, "
+                f"got {type(process_param_index).__name__}: "
+                f"{process_param_index!r}"
+            )
+
+        if process_param_index < 0:
+            raise ValueError(
+                "Point "
+                f"{point_index} process_param_index must be greater than or "
+                f"equal to 0, got {process_param_index}"
+            )
+
+        if process_param_index > MAX_PROCESS_PARAM_SET_COUNT:
+            raise ValueError(
+                "Point "
+                f"{point_index} process_param_index must be in "
+                f"0..{MAX_PROCESS_PARAM_SET_COUNT}, "
+                f"got {process_param_index}"
+            )
+
+        if resolved.process_type == PROCESS_NONE:
+            if process_param_index != 0:
+                raise ValueError(
+                    "Point "
+                    f"{point_index} references process parameter set "
+                    f"{process_param_index} while process type is NONE"
+                )
             continue
-        if point.process_param_index not in process_set_indexes:
+
+        if process_param_index == 0:
+            continue
+
+        if process_param_index not in process_set_indexes:
             raise ValueError(
                 "Point "
                 f"{point_index} references unknown process parameter set "
-                f"{point.process_param_index}"
+                f"{process_param_index}"
             )
+
+        referenced_set_indexes.add(process_param_index)
+
+    if resolved.process_type == PROCESS_NONE and process_set_indexes:
+        raise ValueError(
+            "Resolved trajectory contains process parameter sets while "
+            "process type is NONE"
+        )
+
+    unreferenced_set_indexes = process_set_indexes - referenced_set_indexes
+
+    if unreferenced_set_indexes:
+        raise ValueError(
+            "Resolved trajectory contains unreferenced process parameter sets: "
+            f"{sorted(unreferenced_set_indexes)}"
+        )
 
 
 async def write_store_metadata(
@@ -552,6 +706,72 @@ async def write_store_metadata(
 
     await _retry_mastership(_do_write, mastership_retries)
     logger.info("Store metadata written successfully.")
+
+
+async def write_transfer_failure(
+    client: RWSClient,
+    message: str,
+    *,
+    task: str = DEFAULT_TASK,
+    module: str = TRAJCENTER_MODULE,
+    error_code: int = InternalClientError.code,
+    mastership_retries: int = 3,
+    retry_delay_s: float = DEFAULT_MASTERSHIP_RETRY_DELAY_S,
+) -> None:
+    """Publish a failed trajectory-transfer state and acknowledge the request.
+
+    ABB Route:
+        Writes the transfer failure state under RAPID Mastership.
+
+    ABB Constraints:
+        - ``trajReady`` is reset to ``FALSE``;
+        - ``transferError`` is set to ``TRUE``;
+        - ``sendTrajRequest`` is reset to ``FALSE``;
+        - RAPID strings are limited to a short diagnostic message.
+
+    Args:
+        client: Open RWS client.
+        message: Human-readable failure message.
+        task: RAPID task name.
+        module: RAPID module name.
+        error_code: Protocol error code written to ``lastErrorCode``.
+        mastership_retries: Number of Mastership attempts.
+        retry_delay_s: Delay between Mastership attempts.
+
+    Returns:
+        None.
+    """
+    # RAPID strings have a limited size. Remove line breaks and keep the
+    # diagnostic short enough for lastError.
+    safe_message = " ".join(message.split())[:80]
+
+    async def _do_write() -> None:
+        values: dict[str, str] = {}
+
+        values[symbol(task, module, "trajReady")] = _fmt_bool(False)
+        values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(0)
+        values[symbol(task, module, "loadedProcessType")] = _fmt_num(PROCESS_NONE)
+        values[symbol(task, module, "transferError")] = _fmt_bool(True)
+        values[symbol(task, module, "lastErrorCode")] = _fmt_num(error_code)
+        values[symbol(task, module, "lastError")] = _fmt_string(safe_message)
+        values[symbol(task, module, "sendTrajRequest")] = _fmt_bool(False)
+
+        await set_variables_with_mastership(
+            client,
+            values=values,
+            domain="rapid",
+        )
+
+    await _retry_mastership(
+        _do_write,
+        mastership_retries,
+        retry_delay_s=retry_delay_s,
+    )
+
+    logger.info(
+        "Trajectory transfer failure published and request acknowledged: %s",
+        safe_message,
+    )
 
 
 async def write_resolved_trajectory(
@@ -653,6 +873,7 @@ def _build_resolved_trajectory_start_values(
     values[symbol(task, module, "lastError")] = _fmt_string("")
     values[symbol(task, module, "transferProgress")] = _fmt_num(0)
     values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(0)
+    values[symbol(task, module, "loadedProcessType")] = _fmt_num(PROCESS_NONE)
 
     return values
 
@@ -736,6 +957,9 @@ def _build_resolved_trajectory_payload_values(
             on_progress=on_progress,
         )
 
+    # Process associated with this exact transferred payload.
+    values[symbol(task, module, "loadedProcessType")] = _fmt_num(resolved.process_type)
+
     # This value is the authoritative boundary for RAPID trajectory execution.
     values[symbol(task, module, "nbLoadedTrajPoints")] = _fmt_num(resolved.point_count)
 
@@ -773,7 +997,7 @@ def _notify_progress(
     """Notify local progress and compute the next progress threshold.
 
     ABB Route:
-        N/A — local batching helper.
+        N/A - local batching helper.
 
     ABB Constraints:
         Progress here is local to Python batch construction. The final robot-side
@@ -870,7 +1094,7 @@ async def _retry_mastership(
     """Execute an async write callable retrying on ``MastershipDenied``.
 
     ABB Route:
-        N/A — retry wrapper around high-level RWS write calls.
+        N/A - retry wrapper around high-level RWS write calls.
 
     ABB Constraints:
         Only ``MastershipDenied`` is retried. Other RWS errors propagate
@@ -904,7 +1128,7 @@ async def _retry_mastership(
         except MastershipDenied as exc:
             last_exc = exc
             logger.warning(
-                "Mastership denied (attempt %d/%d) — retrying in %.1fs ...",
+                "Mastership denied (attempt %d/%d) - retrying in %.1fs ...",
                 attempt,
                 retries,
                 retry_delay_s,

@@ -166,7 +166,7 @@ class StoreScreen(Screen[None]):
         text = Text()
         text.append("Status: ", style="bold white")
         text.append("OK", style="bold #22C55E")
-        text.append(f" — {count} archive(s) détectée(s).", style="#F4F4F5")
+        text.append(f" - {count} archive(s) détectée(s).", style="#F4F4F5")
         return text
 
     def _error_text(self, exc: Exception) -> Text:
@@ -181,5 +181,5 @@ class StoreScreen(Screen[None]):
         text = Text()
         text.append("Status: ", style="bold white")
         text.append("Erreur", style="bold #EF4444")
-        text.append(f" — {exc}", style="#F4F4F5")
+        text.append(f" - {exc}", style="#F4F4F5")
         return text

@@ -39,7 +39,7 @@ def client() -> MagicMock:
     """Return a bare ``MagicMock`` acting as ``RWSClient``.
 
     ABB Route:
-        N/A — test fixture.
+        N/A - test fixture.
 
     ABB Constraints:
         No controller access is performed.
@@ -63,7 +63,7 @@ def _make_points() -> pd.DataFrame:
     """Build a minimal valid trajectory points table.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         The table uses TrajCenter v2 columns and stores no ``9E+9`` sentinel.
@@ -107,7 +107,7 @@ def _make_trajectory(name: str = "demo") -> Trajectory:
     """Build a minimal no-process trajectory.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         No process parameters are attached because ``process_type == 0``.
@@ -136,7 +136,7 @@ def _save_trajectory(tmp_path: Path, name: str = "demo") -> Path:
     """Save one temporary ``.trajcenter`` archive.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         The archive is saved through the real ``Trajectory.save`` path.
@@ -169,7 +169,7 @@ def _make_entry(
     """Build a trajectory store entry for tests.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         ``index`` is RAPID base-1 and maps to ``selectedTrajIndex``.
@@ -201,7 +201,7 @@ def _make_context() -> RobotContext:
     """Build a minimal robot context accepted by the resolver.
 
     ABB Route:
-        N/A — local test helper.
+        N/A - local test helper.
 
     ABB Constraints:
         Tool and workobject names are ordered as RAPID base-1 arrays.

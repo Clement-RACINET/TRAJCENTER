@@ -14,7 +14,7 @@ def point_count(traj: Trajectory) -> int:
     """Return trajectory point count.
 
     ABB Route:
-        N/A — local demonstration helper.
+        N/A - local demonstration helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -45,7 +45,7 @@ def active_external_axes(traj: Trajectory) -> list[str]:
     """Return active external axis column names.
 
     ABB Route:
-        N/A — local demonstration helper.
+        N/A - local demonstration helper.
 
     ABB Constraints:
         No ABB controller access. Inactive RAPID sentinel ``9E9`` is not
@@ -79,7 +79,7 @@ def preview_columns(traj: Trajectory, columns: list[str]) -> list[str]:
     """Return available columns for preview display.
 
     ABB Route:
-        N/A — local display helper.
+        N/A - local display helper.
 
     ABB Constraints:
         No ABB controller access.
@@ -103,7 +103,7 @@ def assert_same_geometry(left: Trajectory, right: Trajectory) -> None:
     """Assert basic geometry roundtrip invariants between two trajectories.
 
     ABB Route:
-        N/A — local validation helper.
+        N/A - local validation helper.
 
     ABB Constraints:
         No ABB controller access.
