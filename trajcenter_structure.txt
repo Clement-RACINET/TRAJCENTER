@@ -8,22 +8,11 @@ trajcenter_v2
 │   │   ├── Conclusion
 │   │   │   └── Conclusion.tex
 │   │   ├── figures
-│   │   │   ├── rapid_api_call_graph
-│   │   │   │   ├── rapid_api_call_graph.aux
-│   │   │   │   ├── rapid_api_call_graph.fdb_latexmk
-│   │   │   │   ├── rapid_api_call_graph.fls
-│   │   │   │   ├── rapid_api_call_graph.pdf
-│   │   │   │   ├── rapid_api_call_graph.synctex.gz
-│   │   │   │   ├── rapid_api_call_graph.tex
-│   │   │   │   └── rapid_api_call_graph_unzipped.synctex
-│   │   │   ├── rapid_module_architecture
-│   │   │   │   ├── rapid_module_architecture.aux
-│   │   │   │   ├── rapid_module_architecture.fdb_latexmk
-│   │   │   │   ├── rapid_module_architecture.fls
-│   │   │   │   ├── rapid_module_architecture.pdf
-│   │   │   │   ├── rapid_module_architecture.synctex.gz
-│   │   │   │   ├── rapid_module_architecture.tex
-│   │   │   │   └── rapid_module_architecture_unzipped.synctex
+│   │   │   ├── schema
+│   │   │   │   ├── rapid_api_call_graph.drawio
+│   │   │   │   ├── rapid_api_call_graph.jpg
+│   │   │   │   ├── trajcenter_architecture.drawio
+│   │   │   │   └── trajcenter_architecture.jpg
 │   │   │   └── screenshot
 │   │   │       ├── tui_convert.png
 │   │   │       ├── tui_export.png
@@ -34,13 +23,10 @@ trajcenter_v2
 │   │   │       └── tui_store.png
 │   │   ├── Introduction
 │   │   │   └── Intro.tex
-│   │   ├── latex
-│   │   │   └── rapid-listings.sty
 │   │   ├── logos
 │   │   │   ├── fond.png
 │   │   │   ├── logo-arts-et-metiers.jpg
 │   │   │   └── logo-arts-et-metiers2.png
-│   │   ├── CoursENSAM.cls
 │   │   ├── main.aux
 │   │   ├── main.fdb_latexmk
 │   │   ├── main.fls
@@ -50,7 +36,9 @@ trajcenter_v2
 │   │   ├── main.pdf
 │   │   ├── main.synctex.gz
 │   │   ├── main.tex
-│   │   └── main.toc
+│   │   ├── main.toc
+│   │   ├── rapid-listings.sty
+│   │   └── rapportENSAM.cls
 │   ├── route3.md
 │   ├── route3.pdf
 │   ├── route4.md
@@ -61,6 +49,12 @@ trajcenter_v2
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
+│   ├── new
+│   │   ├── TRAJCENTER.sys
+│   │   ├── TRAJCENTER_DEMO.mod
+│   │   ├── TRAJCENTER_DEMO.pgf
+│   │   ├── TRAJCENTER_GUI_DEMO.mod
+│   │   └── TRAJCENTER_GUI_DEMO.pgf
 │   ├── TRAJCENTER.sys
 │   ├── TRAJCENTER_DEMO.mod
 │   ├── TRAJCENTER_DEMO.pgf
