@@ -40,6 +40,8 @@ Example:
 
 import argparse
 import asyncio
+import logging
+import sys
 from pathlib import Path
 
 from trajcenter.core.logger import get_logger
@@ -148,6 +150,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def configure_console_logging(log_level: str | None) -> None:
+    """Configure TrajCenter logs to be displayed in the terminal."""
+    resolved_level = (log_level or "INFO").upper()
+
+    logging.basicConfig(
+        level=getattr(logging, resolved_level, logging.INFO),
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+        datefmt="%H:%M:%S",
+        stream=sys.stdout,
+        force=True,
+    )
+
+
 async def async_main() -> int:
     """Run the asynchronous supervisor entry point.
 
@@ -163,6 +178,8 @@ async def async_main() -> int:
         Process exit code.
     """
     args = parse_args()
+
+    configure_console_logging(args.log_level)
 
     logger.info("Starting TrajCenter RWS subscription supervisor")
 

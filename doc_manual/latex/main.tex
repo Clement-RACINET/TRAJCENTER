@@ -3470,11 +3470,11 @@ MODULE TRAJCENTER_PRODUCTION_EXAMPLE
     PROC ExecuteTrajectory()
 
         IF trajReady = FALSE THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
+            RAISE ERR_TJC_NOT_READY;
         ENDIF
 
         IF nbLoadedTrajPoints < 1 THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
+            RAISE ERR_TJC_NOT_READY;
         ENDIF
 
         ! Perform cell-specific safety checks here.
@@ -3496,30 +3496,30 @@ MODULE TRAJCENTER_PRODUCTION_EXAMPLE
 
     ERROR
 
-        IF ERRNO = ERR_TRAJCENTER_NOT_READY THEN
+        IF ERRNO = ERR_TJC_NOT_READY THEN
 
             TPWrite "Trajectory not ready";
             TPWrite "Code:" \Num:=lastErrorCode;
             TPWrite lastError;
 
-        ELSEIF ERRNO = ERR_TRAJCENTER_TIMEOUT THEN
+        ELSEIF ERRNO = ERR_TJC_TIMEOUT THEN
 
             TPWrite "TrajCenter timeout";
 
         ELSEIF ERRNO =
-            ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED THEN
+            ERR_TJC_PROCESS_NOT_IMPLEMENTED THEN
 
             TPWrite "Process not implemented";
             TPWrite "Process:" \Num:=loadedProcessType;
 
         ELSEIF ERRNO =
-            ERR_TRAJCENTER_BAD_PROCESS_TYPE THEN
+            ERR_TJC_BAD_PROCESS_TYPE THEN
 
             TPWrite "Invalid process type";
             TPWrite "Process:" \Num:=loadedProcessType;
 
         ELSEIF ERRNO =
-            ERR_TRAJCENTER_BAD_MOVEC_PAIR THEN
+            ERR_TJC_BAD_MOVEC_PAIR THEN
 
             TPWrite "Invalid MoveC pair";
 
@@ -5314,7 +5314,7 @@ TRAJCENTER_GetProcessParam
     processValue;
 
 IF found = FALSE THEN
-    RAISE ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
+    RAISE ERR_TJC_BAD_PROCESS_PARAM_INDEX;
 ENDIF
 \end{lstlisting}
 

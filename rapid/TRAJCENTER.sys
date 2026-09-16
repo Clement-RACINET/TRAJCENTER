@@ -548,24 +548,24 @@ MODULE TRAJCENTER(SYSMODULE)
 !   that may execute RAISE.
 !------------------------------------------------------------------------------
 
-    VAR errnum ERR_TRAJCENTER_NOT_READY := -1;
-    VAR errnum ERR_TRAJCENTER_TIMEOUT := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_TRAJ_INDEX := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_POINT_INDEX := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_TOOL_INDEX := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_WOBJ_INDEX := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_MOVE_TYPE := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_ZONE_TYPE := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_MOVEC_PAIR := -1;
-    VAR errnum ERR_TRAJCENTER_TOOL_TABLE_FULL := -1;
-    VAR errnum ERR_TRAJCENTER_WOBJ_TABLE_FULL := -1;
-    VAR errnum ERR_TRAJCENTER_TOOL_NOT_FOUND := -1;
-    VAR errnum ERR_TRAJCENTER_WOBJ_NOT_FOUND := -1;
-    VAR errnum ERR_TRAJCENTER_TRAJ_NOT_FOUND := -1;
-    VAR errnum ERR_TRAJCENTER_EMPTY_NAME := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_TYPE := -1;
-    VAR errnum ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX := -1;
-    VAR errnum ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED := -1;
+    VAR errnum ERR_TJC_NOT_READY := -1;
+    VAR errnum ERR_TJC_TIMEOUT := -1;
+    VAR errnum ERR_TJC_BAD_TRAJ_INDEX := -1;
+    VAR errnum ERR_TJC_BAD_POINT_INDEX := -1;
+    VAR errnum ERR_TJC_BAD_TOOL_INDEX := -1;
+    VAR errnum ERR_TJC_BAD_WOBJ_INDEX := -1;
+    VAR errnum ERR_TJC_BAD_MOVE_TYPE := -1;
+    VAR errnum ERR_TJC_BAD_ZONE_TYPE := -1;
+    VAR errnum ERR_TJC_BAD_MOVEC_PAIR := -1;
+    VAR errnum ERR_TJC_TOOL_TABLE_FULL := -1;
+    VAR errnum ERR_TJC_WOBJ_TABLE_FULL := -1;
+    VAR errnum ERR_TJC_TOOL_NOT_FOUND := -1;
+    VAR errnum ERR_TJC_WOBJ_NOT_FOUND := -1;
+    VAR errnum ERR_TJC_TRAJ_NOT_FOUND := -1;
+    VAR errnum ERR_TJC_EMPTY_NAME := -1;
+    VAR errnum ERR_TJC_BAD_PROCESS_TYPE := -1;
+    VAR errnum ERR_TJC_BAD_PROCESS_PARAM_INDEX := -1;
+    VAR errnum ERR_TJC_PROCESS_NOT_IMPLEMENTED := -1;
 
     VAR bool trajCenterErrorsInitialized := FALSE;
 
@@ -593,25 +593,34 @@ MODULE TRAJCENTER(SYSMODULE)
 !==============================================================================
 !
 ! FR:
-!   Cette section regroupe les constantes process et le catalogue process lu
-!   par le PC.
+!   Cette section regroupe les identifiants process et le catalogue des
+!   process executables par ce controleur.
 !
 !   Pour ajouter un process :
-!       1. Ajouter une constante process.
-!       2. Incrementer processTypeCount.
-!       3. Ajouter l'entree correspondante e processTypes.
+!       1. Ajouter une constante process dans cette section.
+!       2. Implementer les routines process dans la section 9.10.
+!       3. Ajouter les CASE correspondants dans la section 9.11.
+!       4. Incrementer processTypeCount.
+!       5. Ajouter l'entree correspondante a processTypes.
+!       6. Mettre a jour le client PC, les tests et la documentation.
 !
-!   Ne modifier aucune autre section pour un simple ajout de process.
+!   Un process ne doit etre ajoute a processTypes que lorsque son
+!   implementation RAPID est operationnelle.
 !
 ! EN:
-!   This section groups process constants and the process catalog read by the PC.
+!   This section groups process identifiers and the catalog of processes
+!   executable by this controller.
 !
 !   To add a process:
-!       1. Add a process constant.
-!       2. Increment processTypeCount.
-!       3. Add the corresponding entry to processTypes.
+!       1. Add a process constant in this section.
+!       2. Implement the process routines in section 9.10.
+!       3. Add the corresponding CASE statements in section 9.11.
+!       4. Increment processTypeCount.
+!       5. Add the corresponding processTypes entry.
+!       6. Update the PC client, tests and documentation.
 !
-!   Do not modify any other section for a simple process addition.
+!   A process must only be added to processTypes when its RAPID
+!   implementation is operational.
 !
 ! Convention:
 !   0 = NONE
@@ -620,6 +629,7 @@ MODULE TRAJCENTER(SYSMODULE)
 !   3 = PUSHCORP
 !   4..255 = RESERVED
 !==============================================================================
+
 
     !--------------------------------------------------------------------------
     ! Process identifiers / Identifiants process
@@ -637,7 +647,10 @@ MODULE TRAJCENTER(SYSMODULE)
     ! EN:
     !   Number of valid entries in processTypes.
     !--------------------------------------------------------------------------
-    CONST num processTypeCount := 4;
+
+    ! FR: Ajouter les process au catalogue lorsqu'ils sont operationnels.
+    ! EN: Add processes to the catalog when they become operational.
+    CONST num processTypeCount := 1;
 
 
     !--------------------------------------------------------------------------
@@ -661,11 +674,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !   Valid entries:
     !       processTypes{1..processTypeCount}
     !--------------------------------------------------------------------------
+
+    ! FR: Ajouter les process au catalogue lorsqu'ils sont operationnels.
+    ! EN: Add processes to the catalog when they become operational.
     VAR trajCenterProcessType processTypes{processTypeCount}:=[
-        [processNone, "NONE"],
-        [processAcf, "ACF"],
-        [processAak, "AAK"],
-        [processPushcorp, "PUSHCORP"]
+        [processNone, "NONE"]
     ];
 
 
@@ -888,7 +901,7 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Demande de chargement trajectoire depuis le PC.
     !
-    !   Sequence cete robot :
+    !   Sequence cote robot :
     !       selectedTrajIndex := k;
     !       sendTrajRequest := TRUE;
     !
@@ -898,9 +911,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !       3. Charger le fichier .trajcenter correspondant.
     !       4. Lire les variables par defaut, tools, wobjs et processTypes.
     !       5. Resoudre les champs robot.
-    !       6. ecrire nbLoadedTrajPoints, processParams et trajData.
-    !       7. ecrire les variables d'etat.
-    !       8. Remettre sendTrajRequest e FALSE.
+    !       6. Mettre trajReady a FALSE et invalider l'ancien payload.
+    !       7. Ecrire processParams, trajData, loadedProcessType et
+    !          nbLoadedTrajPoints.
+    !       8. Mettre trajReady a TRUE uniquement apres l'ecriture complete.
+    !       9. Remettre sendTrajRequest a FALSE.
     !
     ! EN:
     !   Request trajectory loading from the PC.
@@ -915,9 +930,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !       3. Load the corresponding .trajcenter file.
     !       4. Read defaults, tools, wobjs and processTypes.
     !       5. Resolve robot-side fields.
-    !       6. Write nbLoadedTrajPoints, processParams and trajData.
-    !       7. Write status variables.
-    !       8. Reset sendTrajRequest to FALSE.
+    !       6. Set trajReady to FALSE and invalidate the previous payload.
+    !       7. Write processParams, trajData, loadedProcessType and
+    !          nbLoadedTrajPoints.
+    !       8. Set trajReady to TRUE only after the complete payload is written.
+    !       9. Reset sendTrajRequest to FALSE.
     !--------------------------------------------------------------------------
     PERS bool sendTrajRequest := FALSE;
 
@@ -1129,10 +1146,25 @@ MODULE TRAJCENTER(SYSMODULE)
     VAR trajCenterProcessParameter processParams{maxProcessParamSetCount, maxProcessParamPerSet};
 
     !--------------------------------------------------------------------------
-    ! FR: Type de process de la trajectoire actuellement chargee.
-    ! EN: Process type of the currently loaded trajectory.
+    ! FR:
+    !   Type de process associe au payload actuellement charge.
+    !
+    !   Cette valeur est ecrite par le superviseur Python pendant le transfert.
+    !   Elle provient du fichier .trajcenter effectivement charge et valide.
+    !
+    !   La valeur n'est exploitable que lorsque trajReady = TRUE.
+    !
+    ! EN:
+    !   Process type associated with the currently loaded payload.
+    !
+    !   This value is written by the Python supervisor during transfer.
+    !   It comes from the .trajcenter file that was actually loaded and validated.
+    !
+    !   The value is only valid when trajReady = TRUE.
     !--------------------------------------------------------------------------
     VAR num loadedProcessType := processNone;
+
+
 
 !==============================================================================
 ! SECTION 8 - VARIABLES PAR DEFAUT DU ROBOT / ROBOT DEFAULTS
@@ -1373,33 +1405,40 @@ MODULE TRAJCENTER(SYSMODULE)
 !
 !   Elle permet de :
 !       - initialiser les erreurs locales RAPID ;
+!       - gerer la validite du payload charge ;
 !       - initialiser une configuration cellule minimale ;
-!       - ajouter ou mettre e jour des tools/wobjs exposes e TrajCenter ;
+!       - ajouter ou mettre a jour des tools/wobjs exposes a TrajCenter ;
 !       - declencher les requetes PC via RWS ;
 !       - attendre la fin d'un refresh ou d'un transfert ;
-!       - acceder aux points charges ;
-!       - executer une trajectoire chargee sans process metier.
+!       - acceder aux points et parametres process charges ;
+!       - executer une trajectoire avec ou sans process metier.
 !
-!   Les routines d'execution process sont volontairement laissees en attente.
-!   Les donnees process sont transferees et stockees, mais leur interpretation
-!   depend du procede cellule.
+!   TRAJCENTER_ExecuteLoaded constitue l'unique point d'entree recommande
+!   pour l'execution.
+!
+!   Les interfaces process et le dispatcher sont implementes. Les routines
+!   propres a ACF, AAK et PUSHCORP restent a completer avant d'ajouter ces
+!   process au catalogue processTypes.
 !
 ! EN:
 !   RAPID API intended for regular user programs.
 !
 !   It allows users to:
 !       - initialize local RAPID errors;
+!       - manage loaded payload validity;
 !       - initialize a minimal cell configuration;
 !       - add or update tools/wobjs exposed to TrajCenter;
 !       - trigger PC requests through RWS;
 !       - wait for refresh or transfer completion;
-!       - access loaded points;
-!       - execute a loaded trajectory without business process handling.
+!       - access loaded points and process parameters;
+!       - execute a trajectory with or without a business process.
 !
-!   Process execution routines are intentionally left pending.
-!   Process data is transferred and stored, but its interpretation depends on
-!   the cell process.
+!   TRAJCENTER_ExecuteLoaded is the single recommended execution entry point.
+!
+!   Process interfaces and dispatching are implemented. ACF, AAK and PUSHCORP
+!   routines must be completed before adding these processes to processTypes.
 !==============================================================================
+
 
 
 !------------------------------------------------------------------------------
@@ -1424,34 +1463,91 @@ MODULE TRAJCENTER(SYSMODULE)
             RETURN;
         ENDIF
 
-        BookErrNo ERR_TRAJCENTER_NOT_READY;
-        BookErrNo ERR_TRAJCENTER_TIMEOUT;
-        BookErrNo ERR_TRAJCENTER_BAD_TRAJ_INDEX;
-        BookErrNo ERR_TRAJCENTER_BAD_POINT_INDEX;
-        BookErrNo ERR_TRAJCENTER_BAD_TOOL_INDEX;
-        BookErrNo ERR_TRAJCENTER_BAD_WOBJ_INDEX;
-        BookErrNo ERR_TRAJCENTER_BAD_MOVE_TYPE;
-        BookErrNo ERR_TRAJCENTER_BAD_ZONE_TYPE;
-        BookErrNo ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-        BookErrNo ERR_TRAJCENTER_TOOL_TABLE_FULL;
-        BookErrNo ERR_TRAJCENTER_WOBJ_TABLE_FULL;
-        BookErrNo ERR_TRAJCENTER_TOOL_NOT_FOUND;
-        BookErrNo ERR_TRAJCENTER_WOBJ_NOT_FOUND;
-        BookErrNo ERR_TRAJCENTER_TRAJ_NOT_FOUND;
-        BookErrNo ERR_TRAJCENTER_EMPTY_NAME;
-        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_TYPE;
-        BookErrNo ERR_TRAJCENTER_BAD_PROCESS_PARAM_INDEX;
-        BookErrNo ERR_TRAJCENTER_PROCESS_NOT_IMPLEMENTED;
+        BookErrNo ERR_TJC_NOT_READY;
+        BookErrNo ERR_TJC_TIMEOUT;
+        BookErrNo ERR_TJC_BAD_TRAJ_INDEX;
+        BookErrNo ERR_TJC_BAD_POINT_INDEX;
+        BookErrNo ERR_TJC_BAD_TOOL_INDEX;
+        BookErrNo ERR_TJC_BAD_WOBJ_INDEX;
+        BookErrNo ERR_TJC_BAD_MOVE_TYPE;
+        BookErrNo ERR_TJC_BAD_ZONE_TYPE;
+        BookErrNo ERR_TJC_BAD_MOVEC_PAIR;
+        BookErrNo ERR_TJC_TOOL_TABLE_FULL;
+        BookErrNo ERR_TJC_WOBJ_TABLE_FULL;
+        BookErrNo ERR_TJC_TOOL_NOT_FOUND;
+        BookErrNo ERR_TJC_WOBJ_NOT_FOUND;
+        BookErrNo ERR_TJC_TRAJ_NOT_FOUND;
+        BookErrNo ERR_TJC_EMPTY_NAME;
+        BookErrNo ERR_TJC_BAD_PROCESS_TYPE;
+        BookErrNo ERR_TJC_BAD_PROCESS_PARAM_INDEX;
+        BookErrNo ERR_TJC_PROCESS_NOT_IMPLEMENTED;
 
         trajCenterErrorsInitialized := TRUE;
 
     ENDPROC
 
 
+!------------------------------------------------------------------------------
+! SECTION 9.2 - GESTION ETAT TRAJECTOIRE CHARGEE
+!               LOADED TRAJECTORY STATE MANAGEMENT
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section contient les helpers internes gerant la validite du payload
+!   trajectoire charge.
+!
+!   Une trajectoire doit etre invalidee :
+!       - avant le chargement d'un nouveau payload ;
+!       - apres modification d'un tool ou d'un workobject reference ;
+!       - apres suppression ou vidage de la configuration cellule ;
+!       - lorsqu'une routine RAPID invalide explicitement le payload.
+!
+!   En cas d'echec de transfert, le superviseur PC applique directement le
+!   meme etat d'invalidation via RWS.
+
+!
+! EN:
+!   This section contains internal helpers managing the validity of the loaded
+!   trajectory payload.
+!
+!   A trajectory must be invalidated:
+!       - before loading a new payload;
+!       - after changing a referenced tool or workobject;
+!       - after deleting or clearing cell configuration;
+!       - when a RAPID routine explicitly invalidates the payload.
+!
+!   On transfer failure, the PC supervisor directly applies the same
+!   invalidation state through RWS.
+!------------------------------------------------------------------------------
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Invalide le payload trajectoire actuellement charge.
+    !
+    !   Les anciennes valeurs de trajData et processParams ne sont pas effacees.
+    !   Elles sont rendues inaccessibles par :
+    !       - trajReady = FALSE ;
+    !       - nbLoadedTrajPoints = 0 ;
+    !       - loadedProcessType = processNone.
+    !
+    ! EN:
+    !   Invalidates the currently loaded trajectory payload.
+    !
+    !   Previous trajData and processParams values are not cleared.
+    !   They are made inaccessible through:
+    !       - trajReady = FALSE;
+    !       - nbLoadedTrajPoints = 0;
+    !       - loadedProcessType = processNone.
+    !--------------------------------------------------------------------------
+    LOCAL PROC TRAJCENTER_InvalidateLoaded()
+        trajReady := FALSE;
+        nbLoadedTrajPoints := 0;
+        loadedProcessType := processNone;
+    ENDPROC
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.2 - INITIALISATION CONFIG CELLULE / CELL CONFIG INITIALIZATION
+! SECTION 9.3 - INITIALISATION CONFIG CELLULE / CELL CONFIG INITIALIZATION
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -1495,7 +1591,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.3 - GESTION TOOLS/WOBJS / TOOL AND WOBJ MANAGEMENT
+! SECTION 9.4 - GESTION TOOLS/WOBJS / TOOL AND WOBJ MANAGEMENT
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -1587,15 +1683,14 @@ MODULE TRAJCENTER(SYSMODULE)
         VAR num existingIndex;
 
         IF toolName = "" THEN
-            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+            RAISE ERR_TJC_EMPTY_NAME;
         ENDIF
 
         existingIndex := TRAJCENTER_FindToolIndex(toolName);
 
         IF existingIndex > 0 THEN
             trajTools{existingIndex}.value := toolValue;
-            trajReady := FALSE;
-            nbLoadedTrajPoints := 0;
+            TRAJCENTER_InvalidateLoaded;
             RETURN;
         ENDIF
 
@@ -1603,20 +1698,19 @@ MODULE TRAJCENTER(SYSMODULE)
             IF trajTools{i}.name = "" THEN
                 trajTools{i}.name := toolName;
                 trajTools{i}.value := toolValue;
-                trajReady := FALSE;
-                nbLoadedTrajPoints := 0;
+                TRAJCENTER_InvalidateLoaded;
                 RETURN;
             ENDIF
         ENDFOR
 
-        RAISE ERR_TRAJCENTER_TOOL_TABLE_FULL;
+        RAISE ERR_TJC_TOOL_TABLE_FULL;
     ENDPROC
 
 
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Ajoute ou met e jour un workobject expose e TrajCenter.
+    !   Ajoute ou met a jour un workobject expose TrajCenter.
     !
     !   Regle :
     !       - si le nom existe deje, sa valeur est remplacee ;
@@ -1643,15 +1737,14 @@ MODULE TRAJCENTER(SYSMODULE)
         VAR num existingIndex;
 
         IF wobjName = "" THEN
-            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+            RAISE ERR_TJC_EMPTY_NAME;
         ENDIF
 
         existingIndex := TRAJCENTER_FindWobjIndex(wobjName);
 
         IF existingIndex > 0 THEN
             trajWobjs{existingIndex}.value := wobjValue;
-            trajReady := FALSE;
-            nbLoadedTrajPoints := 0;
+            TRAJCENTER_InvalidateLoaded;
             RETURN;
         ENDIF
 
@@ -1659,13 +1752,12 @@ MODULE TRAJCENTER(SYSMODULE)
             IF trajWobjs{i}.name = "" THEN
                 trajWobjs{i}.name := wobjName;
                 trajWobjs{i}.value := wobjValue;
-                trajReady := FALSE;
-                nbLoadedTrajPoints := 0;
+                TRAJCENTER_InvalidateLoaded;
                 RETURN;
             ENDIF
         ENDFOR
 
-        RAISE ERR_TRAJCENTER_WOBJ_TABLE_FULL;
+        RAISE ERR_TJC_WOBJ_TABLE_FULL;
     ENDPROC
 
 
@@ -1673,7 +1765,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Supprime un tool expose e TrajCenter.
+    !   Supprime un tool expose de TrajCenter.
     !
     !   La suppression libere le slot en mettant name e "" et remet une valeur
     !   tooldata neutre.
@@ -1694,13 +1786,13 @@ MODULE TRAJCENTER(SYSMODULE)
         VAR num idx;
 
         IF toolName = "" THEN
-            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+            RAISE ERR_TJC_EMPTY_NAME;
         ENDIF
 
         idx := TRAJCENTER_FindToolIndex(toolName);
 
         IF idx = 0 THEN
-            RAISE ERR_TRAJCENTER_TOOL_NOT_FOUND;
+            RAISE ERR_TJC_TOOL_NOT_FOUND;
         ENDIF
 
         trajTools{idx}.name := "";
@@ -1710,14 +1802,14 @@ MODULE TRAJCENTER(SYSMODULE)
             [0, [0, 0, 0], [1, 0, 0, 0], 0, 0, 0]
         ];
 
-        trajReady := FALSE;
-        nbLoadedTrajPoints := 0;
+        TRAJCENTER_InvalidateLoaded;
+
     ENDPROC
 
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Supprime un workobject expose e TrajCenter.
+    !   Supprime un workobject expose TrajCenter.
     !
     !   La suppression libere le slot en mettant name e "" et remet une valeur
     !   wobjdata neutre.
@@ -1738,13 +1830,13 @@ MODULE TRAJCENTER(SYSMODULE)
         VAR num idx;
 
         IF wobjName = "" THEN
-            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+            RAISE ERR_TJC_EMPTY_NAME;
         ENDIF
 
         idx := TRAJCENTER_FindWobjIndex(wobjName);
 
         IF idx = 0 THEN
-            RAISE ERR_TRAJCENTER_WOBJ_NOT_FOUND;
+            RAISE ERR_TJC_WOBJ_NOT_FOUND;
         ENDIF
 
         trajWobjs{idx}.name := "";
@@ -1756,8 +1848,8 @@ MODULE TRAJCENTER(SYSMODULE)
             [[0, 0, 0], [1, 0, 0, 0]]
         ];
 
-        trajReady := FALSE;
-        nbLoadedTrajPoints := 0;
+        TRAJCENTER_InvalidateLoaded;
+
     ENDPROC
 
 
@@ -1791,8 +1883,8 @@ MODULE TRAJCENTER(SYSMODULE)
             ];
         ENDFOR
 
-        trajReady := FALSE;
-        nbLoadedTrajPoints := 0;
+        TRAJCENTER_InvalidateLoaded;
+
     ENDPROC
 
 
@@ -1827,8 +1919,8 @@ MODULE TRAJCENTER(SYSMODULE)
             ];
         ENDFOR
 
-        trajReady := FALSE;
-        nbLoadedTrajPoints := 0;
+        TRAJCENTER_InvalidateLoaded;
+
     ENDPROC
 
 
@@ -1876,7 +1968,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.4 - REQUETES PC / PC REQUESTS
+! SECTION 9.5 - REQUETES PC / PC REQUESTS
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -1912,7 +2004,7 @@ MODULE TRAJCENTER(SYSMODULE)
         VAR num i;
 
         IF trajName = "" THEN
-            RAISE ERR_TRAJCENTER_EMPTY_NAME;
+            RAISE ERR_TJC_EMPTY_NAME;
         ENDIF
 
         FOR i FROM 1 TO nbTrajAvailable DO
@@ -1933,7 +2025,6 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_RequestMetaRefresh()
         transferError := FALSE;
-        trajReady := FALSE;
         lastErrorCode := statusOk;
         lastError := "";
         transferProgress := 0;
@@ -1958,19 +2049,21 @@ MODULE TRAJCENTER(SYSMODULE)
     PROC TRAJCENTER_RequestTrajectory(num trajIndex)
 
         IF trajIndex < 1 OR trajIndex > nbTrajAvailable THEN
-            RAISE ERR_TRAJCENTER_BAD_TRAJ_INDEX;
+            RAISE ERR_TJC_BAD_TRAJ_INDEX;
         ENDIF
 
         selectedTrajIndex := trajIndex;
 
+        TRAJCENTER_InvalidateLoaded;
+
         transferError := FALSE;
-        trajReady := FALSE;
         lastErrorCode := statusOk;
         lastError := "";
         transferProgress := 0;
 
         sendTrajRequest := TRUE;
     ENDPROC
+
 
     !--------------------------------------------------------------------------
     ! FR:
@@ -2007,14 +2100,14 @@ MODULE TRAJCENTER(SYSMODULE)
         trajIndex := TRAJCENTER_FindTrajectoryIndex(trajName);
 
         IF trajIndex = 0 THEN
-            RAISE ERR_TRAJCENTER_TRAJ_NOT_FOUND;
+            RAISE ERR_TJC_TRAJ_NOT_FOUND;
         ENDIF
 
         TRAJCENTER_RequestTrajectory trajIndex;
     ENDPROC
 
 !------------------------------------------------------------------------------
-! SECTION 9.5 - ATTENTES / WAIT HELPERS
+! SECTION 9.6 - ATTENTES / WAIT HELPERS
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -2039,7 +2132,7 @@ MODULE TRAJCENTER(SYSMODULE)
             ENDIF
 
             IF elapsed >= timeoutSec THEN
-                RAISE ERR_TRAJCENTER_TIMEOUT;
+                RAISE ERR_TJC_TIMEOUT;
             ENDIF
 
             WaitTime 0.1;
@@ -2052,14 +2145,14 @@ MODULE TRAJCENTER(SYSMODULE)
     ! FR:
     !   Attend que la trajectoire soit prete ou qu'une erreur soit signalee.
     !
-    !   Si transferError devient TRUE, la routine leve ERR_TRAJCENTER_NOT_READY.
+    !   Si transferError devient TRUE, la routine leve ERR_TJC_NOT_READY.
     !   Le detail de l'erreur PC est disponible dans lastErrorCode/lastError.
     !
     ! EN:
     !   Waits until the trajectory is ready or an error is reported.
     !
     !   If transferError becomes TRUE, the routine raises
-    !   ERR_TRAJCENTER_NOT_READY.
+    !   ERR_TJC_NOT_READY.
     !   PC error details are available in lastErrorCode/lastError.
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_WaitTrajectoryReady(num timeoutSec)
@@ -2069,11 +2162,11 @@ MODULE TRAJCENTER(SYSMODULE)
 
         WHILE (sendTrajRequest = TRUE) OR (trajReady = FALSE) DO
             IF transferError = TRUE THEN
-                RAISE ERR_TRAJCENTER_NOT_READY;
+                RAISE ERR_TJC_NOT_READY;
             ENDIF
 
             IF elapsed >= timeoutSec THEN
-                RAISE ERR_TRAJCENTER_TIMEOUT;
+                RAISE ERR_TJC_TIMEOUT;
             ENDIF
 
             WaitTime 0.1;
@@ -2081,13 +2174,13 @@ MODULE TRAJCENTER(SYSMODULE)
         ENDWHILE
 
         IF nbLoadedTrajPoints < 1 THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
+            RAISE ERR_TJC_NOT_READY;
         ENDIF
     ENDPROC
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.6 - ACCES DONNEES / DATA ACCESS
+! SECTION 9.7 - ACCES DONNEES / DATA ACCESS
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -2111,11 +2204,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_GetPoint(num pointIndex, VAR trajCenterPointData pointData)
         IF nbLoadedTrajPoints < 0 OR nbLoadedTrajPoints > maxTrajPointCount THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
+            RAISE ERR_TJC_NOT_READY;
         ENDIF
 
         IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
-            RAISE ERR_TRAJCENTER_BAD_POINT_INDEX;
+            RAISE ERR_TJC_BAD_POINT_INDEX;
         ENDIF
 
         pointData := trajData{pointIndex};
@@ -2131,11 +2224,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_GetTool(num toolIndex, VAR tooldata toolValue)
         IF toolIndex < 1 OR toolIndex > maxTrajToolCount THEN
-            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+            RAISE ERR_TJC_BAD_TOOL_INDEX;
         ENDIF
 
         IF trajTools{toolIndex}.name = "" THEN
-            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+            RAISE ERR_TJC_BAD_TOOL_INDEX;
         ENDIF
 
         toolValue := trajTools{toolIndex}.value;
@@ -2151,11 +2244,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_GetWobj(num wobjIndex, VAR wobjdata wobjValue)
         IF wobjIndex < 1 OR wobjIndex > maxTrajWobjCount THEN
-            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+            RAISE ERR_TJC_BAD_WOBJ_INDEX;
         ENDIF
 
         IF trajWobjs{wobjIndex}.name = "" THEN
-            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+            RAISE ERR_TJC_BAD_WOBJ_INDEX;
         ENDIF
 
         wobjValue := trajWobjs{wobjIndex}.value;
@@ -2176,11 +2269,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_LoadExecTool(num toolIndex)
         IF toolIndex < 1 OR toolIndex > maxTrajToolCount THEN
-            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+            RAISE ERR_TJC_BAD_TOOL_INDEX;
         ENDIF
 
         IF trajTools{toolIndex}.name = "" THEN
-            RAISE ERR_TRAJCENTER_BAD_TOOL_INDEX;
+            RAISE ERR_TJC_BAD_TOOL_INDEX;
         ENDIF
 
         trajExecTool := trajTools{toolIndex}.value;
@@ -2202,11 +2295,11 @@ MODULE TRAJCENTER(SYSMODULE)
     !--------------------------------------------------------------------------
     PROC TRAJCENTER_LoadExecWobj(num wobjIndex)
         IF wobjIndex < 1 OR wobjIndex > maxTrajWobjCount THEN
-            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+            RAISE ERR_TJC_BAD_WOBJ_INDEX;
         ENDIF
 
         IF trajWobjs{wobjIndex}.name = "" THEN
-            RAISE ERR_TRAJCENTER_BAD_WOBJ_INDEX;
+            RAISE ERR_TJC_BAD_WOBJ_INDEX;
         ENDIF
 
         trajExecWobj := trajWobjs{wobjIndex}.value;
@@ -2214,7 +2307,7 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.7 - HELPERS MOUVEMENT / MOTION HELPERS
+! SECTION 9.8 - HELPERS MOUVEMENT / MOTION HELPERS
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
@@ -2280,7 +2373,7 @@ MODULE TRAJCENTER(SYSMODULE)
         CASE 255:
             RETURN fine;
         DEFAULT:
-            RAISE ERR_TRAJCENTER_BAD_ZONE_TYPE;
+            RAISE ERR_TJC_BAD_ZONE_TYPE;
         ENDTEST
 
         RETURN fine;
@@ -2307,217 +2400,810 @@ MODULE TRAJCENTER(SYSMODULE)
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.8 - EXECUTION SANS PROCESS / EXECUTION WITHOUT PROCESS
+! SECTION 9.9 - ACCES PARAMETRES PROCESS / PROCESS PARAMETER ACCESS
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Cette section execute uniquement les mouvements.
+!   Cette section fournit un acces controle aux parametres process associes
+!   aux points de la trajectoire chargee.
 !
-!   Limite volontaire :
-!       - processParamIndex est ignore ;
-!       - processParams est ignore ;
-!       - aucune logique ACF/AAK/PUSHCORP n'est appliquee.
+!   Chaque point contient un processParamIndex :
+!       0       = aucun jeu de parametres process ;
+!       1..256  = ligne correspondante dans processParams.
 !
-!   Les donnees process sont neanmoins transferees et restent disponibles pour
-!   une future execution avec process.
+!   Les routines process doivent utiliser cette API plutot que lire directement
+!   les tableaux internes. Cela centralise les controles d'index et preserve le
+!   contrat interne du module.
 !
 ! EN:
-!   This section executes motion only.
+!   This section provides controlled access to process parameters associated
+!   with loaded trajectory points.
 !
-!   Intentional limitation:
-!       - processParamIndex is ignored;
-!       - processParams is ignored;
-!       - no ACF/AAK/PUSHCORP logic is applied.
+!   Each point contains a processParamIndex:
+!       0       = no process parameter set;
+!       1..256  = corresponding row in processParams.
 !
-!   Process data is still transferred and remains available for future process
-!   execution.
+!   Process routines should use this API instead of directly reading internal
+!   arrays. This centralizes index checks and preserves the module contract.
+!------------------------------------------------------------------------------
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Indique si un point reference un jeu de parametres process.
+    !
+    ! EN:
+    !   Indicates whether a point references a process parameter set.
+    !--------------------------------------------------------------------------
+    FUNC bool TRAJCENTER_PointHasProcessParams(num pointIndex)
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TJC_BAD_POINT_INDEX;
+        ENDIF
+
+        RETURN trajData{pointIndex}.processParamIndex > 0;
+
+    ENDFUNC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Recherche un parametre process par son nom pour un point donne.
+    !
+    !   Sorties :
+    !       found = TRUE si le parametre a ete trouve ;
+    !       value = valeur numerique du parametre.
+    !
+    !   Si le point ne reference aucun jeu de parametres, found reste FALSE.
+    !
+    ! EN:
+    !   Searches a process parameter by name for a given point.
+    !
+    !   Outputs:
+    !       found = TRUE if the parameter was found;
+    !       value = numeric parameter value.
+    !
+    !   If the point references no parameter set, found remains FALSE.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_GetProcessParam(
+        num pointIndex,
+        string paramName,
+        VAR bool found,
+        VAR num value
+    )
+        VAR num setIndex;
+        VAR num paramIndex;
+
+        found := FALSE;
+        value := 0;
+
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TJC_BAD_POINT_INDEX;
+        ENDIF
+
+        IF paramName = "" THEN
+            RAISE ERR_TJC_EMPTY_NAME;
+        ENDIF
+
+        setIndex := trajData{pointIndex}.processParamIndex;
+
+        IF setIndex = 0 THEN
+            RETURN;
+        ENDIF
+
+        IF setIndex < 1 OR setIndex > maxProcessParamSetCount THEN
+            RAISE ERR_TJC_BAD_PROCESS_PARAM_INDEX;
+        ENDIF
+
+        FOR paramIndex FROM 1 TO maxProcessParamPerSet DO
+
+            IF processParams{setIndex, paramIndex}.name = paramName THEN
+                found := TRUE;
+                value := processParams{setIndex, paramIndex}.value;
+                RETURN;
+            ENDIF
+
+        ENDFOR
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10 - IMPLEMENTATIONS PROCESS / PROCESS IMPLEMENTATIONS
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Chaque process fournit cinq points d'extension :
+!
+!       Begin:
+!           initialise le process avant le premier mouvement.
+!
+!       BeforeMotion:
+!           applique les parametres avant un mouvement.
+!
+!       AfterMotion:
+!           realise les actions necessaires apres l'instruction de mouvement.
+!
+!       End:
+!           termine normalement le process apres le dernier mouvement.
+!
+!       Abort:
+!           remet le process dans un etat sur lorsqu'une erreur survient.
+!
+!   L'index transmis correspond au premier point du mouvement courant.
+!   Pour MoveC, il correspond au point de passage. Le point d'arrivee se trouve
+!   a l'index pointIndex + 1.
+!
+!   Les fonctions BeforeMotion et AfterMotion sont appelees une fois par
+!   instruction de mouvement, et non une fois par entree trajData.
+!
+!   IMPORTANT:
+!   Une action executee dans AfterMotion n'est pas necessairement synchronisee
+!   avec le passage physique exact au point si une zone non fine est utilisee.
+!   Un process exigeant une synchronisation precise doit employer une strategie
+!   ABB adaptee : triggers, instructions process specialisees ou executeur
+!   dedie.
+!
+! EN:
+!   Each process provides five extension points:
+!
+!       Begin:
+!           initializes the process before the first motion.
+!
+!       BeforeMotion:
+!           applies parameters before a motion.
+!
+!       AfterMotion:
+!           performs required actions after the motion instruction.
+!
+!       End:
+!           normally terminates the process after the final motion.
+!
+!       Abort:
+!           returns the process to a safe state when an error occurs.
+!
+!   The provided index corresponds to the first point of the current motion.
+!   For MoveC, it corresponds to the circular point. The destination point is
+!   stored at pointIndex + 1.
+!
+!   BeforeMotion and AfterMotion are called once per motion instruction, not
+!   once per trajData entry.
+!
+!   IMPORTANT:
+!   An action executed in AfterMotion is not necessarily synchronized with the
+!   exact physical passage through the point when a non-fine zone is used.
+!   A process requiring accurate synchronization must use a suitable ABB
+!   strategy: triggers, specialized process instructions or a dedicated
+!   executor.
+!------------------------------------------------------------------------------
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.1 - PROCESS ACF
 !------------------------------------------------------------------------------
 
     !--------------------------------------------------------------------------
     ! FR:
-    !   Execute la trajectoire chargee sans appliquer les parametres process.
+    !   Initialise le process ACF.
     !
-    !   Les vitesses ori/leax/reax sont fournies par le programme utilisateur.
+    !   Etat initial :
+    !       non implemente.
+    !
+    !   Remplacer le RAISE par l'initialisation reelle du process avant de
+    !   declarer ACF utilisable en production.
     !
     ! EN:
-    !   Executes the loaded trajectory without applying process parameters.
+    !   Initializes the ACF process.
     !
-    !   ori/leax/reax speeds are provided by the user program.
+    !   Initial state:
+    !       not implemented.
+    !
+    !   Replace the RAISE with the actual process initialization before
+    !   declaring ACF usable in production.
     !--------------------------------------------------------------------------
-    PROC TRAJCENTER_ExecLoadedNoProc(
+    PROC TRAJCENTER_AcfBegin()
+
+        RAISE ERR_TJC_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Applique les parametres ACF avant le mouvement courant.
+    !
+    !   Exemple d'implementation :
+    !       1. appeler TRAJCENTER_GetProcessParam ;
+    !       2. verifier les parametres obligatoires ;
+    !       3. configurer les sorties ou instructions ACF.
+    !
+    ! EN:
+    !   Applies ACF parameters before the current motion.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Example:
+        !
+        ! TRAJCENTER_GetProcessParam
+        !     pointIndex,
+        !     "example_parameter",
+        !     found,
+        !     processValue;
+        !
+        ! IF found = FALSE THEN
+        !     RAISE ERR_TJC_BAD_PROCESS_PARAM_INDEX;
+        ! ENDIF
+        !
+        ! Apply the ACF value here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Actions ACF apres le mouvement courant.
+    !
+    ! EN:
+    !   ACF actions after the current motion.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfAfterMotion(num pointIndex)
+
+        ! Add post-motion ACF actions here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Termine normalement le process ACF.
+    !
+    ! EN:
+    !   Normally terminates the ACF process.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfEnd()
+
+        ! Stop or finalize ACF here.
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Met le process ACF dans un etat sur apres une erreur.
+    !
+    !   Cette routine ne doit normalement pas lever de nouvelle erreur.
+    !
+    ! EN:
+    !   Returns the ACF process to a safe state after an error.
+    !
+    !   This routine should normally not raise another error.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_AcfAbort()
+
+        ! Disable ACF outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.2 - PROCESS AAK
+!------------------------------------------------------------------------------
+
+    PROC TRAJCENTER_AakBegin()
+
+        RAISE ERR_TJC_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Read and apply AAK parameters here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakAfterMotion(num pointIndex)
+
+        ! Add post-motion AAK actions here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakEnd()
+
+        ! Stop or finalize AAK here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_AakAbort()
+
+        ! Disable AAK outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.10.3 - PROCESS PUSHCORP
+!------------------------------------------------------------------------------
+
+    PROC TRAJCENTER_PushcorpBegin()
+
+        RAISE ERR_TJC_PROCESS_NOT_IMPLEMENTED;
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpBeforeMotion(num pointIndex)
+        VAR bool found;
+        VAR num processValue;
+
+        ! Read and apply PUSHCORP parameters here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpAfterMotion(num pointIndex)
+
+        ! Add post-motion PUSHCORP actions here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpEnd()
+
+        ! Stop or finalize PUSHCORP here.
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_PushcorpAbort()
+
+        ! Disable PUSHCORP outputs and restore a safe state here.
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.11 - DISPATCHER PROCESS / PROCESS DISPATCHER
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Le dispatcher constitue l'unique point de correspondance entre un
+!   identifiant process et son implementation RAPID.
+!
+!   Pour ajouter un process :
+!
+!       1. ajouter sa constante dans la section 5 ;
+!       2. l'ajouter au tableau processTypes ;
+!       3. creer ses routines Begin, BeforeMotion, AfterMotion, End et Abort ;
+!       4. ajouter un CASE dans chacun des dispatchers ci-dessous ;
+!       5. mettre a jour le client Python, les tests et la documentation.
+!
+!   Le process NONE est un cas normal. Ses hooks ne realisent aucune action.
+!
+! EN:
+!   The dispatcher is the single mapping point between a process identifier
+!   and its RAPID implementation.
+!
+!   To add a process:
+!
+!       1. add its constant in section 5;
+!       2. add it to the processTypes array;
+!       3. create its Begin, BeforeMotion, AfterMotion, End and Abort routines;
+!       4. add a CASE to each dispatcher below;
+!       5. update the Python client, tests and documentation.
+!
+!   The NONE process is a normal case. Its hooks perform no action.
+!------------------------------------------------------------------------------
+
+
+    PROC TRAJCENTER_ProcessBegin(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfBegin;
+
+        CASE processAak:
+            TRAJCENTER_AakBegin;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpBegin;
+
+        DEFAULT:
+            RAISE ERR_TJC_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessBeforeMotion(
+        num processType,
+        num pointIndex
+    )
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfBeforeMotion pointIndex;
+
+        CASE processAak:
+            TRAJCENTER_AakBeforeMotion pointIndex;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpBeforeMotion pointIndex;
+
+        DEFAULT:
+            RAISE ERR_TJC_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessAfterMotion(
+        num processType,
+        num pointIndex
+    )
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfAfterMotion pointIndex;
+
+        CASE processAak:
+            TRAJCENTER_AakAfterMotion pointIndex;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpAfterMotion pointIndex;
+
+        DEFAULT:
+            RAISE ERR_TJC_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    PROC TRAJCENTER_ProcessEnd(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfEnd;
+
+        CASE processAak:
+            TRAJCENTER_AakEnd;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpEnd;
+
+        DEFAULT:
+            RAISE ERR_TJC_BAD_PROCESS_TYPE;
+
+        ENDTEST
+
+    ENDPROC
+
+
+    !--------------------------------------------------------------------------
+    ! FR:
+    !   Tente de remettre le process dans un etat sur.
+    !
+    !   Les routines appelees ici doivent eviter de lever une erreur afin de ne
+    !   pas masquer l'erreur d'execution originale.
+    !
+    ! EN:
+    !   Attempts to return the process to a safe state.
+    !
+    !   Routines called here should avoid raising an error so that the original
+    !   execution error is not hidden.
+    !--------------------------------------------------------------------------
+    PROC TRAJCENTER_ProcessAbort(num processType)
+
+        TEST processType
+
+        CASE processNone:
+            RETURN;
+
+        CASE processAcf:
+            TRAJCENTER_AcfAbort;
+
+        CASE processAak:
+            TRAJCENTER_AakAbort;
+
+        CASE processPushcorp:
+            TRAJCENTER_PushcorpAbort;
+
+        DEFAULT:
+            RETURN;
+
+        ENDTEST
+
+    ENDPROC
+
+
+!------------------------------------------------------------------------------
+! SECTION 9.12 - MOTEUR DE MOUVEMENT COMMUN / COMMON MOTION ENGINE
+!------------------------------------------------------------------------------
+!
+! FR:
+!   Cette section contient l'unique implementation generique des mouvements.
+!
+!   Elle prend en charge :
+!       - la lecture des points ;
+!       - la construction du speeddata ;
+!       - la conversion de la zone ;
+!       - le chargement du tool et du workobject ;
+!       - l'application de readConfs ;
+!       - la validation des paires MoveC ;
+!       - les appels process avant et apres chaque mouvement ;
+!       - l'increment de l'index de parcours.
+!
+!   L'index pointIndex est passe par reference et est avance :
+!       - de 1 apres MoveL ou MoveJ ;
+!       - de 2 apres MoveC.
+!
+! EN:
+!   This section contains the single generic motion implementation.
+!
+!   It handles:
+!       - point reading;
+!       - speeddata construction;
+!       - zone conversion;
+!       - tool and workobject loading;
+!       - readConfs application;
+!       - MoveC pair validation;
+!       - process calls before and after each motion;
+!       - traversal index update.
+!
+!   pointIndex is passed by reference and advanced:
+!       - by 1 after MoveL or MoveJ;
+!       - by 2 after MoveC.
+!------------------------------------------------------------------------------
+
+
+    PROC TRAJCENTER_ExecuteOneMotion(
+        VAR num pointIndex,
+        num processType,
         num oriSpeed,
         num leaxSpeed,
         num reaxSpeed
     )
-        VAR num i;
+        VAR num currentIndex;
         VAR trajCenterPointData p;
         VAR trajCenterPointData p2;
         VAR speeddata v;
         VAR zonedata z;
 
-        IF trajReady = FALSE THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
+        IF pointIndex < 1 OR pointIndex > nbLoadedTrajPoints THEN
+            RAISE ERR_TJC_BAD_POINT_INDEX;
         ENDIF
 
-        IF nbLoadedTrajPoints < 1 THEN
-            RAISE ERR_TRAJCENTER_NOT_READY;
-        ENDIF
+        currentIndex := pointIndex;
+        p := trajData{currentIndex};
 
-        i := 1;
+        v := TRAJCENTER_MakeSpeed(
+            p.tcpSpeed,
+            oriSpeed,
+            leaxSpeed,
+            reaxSpeed
+        );
 
-        WHILE i <= nbLoadedTrajPoints DO
-            p := trajData{i};
+        z := TRAJCENTER_MakeZone(p.zoneType);
 
-            v := TRAJCENTER_MakeSpeed(p.tcpSpeed, oriSpeed, leaxSpeed, reaxSpeed);
-            z := TRAJCENTER_MakeZone(p.zoneType);
+        TRAJCENTER_LoadExecTool p.toolIndex;
+        TRAJCENTER_LoadExecWobj p.wobjIndex;
+        TRAJCENTER_ApplyReadConfs p.readConfs;
 
-            TRAJCENTER_LoadExecTool p.toolIndex;
-            TRAJCENTER_LoadExecWobj p.wobjIndex;
-            TRAJCENTER_ApplyReadConfs p.readConfs;
 
-            IF p.moveType = moveTypeL THEN
-                MoveL p.point, v, z, trajExecTool\WObj:=trajExecWobj;
-                i := i + 1;
+        IF p.moveType = moveTypeL THEN
 
-            ELSEIF p.moveType = moveTypeJ THEN
-                MoveJ p.point, v, z, trajExecTool\WObj:=trajExecWobj;
-                i := i + 1;
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
 
-            ELSEIF p.moveType = moveTypeC THEN
-                IF i + 1 > nbLoadedTrajPoints THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            MoveL
+                p.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
 
-                p2 := trajData{i + 1};
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
 
-                IF p2.moveType <> moveTypeC THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            pointIndex := currentIndex + 1;
 
-                IF p2.tcpSpeed <> p.tcpSpeed THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
 
-                IF p2.toolIndex <> p.toolIndex THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+        ELSEIF p.moveType = moveTypeJ THEN
 
-                IF p2.wobjIndex <> p.wobjIndex THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
 
-                IF p2.zoneType <> p.zoneType THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            MoveJ
+                p.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
 
-                IF p2.readConfs <> p.readConfs THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
 
-                IF p2.processParamIndex <> p.processParamIndex THEN
-                    RAISE ERR_TRAJCENTER_BAD_MOVEC_PAIR;
-                ENDIF
+            pointIndex := currentIndex + 1;
 
-                MoveC p.point, p2.point, v, z, trajExecTool\WObj:=trajExecWobj;
-                i := i + 2;
 
-            ELSE
-                RAISE ERR_TRAJCENTER_BAD_MOVE_TYPE;
+        ELSEIF p.moveType = moveTypeC THEN
+
+            IF currentIndex + 1 > nbLoadedTrajPoints THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
             ENDIF
-        ENDWHILE
 
-        ! FR: Retour e une politique confdata sere par defaut.
-        ! EN: Return to a safe default confdata policy.
-        ConfL \On;
-        ConfJ \On;
+            p2 := trajData{currentIndex + 1};
+
+            IF p2.moveType <> moveTypeC THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.tcpSpeed <> p.tcpSpeed THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.toolIndex <> p.toolIndex THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.wobjIndex <> p.wobjIndex THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.zoneType <> p.zoneType THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.readConfs <> p.readConfs THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            IF p2.processParamIndex <> p.processParamIndex THEN
+                RAISE ERR_TJC_BAD_MOVEC_PAIR;
+            ENDIF
+
+            TRAJCENTER_ProcessBeforeMotion
+                processType,
+                currentIndex;
+
+            MoveC
+                p.point,
+                p2.point,
+                v,
+                z,
+                trajExecTool
+                \WObj:=trajExecWobj;
+
+            TRAJCENTER_ProcessAfterMotion
+                processType,
+                currentIndex;
+
+            pointIndex := currentIndex + 2;
+
+
+        ELSE
+
+            RAISE ERR_TJC_BAD_MOVE_TYPE;
+
+        ENDIF
+
     ENDPROC
 
 
 !------------------------------------------------------------------------------
-! SECTION 9.9 - ACCES PARAMETRES PROCESS / PROCESS PARAMETER ACCESS
+! SECTION 9.13 - API PUBLIQUE D'EXECUTION / PUBLIC EXECUTION API
 !------------------------------------------------------------------------------
 !
 ! FR:
-!   Section prevue pour l'acces propre aux parametres process par point.
+!   TRAJCENTER_ExecuteLoaded est l'unique point d'entree public recommande pour
+!   executer une trajectoire chargee.
 !
-!   Etat actuel :
-!       - imagine ;
-!       - non implemente dans cette version.
+!   Le process NONE n'utilise aucune action process. Il passe neanmoins par le
+!   meme moteur de mouvement que les autres process.
 !
-!   Intention :
-!       - fournir TRAJCENTER_PointHasProcessParams(pointIndex) ;
-!       - fournir TRAJCENTER_GetProcessParam(pointIndex, paramName, found, value);
-!       - permettre e un module metier ACF/AAK/PUSHCORP d'interpreter les
-!         parametres sans modifier le protocole de transfert.
-!
-! EN:
-!   Section reserved for clean per-point process parameter access.
-!
-!   Current state:
-!       - designed;
-!       - not implemented in this version.
-!
-!   Intent:
-!       - provide TRAJCENTER_PointHasProcessParams(pointIndex);
-!       - provide TRAJCENTER_GetProcessParam(pointIndex, paramName, found, value);
-!       - allow an ACF/AAK/PUSHCORP business module to interpret parameters
-!         without modifying the transfer protocol.
-!------------------------------------------------------------------------------
-
-
-!------------------------------------------------------------------------------
-! SECTION 9.10 - EXECUTION AVEC PROCESS / EXECUTION WITH PROCESS
-!------------------------------------------------------------------------------
-!
-! FR:
-!   Section reservee e l'execution avec process.
-!
-!   Etat actuel :
-!       - non implemente.
-!
-!   Intention :
-!       - conserver TRAJCENTER_ExecLoadedNoProc comme
-!         execution generique pure mouvement ;
-!       - ajouter une routine avec process, ou une routine globale qui
-!         choisira l'execution adaptee.
-!
-!   Exemple futur possible :
-!       TRAJCENTER_ExecuteLoadedTrajectoryWithProcess
-!       TRAJCENTER_ExecuteLoadedTrajectory
+!   En cas d'erreur :
+!       - le process est arrete par ProcessAbort ;
+!       - ConfL et ConfJ sont remis a On ;
+!       - l'erreur originale est propagee au programme appelant.
 !
 ! EN:
-!   Section reserved for process-aware execution.
+!   TRAJCENTER_ExecuteLoaded is the single recommended public entry point for
+!   executing a loaded trajectory.
 !
-!   Current state:
-!       - not implemented.
+!   The NONE process performs no process action. It still uses the same motion
+!   engine as all other processes.
 !
-!   Intent:
-!       - keep TRAJCENTER_ExecLoadedNoProc as generic
-!         motion-only execution;
-!       - later add a process-aware routine, or a global routine selecting the
-!         appropriate execution mode.
-!
-!   Possible future example:
-!       TRAJCENTER_ExecuteLoadedTrajectoryWithProcess
-!       TRAJCENTER_ExecuteLoadedTrajectory
+!   On error:
+!       - the process is stopped through ProcessAbort;
+!       - ConfL and ConfJ are restored to On;
+!       - the original error is propagated to the calling program.
 !------------------------------------------------------------------------------
 
-    ! TODO FR:
-    !   Definir la strategie d'application process :
-    !       - avant mouvement ;
-    !       - pendant mouvement ;
-    !       - apres mouvement ;
-    !       - par point ;
-    !       - par segment ;
-    !       - par type de process.
-    !
-    ! TODO EN:
-    !   Define the process application strategy:
-    !       - before motion;
-    !       - during motion;
-    !       - after motion;
-    !       - per point;
-    !       - per segment;
-    !       - per process type.
+
+    PROC TRAJCENTER_ExecuteLoaded(
+        num oriSpeed,
+        num leaxSpeed,
+        num reaxSpeed
+    )
+        VAR num pointIndex;
+        VAR num activeProcessType;
+
+        activeProcessType := processNone;
+        pointIndex := 1;
+
+        IF trajReady = FALSE THEN
+            RAISE ERR_TJC_NOT_READY;
+        ENDIF
+
+        IF nbLoadedTrajPoints < 1 OR
+            nbLoadedTrajPoints > maxTrajPointCount THEN
+                RAISE ERR_TJC_NOT_READY;
+        ENDIF
+
+        activeProcessType := loadedProcessType;
+
+        TRAJCENTER_ProcessBegin activeProcessType;
+
+        WHILE pointIndex <= nbLoadedTrajPoints DO
+
+            TRAJCENTER_ExecuteOneMotion
+                pointIndex,
+                activeProcessType,
+                oriSpeed,
+                leaxSpeed,
+                reaxSpeed;
+
+        ENDWHILE
+
+        TRAJCENTER_ProcessEnd activeProcessType;
+
+        ConfL \On;
+        ConfJ \On;
+
+        RETURN;
+
+
+    ERROR
+
+        TRAJCENTER_ProcessAbort activeProcessType;
+
+        ConfL \On;
+        ConfJ \On;
+
+        RAISE;
+
+    ENDPROC
+
 
 ENDMODULE
+

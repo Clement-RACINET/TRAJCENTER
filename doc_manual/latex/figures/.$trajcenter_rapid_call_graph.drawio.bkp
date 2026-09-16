@@ -110,7 +110,7 @@
         </mxCell>
 
         <mxCell id="rapid-errors"
-                value="&lt;font face=&quot;Courier New&quot;&gt;BookErrNo&lt;br&gt;ERR_TRAJCENTER_*&lt;/font&gt;"
+                value="&lt;font face=&quot;Courier New&quot;&gt;BookErrNo&lt;br&gt;ERR_TJC_*&lt;/font&gt;"
                 style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#498952;strokeWidth=2;fillColor=#EFF7F0;fontColor=#202020;fontFamily=Courier New;fontSize=11;align=center;verticalAlign=middle;spacing=8;arcSize=10;"
                 vertex="1"
                 parent="1">

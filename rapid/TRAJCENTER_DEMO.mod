@@ -1,9 +1,9 @@
 MODULE TRAJCENTER_DEMO
 
 !------------------------------------------------------------------------------
-! DATE:          03/08/2026
+! DATE:          15/09/2026
 ! AUTHORS:       J. SCHUMACKER, C. RACINET
-! VERSION:       TrajCenter Demo v2.0
+! VERSION:       TrajCenter Demo v2.1
 !
 ! DESCRIPTION FR:
 !   Exemple d'utilisation classique du module systeme TRAJCENTER.
@@ -12,13 +12,15 @@ MODULE TRAJCENTER_DEMO
 !       - initialiser l'API RAPID TrajCenter ;
 !       - declarer un tool et un workobject utilisateur ;
 !       - les exposer a TrajCenter avec Upsert ;
-!       - configurer les defaults robot ;
-!       - demander un refresh metadata ;
+!       - configurer les valeurs par defaut robot ;
+!       - demander un rafraichissement des metadata ;
 !       - demander le chargement d'une trajectoire ;
-!       - executer la trajectoire chargee sans process.
+!       - verifier le process transfere ;
+!       - executer la trajectoire avec l'API publique unique.
 !
-!   Limite :
-!       L'execution process n'est pas implementee dans cet exemple.
+!   TRAJCENTER_ExecuteLoaded utilise automatiquement loadedProcessType :
+!       - processNone execute uniquement les mouvements ;
+!       - un autre process utilise le dispatcher RAPID correspondant.
 !
 ! DESCRIPTION EN:
 !   Example of regular usage of the TRAJCENTER system module.
@@ -30,10 +32,20 @@ MODULE TRAJCENTER_DEMO
 !       - configure robot defaults;
 !       - request metadata refresh;
 !       - request trajectory loading;
-!       - execute the loaded trajectory without process.
+!       - verify the transferred process;
+!       - execute the trajectory through the single public API.
 !
-!   Limitation:
-!       Process execution is not implemented in this example.
+!   TRAJCENTER_ExecuteLoaded automatically uses loadedProcessType:
+!       - processNone executes motion only;
+!       - any other process uses the corresponding RAPID dispatcher.
+!
+! CURRENT PROCESS CATALOG:
+!   The current development controller publishes only process NONE.
+!   ACF, AAK and PUSHCORP must be implemented before being published in
+!   processTypes.
+!
+! ENCODING:
+!   ASCII only. Do not use accents or non-ASCII characters.
 !------------------------------------------------------------------------------
 
 
@@ -42,6 +54,7 @@ MODULE TRAJCENTER_DEMO
 !==============================================================================
 
     CONST string demoTrajectoryName := "000_trajectory_demo";
+
     CONST num demoRefreshTimeout := 30;
     CONST num demoTransferTimeout := 120;
 
@@ -75,12 +88,16 @@ MODULE TRAJCENTER_DEMO
 !==============================================================================
 
     PROC main()
+        VAR num selectedIndex;
+        VAR num selectedProcessType;
 
         TPWrite "=== TrajCenter Demo START ===";
+
 
         !----------------------------------------------------------------------
         ! Initialisation API et configuration cellule
         !----------------------------------------------------------------------
+
         TPWrite "Step 1: init errors";
         TRAJCENTER_InitErrors;
 
@@ -92,6 +109,7 @@ MODULE TRAJCENTER_DEMO
         TRAJCENTER_UpsertWobj "demoWobj", demoWobj;
 
         TPWrite "Step 4: configure defaults";
+
         hasDefaultTcpSpeed := TRUE;
         defaultTcpSpeed := 100;
 
@@ -115,7 +133,9 @@ MODULE TRAJCENTER_DEMO
         !----------------------------------------------------------------------
         ! Refresh metadata
         !----------------------------------------------------------------------
+
         TPWrite "Step 5: refresh metadata request";
+
         TRAJCENTER_RequestMetaRefresh;
         TRAJCENTER_WaitRequestDone demoRefreshTimeout;
 
@@ -134,6 +154,21 @@ MODULE TRAJCENTER_DEMO
             Stop;
         ENDIF
 
+        selectedIndex := TRAJCENTER_FindTrajectoryIndex(
+            demoTrajectoryName
+        );
+
+        IF selectedIndex = 0 THEN
+            TPWrite "Demo trajectory not found";
+            TPWrite demoTrajectoryName;
+            Stop;
+        ENDIF
+
+        selectedProcessType := trajectories{selectedIndex}.processType;
+
+        TPWrite "Selected metadata index:" \Num:=selectedIndex;
+        TPWrite "Selected process type:" \Num:=selectedProcessType;
+
         TPWrite "CHECKPOINT 2: metadata OK";
         TPWrite "Press START to load trajectory";
         Stop;
@@ -142,11 +177,12 @@ MODULE TRAJCENTER_DEMO
         !----------------------------------------------------------------------
         ! Chargement trajectoire
         !----------------------------------------------------------------------
+
         TPWrite "Step 6: trajectory load request";
         TPWrite "Trajectory name:";
         TPWrite demoTrajectoryName;
 
-        TRAJCENTER_RequestTrajByName demoTrajectoryName;
+        TRAJCENTER_RequestTrajectory selectedIndex;
         TRAJCENTER_WaitTrajectoryReady demoTransferTimeout;
 
         IF transferError = TRUE THEN
@@ -156,8 +192,26 @@ MODULE TRAJCENTER_DEMO
             Stop;
         ENDIF
 
+        IF trajReady = FALSE THEN
+            TPWrite "Trajectory transfer ended without ready state";
+            Stop;
+        ENDIF
+
+        IF nbLoadedTrajPoints < 1 THEN
+            TPWrite "Loaded trajectory contains no point";
+            Stop;
+        ENDIF
+
+        IF loadedProcessType <> selectedProcessType THEN
+            TPWrite "Loaded process type mismatch";
+            TPWrite "Metadata process:" \Num:=selectedProcessType;
+            TPWrite "Loaded process:" \Num:=loadedProcessType;
+            Stop;
+        ENDIF
+
         TPWrite "Step 6 OK: trajectory ready";
         TPWrite "Loaded points:" \Num:=nbLoadedTrajPoints;
+        TPWrite "Loaded process:" \Num:=loadedProcessType;
         TPWrite "Last status code:" \Num:=lastErrorCode;
 
         TPWrite "CHECKPOINT 3: before motion";
@@ -166,17 +220,28 @@ MODULE TRAJCENTER_DEMO
 
 
         !----------------------------------------------------------------------
-        ! Ex�cution mouvement
+        ! Execution trajectoire
         !----------------------------------------------------------------------
-        TPWrite "Step 7: execute without process";
-        TRAJCENTER_ExecLoadedNoProc demoOriSpeed, demoLeaxSpeed, demoReaxSpeed;
+
+        TPWrite "Step 7: execute loaded trajectory";
+        TPWrite "Active process:" \Num:=loadedProcessType;
+
+        TRAJCENTER_ExecuteLoaded
+            demoOriSpeed,
+            demoLeaxSpeed,
+            demoReaxSpeed;
 
         TPWrite "=== TrajCenter Demo DONE ===";
 
+
     ERROR
+
         TPWrite "TrajCenter Demo: RAPID error";
         TPWrite "ERRNO:" \Num:=ERRNO;
+        TPWrite "Last TrajCenter code:" \Num:=lastErrorCode;
+        TPWrite lastError;
         TPWrite "Check event log for details";
+
         Stop;
 
     ENDPROC

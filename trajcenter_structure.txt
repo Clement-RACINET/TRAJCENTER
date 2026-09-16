@@ -1,60 +1,50 @@
 trajcenter_v2
 ├── doc_manual
-│   ├── doc_utilisateur
-│   │   ├── Appendix
-│   │   │   └── appendix.tex
-│   │   ├── bibs
-│   │   │   └── export.bib
-│   │   ├── Conclusion
-│   │   │   └── Conclusion.tex
-│   │   ├── figures
-│   │   │   ├── schema
-│   │   │   │   ├── rapid_api_call_graph.drawio
-│   │   │   │   ├── rapid_api_call_graph.jpg
-│   │   │   │   ├── trajcenter_architecture.drawio
-│   │   │   │   └── trajcenter_architecture.jpg
-│   │   │   └── screenshot
-│   │   │       ├── tui_convert.png
-│   │   │       ├── tui_export.png
-│   │   │       ├── tui_home.png
-│   │   │       ├── tui_robot.png
-│   │   │       ├── tui_settings.png
-│   │   │       ├── tui_splash.png
-│   │   │       └── tui_store.png
-│   │   ├── Introduction
-│   │   │   └── Intro.tex
-│   │   ├── logos
-│   │   │   ├── fond.png
-│   │   │   ├── logo-arts-et-metiers.jpg
-│   │   │   └── logo-arts-et-metiers2.png
-│   │   ├── main.aux
-│   │   ├── main.fdb_latexmk
-│   │   ├── main.fls
-│   │   ├── main.lol
-│   │   ├── main.nlo
-│   │   ├── main.out
-│   │   ├── main.pdf
-│   │   ├── main.synctex.gz
-│   │   ├── main.tex
-│   │   ├── main.toc
-│   │   ├── rapid-listings.sty
-│   │   └── rapportENSAM.cls
-│   ├── route3.md
-│   ├── route3.pdf
-│   ├── route4.md
-│   └── route4.pdf
+│   └── doc_utilisateur
+│       ├── Appendix
+│       │   └── appendix.tex
+│       ├── bibs
+│       │   └── export.bib
+│       ├── Conclusion
+│       │   └── Conclusion.tex
+│       ├── figures
+│       │   ├── schema
+│       │   │   ├── rapid_api_call_graph.drawio
+│       │   │   ├── rapid_api_call_graph.jpg
+│       │   │   ├── trajcenter_architecture.drawio
+│       │   │   └── trajcenter_architecture.jpg
+│       │   └── screenshot
+│       │       ├── tui_convert.png
+│       │       ├── tui_export.png
+│       │       ├── tui_home.png
+│       │       ├── tui_robot.png
+│       │       ├── tui_settings.png
+│       │       ├── tui_splash.png
+│       │       └── tui_store.png
+│       ├── Introduction
+│       │   └── Intro.tex
+│       ├── logos
+│       │   ├── fond.png
+│       │   ├── logo-arts-et-metiers.jpg
+│       │   └── logo-arts-et-metiers2.png
+│       ├── main.aux
+│       ├── main.fdb_latexmk
+│       ├── main.fls
+│       ├── main.lol
+│       ├── main.nlo
+│       ├── main.out
+│       ├── main.pdf
+│       ├── main.synctex.gz
+│       ├── main.tex
+│       ├── main.toc
+│       ├── rapid-listings.sty
+│       └── rapportENSAM.cls
 ├── icons
 │   ├── Image0.png
 │   ├── Image1.png
 │   ├── Image2.png
 │   └── Image3.png
 ├── rapid
-│   ├── new
-│   │   ├── TRAJCENTER.sys
-│   │   ├── TRAJCENTER_DEMO.mod
-│   │   ├── TRAJCENTER_DEMO.pgf
-│   │   ├── TRAJCENTER_GUI_DEMO.mod
-│   │   └── TRAJCENTER_GUI_DEMO.pgf
 │   ├── TRAJCENTER.sys
 │   ├── TRAJCENTER_DEMO.mod
 │   ├── TRAJCENTER_DEMO.pgf
@@ -218,6 +208,7 @@ trajcenter_v2
 │   ├── 000_trajectory_demo.trajcenter
 │   ├── 001_trajectory_demo.trajcenter
 │   └── demo_basic_usage.trajcenter
+├── LICENSE
 ├── mkdocs.yml
 ├── pixi.lock
 ├── pixi.toml

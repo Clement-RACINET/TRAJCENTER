@@ -300,7 +300,11 @@ class TestTransferSelectedTrajectory:
             task="T_ROB1",
             module="TRAJCENTER",
         )
-        mock_read_context.assert_awaited_once_with(client, task="T_ROB1")
+        mock_read_context.assert_awaited_once_with(
+            client,
+            task="T_ROB1",
+            module="TRAJCENTER",
+        )
         mock_write.assert_awaited_once()
 
     @pytest.mark.asyncio

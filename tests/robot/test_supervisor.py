@@ -385,9 +385,9 @@ class TestRunRwsSubscriptionSupervisor:
 
         assert stream.closed
         assert state.entries == (entry,)
-        assert state.refresh_count == 1
+        assert state.refresh_count == 2
         assert state.transfer_count == 1
-        refresh_mock.assert_awaited_once()
+        assert refresh_mock.await_count == 2
         transfer_mock.assert_awaited_once()
 
     @pytest.mark.asyncio

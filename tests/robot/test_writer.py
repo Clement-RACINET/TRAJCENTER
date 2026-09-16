@@ -779,7 +779,7 @@ class TestWriteResolvedTrajectory:
             process_param_sets=(),
         )
 
-        with pytest.raises(ValueError, match="unknown process parameter set"):
+        with pytest.raises(ValueError, match="process type is NONE"):
             await write_resolved_trajectory(client, resolved)
 
     @pytest.mark.asyncio
