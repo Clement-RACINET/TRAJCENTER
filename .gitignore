@@ -115,3 +115,5 @@ config_local.*
 sandbox/
 utils/
 archives/
+
+trajectory_files/

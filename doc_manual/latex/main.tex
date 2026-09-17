@@ -2,7 +2,7 @@
 
 \setlength{\emergencystretch}{3em}
 
-\usepackage{rotating}
+\usepackage{pdflscape}
 
 % Package spécifique local
 \usepackage{rapid-listings}
@@ -13,7 +13,8 @@
 % Informations du document
 
 \ecole{École Nationale Supérieure d'Arts et Métiers}
-\titre{TrajCenter v2.0 -- Manuel utilisateur}
+\titre{TrajCenter v2.0}
+\shortTitle{TrajCenter v2.0 -- Manuel utilisateur}
 \contexte{Manuel utilisateur et guide d'intégration}
 \sujet{TrajCenter avec ABB Robot Web Services}
 
@@ -4933,7 +4934,8 @@ La figure~\ref{fig:rapid-module-architecture} présente le flux de données
 complet, depuis la conversion d'un fichier source jusqu'à la publication du
 payload dans le contrôleur.
 
-\begin{sidewaysfigure}
+\begin{landscape}
+    \begin{figure}
     \centering
     \includegraphics[
         width=\linewidth,
@@ -4941,7 +4943,8 @@ payload dans le contrôleur.
     ]{figures/schema/trajcenter_architecture}
     \caption{Flux de données TrajCenter entre le store PC, Python et RAPID}
     \label{fig:rapid-module-architecture}
-\end{sidewaysfigure}
+    \end{figure}
+\end{landscape}
 
 Cette figure représente un \textbf{flux de données}. Elle ne doit pas être
 interprétée comme un graphe d'appels de fonctions.
@@ -5472,7 +5475,8 @@ consécutives :
 \subsubsection{Graphe d'appels}
 \label{subsubsec:rapid-call-graph}
 
-\begin{sidewaysfigure}
+\begin{landscape}
+    \begin{figure}
     \centering
     \includegraphics[
         width=\linewidth,
@@ -5480,7 +5484,8 @@ consécutives :
     ]{figures/schema/rapid_api_call_graph}
     \caption{Graphe d'appels et interdépendances du module système RAPID}
     \label{fig:rapid-api-call-graph}
-\end{sidewaysfigure}
+    \end{figure}
+\end{landscape}
 
 La figure~\ref{fig:rapid-api-call-graph} présente une vue simplifiée des
 appels et interdépendances internes du module système RAPID. Dans ce graphe :

@@ -125,6 +125,9 @@
 \newcommand{\@monTitre}{}
 \newcommand{\titre}[1]{\renewcommand{\@monTitre}{#1}\title{#1}}
 
+\newcommand{\@shortTitle}{}
+\newcommand{\shortTitle}[1]{\renewcommand{\@shortTitle}{#1}}
+
 \newcommand{\@contexte}{}
 \newcommand{\contexte}[1]{\renewcommand{\@contexte}{#1}}
 \newcommand{\UE}[1]{\contexte{#1}}
@@ -157,7 +160,7 @@
     \fancyheadoffset{0cm}
     \setlength{\headheight}{35pt}
     \lhead{\IfFileExists{\@logoInstitution}{\includegraphics[height=1cm]{\@logoInstitution}}{}}
-    \rhead{\today}
+    \rhead{\raisebox{0.35cm}{\@shortTitle}} 
     \cfoot{\thepage}
 }
 
@@ -167,7 +170,7 @@
     \fancyheadoffset{0cm}
     \setlength{\headheight}{35pt}
     \lhead{\IfFileExists{\@logoInstitution}{\includegraphics[height=1cm]{\@logoInstitution}}{}}
-    \rhead{\today}
+    \rhead{\raisebox{0.35cm}{\@shortTitle}} 
     \rfoot{Page \thepage/\pageref{LastPage}}
 }
 
