@@ -1,0 +1,29 @@
+pages:
+  image: ubuntu:24.04
+
+  before_script:
+    - apt-get update
+    - apt-get install -y curl git ca-certificates
+    - curl -fsSL https://pixi.sh/install.sh | bash
+    - export PATH="$HOME/.pixi/bin:$PATH"
+    - pixi --version
+
+  cache:
+    key:
+      files:
+        - pixi.lock
+    paths:
+      - .pixi
+
+  script:
+    - export PATH="$HOME/.pixi/bin:$PATH"
+    - pixi run -e dev docs
+    - pixi run -e dev docs-build
+
+  artifacts:
+    paths:
+      - public
+
+  only:
+    - main
+    - v2
