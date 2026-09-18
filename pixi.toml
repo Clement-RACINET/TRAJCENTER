@@ -120,7 +120,7 @@ py-doc-tools = { git = "https://gitlab.com/dev-tools-cr/python/py-doc-tools.git"
 [feature.docs.tasks]
 pydocs     = "pydocs"
 docs = "pydocs generate --all"
-docs-build = "python -m mkdocs build --strict"
+docs-build = "python -m mkdocs build --strict -d public"
 docs-serve = "pydocs generate --all && mkdocs serve"
 
 

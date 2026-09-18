@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Clément RACINET" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>📄 App - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\ud83d\udcc4 App";
+        var mkdocs_page_input_path = "api\\trajcenter\\ui\\app.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >📂 Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../trajcenter/">📖 Intro trajcenter</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/cli/">📖 Intro cli</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">📄 Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/convert/">📖 Intro convert</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/apt_converter/">📄 Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/column_mapper/">📄 Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/csv_converter/">📄 Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/defaults/">📄 Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/excel_converter/">📄 Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/mod_converter/">📄 Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/tabular_converter/">📄 Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/core/">📖 Intro core</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">📄 Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">📄 Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">📄 Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/export/">📖 Intro export</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/csv_exporter/">📄 Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/excel_exporter/">📄 Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/options/">📄 Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/tabular_exporter/">📄 Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/robot/">📖 Intro robot</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/_utils/">📄 Utils</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/models/">📄 Models</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/reader/">📄 Reader</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/resolver/">📄 Resolver</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/service/">📄 Service</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/supervisor/">📄 Supervisor</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/writer/">📄 Writer</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Errors</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/errors/">📖 Intro errors</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/codes/">📄 Codes</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/translate/">📄 Translate</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Store</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/store/">📖 Intro store</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/local/">📄 Local</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/metadata/">📄 Metadata</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/models/">📄 Models</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >📂 Ui</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../ui/">📖 Intro ui</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../actions/">📄 Actions</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">📄 App</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.ui.app">app</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../config/">📄 Config</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../features/">📄 Features</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../logos/">📄 Logos</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../widgets/">📄 Widgets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Screens</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/screens/">📖 Intro screens</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/convert/">📄 Convert</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/export/">📄 Export</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/home/">📄 Home</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/robot/">📄 Robot</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/settings/">📄 Settings</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/splash/">📄 Splash</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../screens/store/">📄 Store</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">📂 Trajcenter</li>
+          <li class="breadcrumb-item">📂 Ui</li>
+      <li class="breadcrumb-item active">📄 App</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="app">App<a class="headerlink" href="#app" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="trajcenter.ui.app" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">trajcenter.ui.app</span>
+
+
+<a href="#trajcenter.ui.app" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Textual application entry point for TrajCenter.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="trajcenter.ui.app.TrajCenterTUI" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">TrajCenterTUI</span>
+
+
+<a href="#trajcenter.ui.app.TrajCenterTUI" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="textual.app.App">App</span>[None]</code></p>
+
+
+
+        <p>Main TrajCenter TUI app.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TrajCenterTUI</span><span class="p">(</span><span class="n">App</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Main TrajCenter TUI app."""</span>
+
+    <span class="n">CSS</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    Screen {</span>
+<span class="s2">        background: #101014;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    Header {</span>
+<span class="s2">        background: #87196B;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    Footer {</span>
+<span class="s2">        background: #181820;</span>
+<span class="s2">        color: #A1A1AA;</span>
+<span class="s2">    }</span>
+<span class="s2">    """</span>
+
+    <span class="n">BINDINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">BindingType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">"q"</span><span class="p">,</span> <span class="s2">"quit"</span><span class="p">,</span> <span class="s2">"Quitter"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"r"</span><span class="p">,</span> <span class="s2">"refresh"</span><span class="p">,</span> <span class="s2">"Rafraîchir"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"s"</span><span class="p">,</span> <span class="s2">"show_splash"</span><span class="p">,</span> <span class="s2">"Splash"</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">TITLE</span> <span class="o">=</span> <span class="s2">"TrajCenter"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the TUI app.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: UI configuration.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">UIConfig</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Install and open screens."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">SplashScreen</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"splash"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">HomeScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"home"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">StoreScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"store"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">ConvertScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"convert"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">ExportScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"export"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">RobotScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"robot"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">SettingsScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"settings"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_screen</span><span class="p">(</span><span class="s2">"splash"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Refresh the current screen."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_show_splash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Show splash screen."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"splash"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.app.TrajCenterTUI.__init__" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+<a href="#trajcenter.ui.app.TrajCenterTUI.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize the TUI app.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="UIConfig
+
+
+  
+      dataclass
+   (trajcenter.ui.config.UIConfig)" href="../config/#trajcenter.ui.config.UIConfig">UIConfig</a> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>UI configuration.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize the TUI app.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: UI configuration.</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">UIConfig</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.app.TrajCenterTUI.action_refresh" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">action_refresh</span>
+
+
+<a href="#trajcenter.ui.app.TrajCenterTUI.action_refresh" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">action_refresh</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Refresh the current screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Refresh the current screen."""</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.app.TrajCenterTUI.action_show_splash" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">action_show_splash</span>
+
+
+<a href="#trajcenter.ui.app.TrajCenterTUI.action_show_splash" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">action_show_splash</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Show splash screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_show_splash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Show splash screen."""</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"splash"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.app.TrajCenterTUI.on_mount" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">on_mount</span>
+
+
+<a href="#trajcenter.ui.app.TrajCenterTUI.on_mount" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">on_mount</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Install and open screens.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Install and open screens."""</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">SplashScreen</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"splash"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">HomeScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"home"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">StoreScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"store"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">ConvertScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"convert"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">ExportScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"export"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">RobotScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"robot"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">install_screen</span><span class="p">(</span><span class="n">SettingsScreen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"settings"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">push_screen</span><span class="p">(</span><span class="s2">"splash"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.ui.app.run_tui" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">run_tui</span>
+
+
+<a href="#trajcenter.ui.app.run_tui" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">run_tui</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Run the TrajCenter Textual TUI.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="UIConfig
+
+
+  
+      dataclass
+   (trajcenter.ui.config.UIConfig)" href="../config/#trajcenter.ui.config.UIConfig">UIConfig</a> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Optional UI configuration.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="int">int</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Process exit code.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\app.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run_tui</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Run the TrajCenter Textual TUI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: Optional UI configuration.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Process exit code.</span>
+<span class="sd">    """</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">TrajCenterTUI</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">return</span> <span class="mi">0</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../actions/" class="btn btn-neutral float-left" title="📄 Actions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../config/" class="btn btn-neutral float-right" title="📄 Config">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© 2026 Clément RACINET — TrajCenter</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../actions/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../config/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

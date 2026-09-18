@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Clément RACINET" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>📄 Writer - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\ud83d\udcc4 Writer";
+        var mkdocs_page_input_path = "api\\trajcenter\\robot\\writer.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >📂 Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../trajcenter/">📖 Intro trajcenter</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/cli/">📖 Intro cli</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">📄 Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/convert/">📖 Intro convert</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/apt_converter/">📄 Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/column_mapper/">📄 Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/csv_converter/">📄 Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/defaults/">📄 Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/excel_converter/">📄 Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/mod_converter/">📄 Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/tabular_converter/">📄 Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/core/">📖 Intro core</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">📄 Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">📄 Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">📄 Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/export/">📖 Intro export</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/csv_exporter/">📄 Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/excel_exporter/">📄 Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/options/">📄 Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../export/tabular_exporter/">📄 Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >📂 Robot</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../robot/">📖 Intro robot</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../_utils/">📄 Utils</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../models/">📄 Models</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../reader/">📄 Reader</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../resolver/">📄 Resolver</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../service/">📄 Service</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../supervisor/">📄 Supervisor</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">📄 Writer</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.robot.writer">writer</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Errors</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../errors/errors/">📖 Intro errors</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../errors/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../errors/codes/">📄 Codes</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../errors/translate/">📄 Translate</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Store</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/store/">📖 Intro store</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/local/">📄 Local</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/metadata/">📄 Metadata</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/models/">📄 Models</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Ui</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/ui/">📖 Intro ui</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/actions/">📄 Actions</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/app/">📄 App</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/config/">📄 Config</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/features/">📄 Features</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/logos/">📄 Logos</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/widgets/">📄 Widgets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Screens</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/screens/">📖 Intro screens</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/convert/">📄 Convert</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/export/">📄 Export</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/home/">📄 Home</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/robot/">📄 Robot</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/settings/">📄 Settings</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/splash/">📄 Splash</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/store/">📄 Store</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">📂 Trajcenter</li>
+          <li class="breadcrumb-item">📂 Robot</li>
+      <li class="breadcrumb-item active">📄 Writer</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="writer">Writer<a class="headerlink" href="#writer" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="trajcenter.robot.writer" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">trajcenter.robot.writer</span>
+
+
+<a href="#trajcenter.robot.writer" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>RWS writer - writes TrajCenter v2 data to ABB RAPID variables.</p>
+<p>Author: Clement RACINET</p>
+<p>This module writes variables declared in <code>TRAJCENTER</code>.</p>
+<p>The writer uses <code>set_variables_with_mastership</code> from
+<code>abb_rws_client_python_rw6.highlevel.variables</code> so each public write operation
+holds RAPID Mastership once for the whole batch.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p><code>POST /rw/mastership/rapid</code> with <code>action=request</code>.
+<code>POST /rw/rapid/symbol/data/{symbolurl}</code> with <code>action=set</code>.
+<code>POST /rw/mastership/rapid</code> with <code>action=release</code>.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <ul>
+<li>All PC writes must be performed under Mastership.</li>
+<li>RAPID arrays are one-based and use braces in RAPID syntax.</li>
+<li>RWS symbol URLs must percent-encode RAPID array braces.</li>
+<li><code>trajData</code> entries are <code>trajCenterPointData</code> records.</li>
+<li><code>processParams</code> entries are <code>trajCenterProcessParameter</code> records.</li>
+<li><code>9E+9</code> is injected only during RWS serialization for inactive external
+  axes. It must never be stored in <code>.trajcenter</code> files.</li>
+</ul>
+</details>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.robot.writer.write_resolved_trajectory" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">write_resolved_trajectory</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#trajcenter.robot.writer.write_resolved_trajectory" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_resolved_trajectory</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">resolved</span><span class="p">:</span> <span class="n">ResolvedTrajectory</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">on_progress</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">retry_delay_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span><span class="p">,</span>
+    <span class="n">progress_step_percent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Transfer a resolved trajectory to <code>TRAJCENTER</code>.</p>
+<p>The transfer is intentionally split into three RWS write phases:</p>
+<pre><code>1. Start state:
+   ``trajReady := FALSE`` and transfer status reset.
+
+2. Payload:
+   ``processParams``, ``trajData`` and ``nbLoadedTrajPoints``.
+
+3. Final state:
+   ``trajReady := TRUE`` and ``sendTrajRequest := FALSE``.
+</code></pre>
+<p>This avoids the Python dict key overwrite issue where writing
+<code>trajReady</code> twice in the same dict could make the final TRUE value be
+sent too early in the batch.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\robot\writer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span>
+<span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span>
+<span class="normal">847</span>
+<span class="normal">848</span>
+<span class="normal">849</span>
+<span class="normal">850</span>
+<span class="normal">851</span>
+<span class="normal">852</span>
+<span class="normal">853</span>
+<span class="normal">854</span>
+<span class="normal">855</span>
+<span class="normal">856</span>
+<span class="normal">857</span>
+<span class="normal">858</span>
+<span class="normal">859</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_resolved_trajectory</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">resolved</span><span class="p">:</span> <span class="n">ResolvedTrajectory</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">on_progress</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">retry_delay_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span><span class="p">,</span>
+    <span class="n">progress_step_percent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PROGRESS_UPDATE_STEP_PERCENT</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Transfer a resolved trajectory to ``TRAJCENTER``.</span>
+
+<span class="sd">    The transfer is intentionally split into three RWS write phases:</span>
+
+<span class="sd">        1. Start state:</span>
+<span class="sd">           ``trajReady := FALSE`` and transfer status reset.</span>
+
+<span class="sd">        2. Payload:</span>
+<span class="sd">           ``processParams``, ``trajData`` and ``nbLoadedTrajPoints``.</span>
+
+<span class="sd">        3. Final state:</span>
+<span class="sd">           ``trajReady := TRUE`` and ``sendTrajRequest := FALSE``.</span>
+
+<span class="sd">    This avoids the Python dict key overwrite issue where writing</span>
+<span class="sd">    ``trajReady`` twice in the same dict could make the final TRUE value be</span>
+<span class="sd">    sent too early in the batch.</span>
+<span class="sd">    """</span>
+    <span class="n">_validate_resolved_trajectory</span><span class="p">(</span><span class="n">resolved</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Writing resolved trajectory '</span><span class="si">%s</span><span class="s2">': </span><span class="si">%d</span><span class="s2"> points, </span><span class="si">%d</span><span class="s2"> process parameter sets "</span>
+        <span class="s2">"-&gt; controller [</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">]"</span><span class="p">,</span>
+        <span class="n">resolved</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">resolved</span><span class="o">.</span><span class="n">point_count</span><span class="p">,</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">process_param_sets</span><span class="p">),</span>
+        <span class="n">task</span><span class="p">,</span>
+        <span class="n">module</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_write_start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">_build_resolved_trajectory_start_values</span><span class="p">(</span>
+            <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">set_variables_with_mastership</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">"rapid"</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_write_payload</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">_build_resolved_trajectory_payload_values</span><span class="p">(</span>
+            <span class="n">resolved</span><span class="o">=</span><span class="n">resolved</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+            <span class="n">on_progress</span><span class="o">=</span><span class="n">on_progress</span><span class="p">,</span>
+            <span class="n">progress_step_percent</span><span class="o">=</span><span class="n">progress_step_percent</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">set_variables_with_mastership</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">"rapid"</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_write_finish</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">_build_resolved_trajectory_finish_values</span><span class="p">(</span>
+            <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">set_variables_with_mastership</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">"rapid"</span><span class="p">)</span>
+
+    <span class="k">await</span> <span class="n">_retry_mastership</span><span class="p">(</span>
+        <span class="n">_do_write_start</span><span class="p">,</span>
+        <span class="n">mastership_retries</span><span class="p">,</span>
+        <span class="n">retry_delay_s</span><span class="o">=</span><span class="n">retry_delay_s</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">await</span> <span class="n">_retry_mastership</span><span class="p">(</span>
+        <span class="n">_do_write_payload</span><span class="p">,</span>
+        <span class="n">mastership_retries</span><span class="p">,</span>
+        <span class="n">retry_delay_s</span><span class="o">=</span><span class="n">retry_delay_s</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">await</span> <span class="n">_retry_mastership</span><span class="p">(</span>
+        <span class="n">_do_write_finish</span><span class="p">,</span>
+        <span class="n">mastership_retries</span><span class="p">,</span>
+        <span class="n">retry_delay_s</span><span class="o">=</span><span class="n">retry_delay_s</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Resolved trajectory '</span><span class="si">%s</span><span class="s2">' written successfully."</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.robot.writer.write_store_metadata" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">write_store_metadata</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#trajcenter.robot.writer.write_store_metadata" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_store_metadata</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">point_counts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">process_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Write trajectory store metadata to <code>TRAJCENTER</code>.</p>
+
+
+<details class="only-active-metadata-entries-are-written" open>
+  <summary>Only active metadata entries are written</summary>
+  <ul>
+<li><code>nbTrajAvailable</code> defines the valid range;</li>
+<li>RAPID must only consume <code>trajectories{1..nbTrajAvailable}</code>;</li>
+<li>stale entries above <code>nbTrajAvailable</code> are intentionally ignored.</li>
+</ul>
+</details>        <p>This avoids rewriting the full <code>trajectories{1..256}</code> buffer on every
+refresh and reduces the number of RWS writes from <code>MAX_TRAJ + status</code> to
+<code>nbTrajAvailable + status</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\robot\writer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_store_metadata</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">point_counts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">process_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write trajectory store metadata to ``TRAJCENTER``.</span>
+
+<span class="sd">    Only active metadata entries are written:</span>
+<span class="sd">        - ``nbTrajAvailable`` defines the valid range;</span>
+<span class="sd">        - RAPID must only consume ``trajectories{1..nbTrajAvailable}``;</span>
+<span class="sd">        - stale entries above ``nbTrajAvailable`` are intentionally ignored.</span>
+
+<span class="sd">    This avoids rewriting the full ``trajectories{1..256}`` buffer on every</span>
+<span class="sd">    refresh and reduces the number of RWS writes from ``MAX_TRAJ + status`` to</span>
+<span class="sd">    ``nbTrajAvailable + status``.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">point_counts</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"names and point_counts must have the same length, "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">point_counts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">process_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">process_types</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">process_types</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"process_types and names must have the same length, "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">process_types</span><span class="p">)</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_TRAJ</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Store has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2"> trajectories but MAX_TRAJ=</span><span class="si">{</span><span class="n">MAX_TRAJ</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">nb</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Writing store metadata: </span><span class="si">%d</span><span class="s2"> trajectories -&gt; controller [</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">]"</span><span class="p">,</span>
+        <span class="n">nb</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">,</span>
+        <span class="n">module</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_write</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># nbTrajAvailable is the contract boundary. RAPID code must ignore</span>
+        <span class="c1"># trajectories above this index, so stale values do not need clearing.</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"nbTrajAvailable"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span><span class="n">nb</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">process_type</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">point_counts</span><span class="p">,</span> <span class="n">process_types</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">values</span><span class="p">[</span>
+                <span class="n">symbol_array_element</span><span class="p">(</span>
+                    <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                    <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+                    <span class="n">variable</span><span class="o">=</span><span class="s2">"trajectories"</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="n">_fmt_traj_meta_record</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">process_type</span><span class="p">)</span>
+
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"refreshMetaRequest"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"transferError"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"lastErrorCode"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span>
+            <span class="n">STATUS_METADATA_REFRESHED</span>
+        <span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"lastError"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_string</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"transferProgress"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">set_variables_with_mastership</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">"rapid"</span><span class="p">)</span>
+
+    <span class="k">await</span> <span class="n">_retry_mastership</span><span class="p">(</span><span class="n">_do_write</span><span class="p">,</span> <span class="n">mastership_retries</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Store metadata written successfully."</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.robot.writer.write_trajectory" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">write_trajectory</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#trajcenter.robot.writer.write_trajectory" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_trajectory</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">on_progress</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Transfer a full trajectory to <code>TRAJCENTER</code>.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>Planned v2 route:
+<code>POST /rw/rapid/symbol/data/RAPID/{task}/{module}/trajData%7Bi%7D</code>.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <p>The full v2 orchestration writer is migrated in the next integration
+step. This placeholder intentionally raises to avoid silently using the
+obsolete v1 protocol.</p>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>client</code></b>
+                  (<code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Open RWS client.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>traj</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="Trajectory (trajcenter.core.trajectory.Trajectory)" href="../../core/trajectory/#trajcenter.core.trajectory.Trajectory">Trajectory</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>Trajectory to transfer.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>task</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code><span title="trajcenter.robot.constants.DEFAULT_TASK">DEFAULT_TASK</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>RAPID task name.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>module</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code><span title="trajcenter.robot.constants.TRAJCENTER_MODULE">TRAJCENTER_MODULE</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>RAPID module name.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>on_progress</code></b>
+                  (<code><span title="collections.abc.Callable">Callable</span>[[<span title="int">int</span>, <span title="int">int</span>], None] | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Optional progress callback.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mastership_retries</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of Mastership retries.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>None</code>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="NotImplementedError">NotImplementedError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>Always, until orchestration is connected to the
+resolver and <code>write_resolved_trajectory</code>.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>::</p>
+<pre><code>await write_trajectory(client, traj)
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\robot\writer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1041</span>
+<span class="normal">1042</span>
+<span class="normal">1043</span>
+<span class="normal">1044</span>
+<span class="normal">1045</span>
+<span class="normal">1046</span>
+<span class="normal">1047</span>
+<span class="normal">1048</span>
+<span class="normal">1049</span>
+<span class="normal">1050</span>
+<span class="normal">1051</span>
+<span class="normal">1052</span>
+<span class="normal">1053</span>
+<span class="normal">1054</span>
+<span class="normal">1055</span>
+<span class="normal">1056</span>
+<span class="normal">1057</span>
+<span class="normal">1058</span>
+<span class="normal">1059</span>
+<span class="normal">1060</span>
+<span class="normal">1061</span>
+<span class="normal">1062</span>
+<span class="normal">1063</span>
+<span class="normal">1064</span>
+<span class="normal">1065</span>
+<span class="normal">1066</span>
+<span class="normal">1067</span>
+<span class="normal">1068</span>
+<span class="normal">1069</span>
+<span class="normal">1070</span>
+<span class="normal">1071</span>
+<span class="normal">1072</span>
+<span class="normal">1073</span>
+<span class="normal">1074</span>
+<span class="normal">1075</span>
+<span class="normal">1076</span>
+<span class="normal">1077</span>
+<span class="normal">1078</span>
+<span class="normal">1079</span>
+<span class="normal">1080</span>
+<span class="normal">1081</span>
+<span class="normal">1082</span>
+<span class="normal">1083</span>
+<span class="normal">1084</span>
+<span class="normal">1085</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_trajectory</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">traj</span><span class="p">:</span> <span class="n">Trajectory</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">on_progress</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Transfer a full trajectory to ``TRAJCENTER``.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        Planned v2 route:</span>
+<span class="sd">        ``POST /rw/rapid/symbol/data/RAPID/{task}/{module}/trajData%7Bi%7D``.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        The full v2 orchestration writer is migrated in the next integration</span>
+<span class="sd">        step. This placeholder intentionally raises to avoid silently using the</span>
+<span class="sd">        obsolete v1 protocol.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client: Open RWS client.</span>
+<span class="sd">        traj: Trajectory to transfer.</span>
+<span class="sd">        task: RAPID task name.</span>
+<span class="sd">        module: RAPID module name.</span>
+<span class="sd">        on_progress: Optional progress callback.</span>
+<span class="sd">        mastership_retries: Number of Mastership retries.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NotImplementedError: Always, until orchestration is connected to the</span>
+<span class="sd">            resolver and ``write_resolved_trajectory``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            await write_trajectory(client, traj)</span>
+<span class="sd">    """</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">traj</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">on_progress</span><span class="p">,</span> <span class="n">mastership_retries</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s2">"RWS v2 trajectory transfer requires resolver orchestration. "</span>
+        <span class="s2">"Use write_resolved_trajectory with a ResolvedTrajectory payload."</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.robot.writer.write_transfer_failure" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">write_transfer_failure</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#trajcenter.robot.writer.write_transfer_failure" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">write_transfer_failure</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">error_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">InternalClientError</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">retry_delay_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Publish a failed trajectory-transfer state and acknowledge the request.</p>
+
+
+<details class="abb-route" open>
+  <summary>ABB Route</summary>
+  <p>Writes the transfer failure state under RAPID Mastership.</p>
+</details>
+
+<details class="abb-constraints" open>
+  <summary>ABB Constraints</summary>
+  <ul>
+<li><code>trajReady</code> is reset to <code>FALSE</code>;</li>
+<li><code>transferError</code> is set to <code>TRUE</code>;</li>
+<li><code>sendTrajRequest</code> is reset to <code>FALSE</code>;</li>
+<li>RAPID strings are limited to a short diagnostic message.</li>
+</ul>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>client</code></b>
+                  (<code><span title="abb_rws_client_python_rw6.RWSClient">RWSClient</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Open RWS client.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>message</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Human-readable failure message.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>task</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code><span title="trajcenter.robot.constants.DEFAULT_TASK">DEFAULT_TASK</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>RAPID task name.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>module</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code><span title="trajcenter.robot.constants.TRAJCENTER_MODULE">TRAJCENTER_MODULE</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>RAPID module name.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>error_code</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code><span title="trajcenter.robot.errors.codes.InternalClientError.code">code</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Protocol error code written to <code>lastErrorCode</code>.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mastership_retries</code></b>
+                  (<code><span title="int">int</span></code>, default:
+                      <code>3</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Number of Mastership attempts.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>retry_delay_s</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code><span title="trajcenter.robot.writer.DEFAULT_MASTERSHIP_RETRY_DELAY_S">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span></code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Delay between Mastership attempts.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>None</code>
+              –
+              <div class="doc-md-description">
+                <p>None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\robot\writer.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span>
+<span class="normal">742</span>
+<span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">write_transfer_failure</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">RWSClient</span><span class="p">,</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_TASK</span><span class="p">,</span>
+    <span class="n">module</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TRAJCENTER_MODULE</span><span class="p">,</span>
+    <span class="n">error_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">InternalClientError</span><span class="o">.</span><span class="n">code</span><span class="p">,</span>
+    <span class="n">mastership_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">retry_delay_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_MASTERSHIP_RETRY_DELAY_S</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Publish a failed trajectory-transfer state and acknowledge the request.</span>
+
+<span class="sd">    ABB Route:</span>
+<span class="sd">        Writes the transfer failure state under RAPID Mastership.</span>
+
+<span class="sd">    ABB Constraints:</span>
+<span class="sd">        - ``trajReady`` is reset to ``FALSE``;</span>
+<span class="sd">        - ``transferError`` is set to ``TRUE``;</span>
+<span class="sd">        - ``sendTrajRequest`` is reset to ``FALSE``;</span>
+<span class="sd">        - RAPID strings are limited to a short diagnostic message.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client: Open RWS client.</span>
+<span class="sd">        message: Human-readable failure message.</span>
+<span class="sd">        task: RAPID task name.</span>
+<span class="sd">        module: RAPID module name.</span>
+<span class="sd">        error_code: Protocol error code written to ``lastErrorCode``.</span>
+<span class="sd">        mastership_retries: Number of Mastership attempts.</span>
+<span class="sd">        retry_delay_s: Delay between Mastership attempts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    """</span>
+    <span class="c1"># RAPID strings have a limited size. Remove line breaks and keep the</span>
+    <span class="c1"># diagnostic short enough for lastError.</span>
+    <span class="n">safe_message</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">split</span><span class="p">())[:</span><span class="mi">80</span><span class="p">]</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_do_write</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"trajReady"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"nbLoadedTrajPoints"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"loadedProcessType"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span><span class="n">PROCESS_NONE</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"transferError"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"lastErrorCode"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_num</span><span class="p">(</span><span class="n">error_code</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"lastError"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_string</span><span class="p">(</span><span class="n">safe_message</span><span class="p">)</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">symbol</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="s2">"sendTrajRequest"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_fmt_bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">set_variables_with_mastership</span><span class="p">(</span>
+            <span class="n">client</span><span class="p">,</span>
+            <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">domain</span><span class="o">=</span><span class="s2">"rapid"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">await</span> <span class="n">_retry_mastership</span><span class="p">(</span>
+        <span class="n">_do_write</span><span class="p">,</span>
+        <span class="n">mastership_retries</span><span class="p">,</span>
+        <span class="n">retry_delay_s</span><span class="o">=</span><span class="n">retry_delay_s</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">"Trajectory transfer failure published and request acknowledged: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">safe_message</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../supervisor/" class="btn btn-neutral float-left" title="📄 Supervisor"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../errors/errors/" class="btn btn-neutral float-right" title="📖 Intro errors">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© 2026 Clément RACINET — TrajCenter</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../supervisor/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../errors/errors/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

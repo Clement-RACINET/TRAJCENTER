@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Clément RACINET" />
+      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <title>📄 Splash - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\ud83d\udcc4 Splash";
+        var mkdocs_page_input_path = "api\\trajcenter\\ui\\screens\\splash.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../../..">
+          <img src="../../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >📂 Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../../trajcenter/">📖 Intro trajcenter</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../cli/cli/">📖 Intro cli</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../cli/main/">📄 Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/convert/">📖 Intro convert</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/apt_converter/">📄 Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/column_mapper/">📄 Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/csv_converter/">📄 Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/defaults/">📄 Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/excel_converter/">📄 Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/mod_converter/">📄 Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/tabular_converter/">📄 Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/core/">📖 Intro core</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/logger/">📄 Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/messages/">📄 Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/trajectory/">📄 Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/export/">📖 Intro export</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/csv_exporter/">📄 Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/excel_exporter/">📄 Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/options/">📄 Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/tabular_exporter/">📄 Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/robot/">📖 Intro robot</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/_utils/">📄 Utils</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/models/">📄 Models</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/reader/">📄 Reader</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/resolver/">📄 Resolver</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/service/">📄 Service</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/supervisor/">📄 Supervisor</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/writer/">📄 Writer</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Errors</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/errors/">📖 Intro errors</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/codes/">📄 Codes</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/translate/">📄 Translate</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Store</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/store/">📖 Intro store</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/local/">📄 Local</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/metadata/">📄 Metadata</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/models/">📄 Models</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >📂 Ui</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/">📖 Intro ui</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../actions/">📄 Actions</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../app/">📄 App</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../config/">📄 Config</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../features/">📄 Features</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../logos/">📄 Logos</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../widgets/">📄 Widgets</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" >📂 Screens</a>
+    <ul class="current">
+                <li class="toctree-l4"><a class="reference internal" href="../screens/">📖 Intro screens</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../convert/">📄 Convert</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../export/">📄 Export</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../home/">📄 Home</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../robot/">📄 Robot</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../settings/">📄 Settings</a>
+                </li>
+                <li class="toctree-l4 current"><a class="reference internal current" href="#">📄 Splash</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../store/">📄 Store</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">📂 Trajcenter</li>
+          <li class="breadcrumb-item">📂 Ui</li>
+          <li class="breadcrumb-item">📂 Screens</li>
+      <li class="breadcrumb-item active">📄 Splash</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="splash">Splash<a class="headerlink" href="#splash" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="trajcenter.ui.screens.splash" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">trajcenter.ui.screens.splash</span>
+
+
+<a href="#trajcenter.ui.screens.splash" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Splash screen for the TrajCenter TUI.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="trajcenter.ui.screens.splash.SplashScreen" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">SplashScreen</span>
+
+
+<a href="#trajcenter.ui.screens.splash.SplashScreen" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="textual.screen.Screen">Screen</span>[None]</code></p>
+
+
+
+        <p>Landing page with institutional logos.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>trajcenter\ui\screens\splash.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SplashScreen</span><span class="p">(</span><span class="n">Screen</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Landing page with institutional logos."""</span>
+
+    <span class="n">BINDINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">BindingType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">"enter"</span><span class="p">,</span> <span class="s2">"continue_to_home"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"space"</span><span class="p">,</span> <span class="s2">"continue_to_home"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"q"</span><span class="p">,</span> <span class="s2">"quit"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"escape"</span><span class="p">,</span> <span class="s2">"quit"</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">DEFAULT_CSS</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    SplashScreen {</span>
+<span class="s2">        layout: vertical;</span>
+<span class="s2">        background: #101014;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #splash-container {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1fr;</span>
+<span class="s2">        margin: 1 2 0 2;</span>
+<span class="s2">        padding: 1 2;</span>
+<span class="s2">        border: round #87196B;</span>
+<span class="s2">        background: #181820;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #logos-row {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 20;</span>
+<span class="s2">        layout: horizontal;</span>
+<span class="s2">        align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #am-card {</span>
+<span class="s2">        width: 1fr;</span>
+<span class="s2">        height: 20;</span>
+<span class="s2">        margin-right: 1;</span>
+<span class="s2">        align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #lcfc-card {</span>
+<span class="s2">        width: 1fr;</span>
+<span class="s2">        height: 20;</span>
+<span class="s2">        margin-left: 1;</span>
+<span class="s2">        align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #am-logo {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 16;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #lcfc-logo {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 17;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #am-text-1,</span>
+<span class="s2">    #lcfc-text-1 {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #am-text-2,</span>
+<span class="s2">    #lcfc-text-2 {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        color: #A1A1AA;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #separator-top {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        margin-top: 0;</span>
+<span class="s2">        margin-bottom: 1;</span>
+<span class="s2">        background: #87196B;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #separator-bottom {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        margin-top: 1;</span>
+<span class="s2">        margin-bottom: 1;</span>
+<span class="s2">        background: #87196B;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #trajcenter-title {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 8;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #splash-authors {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        margin-top: 1;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #splash-help {</span>
+<span class="s2">        width: 100%;</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        margin-top: 0;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        color: #F59C00;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">    }</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compose the splash screen."""</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">trajcenter.ui.logos</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">AM_TEXT_1</span><span class="p">,</span>
+            <span class="n">AM_TEXT_2</span><span class="p">,</span>
+            <span class="n">LCFC_TEXT_1</span><span class="p">,</span>
+            <span class="n">LCFC_TEXT_2</span><span class="p">,</span>
+            <span class="n">SPLASH_AUTHORS</span><span class="p">,</span>
+            <span class="n">SPLASH_HELP</span><span class="p">,</span>
+            <span class="n">TRAJCENTER_ASCII</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Header</span><span class="p">(</span><span class="n">show_clock</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"splash-container"</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">Horizontal</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"logos-row"</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"am-card"</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">AMLogo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"am-logo"</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">AM_TEXT_1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"am-text-1"</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">AM_TEXT_2</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"am-text-2"</span><span class="p">)</span>
+
+                <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-card"</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">LCFCLogo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-logo"</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">LCFC_TEXT_1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-text-1"</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">LCFC_TEXT_2</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-text-2"</span><span class="p">)</span>
+
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"separator-top"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">TRAJCENTER_ASCII</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"trajcenter-title"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"separator-bottom"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">SPLASH_AUTHORS</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"splash-authors"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">SPLASH_HELP</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"splash-help"</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Footer</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_continue_to_home</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Switch from splash screen to home screen."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"home"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.splash.SplashScreen.action_continue_to_home" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">action_continue_to_home</span>
+
+
+<a href="#trajcenter.ui.screens.splash.SplashScreen.action_continue_to_home" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">action_continue_to_home</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Switch from splash screen to home screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\splash.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_continue_to_home</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Switch from splash screen to home screen."""</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"home"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.splash.SplashScreen.compose" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">compose</span>
+
+
+<a href="#trajcenter.ui.screens.splash.SplashScreen.compose" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">compose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Compose the splash screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\splash.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Compose the splash screen."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">trajcenter.ui.logos</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">AM_TEXT_1</span><span class="p">,</span>
+        <span class="n">AM_TEXT_2</span><span class="p">,</span>
+        <span class="n">LCFC_TEXT_1</span><span class="p">,</span>
+        <span class="n">LCFC_TEXT_2</span><span class="p">,</span>
+        <span class="n">SPLASH_AUTHORS</span><span class="p">,</span>
+        <span class="n">SPLASH_HELP</span><span class="p">,</span>
+        <span class="n">TRAJCENTER_ASCII</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">Header</span><span class="p">(</span><span class="n">show_clock</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"splash-container"</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">Horizontal</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"logos-row"</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"am-card"</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">AMLogo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"am-logo"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">AM_TEXT_1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"am-text-1"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">AM_TEXT_2</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"am-text-2"</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-card"</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">LCFCLogo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-logo"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">LCFC_TEXT_1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-text-1"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">LCFC_TEXT_2</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"lcfc-text-2"</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"separator-top"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">TRAJCENTER_ASCII</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"trajcenter-title"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"separator-bottom"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">SPLASH_AUTHORS</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"splash-authors"</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="n">SPLASH_HELP</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"splash-help"</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">Footer</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../settings/" class="btn btn-neutral float-left" title="📄 Settings"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../store/" class="btn btn-neutral float-right" title="📄 Store">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© 2026 Clément RACINET — TrajCenter</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../settings/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../store/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../../..";</script>
+    <script src="../../../../../js/theme_extra.js"></script>
+    <script src="../../../../../js/theme.js"></script>
+      <script src="../../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

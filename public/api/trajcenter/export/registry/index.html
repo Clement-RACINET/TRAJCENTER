@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Clément RACINET" />
+      <link rel="shortcut icon" href="../../../../img/favicon.ico" />
+    <title>📄 Registry - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\ud83d\udcc4 Registry";
+        var mkdocs_page_input_path = "api\\trajcenter\\export\\registry.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../..">
+          <img src="../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >📂 Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../trajcenter/">📖 Intro trajcenter</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/cli/">📖 Intro cli</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../cli/main/">📄 Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/convert/">📖 Intro convert</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/apt_converter/">📄 Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/column_mapper/">📄 Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/csv_converter/">📄 Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/defaults/">📄 Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/excel_converter/">📄 Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/mod_converter/">📄 Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../convert/tabular_converter/">📄 Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/core/">📖 Intro core</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/logger/">📄 Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/messages/">📄 Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../core/trajectory/">📄 Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >📂 Export</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../export/">📖 Intro export</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../csv_exporter/">📄 Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../excel_exporter/">📄 Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../options/">📄 Options</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="#">📄 Registry</a>
+    <ul class="current">
+    <li class="toctree-l4"><a class="reference internal" href="#trajcenter.export.registry">registry</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../tabular_exporter/">📄 Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/robot/">📖 Intro robot</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/_utils/">📄 Utils</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/models/">📄 Models</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/reader/">📄 Reader</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/resolver/">📄 Resolver</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/service/">📄 Service</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/supervisor/">📄 Supervisor</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../robot/writer/">📄 Writer</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Errors</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/errors/">📖 Intro errors</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/codes/">📄 Codes</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../robot/errors/translate/">📄 Translate</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Store</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/store/">📖 Intro store</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/local/">📄 Local</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/metadata/">📄 Metadata</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../store/models/">📄 Models</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Ui</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/ui/">📖 Intro ui</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/actions/">📄 Actions</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/app/">📄 App</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/config/">📄 Config</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/features/">📄 Features</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/logos/">📄 Logos</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/widgets/">📄 Widgets</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Screens</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/screens/">📖 Intro screens</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/convert/">📄 Convert</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/export/">📄 Export</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/home/">📄 Home</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/robot/">📄 Robot</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/settings/">📄 Settings</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/splash/">📄 Splash</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../ui/screens/store/">📄 Store</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">📂 Trajcenter</li>
+          <li class="breadcrumb-item">📂 Export</li>
+      <li class="breadcrumb-item active">📄 Registry</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="registry">Registry<a class="headerlink" href="#registry" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="trajcenter.export.registry" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">trajcenter.export.registry</span>
+
+
+<a href="#trajcenter.export.registry" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Exporter registry helpers.</p>
+<p>This module contains exporter selection logic shared by the CLI and the TUI.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="trajcenter.export.registry.infer_exporter" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">infer_exporter</span>
+
+
+<a href="#trajcenter.export.registry.infer_exporter" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">infer_exporter</span><span class="p">(</span><span class="n">format_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseExporter</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return an exporter instance for an output format.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>format_name</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Export format name.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="BaseExporter (trajcenter.export.base.BaseExporter)" href="../base/#trajcenter.export.base.BaseExporter">BaseExporter</a></code>
+              –
+              <div class="doc-md-description">
+                <p>Exporter instance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="ValueError">ValueError</span></code>
+              –
+              <div class="doc-md-description">
+                <p>If the format is unsupported.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\export\registry.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">infer_exporter</span><span class="p">(</span><span class="n">format_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseExporter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return an exporter instance for an output format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        format_name: Export format name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Exporter instance.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the format is unsupported.</span>
+<span class="sd">    """</span>
+    <span class="n">normalized_format</span> <span class="o">=</span> <span class="n">format_name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">normalized_format</span> <span class="o">==</span> <span class="s2">"csv"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CsvExporter</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">normalized_format</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"excel"</span><span class="p">,</span> <span class="s2">"xlsx"</span><span class="p">}:</span>
+        <span class="k">return</span> <span class="n">ExcelExporter</span><span class="p">()</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported export format: </span><span class="si">{</span><span class="n">format_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../options/" class="btn btn-neutral float-left" title="📄 Options"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tabular_exporter/" class="btn btn-neutral float-right" title="📄 Tabular Exporter">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© 2026 Clément RACINET — TrajCenter</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../options/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../tabular_exporter/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../..";</script>
+    <script src="../../../../js/theme_extra.js"></script>
+    <script src="../../../../js/theme.js"></script>
+      <script src="../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

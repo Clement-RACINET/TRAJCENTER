@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Clément RACINET" />
+      <link rel="shortcut icon" href="../../../../../img/favicon.ico" />
+    <title>📄 Robot - TrajCenter</title>
+    <link rel="stylesheet" href="../../../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\ud83d\udcc4 Robot";
+        var mkdocs_page_input_path = "api\\trajcenter\\ui\\screens\\robot.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../../../..">
+          <img src="../../../../../assets/logo.png" class="logo" alt="Logo"/>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../../..">Accueil</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Référence API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >📂 Trajcenter</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../../../trajcenter/">📖 Intro trajcenter</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Cli</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../cli/cli/">📖 Intro cli</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../cli/main/">📄 Main</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Convert</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/convert/">📖 Intro convert</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/apt_converter/">📄 Apt Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/column_mapper/">📄 Column Mapper</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/csv_converter/">📄 Csv Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/defaults/">📄 Defaults</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/excel_converter/">📄 Excel Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/mod_converter/">📄 Mod Converter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../convert/tabular_converter/">📄 Tabular Converter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Core</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/core/">📖 Intro core</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/logger/">📄 Logger</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/messages/">📄 Messages</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../core/trajectory/">📄 Trajectory</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Export</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/export/">📖 Intro export</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/csv_exporter/">📄 Csv Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/excel_exporter/">📄 Excel Exporter</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/options/">📄 Options</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/registry/">📄 Registry</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../export/tabular_exporter/">📄 Tabular Exporter</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Robot</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/robot/">📖 Intro robot</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/_utils/">📄 Utils</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/models/">📄 Models</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/reader/">📄 Reader</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/resolver/">📄 Resolver</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/service/">📄 Service</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/supervisor/">📄 Supervisor</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../robot/writer/">📄 Writer</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" >📂 Errors</a>
+    <ul>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/errors/">📖 Intro errors</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/base/">📄 Base</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/codes/">📄 Codes</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../../../robot/errors/translate/">📄 Translate</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >📂 Store</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/store/">📖 Intro store</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/constants/">📄 Constants</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/local/">📄 Local</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/metadata/">📄 Metadata</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../../store/models/">📄 Models</a>
+                </li>
+    </ul>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" >📂 Ui</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../../ui/">📖 Intro ui</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../actions/">📄 Actions</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../app/">📄 App</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../config/">📄 Config</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../features/">📄 Features</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../logos/">📄 Logos</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../widgets/">📄 Widgets</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" >📂 Screens</a>
+    <ul class="current">
+                <li class="toctree-l4"><a class="reference internal" href="../screens/">📖 Intro screens</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../convert/">📄 Convert</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../export/">📄 Export</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../home/">📄 Home</a>
+                </li>
+                <li class="toctree-l4 current"><a class="reference internal current" href="#">📄 Robot</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../settings/">📄 Settings</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../splash/">📄 Splash</a>
+                </li>
+                <li class="toctree-l4"><a class="reference internal" href="../store/">📄 Store</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../..">TrajCenter</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Référence API</li>
+          <li class="breadcrumb-item">📂 Trajcenter</li>
+          <li class="breadcrumb-item">📂 Ui</li>
+          <li class="breadcrumb-item">📂 Screens</li>
+      <li class="breadcrumb-item active">📄 Robot</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="robot">Robot<a class="headerlink" href="#robot" title="Permanent link">&para;</a></h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="trajcenter.ui.screens.robot" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">trajcenter.ui.screens.robot</span>
+
+
+<a href="#trajcenter.ui.screens.robot" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+        <p>Robot supervision screen for the TrajCenter TUI.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="trajcenter.ui.screens.robot.RobotScreen" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">RobotScreen</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="textual.screen.Screen">Screen</span>[None]</code></p>
+
+
+
+        <p>Screen used to start and stop the ABB RWS supervision process.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RobotScreen</span><span class="p">(</span><span class="n">Screen</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">"""Screen used to start and stop the ABB RWS supervision process."""</span>
+
+    <span class="n">BINDINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">BindingType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">"escape"</span><span class="p">,</span> <span class="s2">"back_to_home"</span><span class="p">,</span> <span class="s2">"Accueil"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"back_to_home"</span><span class="p">,</span> <span class="s2">"Retour"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"stop_supervision"</span><span class="p">,</span> <span class="s2">"Arrêter supervision"</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">DEFAULT_CSS</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    RobotScreen {</span>
+<span class="s2">        layout: vertical;</span>
+<span class="s2">        background: #101014;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-container {</span>
+<span class="s2">        height: 1fr;</span>
+<span class="s2">        margin: 1 2 0 2;</span>
+<span class="s2">        padding: 1;</span>
+<span class="s2">        border: round #87196B;</span>
+<span class="s2">        background: #181820;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-title {</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        margin-bottom: 1;</span>
+<span class="s2">        content-align: center middle;</span>
+<span class="s2">        text-align: center;</span>
+<span class="s2">        color: #F59C00;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-info {</span>
+<span class="s2">        height: auto;</span>
+<span class="s2">        margin-bottom: 1;</span>
+<span class="s2">        padding: 1;</span>
+<span class="s2">        border: round #3F3F46;</span>
+<span class="s2">        background: #101014;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-button-row {</span>
+<span class="s2">        height: 3;</span>
+<span class="s2">        margin-top: 1;</span>
+<span class="s2">        align: center middle;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button {</span>
+<span class="s2">        width: 34;</span>
+<span class="s2">        height: 3;</span>
+<span class="s2">        text-style: bold;</span>
+<span class="s2">        border: tall transparent;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-start-button {</span>
+<span class="s2">        background: #0F7FD6;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">        border: tall #0F7FD6;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-start-button:hover {</span>
+<span class="s2">        background: #F59C00;</span>
+<span class="s2">        color: #101014;</span>
+<span class="s2">        border: tall #F59C00;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-start-button:focus {</span>
+<span class="s2">        background: #0F7FD6;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">        border: tall #F59C00;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-stop-button {</span>
+<span class="s2">        background: #B91C1C;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">        border: tall #B91C1C;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-stop-button:hover {</span>
+<span class="s2">        background: #F59C00;</span>
+<span class="s2">        color: #101014;</span>
+<span class="s2">        border: tall #F59C00;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #start-robot-button.robot-stop-button:focus {</span>
+<span class="s2">        background: #B91C1C;</span>
+<span class="s2">        color: white;</span>
+<span class="s2">        border: tall #F59C00;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-status {</span>
+<span class="s2">        height: 3;</span>
+<span class="s2">        margin-top: 1;</span>
+<span class="s2">        padding: 1;</span>
+<span class="s2">        border: round #3F3F46;</span>
+<span class="s2">        background: #101014;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-log {</span>
+<span class="s2">        height: 1fr;</span>
+<span class="s2">        margin-top: 1;</span>
+<span class="s2">        padding: 1;</span>
+<span class="s2">        border: round #3F3F46;</span>
+<span class="s2">        background: #050508;</span>
+<span class="s2">        color: #F4F4F5;</span>
+<span class="s2">    }</span>
+
+<span class="s2">    #robot-help {</span>
+<span class="s2">        height: 1;</span>
+<span class="s2">        padding: 0 1;</span>
+<span class="s2">        text-align: center;</span>
+<span class="s2">        color: #A1A1AA;</span>
+<span class="s2">        background: #181820;</span>
+<span class="s2">    }</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the robot screen.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: UI configuration.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compose the robot supervision screen."""</span>
+        <span class="k">yield</span> <span class="n">Header</span><span class="p">(</span><span class="n">show_clock</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-container"</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">"Supervision robot ABB"</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-title"</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-info"</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Store local : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">store</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Task RAPID : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Module RAPID : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">module</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+                    <span class="s2">"La supervision écoute les demandes RAPID "</span>
+                    <span class="s2">"refreshMetaRequest et sendTrajRequest."</span>
+                <span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">Horizontal</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-button-row"</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">Button</span><span class="p">(</span>
+                    <span class="s2">"Démarrer la supervision"</span><span class="p">,</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s2">"start-robot-button"</span><span class="p">,</span>
+                    <span class="n">classes</span><span class="o">=</span><span class="s2">"robot-start-button"</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+                <span class="s2">"Status: supervision arrêtée."</span><span class="p">,</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-status"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">yield</span> <span class="n">RichLog</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-log"</span><span class="p">,</span>
+                <span class="n">highlight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">markup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">auto_scroll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+            <span class="s2">"Entrée bouton · X arrêter · B/Echap accueil · Q quitter"</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-help"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Footer</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_back_to_home</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return to home screen."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span>
+                <span class="s2">"[yellow]Supervision encore active. "</span>
+                <span class="s2">"Appuie sur X ou sur le bouton Arrêter avant de revenir à l'accueil.[/]"</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"home"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_stop_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Stop robot supervision from keyboard binding."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Button</span><span class="o">.</span><span class="n">Pressed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Handle start/stop button press."""</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="s2">"start-robot-button"</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_supervision</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Start the ABB RWS supervisor as a subprocess."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: la supervision est déjà en cours."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">robot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span>
+                <span class="s2">"Status: option robot indisponible dans cet environnement."</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span>
+                <span class="s2">"[red]Option robot indisponible dans cet environnement.[/]"</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">script_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_supervisor_script_path</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">script_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: script superviseur introuvable."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Script introuvable : </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_supervisor_command</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_log</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[bold #F59C00]Démarrage supervision robot ABB[/]"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[dim]Commande : </span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                <span class="n">command</span><span class="p">,</span>
+                <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_project_root</span><span class="p">(),</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+                <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+                <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">,</span>
+                <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">creationflags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_process_creation_flags</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: échec démarrage supervision."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Erreur démarrage process : </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_running_ui</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_worker</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read_process_output_worker</span><span class="p">,</span>
+            <span class="n">thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"robot-supervisor-output"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Stop the ABB RWS supervisor subprocess."""</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span>
+
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_stopped_ui</span><span class="p">(</span><span class="s2">"Status: supervision arrêtée."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[yellow]Arrêt déjà demandé, attente du process...[/]"</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: arrêt de la supervision demandé..."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[yellow]Arrêt de la supervision demandé.[/]"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_worker</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_process_worker</span><span class="p">,</span>
+            <span class="n">thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"robot-supervisor-stop"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_unmount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Stop supervision when the screen is unmounted."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_process_output_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Read supervisor subprocess output and forward it to the TUI."""</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span>
+
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">stdout</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">stdout</span>
+
+        <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout</span><span class="p">:</span>
+                <span class="n">clean_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">clean_line</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">,</span> <span class="n">clean_line</span><span class="p">)</span>
+
+        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mark_supervision_stopped</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Status: supervision arrêtée. Code retour : </span><span class="si">{</span><span class="n">exit_code</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mark_supervision_stopped</span><span class="p">,</span>
+                <span class="s2">"Status: supervision terminée normalement."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mark_supervision_failed</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"Status: supervision terminée en erreur. Code retour : </span><span class="si">{</span><span class="n">exit_code</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stop_process_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Terminate the supervisor process from a background worker."""</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span>
+
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mark_supervision_stopped</span><span class="p">,</span>
+                <span class="s2">"Status: supervision arrêtée."</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_terminate_process</span><span class="p">(</span><span class="n">process</span><span class="p">)</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">,</span>
+                <span class="s2">"[red]Le process ne répond pas, kill forcé.[/]"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+            <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_from_worker_thread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_mark_supervision_failed</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Status: erreur pendant l'arrêt : </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_terminate_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Terminate the supervisor process."""</span>
+        <span class="n">process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_process_creation_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return subprocess creation flags for the current platform."""</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"nt"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">"CREATE_NEW_PROCESS_GROUP"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_supervisor_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Build supervisor subprocess command."""</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">script_path</span><span class="p">),</span>
+            <span class="s2">"--store"</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">store</span><span class="p">),</span>
+            <span class="s2">"--task"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
+            <span class="s2">"--module"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">module</span><span class="p">,</span>
+            <span class="s2">"--mastership-retries"</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mastership_retries</span><span class="p">),</span>
+            <span class="s2">"--log-level"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">log_level</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--env-file"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_file</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_override</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--env-override"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">host</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--host"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">host</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">username</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--username"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">username</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">password</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--password"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">password</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--port"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">port</span><span class="p">)])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"--timeout"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">command</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_project_root</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the repository root."""</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_supervisor_script_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the supervisor script path."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_project_root</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"scripts"</span> <span class="o">/</span> <span class="s2">"run_trajcenter_supervisor.py"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return whether the supervisor process is currently running."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_running_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update widgets when supervision starts."""</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#start-robot-button"</span><span class="p">,</span> <span class="n">Button</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">"Arrêter la supervision"</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">remove_class</span><span class="p">(</span><span class="s2">"robot-start-button"</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">add_class</span><span class="p">(</span><span class="s2">"robot-stop-button"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_running_text</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_stopped_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update widgets when supervision stops."""</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#start-robot-button"</span><span class="p">,</span> <span class="n">Button</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s2">"Démarrer la supervision"</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">remove_class</span><span class="p">(</span><span class="s2">"robot-stop-button"</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">add_class</span><span class="p">(</span><span class="s2">"robot-start-button"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="n">status_message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mark_supervision_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Mark supervision as failed."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_stopped_ui</span><span class="p">(</span><span class="n">status_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]</span><span class="si">{</span><span class="n">status_message</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mark_supervision_stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Mark supervision as stopped."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_stopped_ui</span><span class="p">(</span><span class="n">status_message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[yellow]</span><span class="si">{</span><span class="n">status_message</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update status widget with plain text."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#robot-status"</span><span class="p">,</span> <span class="n">Static</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_status_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update status widget with rich text."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#robot-status"</span><span class="p">,</span> <span class="n">Static</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_append_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Append a line to the log widget."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#robot-log"</span><span class="p">,</span> <span class="n">RichLog</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Clear the log widget."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#robot-log"</span><span class="p">,</span> <span class="n">RichLog</span><span class="p">)</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_from_worker_thread</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Call a UI callback from a Textual worker thread."""</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="s2">"App[None]"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_running_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Build running status text."""</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Status: "</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold white"</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"supervision en cours"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"bold #22C55E"</span><span class="p">)</span>
+        <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" - bouton Arrêter ou touche X pour stopper."</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"#F4F4F5"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.__init__" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.__init__" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Initialize the robot screen.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>config</code></b>
+                  (<code><a class="autorefs autorefs-internal" title="UIConfig
+
+
+  
+      dataclass
+   (trajcenter.ui.config.UIConfig)" href="../../config/#trajcenter.ui.config.UIConfig">UIConfig</a></code>)
+              –
+              <div class="doc-md-description">
+                <p>UI configuration.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">UIConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize the robot screen.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: UI configuration.</span>
+<span class="sd">    """</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.action_back_to_home" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">action_back_to_home</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.action_back_to_home" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">action_back_to_home</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return to home screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_back_to_home</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return to home screen."""</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span>
+            <span class="s2">"[yellow]Supervision encore active. "</span>
+            <span class="s2">"Appuie sur X ou sur le bouton Arrêter avant de revenir à l'accueil.[/]"</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">switch_screen</span><span class="p">(</span><span class="s2">"home"</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.action_stop_supervision" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">action_stop_supervision</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.action_stop_supervision" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">action_stop_supervision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Stop robot supervision from keyboard binding.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_stop_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Stop robot supervision from keyboard binding."""</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.compose" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">compose</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.compose" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">compose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Compose the robot supervision screen.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Compose the robot supervision screen."""</span>
+    <span class="k">yield</span> <span class="n">Header</span><span class="p">(</span><span class="n">show_clock</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-container"</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="s2">"Supervision robot ABB"</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-title"</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-info"</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Store local : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">store</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Task RAPID : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">task</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Module RAPID : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">module</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+                <span class="s2">"La supervision écoute les demandes RAPID "</span>
+                <span class="s2">"refreshMetaRequest et sendTrajRequest."</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">Horizontal</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"robot-button-row"</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">Button</span><span class="p">(</span>
+                <span class="s2">"Démarrer la supervision"</span><span class="p">,</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">"start-robot-button"</span><span class="p">,</span>
+                <span class="n">classes</span><span class="o">=</span><span class="s2">"robot-start-button"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+            <span class="s2">"Status: supervision arrêtée."</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-status"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">RichLog</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-log"</span><span class="p">,</span>
+            <span class="n">highlight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">markup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">auto_scroll</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">Static</span><span class="p">(</span>
+        <span class="s2">"Entrée bouton · X arrêter · B/Echap accueil · Q quitter"</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">"robot-help"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">Footer</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.on_button_pressed" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">on_button_pressed</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.on_button_pressed" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">on_button_pressed</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Pressed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Handle start/stop button press.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Button</span><span class="o">.</span><span class="n">Pressed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Handle start/stop button press."""</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="s2">"start-robot-button"</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">start_supervision</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.on_unmount" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">on_unmount</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.on_unmount" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">on_unmount</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Stop supervision when the screen is unmounted.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_unmount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Stop supervision when the screen is unmounted."""</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_supervision</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.start_supervision" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">start_supervision</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.start_supervision" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">start_supervision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Start the ABB RWS supervisor as a subprocess.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">start_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Start the ABB RWS supervisor as a subprocess."""</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: la supervision est déjà en cours."</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">robot</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span>
+            <span class="s2">"Status: option robot indisponible dans cet environnement."</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span>
+            <span class="s2">"[red]Option robot indisponible dans cet environnement.[/]"</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">script_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_supervisor_script_path</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: script superviseur introuvable."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Script introuvable : </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_supervisor_command</span><span class="p">(</span><span class="n">script_path</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_clear_log</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[bold #F59C00]Démarrage supervision robot ABB[/]"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[dim]Commande : </span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">)</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="n">command</span><span class="p">,</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_project_root</span><span class="p">(),</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+            <span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">,</span>
+            <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">creationflags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_process_creation_flags</span><span class="p">(),</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: échec démarrage supervision."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Erreur démarrage process : </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">[/]"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_set_running_ui</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">run_worker</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_process_output_worker</span><span class="p">,</span>
+        <span class="n">thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"robot-supervisor-output"</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="trajcenter.ui.screens.robot.RobotScreen.stop_supervision" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">stop_supervision</span>
+
+
+<a href="#trajcenter.ui.screens.robot.RobotScreen.stop_supervision" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">stop_supervision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Stop the ABB RWS supervisor subprocess.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>trajcenter\ui\screens\robot.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stop_supervision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Stop the ABB RWS supervisor subprocess."""</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span>
+
+    <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">process</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_stopped_ui</span><span class="p">(</span><span class="s2">"Status: supervision arrêtée."</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[yellow]Arrêt déjà demandé, attente du process...[/]"</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_set_status</span><span class="p">(</span><span class="s2">"Status: arrêt de la supervision demandé..."</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_append_log</span><span class="p">(</span><span class="s2">"[yellow]Arrêt de la supervision demandé.[/]"</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">run_worker</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_process_worker</span><span class="p">,</span>
+        <span class="n">thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"robot-supervisor-stop"</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../home/" class="btn btn-neutral float-left" title="📄 Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../settings/" class="btn btn-neutral float-right" title="📄 Settings">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>© 2026 Clément RACINET — TrajCenter</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../home/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../settings/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../../../..";</script>
+    <script src="../../../../../js/theme_extra.js"></script>
+    <script src="../../../../../js/theme.js"></script>
+      <script src="../../../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
