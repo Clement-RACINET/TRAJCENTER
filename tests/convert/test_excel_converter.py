@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/test_excel_converter.py
 """Unit tests specific to :mod:`trajcenter.convert.excel_converter`.
 

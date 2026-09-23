@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/export/tabular_exporter.py
 """Abstract tabular exporter shared by Excel and CSV exporters.
 

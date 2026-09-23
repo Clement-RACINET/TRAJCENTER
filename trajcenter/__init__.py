@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/__init__.py
 """TrajCenter v2 - trajectory management and RWS transfer for ABB robots.
 

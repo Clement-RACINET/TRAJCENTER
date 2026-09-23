@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/convert/mod_converter.py
 """Converter for ABB RAPID modules to the TrajCenter v2 format.
 

@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 """Run TrajCenter TUI from the best already-installed Pixi environment."""
 
 from __future__ import annotations

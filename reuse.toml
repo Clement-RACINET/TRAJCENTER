@@ -33,7 +33,11 @@ path = [
   "docs",
   "icons",
   "public",
+  "site",
   "doc_manual",
+  "trajectory_store",
+  "trajectory_exports",
+  "trajectory_files",
   "*.xlsx",
   "*.png",
   "*.jpg"

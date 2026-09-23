@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 """Converter registry helpers.
 
 This module contains converter selection logic shared by the CLI and the TUI.

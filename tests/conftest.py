@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/conftest.py
 """Global fixtures shared across ``converter/``, ``core/`` and ``exporter/``.
 

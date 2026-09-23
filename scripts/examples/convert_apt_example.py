@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # scripts/exemples/convert_apt_example.py
 """APT source to TrajCenter v2.4 conversion demonstration.
 

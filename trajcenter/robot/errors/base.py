@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/robot/errors/base.py
 """Base exception hierarchy for the TrajCenter RWS transfer protocol.
 

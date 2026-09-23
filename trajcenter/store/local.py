@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 """Local trajectory store scanner for TrajCenter."""
 
 from __future__ import annotations

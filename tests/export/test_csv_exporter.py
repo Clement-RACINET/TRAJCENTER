@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/export/test_csv_exporter.py
 """Integration tests for :class:`trajcenter.export.csv_exporter.CsvExporter`.
 

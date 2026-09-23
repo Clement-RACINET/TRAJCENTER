@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/convert/test_tabular_converter_edge_cases.py
 """Edge-case tests for :mod:`trajcenter.convert.tabular_converter`.
 

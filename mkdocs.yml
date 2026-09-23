@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 site_name: TrajCenter
 site_description: Documentation utilisateur et référence API de TrajCenter
 site_author: Clément RACINET

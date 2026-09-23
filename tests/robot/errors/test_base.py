@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/robot/abb/errors/test_base.py
 """Unit tests for :mod:`trajcenter.robot.errors.base`.
 

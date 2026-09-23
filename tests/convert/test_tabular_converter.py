@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/test_tabular_converter.py
 """Unit tests for :mod:`trajcenter.convert.column_mapper` and the shared
 logic of :mod:`trajcenter.convert.tabular_converter`.

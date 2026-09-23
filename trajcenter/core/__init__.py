@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/core/__init__.py
 """Public re-exports for the core package.
 

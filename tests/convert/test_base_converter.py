@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/convert/test_base_converter.py
 """Unit tests for converter defaults and explicit base autocompletion.
 

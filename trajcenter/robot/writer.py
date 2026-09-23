@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/robot/writer.py
 """RWS writer - writes TrajCenter v2 data to ABB RAPID variables.
 

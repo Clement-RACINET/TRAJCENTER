@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 """Typed models for local TrajCenter trajectory stores."""
 
 from __future__ import annotations

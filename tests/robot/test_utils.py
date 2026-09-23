@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # tests/robot/abb/test_utils.py
 """Tests for :mod:`trajcenter.robot._utils`.
 

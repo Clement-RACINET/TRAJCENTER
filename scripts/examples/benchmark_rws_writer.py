@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # scripts/benchmark_rws_writer.py
 """Benchmark TrajCenter RWS trajectory writer.
 

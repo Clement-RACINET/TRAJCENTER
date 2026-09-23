@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/convert/tabular_converter.py
 """Abstract tabular converter shared by Excel and CSV converters.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 """Configuration model for the simple TrajCenter terminal UI."""
 
 from __future__ import annotations

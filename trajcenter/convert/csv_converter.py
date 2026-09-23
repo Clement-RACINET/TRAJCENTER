@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 C. RACINET
+#
+# SPDX-License-Identifier: X11
+
 # trajcenter/convert/csv_converter.py
 """Converter for CSV and delimited text files to ``.trajcenter``.
 

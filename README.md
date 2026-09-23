@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 C. RACINET
+
+SPDX-License-Identifier: X11
+-->
+
 # TrajCenter
 
 TrajCenter is a Python and RAPID toolchain for preparing and transferring
