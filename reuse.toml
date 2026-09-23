@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2026 Clément RACINET
+#
+# SPDX-License-Identifier: X11
+
+version = 1
+
+[[annotations]]
+path = [
+  ".coveragerc",
+  ".coverage",
+  ".gitattributes",
+  ".gitignore",
+  ".gitlab-ci.yml",
+  ".pre-commit-config.yaml",
+  ".pixi",
+  ".github",
+  ".pytest_cache",
+  "basedpyrightconfig.json",
+  "pixi.lock",
+  "pixi.toml",
+  "pyproject.toml",
+  "reuse.toml",
+  "ruff.toml",
+  ".vscode",
+  ".ruff_cache",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Clément RACINET"
+SPDX-License-Identifier = "X11"
+
+[[annotations]]
+path = [
+  "docs",
+  "icons",
+  "public",
+  "doc_manual",
+  "*.xlsx",
+  "*.png",
+  "*.jpg"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Clément RACINET"
+SPDX-License-Identifier = "X11"
