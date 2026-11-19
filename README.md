@@ -1,42 +1,90 @@
 <!--
-SPDX-FileCopyrightText: 2026 C. RACINET
+SPDX-FileCopyrightText: 2026 Josselin Schumacker, Clément Racinet
 
 SPDX-License-Identifier: X11
 -->
 
-# TrajCenter
+<div align="center">
+
+<h1>TrajCenter</h1>
+
+<p><strong>Prepare, store and transfer industrial trajectories to ABB robots.</strong></p>
+
+<p>
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0-blue">
+  <img alt="RobotWare" src="https://img.shields.io/badge/ABB%20RobotWare-6.08%20%7C%206.15-red">
+  <img alt="Interface" src="https://img.shields.io/badge/transport-ABB%20RWS-informational">
+  <img alt="License" src="https://img.shields.io/badge/license-X11-green">
+  <a href="https://archive.softwareheritage.org/browse/origin/?origin_url=https://gitlab.ensam.eu/lcfc/trajcenter">
+    <img alt="Software Heritage" src="https://archive.softwareheritage.org/badge/origin/https://gitlab.ensam.eu/lcfc/trajcenter/">
+  </a>
+</p>
+
+<p>
+  <a href="#installation">Installation</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#command-line-reference">CLI</a> ·
+  <a href="#rapid-integration">RAPID</a> ·
+  <a href="#development">Development</a> ·
+  <a href="#reference-and-citation">Cite</a>
+</p>
+
+</div>
+
+---
 
 TrajCenter is a Python and RAPID toolchain for preparing and transferring
 industrial trajectories to ABB RobotWare 6.x controllers through
-**ABB Robot Web Services (RWS)**.
+**ABB Robot Web Services (RWS)**. It is designed for large trajectories.
 
-> **Version:** 2.0  
-> **Developed at:** LCFC — Arts et Métiers  
-> **Authors:** Josselin Schumacker and Clément Racinet  
-> **Tested with:** ABB RobotWare 6.08 and 6.15
+<table width="100%">
+  <tr>
+    <td width="25%"><b>Version</b></td>
+    <td width="75%">2.0</td>
+  </tr>
+  <tr>
+    <td><b>Developed at</b></td>
+    <td>LCFC — Arts et Métiers</td>
+  </tr>
+  <tr>
+    <td><b>Authors</b></td>
+    <td>Josselin Schumacker and Clément Racinet</td>
+  </tr>
+  <tr>
+    <td><b>Tested with</b></td>
+    <td>ABB RobotWare 6.08 and 6.15</td>
+  </tr>
+  <tr>
+    <td><b>Transport</b></td>
+    <td>ABB RWS only (the legacy v1 TCP protocol is no longer supported)</td>
+  </tr>
+</table>
 
-TrajCenter can:
+## Features
 
-- convert CSV, Excel, APT and RAPID files to `.trajcenter` archives;
-- manage a local trajectory store;
-- export archives to CSV or Excel;
-- provide a command-line and terminal interface;
-- supervise transfers to an ABB controller;
-- expose loaded trajectories to RAPID programs.
+- Convert CSV, Excel, APT and RAPID files to `.trajcenter` archives.
+- Manage a local trajectory store.
+- Export archives to CSV or Excel.
+- Use a command-line interface or a terminal interface (TUI).
+- Supervise transfers to an ABB controller.
+- Expose loaded trajectories to RAPID programs.
 
-TrajCenter v2 uses **ABB RWS exclusively**. The legacy TrajCenter v1 TCP
-protocol is no longer supported.
+## How it works
+
+```mermaid
+flowchart LR
+    A["Source files<br/>CSV · Excel · APT · RAPID"] --> B["trajcenter convert"]
+    B --> C[("Local store<br/>.trajcenter")]
+    C --> D["Supervisor<br/>(ABB RWS)"]
+    D --> E["ABB controller<br/>TRAJCENTER.sys"]
+    E --> F["RAPID program<br/>ExecuteLoaded"]
+```
 
 ---
 
 ## Documentation
 
-The complete user and integration manual is available in:
-
-```text
-doc_manual/
-```
-
+The complete user and integration manual is available in `doc_manual/`.
 It covers:
 
 - installation and configuration;
@@ -54,31 +102,13 @@ This README only provides the essential setup and commands.
 ## Installation
 
 The project uses [Pixi](https://pixi.sh/) to manage Python and its
-dependencies.
+dependencies. Choose the environment that matches your workstation:
 
-### Preparation workstation
-
-For conversion, export, store management and the terminal interface:
-
-```powershell
-pixi install -e tui
-```
-
-### Robot-connected workstation
-
-For all local features and ABB robot supervision:
-
-```powershell
-pixi install -e full
-```
-
-### Development environment
-
-For tests, linting, type checking and documentation:
-
-```powershell
-pixi install -e dev
-```
+| Workstation         | Use case                                                    | Command                |
+| ------------------- | ----------------------------------------------------------- | ---------------------- |
+| **Preparation**     | Conversion, export, store management and terminal interface | `pixi install -e tui`  |
+| **Robot-connected** | All local features and ABB robot supervision                | `pixi install -e full` |
+| **Development**     | Tests, linting, type checking and documentation             | `pixi install -e dev`  |
 
 ---
 
@@ -120,7 +150,7 @@ TRAJCENTER_MASTERSHIP_RETRIES=3
 TRAJCENTER_LOG_LEVEL=INFO
 ```
 
-Do not commit production credentials.
+> **Security:** do not commit production credentials.
 
 ### 4. Start the supervisor
 
@@ -153,9 +183,9 @@ TRAJCENTER_WaitTrajectoryReady 120;
 TRAJCENTER_ExecuteLoaded 500, 5000, 1000;
 ```
 
-A successful transfer does not guarantee reachability, collision avoidance or
-safe execution. Validate trajectories in RobotStudio or at reduced speed
-before production use.
+> **Safety warning:** a successful transfer does not guarantee reachability,
+> collision avoidance or safe execution. Validate trajectories in RobotStudio
+> or at reduced speed before production use.
 
 ---
 
@@ -167,14 +197,8 @@ Launch the Textual terminal interface with:
 pixi run trajcenter-tui
 ```
 
-The interface provides access to:
-
-- trajectory conversion;
-- archive export;
-- local store inspection;
-- ABB robot supervision;
-- session settings.
-
+It provides access to trajectory conversion, archive export, local store
+inspection, ABB robot supervision and session settings.
 Robot supervision requires the `full` environment.
 
 ---
@@ -186,8 +210,6 @@ Display the general help:
 ```powershell
 pixi run -e full trajcenter --help
 ```
-
-Main commands:
 
 | Command                      | Purpose                        |
 | ---------------------------- | ------------------------------ |
@@ -210,12 +232,7 @@ pixi run -e full trajcenter robot supervise --help
 
 ## RAPID integration
 
-The robot-side interface is provided by:
-
-```text
-rapid/TRAJCENTER.sys
-```
-
+The robot-side interface is provided by `rapid/TRAJCENTER.sys`.
 Demonstration programs are also available in `rapid/`.
 
 The main RAPID workflow is:
@@ -239,7 +256,7 @@ Refer to the manual before modifying the RAPID module or its RWS variables.
 ## Repository structure
 
 ```text
-trajcenter_v2/
+trajcenter/
 ├── doc_manual/          # User and integration manual
 ├── rapid/               # RAPID system module and demonstrations
 ├── scripts/             # Launchers and examples
@@ -278,7 +295,66 @@ Main contribution rules:
 
 ---
 
+## Reference and Citation
+
+TrajCenter is archived in [Software Heritage](https://www.softwareheritage.org/),
+which provides a permanent, citable identifier (SWHID) for the source code.
+
+<table width="100%">
+  <tr>
+    <td width="20%"><b>Software</b></td>
+    <td width="80%">TrajCenter v2.0</td>
+  </tr>
+  <tr>
+    <td><b>Authors</b></td>
+    <td>Josselin Schumacker, Clément Racinet</td>
+  </tr>
+  <tr>
+    <td><b>Institution</b></td>
+    <td>LCFC, Arts et Métiers</td>
+  </tr>
+  <tr>
+    <td><b>Repository</b></td>
+    <td><a href="https://gitlab.ensam.eu/lcfc/trajcenter">gitlab.ensam.eu/lcfc/trajcenter</a></td>
+  </tr>
+  <tr>
+    <td><b>SWHID</b></td>
+    <td><a href="https://archive.softwareheritage.org/swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter"><code>swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter</code></a></td>
+  </tr>
+</table>
+
+### How to cite
+
+If you use TrajCenter in your work, please cite it as:
+
+> Schumacker, J., & Racinet, C. (2026). _TrajCenter_ (Version 2.0) [Computer software].
+> LCFC, Arts et Métiers.
+> https://gitlab.ensam.eu/lcfc/trajcenter
+> SWHID: `swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter`
+
+<details>
+<summary><strong>BibTeX</strong></summary>
+
+```bibtex
+@software{trajcenter2026,
+  author    = {Schumacker, Josselin and Racinet, Cl{\'e}ment},
+  title     = {{TrajCenter}},
+  version   = {2.0},
+  year      = {2026},
+  publisher = {LCFC, Arts et M{\'e}tiers},
+  url       = {https://gitlab.ensam.eu/lcfc/trajcenter},
+  swhid     = {swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter}
+}
+```
+
+</details>
+
+---
+
 ## License and attribution
 
-TrajCenter was developed at by **Josselin Schumacker** and **Clément Racinet**.
-This project is licensed under the **X11 License** — see the [`LICENSE`](./LICENSE) file for details.
+TrajCenter was developed at LCFC — Arts et Métiers by
+**Josselin Schumacker** and **Clément Racinet**.
+
+This project is licensed under the **X11 License**. See the
+[`LICENSE`](./LICENSE) file for details.
