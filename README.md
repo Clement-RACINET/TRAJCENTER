@@ -281,4 +281,4 @@ Main contribution rules:
 ## License and attribution
 
 TrajCenter was developed at by **Josselin Schumacker** and **Clément Racinet**.
-This project is licensed under the **MIT License** — see the [`LICENSE`](./LICENSE) file for details.
+This project is licensed under the **X11 License** — see the [`LICENSE`](./LICENSE) file for details.
