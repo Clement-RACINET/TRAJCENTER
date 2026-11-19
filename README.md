@@ -32,33 +32,12 @@ SPDX-License-Identifier: X11
 </div>
 
 ---
+TrajCenter is a Python and RAPID toolchain for preparing and transferring industrial trajectories to ABB RobotWare 6.x controllers through **ABB Robot Web Services (RWS)**.
 
-TrajCenter is a Python and RAPID toolchain for preparing and transferring
-industrial trajectories to ABB RobotWare 6.x controllers through
-**ABB Robot Web Services (RWS)**. It is designed for large trajectories.
-
-<table width="100%">
-  <tr>
-    <td width="25%"><b>Version</b></td>
-    <td width="75%">2.0</td>
-  </tr>
-  <tr>
-    <td><b>Developed at</b></td>
-    <td>LCFC — Arts et Métiers</td>
-  </tr>
-  <tr>
-    <td><b>Authors</b></td>
-    <td>Josselin Schumacker and Clément Racinet</td>
-  </tr>
-  <tr>
-    <td><b>Tested with</b></td>
-    <td>ABB RobotWare 6.08 and 6.15</td>
-  </tr>
-  <tr>
-    <td><b>Transport</b></td>
-    <td>ABB RWS only (the legacy v1 TCP protocol is no longer supported)</td>
-  </tr>
-</table>
+> **Version:** 2.0  
+> **Developed at:** LCFC — Arts et Métiers  
+> **Authors:** Josselin Schumacker and Clément Racinet  
+> **Tested with:** ABB RobotWare 6.08 and 6.15
 
 ## Features
 
@@ -197,8 +176,7 @@ Launch the Textual terminal interface with:
 pixi run trajcenter-tui
 ```
 
-It provides access to trajectory conversion, archive export, local store
-inspection, ABB robot supervision and session settings.
+It provides access to trajectory conversion, archive export, local store inspection, ABB robot supervision and session settings.
 Robot supervision requires the `full` environment.
 
 ---
@@ -232,8 +210,7 @@ pixi run -e full trajcenter robot supervise --help
 
 ## RAPID integration
 
-The robot-side interface is provided by `rapid/TRAJCENTER.sys`.
-Demonstration programs are also available in `rapid/`.
+The robot-side interface is provided by `rapid/TRAJCENTER.sys`. Demonstration programs are also available in `rapid/`.
 
 The main RAPID workflow is:
 
@@ -245,8 +222,7 @@ The main RAPID workflow is:
 6. validate the loaded data;
 7. execute it with `TRAJCENTER_ExecuteLoaded`.
 
-`TRAJCENTER_ExecuteLoaded` is the single recommended execution entry point.
-It supports trajectories with the `NONE` process and provides dispatching for
+`TRAJCENTER_ExecuteLoaded` is the single recommended execution entry point. It supports trajectories with the `NONE` process and provides dispatching for
 future process-specific implementations.
 
 Refer to the manual before modifying the RAPID module or its RWS variables.
@@ -297,35 +273,9 @@ Main contribution rules:
 
 ## Reference and Citation
 
-TrajCenter is archived in [Software Heritage](https://www.softwareheritage.org/),
-which provides a permanent, citable identifier (SWHID) for the source code.
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://gitlab.ensam.eu/lcfc/trajcenter/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://gitlab.ensam.eu/lcfc/trajcenter)
 
-<table width="100%">
-  <tr>
-    <td width="20%"><b>Software</b></td>
-    <td width="80%">TrajCenter v2.0</td>
-  </tr>
-  <tr>
-    <td><b>Authors</b></td>
-    <td>Josselin Schumacker, Clément Racinet</td>
-  </tr>
-  <tr>
-    <td><b>Institution</b></td>
-    <td>LCFC, Arts et Métiers</td>
-  </tr>
-  <tr>
-    <td><b>Repository</b></td>
-    <td><a href="https://gitlab.ensam.eu/lcfc/trajcenter">gitlab.ensam.eu/lcfc/trajcenter</a></td>
-  </tr>
-  <tr>
-    <td><b>SWHID</b></td>
-    <td><a href="https://archive.softwareheritage.org/swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter"><code>swh:1:snp:c02342c5c509cb366445162abecbf868465ba7d5;origin=https://gitlab.ensam.eu/lcfc/trajcenter</code></a></td>
-  </tr>
-</table>
-
-### How to cite
-
-If you use TrajCenter in your work, please cite it as:
+TrajCenter is archived in [Software Heritage](https://www.softwareheritage.org/), which provides a permanent, citable identifier (SWHID) for the source code. If you use TrajCenter in your work, please cite it as:
 
 > Schumacker, J., & Racinet, C. (2026). _TrajCenter_ (Version 2.0) [Computer software].
 > LCFC, Arts et Métiers.
